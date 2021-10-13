@@ -25,7 +25,7 @@ help:
 	@echo 'get local templates with: pandoc -D latex/html/etc'
 	@echo 'or generic ones from: https://github.com/jgm/pandoc-templates'
 
-ifeq ($(OS),Windows_NT) 
+ifeq ($(OS),Windows_NT)
 	detected_OS=Windows
 else
 	detected_OS=$(shell sh -c 'uname 2>/dev/null || echo Unknown')
@@ -95,6 +95,7 @@ html:
 		--csl="$(STYLEDIR)/ref_format.csl" \
 		--number-sections \
 		--verbose \
+		--mathjax \
 		2>pandoc.html.log
 	rm -rf "$(OUTPUTDIR)/source"
 	mkdir "$(OUTPUTDIR)/source"
