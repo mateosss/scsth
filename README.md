@@ -1,4 +1,10 @@
-# Template for writing a PhD thesis in Markdown [![Build Status](https://travis-ci.org/tompollard/phd_thesis_markdown.svg?branch=master)](https://travis-ci.org/tompollard/phd_thesis_markdown)  
+# Custom Notes
+
+- Texlive installed with [this guide](https://tex.stackexchange.com/questions/540429/tlmgr-in-ubuntu-20-04-local-tex-live-2019-is-older-than-remote-repository-2/545502#545502).
+- Using pandoc 2.14.2 installed through [its installer](https://github.com/jgm/pandoc/releases/tag/2.14.2).
+- Using python 3.8.10
+
+# Template for writing a PhD thesis in Markdown [![Build Status](https://travis-ci.org/tompollard/phd_thesis_markdown.svg?branch=master)](https://travis-ci.org/tompollard/phd_thesis_markdown)
 
 [![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.58490.svg)](http://dx.doi.org/10.5281/zenodo.58490)
 
@@ -44,7 +50,7 @@ Markdown is a super-friendly plain text format that can be easily converted to a
 There are some minor annoyances:
 - if you haven't worked with Markdown before then you'll find yourself referring to the style-guide fairly often at first.
 - it isn't possible to add a short caption to tables ~~and figures~~ ([figures are now fixed](https://github.com/tompollard/phd_thesis_markdown/pull/47), thanks to @martisak). This means that /listoftables includes the long-caption, which probably isn't what you want. If you want to include the list of tables, then you'll need to write it manually.
-- the style documents in this framework could be improved. The PDF and HTML (thanks [@ArcoMul](https://github.com/ArcoMul)) outputs are acceptable, but ~~HTML and~~ Word needs work if you plan to output to this format.  
+- the style documents in this framework could be improved. The PDF and HTML (thanks [@ArcoMul](https://github.com/ArcoMul)) outputs are acceptable, but ~~HTML and~~ Word needs work if you plan to output to this format.
 - ~~there is no straightforward way of specifying image size in the markdown right now, though this functionality is coming (see: https://github.com/tompollard/phd_thesis_markdown/issues/15)~~ (Image size can now be specified. Thanks to @rudolfbyker for [highlighting this](https://github.com/tompollard/phd_thesis_markdown/issues/15)).
 - ... if there are more, please add them here.
 
@@ -62,15 +68,15 @@ There are some minor annoyances:
 ## How do I get started?
 
 1. Install the following software:
-    - A text editor, like [Sublime](https://www.sublimetext.com/), which is what you'll use write the thesis.  
+    - A text editor, like [Sublime](https://www.sublimetext.com/), which is what you'll use write the thesis.
     - A LaTeX distribution (for example, [MacTeX](https://tug.org/mactex/) for Mac users).
-    - [Pandoc](http://johnmacfarlane.net/pandoc), for converting the Markdown to the output format of your choice.  
+    - [Pandoc](http://johnmacfarlane.net/pandoc), for converting the Markdown to the output format of your choice.
     - Pandoc plugins by running ```make install```
     - Git, for version control.
-2. [Fork the repository](https://github.com/tompollard/phd_thesis_markdown/fork) on Github  
+2. [Fork the repository](https://github.com/tompollard/phd_thesis_markdown/fork) on Github
 3. Clone the repository onto your local computer (or [download the Zip file](https://github.com/tompollard/phd_thesis_markdown/archive/master.zip)).
 4. (Skip this step to use default UCL style) Configure style for your institution - see instructions below
-5. Navigate to the directory that contains the Makefile and type "make pdf" (or "make html") at the command line to update the PDF (or HTML) in the output directory.  
+5. Navigate to the directory that contains the Makefile and type "make pdf" (or "make html") at the command line to update the PDF (or HTML) in the output directory.
 **In case of an error** (e.g. `make: *** [pdf] Error 43`), consult [this article](https://dalwilliams.info/lessons-learned-from-writing-a-phd-dissertation-in-markdown.html) for possible fixes. Most importantly, make sure tlmgr is properly installed, then run ```install.sh``
 6. Edit the files in the 'source' directory, then goto step 5.
 
@@ -87,7 +93,7 @@ The universal document converter [`pandoc`](https://pandoc.org/) does all the he
     1. a bunch of options which change the output e.g. `--number-sections`
 1. the output produced is:
     1. the generated pdf: [`output/thesis.pdf`](./output/thesis.pdf)
-    1. logs (which contain the `.tex` which was compiled): `pandoc.pdf.log`    
+    1. logs (which contain the `.tex` which was compiled): `pandoc.pdf.log`
 
 Put simply, `pandoc` uses the latex template provided to create a `.tex` file, then compiles it. In detail, `pandoc` processes the input files in the following way (the file names in quotes aren't visible to you, but are named for the purpose of understanding):
 1. Make replacements within the markdown files `input/*.md` e.g.:
