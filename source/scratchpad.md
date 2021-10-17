@@ -1,9 +1,19 @@
 # En general
 
+- poner un ejemplo de SLAM basico 2d? tutorial de slam
+- releerme los papers?
 - 4 páginas por día
 - en general: encontrar "los nudos centrales", sin vueltas
 
 ## 1. Introducción
+
+- Que es SLAM
+- Que es XR
+- Por que SLAM en XR (mención oculus y otros que se vienen)
+- problemas específicos de XR vs muchos sistemas de SLAM que son más para cosas
+  no tan drásticas (drones, autos, ver EuRoC dataset).
+- online SLAM vs full SLAM
+- "thesis outline" o una sección que describa de que va cada capítulo
 
 ## 2. Marco Teórico
 
@@ -16,6 +26,15 @@
 - explicar métricas de evaluación (todavía no tengo nada pensado de como
   evaluar)
 - explicar los temas soft del open source también:
+  - Ecosistema: Monado, khronos, openxr
+  - soluciones contempladas:
+    - libres para el proyecto: Basalt, Kimera, ORB-SLAM3, OpenVINS, maplab,
+      RTABMAP, OV2SLAM, OpenVSLAM, ProSLAM, granite
+    - lo problemático que fue elegir una solución por que los reportes que hacen
+      son malos, muchos no reportan tiempos de ejecución (solo estadísticas RMS
+      ATE) cuando el el rendimiento de estas soluciones es crucial para sistemas
+      XR que corren en dispositivos con grandes limitaciones de computo
+    - otras soluciones privativas (arcturus, SLAMCore, realsense t265, nvidia elbrus)
   - licencias problemáticas, GPL, MIT, BSL, BSD (se recomendó hacer incapié)
   - como trabajar con la comunidad, insertarse a un proyecto, relaciones
     interpeersonales
@@ -23,7 +42,11 @@
     sociales (y otros?)
 - factor graphs vs kalman filters
 
-## 3. Arquitectura
+## 3. Arquitectura(s)
+
+Ver otras tesis como encaran el hablar de estos sistemas, cuanto tiempo le
+dedican, en que hacen incapie, solo rejurgitan lo que dicen los papers
+originales o agregan comentarios nuevos e interesantes?
 
 - decisiones de los distintos sistemas (Kimera, ORB-SLAM3, Basalt)
   - arquitecturaes, teóricas, algorítmicas
@@ -39,10 +62,21 @@
     minimal?
 - idea interesante: empezar con una arquitectura minimal que muestre los
   componentes fundamentales e ir construyendo sobre eso las mejoras que haya
+- la calidad deplorable de algunas implementaciones, que la mala implementación
+  académica dificulta el reuso científico y práctico e incluso la
+  reproducibilidad
+
+### Kimera-VIO
+
+### ORB-SLAM3
+
+### Basalt
 
 ## 4. Implementación
 
+- otros intentos de generalizar arquitecturas de slam (los 3 papers/tesis que vi)
 - Mi arquitectura
+- Monado
 - Que decisiones tomé
 - Por qué?
 - Se puede bajar un poco más a detalles de implementación acá.
@@ -57,8 +91,29 @@
   - Medidas de corrección
   - Medidas de performance
 
-## 6. Citas
+## 6. Referencias
 
 - como manejar las citas: bibtex, bibfile, references.bib, zotero, etc
 - si uso el template tengo que citarlo:
   <https://github.com/tompollard/phd_thesis_markdown#citing-the-template>
+
+## Cosas que tengo que responder en algún momento
+
+- que es un IMU (que tipos)
+- que es odometríá (que tipos)
+- cual es la diferencia entre odometría visual-inercial y SLAM (https://docs.nvidia.com/isaac/isaac/packages/visual_slam/doc/index.html)
+- casos de uso de SLAM, otros lugares donde se usa
+- loop closure
+- GTSAM, g2o, slam++
+- otros usos de SLAM
+  - robótica
+- RMS ATE
+- mejorar formato/estilo del documento final
+- datasets: EuRoC, TUM-VI, Kitti, OpenLoris?
+- ROS? al menos hablar de lo relevante que pareció ser pero que pude
+  circunventarlo
+- uso de machine learning en SLAM
+- oculus insight?
+- future work: custom SLAM modules in Monado based (cite thesis on SLAM
+  modularity)
+- features and landmarks
