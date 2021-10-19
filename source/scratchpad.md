@@ -1,9 +1,19 @@
-# En general
+# Scratchpad
+
+## Ahora
+
+Instalar linter de repetición de palabras
+
+- ver como approchean los otros
+- encarar la tesis un poco como una generalización de estos sistemas?
+
+## En general
 
 - poner un ejemplo de SLAM basico 2d? tutorial de slam
 - releerme los papers?
 - 4 páginas por día
 - en general: encontrar "los nudos centrales", sin vueltas
+- introducir conceptos con cursiva
 
 ## 1. Introducción
 
@@ -100,8 +110,9 @@ originales o agregan comentarios nuevos e interesantes?
 ## Cosas que tengo que responder en algún momento
 
 - que es un IMU (que tipos)
-- que es odometríá (que tipos)
-- cual es la diferencia entre odometría visual-inercial y SLAM (https://docs.nvidia.com/isaac/isaac/packages/visual_slam/doc/index.html)
+- que es odometría (que tipos)
+- cual es la diferencia entre odometría visual-inercial y SLAM
+  (<https://docs.nvidia.com/isaac/isaac/packages/visual_slam/doc/index.html>)
 - casos de uso de SLAM, otros lugares donde se usa
 - loop closure
 - GTSAM, g2o, slam++
@@ -117,3 +128,9 @@ originales o agregan comentarios nuevos e interesantes?
 - future work: custom SLAM modules in Monado based (cite thesis on SLAM
   modularity)
 - features and landmarks
+
+## Al terminar
+
+- verificar typos
+- verifica errores de gramatica
+- check markdown and other linter errors
