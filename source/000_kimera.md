@@ -31,8 +31,10 @@ módulo de Kimera-RPGO (_Robust Pose Graph Optimization_) que emplea
 [técnicas][kimera-rpgo-pcm-paper] especializadas en un contexto de múltiples
 robots realizando SLAM de forma distribuida. Este módulo va a procurar mantener
 la consistencia global tanto del mapa como de la trayectoria, realizando
-apropiadamente acciones de loop closure, un proceso altamente ruidoso que
-necesita buenas formas de rechazo de valores atípicos (_outliers_).
+apropiadamente acciones de _loop closure_, un proceso altamente ruidoso que
+necesita buenas formas de rechazo de _outliers_ (valores atípicos).
+
+<!-- TODO: Pongo los términos en inglés en cursiva? introduzco los términos en negrita? -->
 
 ## Frontend
 
