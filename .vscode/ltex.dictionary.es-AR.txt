@@ -1,0 +1,17 @@
+SLAM
+XR
+EuRoC
+IMU
+Kimera
+SPARK
+Lab
+Institute
+of
+Technology
+RPGO
+Robust
+Graph
+Optimization
+loop
+closure
+outliers
