@@ -2,8 +2,6 @@
 
 ## Ahora
 
-Instalar linter de repetición de palabras
-
 - ver como approchean los otros
 - encarar la tesis un poco como una generalización de estos sistemas?
 
