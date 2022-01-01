@@ -19,3 +19,8 @@ microelectromecánicos
 MEMS
 Basalt
 Kalibr
+keyframes
+bundle
+adjustment
+motion
+blur
