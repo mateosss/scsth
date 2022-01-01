@@ -15,3 +15,7 @@ Optimization
 loop
 closure
 outliers
+microelectromecánicos
+MEMS
+Basalt
+Kalibr
