@@ -3,6 +3,10 @@ En la mayoría de los casos esos términos serán explicados pero esta notación
 también podrá ser utilizada para simplemente listar términos relacionados que no
 serán tratados en este trabajo.
 
+La bibliografía de este trabajo está escrita mayormente en inglés, y es por eso
+que muchas veces será más práctico utilizar el término en este idioma, aunque
+en varias ocasiones intentará brindar una traducción adecuada en español.
+
 <!-- TODO@style: Cómo se va a referenciar código? notar que tienen que poder imprimirse, una idea es usar pies de páginas y/o url shorteners, otra sería referenciar a un apéndice de la tesis de alguna forma-->
 
 <!-- TODO@style: solidificar estos items?

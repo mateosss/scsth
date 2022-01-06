@@ -129,11 +129,14 @@ El [módulo][`FrameToFrameOpticalFlow`] de optical flow corre en un thread
 individual y es por donde las muestras del par de cámaras estéreo ingresan al
 pipeline de Basalt. Inicialmente se genera una representación piramidal de las
 imágenes, o también llamada de _mipmaps_, esta es una forma tradicional
-[@williams_pyramidal_1983] e almacenar una imagen en memoria junto a versiones
-re-escaladas de la misma. Los mipmaps tienen tienen múltiples utilidades en
-computación gráfica (e.g., _filtrado trilinear_, _LODs_, reducción de
+[@williams_pyramidal_1983] de almacenar una imagen en memoria junto a versiones
+reescaladas de la misma (Fig. @fig:mipmap). Los mipmaps tienen múltiples utilidades en
+computación gráfica (e.g., _filtrado trilineal_, _LODs_, reducción de
 _patrones moiré_) pero en el caso de Basalt serán utilizados para darle robustez
-al algoritmo de localización de features (_feature tracking_).
+al algoritmo de seguimiento de features (_feature tracking_).
+
+![Representación piramidal (mipmaps) de un cuadro del conjunto de datos
+EuRoC.](source/figures/mipmap.jpg "Mipmaps"){#fig:mipmap width=65%}
 
 [`FrameToFrameOpticalFlow`]: TODO
 

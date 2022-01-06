@@ -26,3 +26,5 @@ motion
 blur
 offsets
 baselines
+mipmaps
+trilineal
