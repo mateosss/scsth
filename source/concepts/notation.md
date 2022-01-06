@@ -18,5 +18,13 @@ en varias ocasiones intentará brindar una traducción adecuada en español.
  -->
 
 <!-- TODO@style: arreglar como se ven las citas en el pdf -->
-<!-- TODO@style: que en vez de figure, diga figura -->
+<!-- TODO@style: citation style is in ref_format.csl, update with one that is good -->
+<!-- TODO@style: que en vez de figure, diga figura (lo mismo para tablas y otros textos autogenerados) -->
 <!-- TODO@style: links con alguna marca/color -->
+<!-- TODO@style: caratula, copyright cc-0, UNC, FaMAF -->
+
+<!-- TODO@end: todo lo que diga TODO@end hay que chequearlo al terminar el trabajo -->
+<!-- TODO@end: chequear todo en busca de problemas de ortografía con LTeX -->
+<!-- TODO@end: chequear ortografía con google drive -->
+<!-- TODO@end: leer todas las citas generadas a ver si se colgó algun link de mas o alguna nota de zotero que no iba -->
+<!-- TODO@end: ver que todos los títulos y subtítulos respeten tener solo mayúscula la primera letra (o nombres propios) -->
