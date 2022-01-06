@@ -162,12 +162,3 @@ precisión. No está exento de problemas pero cumple su función muy bien.
 Finalmente se trabajó sobre Basalt, un sistema de odometría visual-inercial
 también con licencia permisiva que fue ignorado originalmente por no presentar
 la posibilidad de ser corrido con una única cámara.
-
-# Heurísticas
-
-- Introducción de conceptos con _cursiva_
-- También se puede utilizar negrita para dar énfasis en general
-- Luego de introducirlas, las palabras en inglés se consideran palabras comunes
-- El género de las palabras en inglés es preferentemente el género que tendrían
-  al traducirlas, pero si se siente incorrecto, se puede utilizar el otro
-  género.

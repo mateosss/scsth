@@ -24,3 +24,5 @@ bundle
 adjustment
 motion
 blur
+offsets
+baselines
