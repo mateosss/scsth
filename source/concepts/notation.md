@@ -16,3 +16,7 @@ en varias ocasiones intentará brindar una traducción adecuada en español.
   al traducirlas, pero si se siente incorrecto, se puede utilizar el otro
   género.
  -->
+
+<!-- TODO@style: arreglar como se ven las citas en el pdf -->
+<!-- TODO@style: que en vez de figure, diga figura -->
+<!-- TODO@style: links con alguna marca/color -->

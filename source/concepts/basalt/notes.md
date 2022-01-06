@@ -187,26 +187,22 @@
       }
       for (id: lm_to_remove) transforms.observations[1].erase(id); // Only from cam1
     }
-    trackPoints(pyr1, pyr2, kps1, kps2) {
-      KeypointId[] ids = kps1.ids;
-      Affine2d[] init_vec = kps1.pos;
+    trackPoints(pyr1, pyr2, kps1, &kps2) {
       tbb:map<KeypointId, Affine2d> result;
       for<tbb>(id1, aff1: kps1) {
         Affine aff2 = aff1;
-        bool valid = trackPoint(pyr1, pyr2, aff1, aff2);
-        if (valid) {
-          aff1_recovered = aff2
-          bool valid = trackPoint(pyr2, pyr1, aff2, &aff1_recovered)
-          if (valid) {
-            float dist2 = (aff1 - aff1_recovered).squaredNorm();
-            if(dist2 < optical_flow_max_recovered_dist2) result[id] = aff2;
-          }
-        }
+        bool valid = trackPoint(pyr1, pyr2, aff1, &aff2);
+        if (!valid) continue;
+        aff1_recovered = aff2
+        bool valid = trackPoint(pyr2, pyr1, aff2, &aff1_recovered)
+        if (!valid) continue;
+        float dist2 = (aff1 - aff1_recovered).squaredNorm();
+        if(dist2 < optical_flow_max_recovered_dist2) kps2[id] = aff2;
       }
     }
     trackPoint(pyr1, pyr2, aff1, out_aff2) {
       out_aff2.A().setIdentity();
-      for(level = 3; level >= && patch_valid; level--) {
+      for(level = 3 - 1; level >= && patch_valid; level--) {
         float scale = 2 ** level;
         out_aff2.b() /= scale;
         // TODO: Heavy stuff, computes interpolated intensity and x-y gradients for each point in pattern51
@@ -226,9 +222,9 @@
       for (iteration = 0; patch_valid && iteration < 5; iteration++) { // gauss newton
         VectorP res;
         Matrix2P transformed_pat = out_aff2 * p::pattern2;
-        patch_valid &= p.residual(img2, transformed_pat, res); // compares with the norm in the paper the mean intensity of current p compared to
+        patch_valid &= p.residual(img2, transformed_pat, &res); // compares with the norm in the paper the mean intensity of current p compared to
         if (patch_valid) {
-          inc = -dp.H_se2_inv_J_se2_T * res;
+          Vector3 inc = -p.H_se2_inv_J_se2_T * res;
           patch_valid &= inc.allNonNaN();
           patch_valid &= inc.lpNorm<infinity>() < 1e6; // avoid very large increments for some reason, infinity norm is just the max component
           if (patch_valid) {

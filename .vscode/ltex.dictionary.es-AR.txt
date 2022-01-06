@@ -28,3 +28,4 @@ offsets
 baselines
 mipmaps
 trilineal
+rasterizado

@@ -5,11 +5,16 @@
 <!-- TODO: Explicar factores no-lineales, o almenos decir que no se explican -->
 <!-- TODO: Que son features? -->
 <!-- TODO: Que es loop closing? -->
+<!-- TODO: Que es OpenCV -->
+<!-- TODO: Que son grafos de poses -->
 <!-- TODO: VIO habla acerca de componentes: (patch tracking, landmark
 representation, first-estimate Jacobians, marginalization
 scheme) que podría ser interesante discutir -->
 <!-- TODO: Citar bien la cita -->
 <!-- TODO: Mencionar que TUM lo desarrolla y las personas que lo mantienen -->
+<!-- TODO: Que es cuadrados minimos -->
+<!-- TODO: Que es gauss newton -->
+<!-- TODO: que son SE(2), etc: ver https://ethaneade.com/ -->
 
 # Basalt
 
@@ -123,53 +128,107 @@ _flujo óptico_). Cabe aclarar que optical flow es el nombre que recibe tanto el
 campo vectorial que representa el movimiento aparente de puntos entre dos
 imágenes, como el proceso de estimarlo. Este puede ser denso, si se considera el
 flujo de todos los píxeles, o no (_sparse_) si solo se computa el flujo de
-algunos keypoints.
+algunos keypoints como en el caso que veremos.
 
-El [módulo][`FrameToFrameOpticalFlow`] de optical flow corre en un thread
+El [módulo][`frametoframeopticalflow`] de optical flow corre en un thread
 individual y es por donde las muestras del par de cámaras estéreo ingresan al
 pipeline de Basalt. Inicialmente se genera una representación piramidal de las
 imágenes, o también llamada de _mipmaps_, esta es una forma tradicional
-[@williams_pyramidal_1983] de almacenar una imagen en memoria junto a versiones
+[@williamsPyramidalParametrics1983] de almacenar una imagen en memoria junto a versiones
 reescaladas de la misma (Fig. @fig:mipmap). Los mipmaps tienen múltiples utilidades en
 computación gráfica (e.g., _filtrado trilineal_, _LODs_, reducción de
 _patrones moiré_) pero en el caso de Basalt serán utilizados para darle robustez
 al algoritmo de seguimiento de features (_feature tracking_).
 
+[`frametoframeopticalflow`]: TODO
+
 ![Representación piramidal (mipmaps) de un cuadro del conjunto de datos
 EuRoC.](source/figures/mipmap.jpg "Mipmaps"){#fig:mipmap width=65%}
 
-[`FrameToFrameOpticalFlow`]: TODO
+Posteriormente se realiza la detección de features nuevas sobre las imágenes
+utilizando el algoritmo _FAST_ para detección de esquinas
+[@rostenFasterBetterMachine2010a] implementado sobre OpenCV. Aquí es notable
+aclarar que Basalt es uno de los sistemas que menos depende de OpenCV, ya que
+tiende a re implementar muchas de las técnicas y algoritmia de forma
+especializada y, como veremos en otros módulos, otras tareas razonablemente
+complejas como la optimización de grafos de poses se implementan también dentro
+del proyecto y sin recurrir a librerías externas. Esta es una de las varias
+razones por las que este sistema logra tan buen rendimiento, ya que las
+librerías externas suelen tener campos y comprobaciones dedicadas al caso
+general del problema que intenta solucionar, mientras que Basalt puede
+prescindir de todas las que no apliquen al problema de VIO. Siguiendo con la
+detección de features, una heurística particular de Basalt es la división del
+cuadro completo en celdas de tamaño configurable (por defecto 50 por 50 píxeles)
+en donde se detectan las nuevas features, por celda solo se conserva la feature
+de mejor calidad o con mejor _respuesta (response)_ (aunque la cantidad a
+conservar es también configurable), y siempre que la celda tenga alguna feature
+localizada de frames anteriores, no se intenta detectar nuevas. Esto contrasta
+con sistemas como Kimera-VIO que corren la detección FAST sobre el cuadro entero
+y evitan la redetección mediante el uso de _máscaras_ que le instruyen al
+algoritmo a obviar esas secciones. Desafortunadamente la construcción de tales
+máscaras suele ser costosa y la heurística de Basalt, a pesar de desperdiciar
+espacio por no permitir la detección de nuevas características entre celdas, es
+más eficiente ya que en situaciones comunes se logran detectar una cantidad
+razonable de features sin problemas. Esta detección de features nuevas se
+realiza unicamente sobre la primera cámara (usualmente la izquierda), mientras
+que en la otra cámara se reutiliza el método de seguimiento de keypoints que se
+describe a continuación.
 
-La versión de este módulo en la que nos enfocaremos, será la implementada en la
-clase  derivada de [`OpticalFlowBase`], las otras
-alternativas que derivan de `OpticalFlowBase` son esencialmente el mismo tipo de
-algoritmo con variaciones mínimas. Este módulo ejecuta en un thread individual
-el método [`processingLoop`] que se encarga de recibir el par de imágenes
-estéreo y procesarlas con [`processFrame`]. `processFrame` por su parte realiza
-tres o cuatro procedimientos fundamentales. Genera _representaciones
-piramidales_ para cada frame recibido, detecta nuevas features con
-[`addPoints`], filtra puntos de mala calidad con [`filterPoints`] y, salvo para
-el primer frame, intenta localizar (trackear) el desplazamiento de keypoints del cuadro
-anterior con [`trackPoints`]. Cabe aclarar que este último punto, el tracking de
-features entre dos imágenes, es al que usualmente se asocia el término optical
-flow o _feature tracking_.
+En cada instante de tiempo que entran un nuevo par de imágenes se tiene acceso a
+toda la información recolectada del instante anterior, en particular a sus
+keypoints. Una suposición razonable es que las imágenes correspondientes a este
+nuevo instante van a compartir mucho de los keypoints con las imágenes
+anteriores y en posiciones similares. En base a esa suposición Basalt logra
+ahorrarse tener que volver a detectar features de la imagen con FAST y en cambio
+el problema se transforma en, dado una imagen anterior (inicial), sus keypoints
+y una imagen nueva (objetivo), estimar donde ocurren esos mismos keypoints en la
+imagen nueva. Para esto, por cada keypoint anterior, se genera un parche
+$\Omega$ alrededor de su ubicación de, por defecto, 52 coordenadas de píxeles
+(i.e., un círculo rasterizado en un bloque de 8 por 8 píxeles). Considerando
+entonces que esta parche debería estar en la imagen nueva en coordenadas
+cercanas a las del keypoint anterior, queremos encontrar la transformación $T
+\in SE(2)$ que le ocurrió al parche, y por ende al nuevo keypoint que se
+encontraría en el centro de este nuevo parche. Basalt emplea entonces
+optimización por cuadrados mínimos mediante el algoritmo iterativo de
+Gauss-Newton para encontrar $T$ utilizando un residual $r$ con:
 
-Se intenta detectar en cada nuevo cuadro nuevos keypoints mediante el metodo
-[`addPoints`]. En este
+$$
+r_i =
+  \frac{I_{t + 1}(\mathbf{T} \mathbf{x}_i)}{\overline{I_{t + 1}}} -
+  \frac{I_{t}(\mathbf{x}_i)}{\overline{I_{t}}}
+  \ \ \ \ \forall \mathbf{x}_i \in \Omega
+$$
 
-La representación piramidal, también llamada de _mipmaps_, es una forma
-tradicional [@williams_pyramidal_1983] de almacenar una imagen en memoria junto a
-versiones re-escaladas de la misma.  y en el caso de Basalt, se utilizan para aplicar el tracker
-Lucas-Kanade piramidal presentado en [@pyramidal-lk-paper].
+con $I_t(\mathbf{x})$ la intensidad de la imagen anterior en el pixel ubicado en
+las coordenadas $\mathbf{x}$ (análogamente $I_{t + 1}(\mathbf{x})$ para la
+imagen objetivo); y $\overline{I_{t}}$ siendo la intensidad media del parche
+$\Omega$ en la imagen inicial (análogamente $\overline{I_{t + 1}}$ para la
+imagen objetivo y el parche transformado $\mathbf{T}\Omega$). Notar que al
+normalizar las intensidades obtenemos un valor que es invariante incluso ante
+cambios de iluminación.
 
-Para la detección de nuevas features,
+Los detalles del cálculo de gradientes y jacobianos están basados en el método
+de Lucas-Kanade para tracking de features (_KLT_)
+[@lucasIterativeImageRegistration1981]. El uso adicional de mipmaps sobre KLT
+fue originalmente expuesto en [@bouguetPyramidalImplementationLucas1999].
 
-<!-- TODO: Add grafico ejemplo de un mipmap, quizas el del mismo williams
-lawrence, o sino el de basalt -->
+Para asegurar que la estimación fue exitosa, se invierte el problema y se
+intenta trackear desde la imagen nueva hacia la inicial y, si el resultados está
+muy alejado de la posición inicial, el nuevo keypoint se considera inválido y se
+descarta. Otro detalle a aclarar es que, recordando que la detección de features
+con FAST solo ocurre en las imágenes de una de las cámaras, es posible ahora
+entender que las features en la segunda cámara son "detectadas" con este método,
+es decir, simplemente se considera la imagen de la segunda cámara en el mismo
+instante de tiempo como la imagen objetivo.
 
-La detección de nuevas features en [`addPoints`] es peculiar. Se detectan
-unicamente en el nivel
+Finalmente, el último de los pasos que ocurre cuando el módulo de óptical flow
+procesa un cuadro es el de filtrado de keypoints, en el cual se desproyecta los
+keypoints a posiciones en la escena tri-dimensional y en caso de que el error
+epipolar supere cierto umbral, estos keypoints serán descartados.
 
-[@pyramidal-lk-paper]: TODO
+<!-- TODO: Que es la desproyección -->
+<!-- TODO: Qué es el error epipolar -->
 
 #### Bundle Adjustment Visual-Inercial
+
+TODO
