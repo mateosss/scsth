@@ -24,6 +24,7 @@ en varias ocasiones intentará brindar una traducción adecuada en español.
 <!-- TODO@style: caratula, copyright cc-0, UNC, FaMAF -->
 
 <!-- TODO@end: todo lo que diga TODO@end hay que chequearlo al terminar el trabajo -->
+<!-- TODO@end: Revisar todos los conceptos introducidos con _negritas_ y ver si lo explico en la tesis -->
 <!-- TODO@end: chequear todo en busca de problemas de ortografía con LTeX -->
 <!-- TODO@end: chequear ortografía con google drive -->
 <!-- TODO@end: leer todas las citas generadas a ver si se colgó algun link de mas o alguna nota de zotero que no iba -->

@@ -1,17 +1,6 @@
 @book{TODO@style,
 _ = {TODO@style: Exportar las referencias en idioma español desde zotero, así cosas como las fechas tienen bien el lenguaje.}
 }
-@book{Cousteau1963,
-_ = {TODO@style: delete this entry Coustea1963 once I fix citation styles},
-abstract = {In The Living Sea Jacques Yves Cousteau describes the rich and exciting progress made in exploring life under water by the numerous scientific expeditions which he has been directing since, in his earlier book, The Silent World, he wrote this classic account of man's first experience on the continent below the sea.},
-address = {London},
-author = {{Cousteau Jacques} and {Dugan James}},
-pages = {1--212},
-publisher = {Hamish Hamilton},
-title = {{The Living Sea: by Jacques-Yves Cousteau}},
-type = {Book},
-year = {1963}
-}
 
 @article{rostenFasterBetterMachine2010a,
   title = {Faster and Better: A Machine Learning Approach to Corner Detection},
@@ -68,4 +57,25 @@ year = {1963}
   abstract = {1 Problem Statement Let I and J be two 2D grayscaled images. The two quantities I(x) = I(x, y) and J(x) = J(x, y) are then the grayscale value of the two images are the location x = [x y] , where x and y are the two pixel coordinates of a generic image point x. The image I will sometimes be referenced as the first image, and the image J as the second image. For practical issues, the images I and J are discret function (or arrays), and the upper left corner pixel coordinate vector is [0 0] . Let nx and ny be the width and height of the two images. Then the lower right pixel coordinate vector is [nx - 1 ny - 1] . Consider an image point u = [ux uy] on the first image I. The goal of feature tracking is to find the location v = u + d = [ux+dx uy +dy] on the second image J such as I(u) and J(v) are ``similar''. The vector d = [dx dy] is the image velocity at x, also known as the optical flow at x. Because of the aperture problem, it is essential to define the notion of similarity in a 2D neighborhood sense. Let {$\omega$}x and {$\omega$}y two integers. We define the image velocity d as being the vector that minimizes the residual function defined as follows:},
   langid = {english},
   file = {/home/mateo/Documents/apps/zotero-files/storage/XXAPLCNK/algo_affine_tracking.pdf;/home/mateo/Documents/apps/zotero-files/storage/J47UTQ2H/aa972b40c0f8e20b07e02d1fd320bc7ebadfdfc7.html}
+}
+
+@article{mur-artalVisualInertialMonocularSLAM2017,
+  title = {Visual-{{Inertial Monocular SLAM}} with {{Map Reuse}}},
+  author = {{Mur-Artal}, Raul and Tardos, Juan D.},
+  year = {2017},
+  month = apr,
+  journal = {IEEE Robotics and Automation Letters},
+  volume = {2},
+  number = {2},
+  eprint = {1610.05949},
+  eprinttype = {arxiv},
+  pages = {796--803},
+  issn = {2377-3766, 2377-3774},
+  doi = {10.1109/LRA.2017.2653359},
+  url = {http://arxiv.org/abs/1610.05949},
+  urldate = {2022-01-07},
+  abstract = {In recent years there have been excellent results in Visual-Inertial Odometry techniques, which aim to compute the incremental motion of the sensor with high accuracy and robustness. However these approaches lack the capability to close loops, and trajectory estimation accumulates drift even if the sensor is continually revisiting the same place. In this work we present a novel tightly-coupled Visual-Inertial Simultaneous Localization and Mapping system that is able to close loops and reuse its map to achieve zero-drift localization in already mapped areas. While our approach can be applied to any camera configuration, we address here the most general problem of a monocular camera, with its well-known scale ambiguity. We also propose a novel IMU initialization method, which computes the scale, the gravity direction, the velocity, and gyroscope and accelerometer biases, in a few seconds with high accuracy. We test our system in the 11 sequences of a recent micro-aerial vehicle public dataset achieving a typical scale factor error of 1\% and centimeter precision. We compare to the state-of-the-art in visual-inertial odometry in sequences with revisiting, proving the better accuracy of our method due to map reuse and no drift accumulation.},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Computer Vision and Pattern Recognition,Computer Science - Robotics},
+  file = {/home/mateo/Documents/apps/zotero-files/storage/N796TLNB/Mur-Artal and Tardos - 2017 - Visual-Inertial Monocular SLAM with Map Reuse.pdf;/home/mateo/Documents/apps/zotero-files/storage/IB9CE9UQ/1610.html}
 }

@@ -45,7 +45,7 @@ pdf:
 		--output "$(OUTPUTDIR)/thesis.pdf" \
 		--template="$(STYLEDIR)/template.tex" \
 		--include-in-header="$(STYLEDIR)/preamble.tex" \
-		--variable=fontsize:12pt \
+		--variable=fontsize:11pt \
 		--variable=papersize:a4paper \
 		--variable=documentclass:report \
 		--pdf-engine=xelatex \
@@ -65,7 +65,7 @@ tex:
 		--output "$(OUTPUTDIR)/thesis.tex" \
 		--template="$(STYLEDIR)/template.tex" \
 		--include-in-header="$(STYLEDIR)/preamble.tex" \
-		--variable=fontsize:12pt \
+		--variable=fontsize:11pt \
 		--variable=papersize:a4paper \
 		--variable=documentclass:report \
 		--pdf-engine=xelatex \
