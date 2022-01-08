@@ -1,5 +1,7 @@
 ### Scractchpad
 
+<!-- TODO: Review if all items and their keywords were addressed in the writeup -->
+
 - [ ] concept: nonlinear regression, gauss-newton algorithm
 - [ ] VIO:
   - [ ] KLT Tracking: FAST, KLT, _inverse-compositional approach_, patch
