@@ -29,3 +29,11 @@ baselines
 mipmaps
 trilineal
 rasterizado
+frameworks
+Godot
+OpenXR
+Khronos
+Group
+Vulkan
+OpenCL
+SYCL

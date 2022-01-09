@@ -29,3 +29,6 @@ en varias ocasiones intentará brindar una traducción adecuada en español.
 <!-- TODO@end: chequear ortografía con google drive -->
 <!-- TODO@end: leer todas las citas generadas a ver si se colgó algun link de mas o alguna nota de zotero que no iba -->
 <!-- TODO@end: ver que todos los títulos y subtítulos respeten tener solo mayúscula la primera letra (o nombres propios) -->
+<!-- TODO@end: revisar pandoc.pdf.log para ver que errores tengo (va no se, viendolo bien hay banda de falsos positivos) -->
+<!-- TODO@end: revisar que todas las imagenes aparezcan -->
+<!-- TODO@end: revisar 80 columnas lo mas que se pueda -->
