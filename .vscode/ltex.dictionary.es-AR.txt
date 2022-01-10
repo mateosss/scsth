@@ -37,3 +37,5 @@ Group
 Vulkan
 OpenCL
 SYCL
+Monado
+runtime

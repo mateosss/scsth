@@ -86,7 +86,7 @@ Notación:
   - [TODO] Otras contribuciones
     - [TODO] Reproductor y grabador de datasets en formato EuRoC
     - [WAIT] Modelo de cámara radtan8 en Basalt (project/unproject and
-          jacobians, jacobi solver, OpenCV) (habría que hacer avanzar el MR)
+          jacobians, jacobi solver, OpenCV, newton solver) (habría que hacer avanzar el MR)
     - [WAIT] Offset para cámaras con bajo solapamiento en Basalt (para WMR) (MR no hecho
       todaví)
     - [MAYBENOT] Controlador Qwerty
