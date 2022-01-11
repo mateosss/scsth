@@ -64,7 +64,8 @@ Notación:
     - [ ] Modelo de Cámara Double Sphere
   - [TOREAD] ORB-SLAM3
 - [TODO] Contribuciones (intro: explicar que es monado/openxr/khronos/collabora)
-  - [TODO] SLAM tracker para Monado
+  - [DRAFT] Contexto
+  - [DRAFT] Tracking por SLAM para Monado
     - [TODO] Interfaz externa (slam_tracker.hpp: what it does, how it works, cv::Mat, dynamic features)
     - [TODO] Implementaciones de la interfaz (Forks: Basalt, ORB-SLAM3, Kimera,
           mencionar peculiaridades como el fork de monado para orbslam3, el no uso
