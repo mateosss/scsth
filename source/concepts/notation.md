@@ -9,6 +9,11 @@ en varias ocasiones intentará brindar una traducción adecuada en español.
 
 <!-- TODO@style: Cómo se va a referenciar código? notar que tienen que poder imprimirse, una idea es usar pies de páginas y/o url shorteners, otra sería referenciar a un apéndice de la tesis de alguna forma-->
 
+<!-- TODO@fig: Por alguna razón la lista de figuras para las figuras del template
+"It's a boat" listaba la página en al que salía, pero para mis figuras no lo está
+haciendo. Revisar si después de reubicar todos los capítulos eso se arregla o no
+-->
+
 <!-- TODO@style: solidificar estos items?
 - También se puede utilizar negrita para dar énfasis en general
 - Luego de introducirlas, las palabras en inglés se consideran palabras comunes

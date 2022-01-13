@@ -28,7 +28,7 @@ Notación:
 - [TODO] Introducción
   - [TODO] Contexto/motivación (mencionar algo de las comunidades con las que trabajé,
         mencionar que CV es muy trial and error, oversights pueden costar horas)
-  - [WHAT] Trabajos relacionados? @thaytan CV1
+  - [WHAT] Trabajos relacionados? @thaytan CV1, ILLIXR
   - [TODO] Estructura de la tesis
 - [TODO] Preliminares y fundamentos teóricos
   - [TODO] IMU: modelos y calibración
