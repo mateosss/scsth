@@ -39,3 +39,4 @@ haciendo. Revisar si después de reubicar todos los capítulos eso se arregla o 
 <!-- TODO@end: revisar 80 columnas lo mas que se pueda -->
 <!-- TODO@end: fijarse que las figuras estén en español -->
 <!-- TODO@end: las referencias a "la Figura @fig:something" tienen que escribir Figura con mayúscula-->
+<!-- TODO@end: review placement of figures and of \FloatBarrier -->

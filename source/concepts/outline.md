@@ -100,6 +100,7 @@ Notación:
   quizás podría replicar resultados online como los de HybVIO en EuRoC. Podría
   testear mis algoritmos de predicción y filtrado haciendo que algunos frames
   (1/4) en EuRoC se skipeen y comparandolos con la version no skipeada?. RMS
-  ATE, RTE, ATO, RTO, etc. (hablarlo mejor con nico)
+  ATE, RTE, ATO, RTO, etc. (hablarlo mejor con nico). Aparte de eso hay
+  resultados de performance, tiempo de demora hasta obtener la estimacion
 - [TODO] Conclusion
 - [AUTO] Referencias
