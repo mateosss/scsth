@@ -66,8 +66,8 @@ Notación:
 - [TODO] Contribuciones (intro: explicar que es monado/openxr/khronos/collabora)
   - [DRAFT] Contexto
   - [DRAFT] Tracking por SLAM para Monado
-    - [TODO] Interfaz externa (slam_tracker.hpp: what it does, how it works, cv::Mat, dynamic features)
-    - [TODO] Implementaciones de la interfaz (Forks: Basalt, ORB-SLAM3, Kimera,
+    - [DRAFT] Interfaz externa (slam_tracker.hpp: what it does, how it works, cv::Mat, dynamic features)
+    - [DRAFT] Implementaciones de la interfaz (Forks: Basalt, ORB-SLAM3, Kimera,
           mencionar peculiaridades como el fork de monado para orbslam3, el no uso
           de mapeo global en Basalt, los problemas de Kimera, etc)
     - [TODO] Clase adaptadora (t_tracker_slam: pose correction, debug utilities, euroc recorder, etc)
