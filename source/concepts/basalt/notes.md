@@ -5,9 +5,11 @@
 - [ ] concept: nonlinear regression, gauss-newton algorithm
 - [ ] VIO:
   - [ ] KLT Tracking: FAST, KLT, _inverse-compositional approach_, patch
-        dissimilarity norm, _ZNCC_, LSSD, estimate T in _SE(2)_, _outiler filtering
-        peculiarity_
-  - [ ] VI BA: _IMU preintegration_, KLT tracking error, T*WI in \_SE(3)*,
+        dissimilarity norm, _ZNCC_, LSSD, estimate T in _SE(2)_,
+        _outlier filtering peculiarity_
+        - inverse-compositional approach: https://homepages.inf.ed.ac.uk/rbf/CVonline/LOCAL_COPIES/AV0910/zhao.pdf
+        - ZNCC: https://martin-thoma.com/zero-mean-normalized-cross-correlation/
+  - [ ] VI BA: _IMU preintegration_, KLT tracking error, _T\_WI in \_SE(3)_,
         static projection function from calibration, landmarks in keyframes
     - [ ] Repr. of Unit Vectors in 3D: bearing vector, efficiency, graph
     - [ ] Reprojection Error: residual, _numerical stability_
@@ -15,11 +17,11 @@
           state, f(s, a, w), _g(ba, bg)_, _jacobian update_, _linearization point_,
           _residuals_, _gravity in residuals_, _covariance matrix for weight of
           residuals_, _[8]_
-  - [ ] Optimization and Partial Marginalization: _Nonlinear energy function_,
-        _E_m_, what happens when a new frame/keyframe is added, _Markov blanket_,
-        _vector space of xi_, _schur complement_, _energy term_, _first estimate
-        jacobians_, _nullspace properties of the linearlized marginalization prior_,
-        _fixed linearization point_.
+    - [ ] Optimization and Partial Marginalization: _Nonlinear energy function_,
+          _E_m_, what happens when a new frame/keyframe is added, _Markov blanket_,
+          _vector space of xi_, _schur complement_, _energy term_, _first estimate
+          jacobians_, _nullspace properties of the linearlized marginalization prior_,
+          _fixed linearization point_.
 - [ ] VI Mapping: _implicit loop closure with keypoint matching_, two layer
       VIO/BA, non-linear factors
   - [ ] Global Map Optimization: ORB, reprojection error, E*nfr, state s,
@@ -114,7 +116,7 @@
 
   ```
 
-- optical_flow.cpp
+- optical_flow.cpp:OpticalFlowFactory::getOpticalFlow
 
   ```c++
   // PatchOpticalFlow vs FrameToFrameOpticalFlow vs MultiscaleFrameToFrameOpticalFlow
@@ -254,3 +256,148 @@
   http://www.inf.fu-berlin.de/inst/ag-ki/rojas_home/documents/tutorials/Lucas-Kanade2.pdf
 - Sophus: SE, SO, exp, expmat, hat, vee
 - Explicar el cv::FAST corner detector
+
+---------------------
+
+```cpp
+vio_estimator.cpp:VioEstimatorFactory::getVioEstimator();
+new SqrtKeypointVioEstimator<float>(g, cam, config) : VioEstimatorBase, SqrtBundleAdjustmentBase: BundleAdjustmentBase {
+
+public: // VioEstimatorBase
+  atomic<int64_t> last_processed_t_ns;
+  atomic<bool> finished;
+  // Input
+  tbb::queue<OpticalFlow::Output> *vision_data_queue;
+  tbb::queue<ImuData<double>> *imu_data_queue;
+  // Output
+  tbb::queue<PoseVelBiasState<double>> *out_state_queue;
+  tbb::queue<MargData> *out_marg_queue;
+  tbb::queue<VioVisualizationData> *out_vis_queue;
+private: // BundleAdjustmentBase (and SqrtBundleAdjustmentBase)
+  map<TS, PoseStateWithLine> frame_poses;
+  map<TS, PoseVelBiasStateWithLin> frame_states;
+  LadmarkDatabase<float> lmdb;
+  float obs_std_dev = vioconfig;
+  float huber_thresh = vioconfig;
+  Calibration calib;
+private:
+  bool take_kf = true;
+  int frames_after_kf = 0;
+  set<int64_t> kf_ids;
+
+  TS last_state_t_ns;
+  map<TS, IntegratedImuMeasurement> imu_meas;
+  Vec3 g;
+
+  //Input
+  map<int64_t, OpticalFlow::Output> prev_opt_flow_res;
+  map<int64_t, int> num_points_kf;
+
+  MargLinData<float>{
+    bool is_sqrt = true;
+    AbsOrderMap {
+      map<TS, {int, int}> abs_order_map;
+      size_t items = 0;
+      size_t total_size = 0;
+    } order;
+    MatXX H = [10000 for position and yaw, 3.16 for ba, 10 for bg, else 0];
+    MatX1 b = 0;
+  } marg_data;
+  MargLinData<float> nullspace_marg_data; // for debugging; marg version without prior(?)
+
+  Vec3 gyro_bias_sqrt_weight = 1 / calib.gyro_bias_std;
+  Vec3 accel_bias_sqrt_weight = 1 / calib.accel_bias_std;
+  size_t max_states = vioconfig(3);
+  size_t max_kfs = vioconfig(7);
+
+  SE3 T_w_i_init;
+
+  bool initialized = false;
+  bool opt_started = false;
+
+  VioConfig config;
+
+  constexpr float vee_faactor = 2;
+  constexpr float initial_vee = 2;
+  float lambda=vioconfig, min_lambda=vioconfig, max_lambda=vioconfig, lambda_vee = 2;
+
+  thread processing_thread;
+
+  ExecutionStats stats_all_
+  ExecutionStats stats_sums_;
+
+  SqrtKeypointVioEstimator(Vec3 g, Calibration calib, VioConfig config) {
+    // set defaults values for fields;
+  }
+
+  initialize(ba = bg={0,0,0}) {
+    processing_thread.run(ba, bg);
+  }
+
+  thread processing_thread(ba, bg) {
+    OpticalFlow::Output prev_frame;
+
+    IntegratedImuMeasurement<float>::Ptr meas;
+
+    const Vec3 accel_cov = calib.accel_noise_std ** 2; // Note: they
+    const Vec3 gyro_cov = calib.gyro_noise_std ** 2;
+
+    ImuData data = imu_data_queue.pop();
+    data.accel = calibrate(data.accel);
+    data.gyro = calibrate(data.gyro);
+
+    while (true) {
+      OpticalFlow::Output curr_frame = vision_data_queue.pop();
+      if (curr_frame == nullptr) break;
+
+      if (!initialized) { // Initialize
+        while(data.t_ns < curr_frame.t_ns) data = imu_data_queue.pop();
+        Vec3 vel_w_i_init = ZERO;
+        T_w_i_init.quaternion = FromTwoVectors(data.accel, +Z);
+        T_w_i_init.position = ZERO;
+
+        int64_t t = curr_frame.t_ns;
+        imu_meas[t] = IntegratedImuMeasurement(t, bg, ba);
+        frame_states[t] = PoseVelBiasStateWithLin(t, T_w_i_init, vel_w_i_init, bg, ba, true);
+        marg_data.order.abs_order_map[t] = {0, POSE_VEL_BIAS_SIZE}
+        marg_data.order.items = 1;
+        marg_data.order.total_size = POSE_VEL_BIAS_SIZE;
+        last_state_t_ns = t;
+
+        initialized = true;
+      }
+
+      if (prev_frame) { // Preintegrate measurements
+
+        // Start preintegration from prev_frame and its bias state
+        PoseVelBiasStateWithLin last_state = frame_states.at(last_state_t_ns);
+        meas = new IntegratedImuMeasurement(prev_frame.t_ns, last_state.getState().bias);
+
+        // Discard old IMU samples
+        while (data.t_ns <= prev_frame.t_ns>) data = imu_data_queue.pop();
+        data = calibrated(data);
+
+        // Interframe integration
+        while (data.t_ns <= curr_frame.t_ns) {
+          meas.integrate(*data, accel_cov, gyro_cov);
+          data = imu_data_queue.pop().calibrated();
+          if (!data) break;
+        }
+
+        // Create fake last measurement
+        if (meas.get_start_t_ns() + meas.get_dt_ns() < curr_frame.t_.ns) {
+          if (!data) break;
+          fake_data = data; fake_data.t_ns=curr_frame.t_ns;
+          meas->integrate(fake_data); // TODO
+        }
+      }
+
+      measure(curr_frame, meas); // TODO
+      prev_frame = curr_frame;
+    }
+
+    finished = true;
+  }
+};
+
+```
