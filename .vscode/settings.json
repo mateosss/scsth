@@ -1,4 +1,5 @@
 {
   "rewrap.autoWrap.enabled": true,
+  "ltex.language": "es-AR",
   "ltex.additionalRules.motherTongue": "es-AR"
 }

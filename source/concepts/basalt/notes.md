@@ -4,7 +4,7 @@
 
 - [ ] concept: nonlinear regression, gauss-newton algorithm
 - [ ] VIO:
-  - [ ] KLT Tracking: FAST, KLT, _inverse-compositional approach_, patch
+  - [x] KLT Tracking: FAST, KLT, _inverse-compositional approach_, patch
         dissimilarity norm, _ZNCC_, LSSD, estimate T in _SE(2)_,
         _outlier filtering peculiarity_
         - inverse-compositional approach: https://homepages.inf.ed.ac.uk/rbf/CVonline/LOCAL_COPIES/AV0910/zhao.pdf
@@ -290,7 +290,7 @@ private:
   Vec3 g;
 
   //Input
-  map<int64_t, OpticalFlow::Output> prev_opt_flow_res;
+  map<int64_t, OpticalFlow::Output> prev_opt_flow_res; // Frame window
   map<int64_t, int> num_points_kf;
 
   MargLinData<float>{
@@ -339,19 +339,16 @@ private:
 
     IntegratedImuMeasurement<float>::Ptr meas;
 
-    const Vec3 accel_cov = calib.accel_noise_std ** 2; // Note: they
+    const Vec3 accel_cov = calib.accel_noise_std ** 2; // Note: they are constant
     const Vec3 gyro_cov = calib.gyro_noise_std ** 2;
 
-    ImuData data = imu_data_queue.pop();
-    data.accel = calibrate(data.accel);
-    data.gyro = calibrate(data.gyro);
+    ImuData data = imu_data_queue.pop().calibrated();
 
     while (true) {
-      OpticalFlow::Output curr_frame = vision_data_queue.pop();
-      if (curr_frame == nullptr) break;
+      OpticalFlow::Output curr_frame = vision_data_queue.pop() or break;
 
       if (!initialized) { // Initialize
-        while(data.t_ns < curr_frame.t_ns) data = imu_data_queue.pop();
+        while(data.t_ns < curr_frame.t_ns) data = imu_data_queue.pop().calibrated();
         Vec3 vel_w_i_init = ZERO;
         T_w_i_init.quaternion = FromTwoVectors(data.accel, +Z);
         T_w_i_init.position = ZERO;
@@ -388,16 +385,144 @@ private:
         if (meas.get_start_t_ns() + meas.get_dt_ns() < curr_frame.t_.ns) {
           if (!data) break;
           fake_data = data; fake_data.t_ns=curr_frame.t_ns;
-          meas->integrate(fake_data); // TODO
+          meas->integrate(fake_data, accel_cov, gyro_cov); // XXX
         }
       }
 
-      measure(curr_frame, meas); // TODO
+      measure(curr_frame, meas); // XXX
       prev_frame = curr_frame;
     }
 
     finished = true;
   }
+
+  measure(OpticalFlow::Output curr_frame, IntegratedImuMeasurement meas) {
+    Timer t_total;
+
+    // Predict new state from last_state and preintegrated meas
+    PoseVelBiasState last_state = frame_states[last_state_t_ns].getState();
+    PoseVelBiasState next_state = last_state; // Reuses bias from last_state
+    meas->predictState(last_state, g, next_state);
+    TS t = last_state_t_ns = next_state.t_ns = curr_frame.t_ns;
+    frame_states[t] = PoseVelBiasStateWithLin(next_state); // XXX
+    imu_meas[last_state.t_ns] = meas;
+
+    // save results
+    prev_opt_flow_res[t] = curr_frame;
+
+    // Make new residual for existing keypoints
+
+    // Update existing landmarks in landmark database with new observations for those kps
+    int connected0 = 0;
+    map<TS, int> num_points_connected; // Used in marg. Amount of observations a kf has connected to itself for already-existing landmarks
+    set<int> unconnected_obs0; // Observations of kps that are not in the lmdb
+    for (int i = 0; i < NUM_CAMS; i++) {
+      TimeCamId camframe = {t, i}; // frame t of camera i
+      for ([kpid, kppos] in curr_frame.observations[i]) {
+        if (!lmdb.landmarkExists(kpid)) if (i == 0) unconnected_obs0.emplace(kpid);
+        else {
+          TimeCamId kp_hostkf = lmdb.getLandmark(kpid).host_kf_id; // kps are "hosted" in a keyframe
+
+          KeypointObservation kobs = {kpid, kppos.translation()};
+          lmdb.addObservation(camframe, kobs);
+
+          num_points_connected[kp_hostkf.frame_id]++;
+          if (i == 0) connected0++;
+        }
+      }
+    }
+
+    // Decide if and take a keyframe
+    bool few_connected_lms = connected0 / (connected0 + unconnected_obs0) < vioconfig(0.7); // less than 70% connected
+    bool nonkf_limit = frames_after_kf > vioconfig(5);
+    take_kf = few_connected_lms and nonkf_limit;
+    if (take_kf) { // keyframing: triangulate new landmarks from stereo pair. Register left cam kf
+      take_kf = false;
+      frames_after_kf = 0;
+      kf_ids.emplace(t);
+
+      TimeCamId tcidl = {t, 0}; // Left camera current frame
+      int num_points_added = 0;
+      for (int lm_id : unconnected_obs0) {
+        // Observations of lm_id in prev_opt_flow_res
+        map<TimeCamId, KeypointObservation> kp_obs;
+        for (stereoframe in prev_opt_flow_res)
+          for (frame in stereoframe)
+            if (frame.observations.has(lm_id) as {kpipd, kppos})
+              kp_obs[{frame.ts, frame.cam}]: {lm_id, kppos}
+
+        // Triangulate
+        for ({fts, fcam, kppos} : kp_obs) {
+          TimeCamId tcido = {fts, fcam}; // Keypoint observation camera-frame
+          Vec2 p0 = curr_frame.observations[0][lm_id].translation();
+          Vec2 p1 = prev_opt_flow_res[fts].observations[fcam][lm_id].translation();
+
+          Vec4 p0_3d = calib.intrinsics[0].unproject(p0);
+          Vec4 p1_3d = calib.intrinsics[fcam].unproject(p1);
+          if (any unprojection fails) continue;
+
+          SE3 T_i0_i1 = frame_poses[t].inverse() * frame_poses[fts]; // Transform current imu0 to observer imu1
+          SE3 T_0_1 = calib.T_i_c[0].inverse() * T_i0_i1 * calib.T_i_c[fcam]; // From left cam to imu0, from imu0 to imu1, from imu1 to observer cam. i.e., From left cam to observer cam.
+          // T_0_1: Moves a point in left cam-frame to a point in observer cam-frame
+          // Or equivalently, changes coordinates of p1 to be in left cam-frame (should be p0)
+
+          if (T_0_1.translation().norm < vioconfig(0.05)) continue;
+
+          Vec4 p0_triangulated = triangulate(p0_3d, p1_3d, T_0_1); // TODO: JacobiSVD. I'm pretty sure this is DLT. TODO: learn and explain it. See pag91, algorithm4.1 of Multiple view geometry... book. Appendix 4 of that book is GOLD. in there there is an explanation of SVD in page 585
+
+          if (p0_triangulated is good) { // Register landmark
+            Keypoint kpt_pos = {
+              host_kf_id = tcidl,
+              direction=StereographicParam::project(p0_triangulated),
+              inv_dist=p0_triangulated[3]
+            }; // TODO: See more on Stereographic project
+            lmdb.addLandmark(lm_id, kpt_pos);
+            num_points_added++;
+            for (every obs in kp_obs) lmdb.addObservation(obs);
+            break;
+          }
+        }
+      }
+      num_points_kf[t] = num_points_added;
+    } else {
+      frames_after_kf++;
+    }
+
+    // ONLY-ON-SQRT: Get landmarks from lmdb that are not in curr_frame
+    set<KeypointId> lost_landmarks;
+    if (vioconfig(vio_marg_lost_landmarks, true)) {
+      lost_landmarks = {kpids in lmdb that do not appear in curr_frame left nor right}
+    }
+
+    optimize_and_marg(num_points_connected, lost_landmarks); // TODO
+
+    out_state_queue.push(frame_states[t]);
+    out_vis_queue.push(built_data_for_visualizer_from_frame_states_t);
+  }
 };
 
+```
+
+```C++
+class IntegratedImuMeasurement {
+  static void propagateState(PoseVelState curr_state, ImuData data, PoseVelState &out_next_state, &jacobians = nullptr);
+  void integrate(ImuData data, Vec3 accel_gyro_cov) {propagateState(delta_state_, data_corrected, delta_state_)};
+  void predictState(PoseVelState state0, Vec3 g, PoseVelState& out_state1);
+  Vec9 residual(state0, g, state1, curr_bg_ba, /, out_jacobians=nullptr);
+};
+
+class PoseVelStateWithLin {};
+
+class Keypoint {
+  Vec2 direction; // bearing vector towards point
+  float inv_dist; // invers distance towards there. 0 means infinitely far I think.
+
+  TimeCamId host_kf_id; // What is the keyframe hosting this kp
+  map<TimeCamId, Vec2> obs; // In which frames this kp has been observed, and what coordinates
+};
+
+class KeypointObservation {
+  int kpt_id;
+  Vec2 pos;
+};
 ```

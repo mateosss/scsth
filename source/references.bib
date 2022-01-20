@@ -92,3 +92,43 @@ _ = {TODO@style: Exportar las referencias en idioma español desde zotero, así 
   langid = {english},
   file = {/home/mateo/Documents/apps/zotero-files/storage/YSN42FIM/Large-Scale C++ Software Design by John Lakos (z-lib.org).djvu}
 }
+
+@article{schubertBasaltTUMVI2018,
+  title = {{{The TUM VI Benchmark}} for {{Evaluating Visual-Inertial Odometry}}},
+  author = {Schubert, David and Goll, Thore and Demmel, Nikolaus and Usenko, Vladyslav and St{\"u}ckler, J{\"o}rg and Cremers, Daniel},
+  year = {2018},
+  month = oct,
+  journal = {2018 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)},
+  eprint = {1804.06120},
+  eprinttype = {arxiv},
+  pages = {1680--1687},
+  doi = {10.1109/IROS.2018.8593419},
+  url = {http://arxiv.org/abs/1804.06120},
+  urldate = {2021-11-05},
+  abstract = {Visual odometry and SLAM methods have a large variety of applications in domains such as augmented reality or robotics. Complementing vision sensors with inertial measurements tremendously improves tracking accuracy and robustness, and thus has spawned large interest in the development of visual-inertial (VI) odometry approaches. In this paper, we propose the TUM VI benchmark, a novel dataset with a diverse set of sequences in different scenes for evaluating VI odometry. It provides camera images with 1024x1024 resolution at 20 Hz, high dynamic range and photometric calibration. An IMU measures accelerations and angular velocities on 3 axes at 200 Hz, while the cameras and IMU sensors are timesynchronized in hardware. For trajectory evaluation, we also provide accurate pose ground truth from a motion capture system at high frequency (120 Hz) at the start and end of the sequences which we accurately aligned with the camera and IMU measurements. The full dataset with raw and calibrated data is publicly available. We also evaluate state-of-the-art VI odometry approaches on our dataset.},
+  archiveprefix = {arXiv},
+  langid = {english},
+  keywords = {Computer Science - Computer Vision and Pattern Recognition,Computer Science - Robotics},
+  file = {/home/mateo/Documents/apps/zotero-files/storage/JFCDABFV/Schubert et al. - 2018 - The TUM VI Benchmark for Evaluating Visual-Inertia.pdf}
+}
+
+@article{forsterOnManifoldPreintegrationRealTime2017,
+  title = {On-{{Manifold Preintegration}} for {{Real-Time Visual-Inertial Odometry}}},
+  author = {Forster, Christian and Carlone, Luca and Dellaert, Frank and Scaramuzza, Davide},
+  year = {2017},
+  month = feb,
+  journal = {IEEE Transactions on Robotics},
+  volume = {33},
+  number = {1},
+  eprint = {1512.02363},
+  eprinttype = {arxiv},
+  pages = {1--21},
+  issn = {1552-3098, 1941-0468},
+  doi = {10.1109/TRO.2016.2597321},
+  url = {http://arxiv.org/abs/1512.02363},
+  urldate = {2021-07-08},
+  abstract = {Current approaches for visual-inertial odometry (VIO) are able to attain highly accurate state estimation via nonlinear optimization. However, real-time optimization quickly becomes infeasible as the trajectory grows over time, this problem is further emphasized by the fact that inertial measurements come at high rate, hence leading to fast growth of the number of variables in the optimization. In this paper, we address this issue by preintegrating inertial measurements between selected keyframes into single relative motion constraints. Our first contribution is a \textbackslash emph\{preintegration theory\} that properly addresses the manifold structure of the rotation group. We formally discuss the generative measurement model as well as the nature of the rotation noise and derive the expression for the \textbackslash emph\{maximum a posteriori\} state estimator. Our theoretical development enables the computation of all necessary Jacobians for the optimization and a-posteriori bias correction in analytic form. The second contribution is to show that the preintegrated IMU model can be seamlessly integrated into a visual-inertial pipeline under the unifying framework of factor graphs. This enables the application of incremental-smoothing algorithms and the use of a \textbackslash emph\{structureless\} model for visual measurements, which avoids optimizing over the 3D points, further accelerating the computation. We perform an extensive evaluation of our monocular \textbackslash VIO pipeline on real and simulated datasets. The results confirm that our modelling effort leads to accurate state estimation in real-time, outperforming state-of-the-art approaches.},
+  archiveprefix = {arXiv},
+  keywords = {Computer Science - Robotics},
+  file = {/home/mateo/Documents/apps/zotero-files/storage/NXS6QMX6/Forster et al. - 2017 - On-Manifold Preintegration for Real-Time Visual-In.pdf;/home/mateo/Documents/apps/zotero-files/storage/VCDQMUBZ/1512.html}
+}

@@ -6,6 +6,7 @@ Notación:
 
 - [TODO]: Puede empezar a hacerse
 - [WAIT]: Habría que avanzar sobre los TODOs antes de hacerlo
+- [WONTDO]: No se va a hacer
 - [AUTO]: Se autogenera
 - [WHAT]: Creo que haría falta pero no tengo idea como escribir esta sección
 - [UNCERTAIN]: Todavía no estoy seguro si esta sección aplicaría al escrito
@@ -59,10 +60,10 @@ Notación:
         licencias (GPL), soluciones privativas, comunidades, actividad (graficos de
         actividad/estrellas/etc?), por que se eligieron los sistemas que se
         eligieron)
-  - [TOREAD] Kimera
+  - [WONTDO] Kimera
   - [TOREAD|DOING] Basalt
     - [ ] Modelo de Cámara Double Sphere
-  - [TOREAD] ORB-SLAM3
+  - [WONTDO] ORB-SLAM3
 - [TODO] Contribuciones (intro: explicar que es monado/openxr/khronos/collabora)
   - [DRAFT] Contexto
   - [DRAFT] Tracking por SLAM para Monado
@@ -70,7 +71,7 @@ Notación:
     - [DRAFT] Implementaciones de la interfaz (Forks: Basalt, ORB-SLAM3, Kimera,
           mencionar peculiaridades como el fork de monado para orbslam3, el no uso
           de mapeo global en Basalt, los problemas de Kimera, etc)
-    - [TODO] Clase adaptadora (t_tracker_slam: pose correction, debug utilities, euroc recorder, etc)
+    - [DRAFT] Clase adaptadora (t_tracker_slam: pose correction, debug utilities, euroc recorder, etc)
     - [TODO] Predicción (explicar los distintos niveles)
     - [TODO] Filtrado (explicar los distintos tipos, mencionar kalman?)
   - [TODO] Controladores en Monado

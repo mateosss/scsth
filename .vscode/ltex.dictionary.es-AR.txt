@@ -19,6 +19,7 @@ microelectromecánicos
 MEMS
 Basalt
 Kalibr
+keyframe
 keyframes
 bundle
 adjustment
@@ -50,3 +51,9 @@ OpenCV
 feature
 features
 trackers
+keypoint
+keypoints
+landmark
+landmarks
+optical
+flow

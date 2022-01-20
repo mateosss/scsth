@@ -19,7 +19,7 @@ sensores, acelerómetro y giroscopio, proveen una muestra por cada uno de los
 tres ejes exponiendo un sistema con seis grados de libertad. Suelen funcionar a
 altas frecuencias (p. ej. $200hz$) en comparación a las cámaras comúnmente
 utilizadas para SLAM (p. ej. $20hz$). El funcionamiento y diseño específico de
-estos sensores [@inertial-nav-intro-section3] [@mems-imu] escapa al alcance de
+estos sensores [@inertial-nav-intro-section3;@mems-imu] escapa al alcance de
 este trabajo, pero es suficiente con aclarar que para este trabajo, tratamos con
 sistemas microelectromecánicos (_MEMS_) de tamaño reducido y de bajo costo.
 
