@@ -423,7 +423,7 @@ private:
         else {
           TimeCamId kp_hostkf = lmdb.getLandmark(kpid).host_kf_id; // kps are "hosted" in a keyframe
 
-          KeypointObservation kobs = {kpid, kppos.translation()};
+          Keypoint kobs = {kpid, kppos.translation()};
           lmdb.addObservation(camframe, kobs);
 
           num_points_connected[kp_hostkf.frame_id]++;
@@ -445,7 +445,7 @@ private:
       int num_points_added = 0;
       for (int lm_id : unconnected_obs0) {
         // Observations of lm_id in prev_opt_flow_res
-        map<TimeCamId, KeypointObservation> kp_obs;
+        map<TimeCamId, Keypoint> kp_obs;
         for (stereoframe in prev_opt_flow_res)
           for (frame in stereoframe)
             if (frame.observations.has(lm_id) as {kpipd, kppos})
@@ -471,7 +471,7 @@ private:
           Vec4 p0_triangulated = triangulate(p0_3d, p1_3d, T_0_1); // TODO: JacobiSVD. I'm pretty sure this is DLT. TODO: learn and explain it. See pag91, algorithm4.1 of Multiple view geometry... book. Appendix 4 of that book is GOLD. in there there is an explanation of SVD in page 585
 
           if (p0_triangulated is good) { // Register landmark
-            Keypoint kpt_pos = {
+            Landmark kpt_pos = {
               host_kf_id = tcidl,
               direction=StereographicParam::project(p0_triangulated),
               inv_dist=p0_triangulated[3]
@@ -513,7 +513,7 @@ class IntegratedImuMeasurement {
 
 class PoseVelStateWithLin {};
 
-class Keypoint {
+class Landmark {
   Vec2 direction; // bearing vector towards point
   float inv_dist; // invers distance towards there. 0 means infinitely far I think.
 
@@ -521,8 +521,188 @@ class Keypoint {
   map<TimeCamId, Vec2> obs; // In which frames this kp has been observed, and what coordinates
 };
 
-class KeypointObservation {
+class Keypoint {
   int kpt_id;
   Vec2 pos;
 };
+```
+
+```cpp
+optimize() {
+  if (frame_states.size() <= 4) return; // initial frame_states are computed with pims
+
+  AbsOrderMap aom;
+  for ({t, pose} in frame_poses) { // frame_poses (s_k) is empty before marginalize. Is for keyframes.
+    aom.abs_ordder_map[t] = {aom.total_size, POSE_SIZE};
+    aom.total_size += POSE_SIZE;
+    aom.items++;
+  }
+  for ({t, state} in frame_states) { // frame_states (s_f) is for all frames
+    aom.abs_order_map[t] = {aom.total_size, POSE_VEL_BIAS_SIZE};
+    aom.total_size += POSE_VEL_BIAS_SIZE;
+    aom.items++;
+  }
+
+  for (int iter; iter < vioconfig(7); iter++) {
+    double rld_error;
+    vector<RelLinData> rld_vec;
+    linearizeHelper(rld_vec, lmdb.getObservations(), rld_error);
+
+    LinearizeAbsReduce<DenseAccumulator> lopt(aom);
+    tbb::parallel_reduce(rld_vec, lopt);
+
+    double marg_prior_error = 0;
+    double imu_error = 0;
+    double bg_error = 0;
+    double ba_error = 0;
+    linearizeAbsIMU(aom, lopt.accom.getH(), lopt.accum.getB(), imu_error, bg_error, ba_error, frame_states, imu_meas, gyro_bias_weight, accel_bias_weight, g);
+    linearizeMargPrior(marg_order, marg_H, marg_b, aom, lopt.accum.getH(), lopt.accum.getB(), marg_prior_error);
+
+    double error_total = rld_error + imu_error + marg_prioer_error + ba_error + bg_error;
+
+    lopt.accum.setup_solver();
+    VectorX Hdiag = lopt.accum.Hdiagonal();
+
+    bool converged = false;
+
+    // Gauss-Newton iteration
+    // By default it uses gauss newton, although Levenverg-Marquardt is implemented
+    VectorX Hdiag_lambda = Hdiag * vioconfig(100);
+    Hdiag_lambda = max(Hdiag_lambda, vioconfig(100));
+    VectorX inc = lopt.accum.solve(&Hdiag_lambda);
+    double max_inc = inc.abs().maxCoeff();
+    if (max_inc < 1e-4) converged = true;
+
+    // Apply increment to poses
+    for ({t, pose} in frame_poses) {
+      int idx = aom.abs_order_map[t].total_size;
+      pose.applyInc(-inc.segment<POSE_SIZE>(idx));
+    }
+
+    // Apply increment to states
+    for ({t, state} in frame_states) {
+      int idx = aom.abs_order_map[t].total_size;
+      state.applyInc(-inc.segment<POSE_VEL_BIAS_SIZE>(idx));
+    }
+
+    // Update points
+    for@parallel (rld in rld_vec) updatePoints(aom, rld, inc); // TODO
+  }
+}
+
+void linearizeHelper(vector<RelLinData>& rld_vec, const obs, double& error) {
+
+  vector<FrameId> obs_kfs = obs.keys();
+  rld_vec = {RelLinData(num_kps=lmdb.landmarks.size(), num_rel_poses=obs[h].size()) for h : obs_kfs};
+
+  for@parallel (i in range(obs_kfs)) {
+    FrameId h = obs_kfs[i];
+    RelLinData rld = rld_vec[i];
+    for ({t, kps} in obs[h]) {
+      if (h != t) {
+        rld.append({h, t});
+        PoseStateWithLine state_h = getPoseStateWithLin(h); // Prioritize keyframe poses, then regular states
+        PoseStateWithLine state_t = getPoseStateWithLin(t);
+        Mat66 d_rel_d_h, d_rel_d_t;
+        SE3 T_t_h = computeRelPose(state_h.getPoseLin(), state_t.getPoseLin(), T_i_c[h], T_i_c[t], &d_rel_d_h, &d_rel_d_t);
+        rld.d_rel_d_h.append(d_rel_d_h);
+        rld.d_rel_d_t.append(d_rel_d_t);
+        if (state_h.isLinearized() or state_t.isLinearized()) {
+          T_t_h = computeRelPose(state_h.getPoseNonLin(), state_t.getPoseNonLin(), T_i_c[h], T_i_c[t]);
+        }
+
+        Mat44 T_t_h = T_t_h.matrix();
+        FrameRelLinData frld;
+
+        Camera cam = cameraOf(t);
+        for (kp in kps) {
+          // ...
+          // Same as the procedure done in the else below but with the following linearize call:
+          linearizePoint(kp, lm, T_t_h, cam, &res, &d_res_d_xi, &d_res_d_p);
+          // ...
+          // And updates frld like this
+          frld.Hpp += obs_weight * d_res_d_xi.transpose() * d_res_d_xi;
+          frld.bp += obs_weight * d_res_d_xi.transpose() * res;
+
+          frld.Hpl.append(obs_weight * d_res_d_xi.transpose() * d_res_d_p);
+          frld.lm_id.append(lm);
+
+          rld.lm_to_obs[lm].append(rld.Hpppl.size(), frld.lm_id.size() - 1);
+        }
+        rld.Hpppl.append(frld);
+      } else {
+        Camera cam = cameraOf(t);
+        for (kp in kps) {
+          Landmark lm = lmdb.getLandmark(kp);
+
+          Vec2 res;
+          Matrix23 d_res_d_p;
+          linearizePointSameFrame(kp, lm, cam, &res, &d_res_d_p);
+
+          // So this is the weight matrix?
+          double e = res.norm();
+          double huber_weight = min(vioconfig(1.0), vioconfig(1.0) / e);
+          double obs_weight = huber_weight / vioconfig(0.5)**2;
+          rld.error += (2 - huber_weight) * obs_weight * res.transpose() * res;
+
+          rld.Hll[kp] += obs_weight * d_res_d_p.transpose() * d_res_d_p;
+          rld.bl[kp] += obs_weight * d_res_d_p.transpose() * res;
+        }
+      }
+    }
+  }
+
+  for (RelLinData rld : rld_vec) &error += rld.error;
+
+}
+
+bool linearizePoint(Keypoint kp, Landmark lm, Mat44 T_t_h, Camera cam, Vec2 &res, Mat26 &d_res_d_xi, Mat23 &d_res_d_p) {
+  Vec4 p3_h = StereographicParam::unproject(lm.dir);
+  p3_h[3] = lm.inv_distance;
+  Vec4 p3_t = T_t_h * p3_h;
+  Vec2 p2 = cam.project(p3_t);
+  if (any failed) return false;
+
+  *res = p2 - kp.pos;
+  *d_res_d_xi = computeJacobian();
+  *d_res_d_p = computeJacobian();
+  return true;
+}
+
+bool linearizePointSameFrame(Keypoint kp, Landmark lm, Camera cam, Vec2 &res, Mat23 &d_res_d_p) {
+  Vec3 p3 = StereographicParam::unproject(lm.dir);
+  Vec2 p2 = cam.project(p3);
+  if (any failed) return false;
+
+  *res = p2 - kp.pos;
+  *d_res_d_p = computeJacobian();
+  return true;
+}
+
+struct AbsOrderMap {
+  map<Timestamps, pair<TOTAL_SIZE: int, SIZE: int>> abs_order_map;
+  items = 0;
+  total_size = 0;
+}
+
+struct RelLinData : RelLinDataBase {
+  // RelLinDataBase:
+  vector<FrameId, FrameId> order;
+  vector<Matrix66> d_rel_d_h;
+  vector<Matrix66> d_rel_d_t;
+
+  // RelLinData
+  map<int, Matrix33> Hll;
+  map<int, Vector> bl;
+  map<int, vector<LandmarkId, LandmarkId>> lm_to_obs;
+  vector<FrameRelLinData> Hpppl;
+  double error;
+}
+
+struct FrameRelLinData {
+  Matrix66 Hpp;
+  Vector6 bp;
+  vector<LandmarkId> lm_id;
+  vector<Matrix63> Hpl;
+}
 ```
