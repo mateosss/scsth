@@ -1,6 +1,3 @@
 \listoftables
 
 \newpage
-
-
-

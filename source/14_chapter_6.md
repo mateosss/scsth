@@ -16,9 +16,9 @@ This is the first part of the methodology. Praesent mollis sem diam, sit amet tr
 
 This is the second part of the methodology. Aenean vel pretium tortor. Aliquam erat volutpat. Quisque quis lobortis mi. Nulla turpis leo, ultrices nec nulla non, ullamcorper laoreet risus.
 
-<!-- 
+<!--
 Comments can be added like this.
---> 
+-->
 
 ## Results
 
@@ -31,9 +31,3 @@ This is the discussion. Curabitur gravida nisl id gravida congue. Duis est nisi,
 ## Conclusion
 
 This is the conclusion to the chapter. Nulla sed condimentum lectus. Duis sed tempor erat, at cursus lacus. Nam vitae tempus arcu, id vestibulum sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-
-
-
-
-
-

@@ -9,6 +9,3 @@ Mauris eget blandit nisi, faucibus imperdiet odio. Suspendisse blandit dolor sed
 <!-- Use the \newpage command to force a new page -->
 
 \newpage
-
-
-

@@ -1,17 +1,7 @@
-# Scratchpad
+## Ideas
 
-## Ahora
-
-- ver como approchean los otros
-- encarar la tesis un poco como una generalización de estos sistemas?
-
-## En general
-
-- poner un ejemplo de SLAM basico 2d? tutorial de slam
-- releerme los papers?
-- 4 páginas por día
+- [ ] poner un ejemplo de SLAM basico 2d? tutorial de slam
 - en general: encontrar "los nudos centrales", sin vueltas
-- introducir conceptos con cursiva
 
 ## 1. Introducción
 
@@ -99,12 +89,6 @@ originales o agregan comentarios nuevos e interesantes?
   - Medidas de corrección
   - Medidas de performance
 
-## 6. Referencias
-
-- como manejar las citas: bibtex, bibfile, references.bib, zotero, etc
-- si uso el template tengo que citarlo:
-  <https://github.com/tompollard/phd_thesis_markdown#citing-the-template>
-
 ## Cosas que tengo que responder en algún momento
 
 - que es un IMU (que tipos)
@@ -127,38 +111,14 @@ originales o agregan comentarios nuevos e interesantes?
   modularity)
 - features and landmarks
 
-## Al terminar
+# Basalt
 
-- verificar typos
-- verifica errores de gramatica
-- check markdown and other linter errors
+- Basalt se ignoró originalmente por que no corría con una sola cámara
 
-## Historia
+## Future Work
+- [ ] Idea for a paper: mathematical formulations and a tool to translate
+  between camera models. First idea to translate KB into DS, but could be
+  between others too.
 
-Es muy util poder localizar el casco en el espacio en el que se encuentra. SLAM
-se usa para esto y Monado no tenía esta funcionalidad. Existe una gran variedad
-de implementacines dando vuelta que pueden confundir a un iniciante en el tema.
-Este traabajo fue un estudio del área que intentó encontrar las soluciones más
-adecuadas para el problema: tanto para XR y como por su licencia. Tres
-implementaciones fueron seleccionadas, cada una por distintas razones
-contextuales al problema que debería detallar al explicarlas. Primero se eligió
-Kimera por haber sido una implementación relativamente reciente que soportaba
-stereo y mono VIO bajo una licencia permisiva. Nos topamos con un muy mal
-rendimiento tanto en precisión como en performance. Aunque como primera
-aproximación sirvió para generar la infraestructura necesaria del lado de Monado
-para poder comunicarse con sistemas de SLAM. Dos drivers uno de reproducción de
-datasets EuRoC y otro para poder utilizar una cámara D455 como fuente de
-muestras para SLAM en tiempo real. Además del tracker y la interfaz y la
-implementación de la misma en un fork de Kimera. Luego de tener toda esta
-aparotología se siguió por ORB-SLAM3 que venía siendo el ganador
-consistentemente en las distintas tablas comparativas en donde aparecía en
-distintos papers. ORB-SLAM3 tiene una licencia GPL que fuerza a
-proyectos usuarios del sistema a migrar a una licencia open source compatible (y
-esto es muchas veces inadmisible para proyectos comerciales, en los cuales
-Monado quiere poder ser utilizado). A pesar de esto valía la pena implementarlo
-para tener una referencia de que tan bien un sistema podría funcionar.
-Efectivamente el sistema es bastante robusto y cuenta con buena performance y
-precisión. No está exento de problemas pero cumple su función muy bien.
-Finalmente se trabajó sobre Basalt, un sistema de odometría visual-inercial
-también con licencia permisiva que fue ignorado originalmente por no presentar
-la posibilidad de ser corrido con una única cámara.
+- [ ] Chapter 2 - Math Fundamentals
+  https://www.vectornav.com/resources/inertial-navigation-primer
