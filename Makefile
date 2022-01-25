@@ -7,6 +7,7 @@ OUTPUTDIR=$(BASEDIR)/output
 TEMPLATEDIR=$(INPUTDIR)/templates
 STYLEDIR=$(BASEDIR)/style
 SCRATCHDIR=$(BASEDIR)/scratch
+EXTERNALDIR=$(BASEDIR)/external
 
 BIBFILE=$(INPUTDIR)/references.bib
 
@@ -44,15 +45,18 @@ pdf:
 	pandoc  \
 		--output "$(OUTPUTDIR)/thesis.pdf" \
 		--template="$(STYLEDIR)/template.tex" \
+		--include-in-header="$(EXTERNALDIR)/01mf02/pandocfilters/header.tex" \
 		--include-in-header="$(STYLEDIR)/preamble.tex" \
 		--variable=fontsize:11pt \
 		--variable=papersize:a4paper \
 		--variable=documentclass:report \
+		--metadata=link-citations:true \
 		--pdf-engine=xelatex \
 		"$(INPUTDIR)"/*.md \
 		"$(INPUTDIR)/metadata.yml" \
 		--filter=pandoc-shortcaption \
 		--filter=pandoc-xnos \
+		--filter=external/01mf02/pandocfilters/all.py \
 		--bibliography="$(BIBFILE)" \
 		--citeproc \
 		--csl="$(STYLEDIR)/ref_format.csl" \

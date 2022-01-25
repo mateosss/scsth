@@ -1,4 +1,11 @@
-
+% NOTE: Tracing commands cheatsheet:
+% \usepackage{trace}
+% \traceon
+% \traceoff
+% \tracingcommands=3\tracingmacros=1
+% \tracingcommands=0\tracingmacros=0
+% \show\command
+% xelatex main to go one error by one
 
 % Table of contents formatting
 \renewcommand{\contentsname}{Table of Contents}
@@ -41,7 +48,6 @@
 % \setsansfont[Scale=1.2]{Optima Regular}
 
 % CODE BLOCKS
-\usepackage[utf8]{inputenc}
 \usepackage{listings}
 \usepackage{color}
 
@@ -114,10 +120,6 @@
 % \usepackage{parskip}
 % \setlength{\parskip}{\baselineskip}
 
-% Set colour of links to black so that they don't show up when printed
-\usepackage{hyperref}
-\hypersetup{colorlinks=false, linkcolor=black}
-
 % Tables
 \usepackage{booktabs}
 \usepackage{threeparttable}
@@ -144,7 +146,21 @@
 \usepackage{bbold}
 \DeclareMathOperator*{\argmin}{\arg\!\min}
 
+% Used for gauss-newton algorithm
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+% Sets spanis. es-lcroman needed to avoid crash (https://tex.stackexchange.com/questions/631424/how-to-debug-and-fix-error-use-of-labeloptarg-doesnt-match-its-definition?noredirect=1#comment1574641_631424)
+\usepackage[spanish, es-lcroman]{babel}
+
+% Set colour of links to black so that they don't show up when printed
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=cyan, urlcolor=magenta, citecolor=red, breaklinks=true}
+
+% NOTE: Keep cleveref as the last \usepackage
 % For use of \cref and \Cref used by pandoc secnos
-\usepackage{cleveref}
+\usepackage[noabbrev,capitalize,nameinlink,spanish]{cleveref}
+\creflabelformat{equation}{#2\textup{#1}#3} % Ecuación (1) -> Ecuación 1
 
 \newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}

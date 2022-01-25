@@ -1,8 +1,3 @@
-\setcounter{page}{1}
-\pagenumbering{arabic}
-\doublespacing
-\setlength{\parindent}{0.5in}
-
 # Introducción
 
 ## Resumen de los capítulos
