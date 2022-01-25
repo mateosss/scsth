@@ -1,3 +1,17 @@
+\pagenumbering{gobble}
+
+\tableofcontents
+
+\newpage
+
+\listoffigures
+
+\newpage
+
+\listoftables
+
+\newpage
+
 # Abbreviations {.unnumbered}
 
 \begin{tabbing}
@@ -11,3 +25,5 @@
 \pagenumbering{arabic}
 \doublespacing
 \setlength{\parindent}{0.5in}
+
+<!-- TODO: list of listings, list of algorithms, list of theorems/defs/obs? -->

@@ -1,13 +1,13 @@
 ---
-# TODO: Set this properly
-pagetitle: This is the HTML document title
-title: This is the title of the thesis
-subtitle: This is the subtitle of the thesis
-author: Firstname Surname
-date: January 2015
-location: University College London, UK
+# TODO: Mejorar el estilo de la portada y poner el logo de la UNC y el CC-by
+pagetitle: Localización en tiempo real con VIO/SLAM para aplicaciones de XR
+title: Localización en tiempo real con odometría y SLAM visual-inercial para
+  aplicaciones de XR.
+subtitle: Facultad de Matemática, Astronomía, Física y Computación
+author: Mateo Brian de Mayo
+date: Febrero 2022
+location: Universidad Nacional de Córdoba
 supervisor:
-- Professor Louis Fage
-- Captain J. Y. Cousteau
-degree: Doctor of Philosophy
+- Nicolás Wolovick
+degree: Licenciado en Ciencias de la Computación.
 ---
