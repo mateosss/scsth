@@ -41,8 +41,14 @@ install:
 	bash $(BASEDIR)/install_mac.sh
 endif
 
-pdf:
-	pandoc  \
+md:
+	gpp -n -U "" "" "(" "," ")" "(" ")" "#" "" \
+    -M "<!-- #\w" "-->\n" " " " " "-->\n" "(" ")" \
+    +s "\"" "\"" "\\" +s "'" "'" "\\" \
+    $(INPUTDIR)/main.md > $(OUTPUTDIR)/thesis.md
+
+pdf: md
+		pandoc \
 		--output "$(OUTPUTDIR)/thesis.pdf" \
 		--template="$(STYLEDIR)/template.tex" \
 		--include-in-header="$(EXTERNALDIR)/01mf02/pandocfilters/header.tex" \
@@ -52,7 +58,7 @@ pdf:
 		--variable=documentclass:report \
 		--metadata=link-citations:true \
 		--pdf-engine=xelatex \
-		"$(INPUTDIR)"/*.md \
+		"$(OUTPUTDIR)/thesis.md" \
 		"$(INPUTDIR)/metadata.yml" \
 		--filter=pandoc-shortcaption \
 		--filter=pandoc-xnos \
