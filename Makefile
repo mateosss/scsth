@@ -47,6 +47,11 @@ md:
     +s "\"" "\"" "\\" \
     $(INPUTDIR)/main.md > $(OUTPUTDIR)/thesis.md
 
+# TODO: Do a tex target that pdf target depends on
+# TODO: Define HTML, PDF, TEX macros and use them in sourcecode for conditional
+# stuff like: BEGIN_FORMULA(), which would pick $$ or \begin{align} based on
+# type of compilation
+
 pdf: md
 		pandoc \
 		--output "$(OUTPUTDIR)/thesis.pdf" \
