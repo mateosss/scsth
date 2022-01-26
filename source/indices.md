@@ -12,7 +12,7 @@
 
 \newpage
 
-# Abbreviations {.unnumbered}
+# Abbreviations {.unnumbered .unlisted}
 
 \begin{tabbing}
 \textbf{API}~~~~~~~~~~~~ \= \textbf{A}pplication \textbf{P}rogramming \textbf{I}nterface \\
@@ -27,3 +27,5 @@
 \setlength{\parindent}{0.5in}
 
 <!-- TODO: list of listings, list of algorithms, list of theorems/defs/obs? -->
+
+\hypersetup{linkcolor=cyan}

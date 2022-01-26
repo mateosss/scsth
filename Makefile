@@ -44,7 +44,7 @@ endif
 md:
 	gpp -n -U "" "" "(" "," ")" "(" ")" "#" "" \
     -M "<!-- #\w" "-->\n" " " " " "-->\n" "(" ")" \
-    +s "\"" "\"" "\\" +s "'" "'" "\\" \
+    +s "\"" "\"" "\\" \
     $(INPUTDIR)/main.md > $(OUTPUTDIR)/thesis.md
 
 pdf: md
