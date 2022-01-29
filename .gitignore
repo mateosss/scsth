@@ -1,5 +1,6 @@
 !.vscode/
 style/latex
+output/thesis.md
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

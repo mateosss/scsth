@@ -12,8 +12,7 @@ RPGO
 Robust
 Graph
 Optimization
-loop
-closure
+loop closure
 outliers
 microelectromecánicos
 MEMS
@@ -21,10 +20,8 @@ Basalt
 Kalibr
 keyframe
 keyframes
-bundle
-adjustment
-motion
-blur
+bundle adjustment
+motion blur
 offsets
 baselines
 mipmaps
@@ -55,7 +52,12 @@ keypoint
 keypoints
 landmark
 landmarks
-optical
-flow
+optical flow
 Gram
 desproyectar
+trackear
+RealSense
+motion sickness
+callbacks
+instanciar
+instanciar este

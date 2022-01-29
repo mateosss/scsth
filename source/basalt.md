@@ -15,6 +15,7 @@ scheme) que podría ser interesante discutir -->
 <!-- TODO@def: levenverg-marquard is also in use (see vio_lm_lambda_initial), I might need to explain it -->
 <!-- TODO@def: que son SE(2), SO(3) etc: ver https://ethaneade.com/ -->
 <!-- TODO@ref: Checkear que los 6 papers de basalt esten siendo citados -->
+<!-- TODO@ref: Los papers de orbslam y kimera deberían estar citados -->
 
 # Basalt
 
@@ -260,7 +261,7 @@ módulo de optical flow. Este módulo es el que efectivamente realizará la
 integración y optimización con toda la información recibida y producirá como
 salida en una cola, la estimación de los estados del agente a localizar.
 
-##### Inicialización y pre-integración
+##### Inicialización y pre-integración {#basalt-preintegration}
 
 <!-- TODO@def: referencia a la sección "Calibración de IMU", escribirla, referenciarla -->
 
@@ -280,7 +281,7 @@ relacionada [^basalt-headers-issue8]_).
 <!-- TODO@style: Make footnotes clickeable -->
 <!-- TODO@style: También hacer que "discusion relacionada" se marque y sea clickeable quizas? -->
 
-[^basalt-headers-issue8]: https://gitlab.com/VladyslavUsenko/basalt-headers/-/issues/8
+[^basalt-headers-issue8]: <https://gitlab.com/VladyslavUsenko/basalt-headers/-/issues/8>
 
 Luego de recibir esta primer muestra de la IMU se comienza la ejecución del
 bucle principal, el cual espera indefinidamente por resultados encolados por el
@@ -344,6 +345,7 @@ $\Delta \mathbf{s}$ de la siguiente manera:
 <!-- $$ -->
 
 \begin{align}
+\label{eq:imu-preintegration}
 (\Delta \mathbf{R}_{t_i}, \Delta \mathbf{v}_{t_i}, \Delta
 \mathbf{p}_{t_i}) & := (\mathbf{I}, \mathbf{0}, \mathbf{0})
 \\

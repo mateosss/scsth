@@ -21,11 +21,11 @@ Notación:
 
 - [TODO] Portada
 - [TODO] Resumen (y abstract en inglés)
-- [TODO] Agradecimientos
 - [AUTO] Índice
 - [AUTO] Lista de figuras
 - [AUTO] Lista de tablas
 - [AUTO] Lista de abreviaturas
+- [AUTO] Lista de fragmentos (listings?), algoritmos y otras?
 - [TODO] Introducción
   - [TODO] Contexto/motivación (mencionar algo de las comunidades con las que trabajé,
         mencionar que CV es muy trial and error, oversights pueden costar horas)
@@ -44,17 +44,16 @@ Notación:
   - [TODO] Conjuntos de Datos: EuRoC, TUM-VI, Kitti, synthetic datasets (listar
         características particulares, layout de los datasets, utilidad, algunos
         scores, traer tabla comparativa del paper de TUM-VI?)
-  - [WAIT] Cuadrados mínimos
-    - [WAIT] Definición del problema no-lineal
-    - [WAIT] Algoritmo de Gauss-Newton
-    - [WAIT] Algoritmo de Levenberg-Marquardt
-  - [TOREAD] Grupos de Lie para transformaciones 2D y 3D
-    - [TOREAD] Definición
-    - [TOREAD] Operadores y Propiedades
-    - [TOREAD] SO(3), SE(3), SO(2), SE(2)
-    - [UNCERTAIN|TOREAD] ¿gauss newton / jacobianos en manifolds?
+  - [DRAFT] Cuadrados mínimos
+    - [DRAFT] Definición del problema no-lineal
+    - [DRAFT] Algoritmo de Gauss-Newton
+    - [WONTDO] Algoritmo de Levenberg-Marquardt
+  - [WAIT] Cuaterniones
+  - [TODO] Grupos de Lie para transformaciones 2D y 3D
+    - [TODO] Definición
+    - [TODO] Operadores (Exp y Log, hat y vee) y Propiedades
+    - [TODO] SO(3), SE(3), SO(2), SE(2)
   - [TOREAD] Grafo de factores
-  - [TODO] Monado y OpenXR (y Khronos y Collabora)
 - [TODO] Sistemas Estudiados
   - [TODO] Introducción: Panorama de sistemas (cuales, metricas, rendimiento,
         licencias (GPL), soluciones privativas, comunidades, actividad (graficos de
@@ -62,6 +61,15 @@ Notación:
         eligieron)
   - [WONTDO] Kimera
   - [TOREAD|DOING] Basalt
+    - [DOING] VIO
+      - [DRAFT] optical flow
+      - [DRAFT] measure
+      - [DOING] optimization
+      - [DOING] marginalization
+    - [TODO] VIM
+      - [TODO] Global map optimization
+      - [TODO] Non-linear factor recovery
+      - [TODO] Non-linear factors for distribution approximation
     - [ ] Modelo de Cámara Double Sphere
   - [WONTDO] ORB-SLAM3
 - [TODO] Contribuciones (intro: explicar que es monado/openxr/khronos/collabora)
@@ -72,7 +80,7 @@ Notación:
           mencionar peculiaridades como el fork de monado para orbslam3, el no uso
           de mapeo global en Basalt, los problemas de Kimera, etc)
     - [DRAFT] Clase adaptadora (t_tracker_slam: pose correction, debug utilities, euroc recorder, etc)
-    - [TODO] Predicción (explicar los distintos niveles)
+    - [DRAFT] Predicción (explicar los distintos niveles)
     - [TODO] Filtrado (explicar los distintos tipos, mencionar kalman?)
   - [TODO] Controladores en Monado
     - [TODO] Controlador para dispositivos RealSense (rs_source, D455 and others)
@@ -91,17 +99,15 @@ Notación:
           jacobians, jacobi solver, OpenCV, newton solver) (habría que hacer avanzar el MR)
     - [WAIT] Offset para cámaras con bajo solapamiento en Basalt (para WMR) (MR no hecho
       todaví)
-    - [MAYBENOT] Controlador Qwerty
     - [MAYBENOT] cJSON Wrapper
   - [MAYBENOT] Contribuciones pendientes
     - [MAYBENOT] Autoexposición
     - [MAYBENOT] Interpolación de muestras de IMU
     - [MAYBENOT] Cámaras OAK-D / Luxonis / Depth-aI
-- [WHAT|WAIT] Resultados? creo que solo tengo resultados cualitativos como: el video,
-  quizás podría replicar resultados online como los de HybVIO en EuRoC. Podría
-  testear mis algoritmos de predicción y filtrado haciendo que algunos frames
-  (1/4) en EuRoC se skipeen y comparandolos con la version no skipeada?. RMS
-  ATE, RTE, ATO, RTO, etc. (hablarlo mejor con nico). Aparte de eso hay
-  resultados de performance, tiempo de demora hasta obtener la estimacion
+- [WHAT|WAIT] Resultados: comparar basalt pre iccv2021, post iccv2021
+  float/double, orb-slam3 pre v1.0, post v1.0, kimera (actualizarlo con
+  march=native). Comparar rendimiento con análisis de los tiempos dados por
+  perfetto. Comparar precisión con colmap. Datasets facil-medio-dificil para
+  d455 y odyssey.
 - [TODO] Conclusion
 - [AUTO] Referencias
