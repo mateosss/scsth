@@ -187,6 +187,8 @@ implementación.
 
 ### Interfaz externa
 
+<!-- TODO: mencionar que ORB-SLAM3 está en un fork separado de monado por GPL -->
+
 Desde un principio se entendió que se necesitaría utilizar sistemas ya
 desarrollados como punto de partida. Estos sistemas son complejos y suelen
 utilizar conceptos teóricos de significativa profundidad, por lo que su
@@ -224,7 +226,7 @@ C++, se puede resumir en algo como esto:
 
 <!-- TODO: linkear la clase slam_tracker en gitlab? -->
 
-```c++
+``` {#lst:slam-tracker-def .cpp caption="Interfaz a implementar por sistemas de SLAM"}
 class slam_tracker {
 public:
   // (1) Constructor y funciones de inicio/fin
@@ -260,7 +262,7 @@ no se relaciona las colas dibujadas con nada, ni con Monado ni con la copia de s
 
 ![
 Interacción entre Monado y sistemas SLAM mediante la interfaz en C++.
-](source/figures/slam-tracker-hpp.pdf "Interfaz del SLAM tracker"){#fig:slam-tracker-hpp width=100%}
+](source/figures/slam-tracker-hpp.pdf "Interfaz de SLAM tracker"){#fig:slam-tracker-hpp width=100%}
 
 La versión actual de esta clase es el
 resultado de varias iteraciones y generaliza adecuadamente los tres sistemas
@@ -386,6 +388,8 @@ un punto a mejorar en el futuro sobre Basalt que no se trató de resolver en est
 trabajo, ya que no se encontraron problemas de performance incluso con esta
 copia innecesaria.
 
+<!-- TODO@def: definir callbacks? -->
+
 Respecto a la cola de poses estimadas, Kimera implementa un sistema de
 _callbacks_ en el cual una función que encola los resultados del pipeline es
 llamada tan pronto como estén listos. Basalt por su parte ya expone una cola con
@@ -425,9 +429,9 @@ dejando una banda de espacio en blanco. -->
 
 ![
 Las distintas interfaces gráficas y formas de visualizar presentadas por cada
-uno de los sistemas adaptados. Arriba Kimera a izquierda, ORB-SLAM3 a derecha;
+uno de los sistemas adaptados. Arriba a izquierda Kimera, ORB-SLAM3 a derecha;
 abajo Basalt.
-](source/figures/trackers-ui.pdf "Visualizadores del SLAM tracker"){#fig:trackers-ui width=100%}
+](source/figures/trackers-ui.pdf "Visualizadores de SLAM trackers"){#fig:trackers-ui width=100%}
 
 \FloatBarrier
 
