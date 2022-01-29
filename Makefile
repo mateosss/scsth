@@ -65,7 +65,7 @@ pdf: md
 		--pdf-engine=xelatex \
 		"$(OUTPUTDIR)/thesis.md" \
 		"$(INPUTDIR)/metadata.yml" \
-		--filter=pandoc-shortcaption \
+		--filter=external/mparker2/pandoc-shortcaption.py \
 		--filter=pandoc-xnos \
 		--filter=external/01mf02/pandocfilters/all.py \
 		--bibliography="$(BIBFILE)" \
