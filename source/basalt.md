@@ -344,15 +344,15 @@ $\Delta \mathbf{s}$ de la siguiente manera:
 <!-- $$ -->
 
 \begin{align}
-(\Delta \mathbf{R}_{t_i}, \Delta \mathbf{v}_{t*i}, \Delta
-\mathbf{p}*{t*i}) & := (\mathbf{I}, \mathbf{0}, \mathbf{0})
+(\Delta \mathbf{R}_{t_i}, \Delta \mathbf{v}_{t_i}, \Delta
+\mathbf{p}_{t_i}) & := (\mathbf{I}, \mathbf{0}, \mathbf{0})
 \\
-\Delta \mathbf{R}*{t+1} & := \Delta \mathbf{R}_t Exp(\mathbf{\omega}_{t+1} \Delta t)
+\Delta \mathbf{R}_{t+1} & := \Delta \mathbf{R}_t Exp(\mathbf{\omega}_{t+1} \Delta t)
 \\
-\Delta \mathbf{v}_{t+1} & := \Delta \mathbf{v}\_t + \Delta{\mathbf{R}\_t}
+\Delta \mathbf{v}_{t+1} & := \Delta \mathbf{v}_t + \Delta{\mathbf{R}_t}
 \mathbf{a}_{t+1} \Delta t
 \\
-\Delta \mathbf{p}_{t+1} & := \Delta \mathbf{p}\_t + \Delta \mathbf{v}\_t \Delta t
+\Delta \mathbf{p}_{t+1} & := \Delta \mathbf{p}_t + \Delta \mathbf{v}_t \Delta t
 \\
 \Delta \mathbf{s}_{t} & := (\Delta \mathbf{R}_{t}, \Delta \mathbf{v}_{t}, \Delta
 \mathbf{p}_{t})
