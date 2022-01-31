@@ -98,13 +98,9 @@
 % \subsectionfont{\rmfamily\mdseries\scshape\normalsize}
 % \subsubsectionfont{\rmfamily\bfseries\upshape\normalsize}
 
-% Set figure legends and captions to be smaller sized sans serif font
-\usepackage[font={footnotesize,sf}]{caption}
-
 \usepackage{siunitx}
 
 % Adjust spacing between lines to 1.5
-\usepackage{setspace}
 % \onehalfspacing
 \doublespacing
 \raggedbottom
@@ -148,15 +144,19 @@
 \DeclareMathOperator*{\argmin}{\arg\!\min}
 
 % Used for gauss-newton algorithm
-\usepackage{algorithm}
-\usepackage{algpseudocode}
+% TODO@style:
+% https://mirror.las.iastate.edu/tex-archive/macros/latex/contrib/hyperref/doc/hyperref-doc.html#x1-550009.1
+% recommends loading algorithm after hyperref
 
-% Sets spanis. es-lcroman needed to avoid crash (https://tex.stackexchange.com/questions/631424/how-to-debug-and-fix-error-use-of-labeloptarg-doesnt-match-its-definition?noredirect=1#comment1574641_631424)
-\usepackage[spanish, es-lcroman, es-tabla]{babel}
-
+% NOTE: Which packages to load after hyperref? Answer: https://mirror.las.iastate.edu/tex-archive/macros/latex/contrib/hyperref/doc/hyperref-doc.html#x1-550009.1
 % Set colour of links to black so that they don't show up when printed
 \usepackage{hyperref}
 \hypersetup{colorlinks=true, linkcolor=black, urlcolor=magenta, citecolor=red, breaklinks=true}
+
+% Sets spanis. es-lcroman needed to avoid crash (https://tex.stackexchange.com/questions/631424/how-to-debug-and-fix-error-use-of-labeloptarg-doesnt-match-its-definition?noredirect=1#comment1574641_631424)
+\usepackage[spanish, es-lcroman, es-tabla]{babel}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 
 % NOTE: Keep cleveref as the last \usepackage
 % For use of \cref and \Cref used by pandoc secnos
