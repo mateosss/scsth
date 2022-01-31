@@ -1,6 +1,3 @@
-PY=python
-PANDOC=pandoc
-
 BASEDIR=$(CURDIR)
 INPUTDIR=$(BASEDIR)/source
 OUTPUTDIR=$(BASEDIR)/output
@@ -17,20 +14,13 @@ help:
 	@echo ''
 	@echo 'Usage:'
 	@echo '   make install                     install pandoc plugins'
-	@echo '   make html                        generate a web version'
 	@echo '   make pdf                         generate a PDF file'
-	@echo '   make docx                        generate a Docx file'
 	@echo '   make tex                         generate a Latex file'
 	@echo ''
 	@echo ''
 	@echo 'get local templates with: pandoc -D latex/html/etc'
 	@echo 'or generic ones from: https://github.com/jgm/pandoc-templates'
-
-ifeq ($(OS),Windows_NT)
-	detected_OS=Windows
-else
-	detected_OS=$(shell sh -c 'uname 2>/dev/null || echo Unknown')
-endif
+# TODO@style: here we have some talk about pandoc templates ^
 
 UNAME := $(shell uname)
 ifeq ($(UNAME), Linux)
@@ -72,11 +62,11 @@ tex: md
 		--csl="$(STYLEDIR)/ref_format.csl" \
 		--number-sections \
 		--verbose \
-		2>pandoc.pdf.log
+		2> output/logs/pandoc.tex.log
 
 # TODO@end: Be sure to run this command twice or thrice to get all references properly
 pdf: tex
-		xelatex -output-directory=$(OUTPUTDIR)/latex $(OUTPUTDIR)/thesis.tex
+		xelatex -output-directory=$(OUTPUTDIR)/latex $(OUTPUTDIR)/thesis.tex 2>&1 | tee output/logs/xelatex.pdf.log
 		mv $(OUTPUTDIR)/latex/thesis.pdf $(OUTPUTDIR)/
 
 all: md tex pdf
