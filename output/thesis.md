@@ -1,8 +1,6 @@
 <!-- Posibles valores de MODE: DRAFT, RELEASE -->
 
 
-
-
 # Resumen (TODO) {.unnumbered .unlisted}
 
 
@@ -1784,7 +1782,6 @@ xrt_slam_sinks, xrt_imu_sink, xrt_fs.slam_stream_start
 
 <!-- TODO: Hablar en la seccion de drivers de frame management -->
 <!-- TODO: Hablar en la seccion de drivers de pose correction -->
-
 
 
 

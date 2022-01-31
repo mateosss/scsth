@@ -47,14 +47,13 @@ md:
     +s "\"" "\"" "\\" \
     $(INPUTDIR)/main.md > $(OUTPUTDIR)/thesis.md
 
-# TODO: Do a tex target that pdf target depends on
 # TODO: Define HTML, PDF, TEX macros and use them in sourcecode for conditional
 # stuff like: BEGIN_FORMULA(), which would pick $$ or \begin{align} based on
 # type of compilation
 
-pdf: md
+tex: md
 		pandoc \
-		--output "$(OUTPUTDIR)/thesis.pdf" \
+		--output "$(OUTPUTDIR)/thesis.tex" \
 		--template="$(STYLEDIR)/template.tex" \
 		--include-in-header="$(EXTERNALDIR)/01mf02/pandocfilters/header.tex" \
 		--include-in-header="$(STYLEDIR)/preamble.tex" \
@@ -75,62 +74,11 @@ pdf: md
 		--verbose \
 		2>pandoc.pdf.log
 
-tex:
-	pandoc  \
-		--output "$(OUTPUTDIR)/thesis.tex" \
-		--template="$(STYLEDIR)/template.tex" \
-		--include-in-header="$(STYLEDIR)/preamble.tex" \
-		--variable=fontsize:11pt \
-		--variable=papersize:a4paper \
-		--variable=documentclass:report \
-		--pdf-engine=xelatex \
-		"$(INPUTDIR)"/*.md \
-		"$(INPUTDIR)/metadata.yml" \
-		--filter=pandoc-shortcaption \
-		--filter=pandoc-xnos \
-		--bibliography="$(BIBFILE)" \
-		--citeproc \
-		--csl="$(STYLEDIR)/ref_format.csl" \
-		--number-sections \
-		--verbose \
-		2>pandoc.tex.log
+# TODO@end: Be sure to run this command twice or thrice to get all references properly
+pdf: tex
+		xelatex -output-directory=$(OUTPUTDIR)/latex $(OUTPUTDIR)/thesis.tex
+		mv $(OUTPUTDIR)/latex/thesis.pdf $(OUTPUTDIR)/
 
-html:
-	pandoc  \
-		--output "$(OUTPUTDIR)/thesis.html" \
-		--template="$(STYLEDIR)/template.html" \
-		--include-in-header="$(STYLEDIR)/style.css" \
-		--toc \
-		"$(INPUTDIR)"/*.md \
-		"$(INPUTDIR)/metadata.yml" \
-		--filter=pandoc-shortcaption \
-		--filter=pandoc-xnos \
-		--bibliography="$(BIBFILE)" \
-		--citeproc \
-		--csl="$(STYLEDIR)/ref_format.csl" \
-		--number-sections \
-		--verbose \
-		--mathjax \
-		2>pandoc.html.log
-	rm -rf "$(OUTPUTDIR)/source"
-	mkdir "$(OUTPUTDIR)/source"
-	cp -r "$(INPUTDIR)/figures" "$(OUTPUTDIR)/source/figures"
+all: md tex pdf
 
-docx:
-	pandoc  \
-		--output "$(OUTPUTDIR)/thesis.docx" \
-		--toc \
-		"$(INPUTDIR)"/*.md \
-		"$(INPUTDIR)/metadata.yml" \
-		--filter=pandoc-shortcaption \
-		--filter=pandoc-xnos \
-		--bibliography="$(BIBFILE)" \
-		--citeproc \
-		--csl="$(STYLEDIR)/ref_format.csl" \
-		--number-sections \
-		--verbose \
-		2>pandoc.docx.log
-
-all: pdf tex html docx
-
-.PHONY: help install pdf docx html tex
+.PHONY: help install md tex pdf
