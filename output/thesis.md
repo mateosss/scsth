@@ -55,6 +55,8 @@
 
 
 
+# Fundamentos
+
 <!-- TODO@ref:
 Books used:
 nocedalNumericalOptimization2006a: solucion mas de calculo, con tema de funciones convexas
@@ -67,7 +69,7 @@ linear algebra done right?: aca ver si esta el teorema que uso sin demo si lo pu
 
 <!-- TODO@def: definir una función afín cuando explique SE(2)/SE(3) estaría bueno -->
 
-# Optimización por cuadrados mínimos
+## Optimización por cuadrados mínimos
 
 Como se verá más adelante, muchos de los problemas fundamentales de SLAM son
 problemas de optimización. Querremos minimizar una _función de error_ o
@@ -80,7 +82,7 @@ más sofisticados como _Levenberg-Marquardt_ o el _método dogleg_ que pueden
 aplicarse; no nos explayaremos en ellos en este trabajo, pero serán mencionados
 cuando sea pertinente.
 
-## Cuadrados mínimos lineales
+### Cuadrados mínimos lineales
 
 Comencemos con el caso lineal que será necesario para luego aproximar el
 no-lineal.
@@ -230,7 +232,7 @@ ya que muestra que las columnas de $A$ son ortogonales al residual óptimo
 $A\hat{x} - b$ al ser su producto interno $0$. Esto suele llamarse el _principio
 de ortogonalidad_.
 
-## Cuadrados mínimos no lineales
+### Cuadrados mínimos no lineales
 
 Generalizaremos el problema anterior para que también considere funciones no
 lineales. Reutilizaremos la notación introducida en la sección anterior.
@@ -931,11 +933,11 @@ para uso futuro.
 <!-- TODO@question: question for basalt: why are they not using gtsam/g2o/ceres for the solvers? -->
 <!-- TODO@future: parallelization/vectorization of gauss newton seems very easy, levenberg marquardt not so much -->
 
-<!-- TODO: Qué es XR -->
-
 # Contribuciones
 
 ## Contexto
+
+<!-- TODO@def: Qué es XR? -->
 
 Por su naturaleza, el área de XR involucra una gran cantidad de partes
 interconectadas y de dispositivos muy diversos con configuraciones difíciles de
@@ -1011,8 +1013,12 @@ móviles. Desafortunadamente, todas estas soluciones son privativas y, por lo
 tanto, no es posible obtener acceso a sus códigos fuentes para reusarlos,
 modificarlos o simplemente estudiarlos sin obtener licencias especiales de sus
 fabricantes. Más aún, existen compañías que se especializan en desarrollar
-soluciones comerciales de SLAM como _SLAMCore_, _Arcturus_ y _Spectacular AI_
-entre otras.
+soluciones comerciales de SLAM como _SLAMCore[^slam-core]_,
+_Arcturus[^arcturus]_ y _Spectacular AI[^spectacular-ai]_ entre otras.
+
+[^slam-core]: https://www.slamcore.com/
+[^arcturus]: https://arcturus.industries/
+[^spectacular-ai]: https://www.spectacularai.com/
 
 Este trabajo se concentró entonces en el estudio de implementaciones de código
 abierto de sistemas de tracking visual-inercial (ya sea mediante SLAM o
@@ -1389,16 +1395,17 @@ El funcionamiento de `TrackerSlam` es sencillo, los controladores que quieran
 ser localizados por SLAM y puedan proveer imágenes y muestras de IMU deben
 instanciar este adaptador e inicializarlo. Por detrás, esto simplemente llama a
 los métodos adecuados de la interfaz `slam_tracker` con el sistema externo.
-Ahora bien, se aprovecha este adaptador para proveer dos funcionalidades
-fundamentales que escapan al alcance de los sistemas de SLAM/VIO y serán
-explicados a continuación: **predicción** y **filtrado** de poses.
+Ahora bien, se aprovecha esta clase adaptadora[^adapter-class-remark] para
+proveer dos funcionalidades fundamentales que escapan al alcance de los sistemas
+de SLAM/VIO y serán explicados a continuación: **predicción** y **filtrado** de
+poses.
 
 <!-- TODO: Hago las "Notas" así? hay una mejor manera? quizás a un
 costado de la página o con un recuadro tcolorbox como vi en un video -->
 
-_Nota: es debatible si el añadido de estas funcionalidades haría que
-`TrackerSlam` deje de ser considerada una clase adaptadora, ya que como veremos,
-ambas pueden ser deshabilitadas en tiempo de ejecución._
+[^adapter-class-remark]: Es debatible si el añadido de estas funcionalidades
+haría que `TrackerSlam` deje de ser considerada una clase adaptadora, ya que
+como veremos, ambas pueden ser deshabilitadas en tiempo de ejecución._
 
 #### Predicción de poses
 
@@ -2163,7 +2170,7 @@ se utilizan habitualmente en dispositivos de consumo como teléfonos
 inteligentes, presentan un _rolling shutter_ en dónde los píxeles son capturados
 en un "barrido" vertical, fila por fila. Esto genera
 distorsiones[^rolling-shutter-name] significativas en presencia de movimientos
-rápidos como se ve en la figura @fig:rolling-shutter.
+rápidos como se ve en la Figura @fig:rolling-shutter.
 
 ![
 Ejemplo de la distorsión que se genera en cámaras con rolling shutter que
@@ -2219,4 +2226,4 @@ este trabajo.
 
 
 
-# References {.unnumbered}
+# Bibliografía {.unnumbered}

@@ -424,8 +424,11 @@ para aplicaciones de XR.}
 \hypertarget{introducciuxf3n-todo}{%
 \chapter{Introducción (TODO)}\label{introducciuxf3n-todo}}
 
+\hypertarget{fundamentos}{%
+\chapter{Fundamentos}\label{fundamentos}}
+
 \hypertarget{optimizaciuxf3n-por-cuadrados-muxednimos}{%
-\chapter{Optimización por cuadrados
+\section{Optimización por cuadrados
 mínimos}\label{optimizaciuxf3n-por-cuadrados-muxednimos}}
 
 Como se verá más adelante, muchos de los problemas fundamentales de SLAM
@@ -441,7 +444,7 @@ aplicarse; no nos explayaremos en ellos en este trabajo, pero serán
 mencionados cuando sea pertinente.
 
 \hypertarget{cuadrados-muxednimos-lineales}{%
-\section{Cuadrados mínimos
+\subsection{Cuadrados mínimos
 lineales}\label{cuadrados-muxednimos-lineales}}
 
 Comencemos con el caso lineal que será necesario para luego aproximar el
@@ -577,7 +580,7 @@ Es decir
 es no-singular, esto solo pasa cuando \(x=\hat{x}\).\end{proof}
 
 \hypertarget{cuadrados-muxednimos-no-lineales}{%
-\section{Cuadrados mínimos no
+\subsection{Cuadrados mínimos no
 lineales}\label{cuadrados-muxednimos-no-lineales}}
 
 Generalizaremos el problema anterior para que también considere
@@ -1336,7 +1339,10 @@ tanto, no es posible obtener acceso a sus códigos fuentes para
 reusarlos, modificarlos o simplemente estudiarlos sin obtener licencias
 especiales de sus fabricantes. Más aún, existen compañías que se
 especializan en desarrollar soluciones comerciales de SLAM como
-\emph{SLAMCore}, \emph{Arcturus} y \emph{Spectacular AI} entre otras.
+\emph{SLAMCore\footnote{https://www.slamcore.com/}},
+\emph{Arcturus\footnote{https://arcturus.industries/}} y
+\emph{Spectacular AI\footnote{https://www.spectacularai.com/}} entre
+otras.
 
 Este trabajo se concentró entonces en el estudio de implementaciones de
 código abierto de sistemas de tracking visual-inercial (ya sea mediante
@@ -1728,14 +1734,13 @@ que quieran ser localizados por SLAM y puedan proveer imágenes y
 muestras de IMU deben instanciar este adaptador e inicializarlo. Por
 detrás, esto simplemente llama a los métodos adecuados de la interfaz
 \texttt{slam\_tracker} con el sistema externo. Ahora bien, se aprovecha
-este adaptador para proveer dos funcionalidades fundamentales que
-escapan al alcance de los sistemas de SLAM/VIO y serán explicados a
-continuación: \textbf{predicción} y \textbf{filtrado} de poses.
-
-\emph{Nota: es debatible si el añadido de estas funcionalidades haría
-que \texttt{TrackerSlam} deje de ser considerada una clase adaptadora,
-ya que como veremos, ambas pueden ser deshabilitadas en tiempo de
-ejecución.}
+esta clase adaptadora\footnote{Es debatible si el añadido de estas
+  funcionalidades haría que \texttt{TrackerSlam} deje de ser considerada
+  una clase adaptadora, ya que como veremos, ambas pueden ser
+  deshabilitadas en tiempo de ejecución.\_} para proveer dos
+funcionalidades fundamentales que escapan al alcance de los sistemas de
+SLAM/VIO y serán explicados a continuación: \textbf{predicción} y
+\textbf{filtrado} de poses.
 
 \hypertarget{predicciuxf3n-de-poses}{%
 \subsubsection{Predicción de poses}\label{predicciuxf3n-de-poses}}
@@ -2499,7 +2504,7 @@ inteligentes, presentan un \emph{rolling shutter} en dónde los píxeles
 son capturados en un ``barrido'' vertical, fila por fila. Esto genera
 distorsiones\footnote{Esta distorsión es homónima al tipo de cámara y se
   denomina el efecto de rolling shutter.} significativas en presencia de
-movimientos rápidos como se ve en la figura \ref{fig:rolling-shutter}.
+movimientos rápidos como se ve en la Figura \ref{fig:rolling-shutter}.
 
 \begin{figure}[!ht]
 \centering
@@ -2542,9 +2547,9 @@ los distintos sistemas externos integrados en este trabajo.
 \hypertarget{windows-mixed-reality}{%
 \subsection{Windows Mixed Reality}\label{windows-mixed-reality}}
 
-\hypertarget{references}{%
-\chapter*{References}\label{references}}
-\addcontentsline{toc}{chapter}{References}
+\hypertarget{bibliografuxeda}{%
+\chapter*{Bibliografía}\label{bibliografuxeda}}
+\addcontentsline{toc}{chapter}{Bibliografía}
 
 \hypertarget{refs}{}
 \begin{CSLReferences}{1}{0}

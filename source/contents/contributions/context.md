@@ -1,5 +1,7 @@
 ## Contexto
 
+<!-- TODO@def: Qué es XR? -->
+
 Por su naturaleza, el área de XR involucra una gran cantidad de partes
 interconectadas y de dispositivos muy diversos con configuraciones difíciles de
 generalizar, y más aún de predecir. Por esta razón hasta hace muy poco tiempo no
@@ -74,8 +76,12 @@ móviles. Desafortunadamente, todas estas soluciones son privativas y, por lo
 tanto, no es posible obtener acceso a sus códigos fuentes para reusarlos,
 modificarlos o simplemente estudiarlos sin obtener licencias especiales de sus
 fabricantes. Más aún, existen compañías que se especializan en desarrollar
-soluciones comerciales de SLAM como _SLAMCore_, _Arcturus_ y _Spectacular AI_
-entre otras.
+soluciones comerciales de SLAM como _SLAMCore[^slam-core]_,
+_Arcturus[^arcturus]_ y _Spectacular AI[^spectacular-ai]_ entre otras.
+
+[^slam-core]: https://www.slamcore.com/
+[^arcturus]: https://arcturus.industries/
+[^spectacular-ai]: https://www.spectacularai.com/
 
 Este trabajo se concentró entonces en el estudio de implementaciones de código
 abierto de sistemas de tracking visual-inercial (ya sea mediante SLAM o

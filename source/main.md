@@ -27,4 +27,4 @@
 <!-- #include contents/contributions/index.md -->
 <!-- #endif -->
 
-# References {.unnumbered}
+# Bibliografía {.unnumbered}

@@ -138,7 +138,7 @@ se utilizan habitualmente en dispositivos de consumo como teléfonos
 inteligentes, presentan un _rolling shutter_ en dónde los píxeles son capturados
 en un "barrido" vertical, fila por fila. Esto genera
 distorsiones[^rolling-shutter-name] significativas en presencia de movimientos
-rápidos como se ve en la figura @fig:rolling-shutter.
+rápidos como se ve en la Figura @fig:rolling-shutter.
 
 ![
 Ejemplo de la distorsión que se genera en cámaras con rolling shutter que

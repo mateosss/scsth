@@ -103,16 +103,17 @@ El funcionamiento de `TrackerSlam` es sencillo, los controladores que quieran
 ser localizados por SLAM y puedan proveer imágenes y muestras de IMU deben
 instanciar este adaptador e inicializarlo. Por detrás, esto simplemente llama a
 los métodos adecuados de la interfaz `slam_tracker` con el sistema externo.
-Ahora bien, se aprovecha este adaptador para proveer dos funcionalidades
-fundamentales que escapan al alcance de los sistemas de SLAM/VIO y serán
-explicados a continuación: **predicción** y **filtrado** de poses.
+Ahora bien, se aprovecha esta clase adaptadora[^adapter-class-remark] para
+proveer dos funcionalidades fundamentales que escapan al alcance de los sistemas
+de SLAM/VIO y serán explicados a continuación: **predicción** y **filtrado** de
+poses.
 
 <!-- TODO: Hago las "Notas" así? hay una mejor manera? quizás a un
 costado de la página o con un recuadro tcolorbox como vi en un video -->
 
-_Nota: es debatible si el añadido de estas funcionalidades haría que
-`TrackerSlam` deje de ser considerada una clase adaptadora, ya que como veremos,
-ambas pueden ser deshabilitadas en tiempo de ejecución._
+[^adapter-class-remark]: Es debatible si el añadido de estas funcionalidades
+haría que `TrackerSlam` deje de ser considerada una clase adaptadora, ya que
+como veremos, ambas pueden ser deshabilitadas en tiempo de ejecución._
 
 #### Predicción de poses
 

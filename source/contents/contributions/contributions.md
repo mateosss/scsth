@@ -1,5 +1,3 @@
-<!-- TODO: Qué es XR -->
-
 # Contribuciones
 
 <!-- #include contents/contributions/context.md -->
