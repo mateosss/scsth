@@ -1937,10 +1937,11 @@ espacio más reciente del historial para realizar el cómputo con
 Simétricamente para extrapolar hacia el pasado lejano\footnote{La
   especificación de OpenXR tiene una sección dedicada a las
   restricciones y condiciones a los que el runtime está sujeto respecto
-  a solicitudes en el pasado y en el futuro por parte del usuario.
-  \url{https://www.khronos.org/registry/OpenXR/specs/1.0-khr/html/xrspec.html\#prediction-time-limits}},
-o sea fuera del registro del historial, se utilizará el espacio más
-antiguo almacenado y \(\Delta T^{-1}\).
+  a solicitudes en el pasado y en el futuro por parte del usuario. Ver
+  {[}\protect\hyperlink{ref-thekhronosgroupinc.OpenXRSpecification}{The
+  Khronos Group Inc. n.d.}, secc. 2.14{]}}, o sea fuera del registro del
+historial, se utilizará el espacio más antiguo almacenado y
+\(\Delta T^{-1}\).
 
 Sería razonable, como primera aproximación a nuestro problema, utilizar
 este historial de espacios. Esto nos garantiza que podamos proveerle al
@@ -2098,18 +2099,268 @@ mismo escenario.
 \caption[Predicción sin uso de muestras IMU]{Ejemplo   de   predicción   para   tiempos   $t \in \{1,45; 1,75; 1.95\}$   ignorando   las  muestras   de   IMU   y   utilizando   unicamente   el   historial   de   poses   con   \texttt{A}   y   \texttt{B}   como  últimas   muestras   (esto   es   antes   de   que   llegue   \texttt{C} ).   De   vuelta,   asumimos   que   las  estimaciones   y   no   contienen   error   por   simplicidad.}\label{fig:prediction-without-imu}
 \end{figure}
 
+Finalmente, cabe aclarar que la trayectoria presentada en estas figuras
+es particularmente desafiante. Considerando que estos dispositivos XR
+están usualmente sujetos a partes como la cabeza o las manos del
+usuario, es improbable encontrar trayectorias demasiado abruptas entre
+los tiempos de estimación de las poses de SLAM. Estos, al coincidir con
+la frecuencia de muestreo de las cámaras, suelen ser menores a 50ms
+(p.ej. a 30 cuadros por segundo, tenemos \textasciitilde33ms entre pose
+y pose). Por otro lado, es usual tener una mayor cantidad de muestras de
+IMU entre estimaciones y no solo las 3 que se muestran en las figuras
+(p.ej. a 30 cuadros por segundo con la IMU a 250 hz, tenemos unas
+\textasciitilde8 muestras de IMU entre cada par de cuadros
+consecutivos), lo cual mejora la precisión de la predicción aún más.
+
 \hypertarget{filtrado-de-poses}{%
 \subsubsection{Filtrado de poses}\label{filtrado-de-poses}}
 
-TODO: Explicaría los distintos tipos de filtros en uso para reducir el
-jittering en las poses: moving average, exponential smoothing, one-euro
-filter
+Continuando con la descripción de la funcionalidad presente en la clase
+adaptadora \texttt{TrackerSlam} y luego de haber presentado el método de
+predicción que se emplea en Monado, veremos ahora la siguiente
+funcionalidad que \texttt{TrackerSlam} implementa: el \textbf{filtrado}
+de poses.
+
+También llamado \emph{smoothing}, alisado o suavizado, el filtro de
+señales, curvas o, en este caso poses, es una forma de minimizar o
+\emph{filtrar} el ruido presente en alguna fuente de información y
+suavizar los cambios abruptos en las poses. Lo que sucede en nuestro
+caso es que por la naturaleza del problema en cuestión y por algunas de
+las decisiones tomadas, se pueden notar la presencia de micro
+movimientos de alta frecuencia que existen en la trayectoria estimada.
+Estas alteraciones no son más que ruido proveniente de distintos
+factores.
+
+Por un lado, los sistemas de SLAM/VIO en el área no necesariamente
+priorizan el caso de uso de XR y suelen estar mayormente interesados en
+aplicaciones de robótica. En este campo, la ``sensación'' que produciría
+el tracking no es un factor de importancia comparado a la precisión
+absoluta del mismo. En particular, las métricas más utilizadas en estos
+trabajos son las que evalúan el error absoluto de la trayectoria en su
+totalidad (ATE, APE, AOE). Es intuitivo ver que estas métricas, a
+diferencias de sus versiones relativas (RTE, RPE, ROE), incentivan
+correcciones abruptas en la trayectoria cuando los sistemas determinan
+que su pose actual no es la mejor posible (p.~ej. en momentos de loop
+closure). Más aún, minimizar el ruido en la trayectoria no es uno de sus
+objetivos, ya que la aplicación artificial de filtros que suavicen la
+trayectoria podría tender a empeorar el puntaje obtenido en estos
+conjuntos de datos. Todo esto hace que muchas veces las trayectorias
+computadas por los sistemas en condiciones no óptimas tiendan a
+presentar una gran cantidad de movimientos bruscos. Estos pueden
+resultar particularmente notables en sistemas VR en dónde las pantallas
+ocupan todo el campo de visión del usuario; movimientos de este tipo
+pueden fácilmente inducir cinetosis.
+
+Por sobre esto, el método de predicción presentado en la sección
+anterior en la Figura \ref{fig:prediction-with-imu} presenta problemas
+que no fueron tratados. En particular, la predicción que realizamos está
+basada en una única pose del sistema SLAM y las muestras nueva de la
+IMU, pero no comparte ningún otro estado en común. Entonces podría
+esperarse que la diferencia entre las poses que se fueron prediciendo
+con la nueva pose que el sistema estimará sea significativa. Más aún, en
+la realidad el error acumulado por la IMU, a pesar de verse limitado a
+un intervalo corto de unas decenas de milisegundos, es un término más
+que afectaría esta diferencia. Todo esto puede verse en el error marcado
+en la Figura \ref{fig:prediction-offset-jump}. Este tipo de desfasaje
+sería reintroducido de forma repetitiva afectando las predicciones cada
+vez que una nueva pose es estimada, causando así constantes micro saltos
+(ruido), especialmente en los momentos en los que la pose estimada por
+SLAM y la pose predicha por nuestro método difieran significativamente.
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=\textwidth,height=562pt,keepaspectratio]{source/figures/prediction-offset-jump.pdf}
+\caption[Predicción sin uso de muestras IMU]{Desfasaje   esperado   entre   el   método   de   predicción   por   muestras   promediadas   y   la  pose   \texttt{C}   estimada   de   SLAM   cuando   \texttt{C}   aún   no   pertenece   al   historial   de   espacios.  Se   muestra   la   incidencia   de   la   acumulación   de   errores   de   la   IMU.   Este   desfasaje  causará   micro   saltos   que   serían   disruptivos   en   una   experiencia   de   VR.}\label{fig:prediction-offset-jump}
+\end{figure}
+
+Es entonces por estas razones, que se implementaron tres métodos
+sencillos de filtrado combinables para suavizar las trayectorias
+estimadas y que intentan minimizar los problemas expuestos. Se deja como
+trabajo futuro el uso de filtros más elaborados como los filtros Kalman
+{[}\protect\hyperlink{ref-welchSCAATIncrementalTracking1997}{Welch \&
+Bishop 1997}, ap. B{]}. Cabe aclarar que en general, el uso de filtros
+también presenta una desventaja fundamental. Esta es, la introducción de
+latencia artificial al sistema, ya que para poder suavizar este ruido,
+los filtros tienden a reducir cambios abruptos en la trayectoria,
+incluso cuando estos sean realmente los movimientos que el usuario
+realizó físicamente.
+
+Presentaremos tres filtros, con el más sofisticado basado en
+{[}\protect\hyperlink{ref-casiezFilterSimpleSpeedbased2012}{Casiez et
+al. 2012}{]}. Además, dicho trabajo cubre el resto de filtros
+presentados, muestra gráficas comparativas, y es también una buena
+lectura para contextualizar el uso de filtros para tracking de
+movimientos humanos. Los filtros presentados aquí y en el trabajo
+mencionado pueden visualizarse interactivamente en la siguiente
+aplicación web:
+\url{https://cristal.univ-lille.fr/~casiez/1euro/InteractiveDemo/}.
+
+El funcionamiento esquemático de un filtro es muy sencillo: es un
+contenedor de \textbf{estado}, con un método de \textbf{actualización}
+que recibe un nuevo \textbf{dato} con una \textbf{timestamp} posterior a
+las provistas hasta el momento; con esto, el filtro computa el valor de
+la \textbf{señal filtrada} para una timestamp requerida. En nuestro
+caso, esta timestamp coincidirá con la del dato de entrada. En Monado,
+ubicaremos el filtro al final del pipeline de \texttt{TrackerSlam},
+justo antes de devolverle la pose a la aplicación OpenXR, es decir luego
+de haber pasado por el procedimiento de predicción. Los filtros
+habilitados interceptan la pose con sus métodos de actualización
+respectivos y devuelven en su lugar una nueva pose filtrada con la misma
+timestamp. Los tres filtros se encuentran uno detrás del otro y son
+combinables.
+
+Expresado más formalmente, lo que tendremos es un conjunto de poses
+\(X_0, ..., X_k \in \R^7\) que ocurren a tiempos \(t_0 < ... < t_k\)
+respectivamente. Para \(i = 0, ..., k\) definimos \(X_i = (p_i, q_i)\)
+con \(p_i \in \R^3\) definido por los primeros tres componentes de
+\(X_i\) para representar la posición, mientras que definimos el
+cuaternión \(q_i\) para representar la orientación con coeficientes
+dados por los últimos cuatro componentes. Tenemos además las versiones
+filtradas de las poses anteriores \(\hat{X}_0, ..., \hat{X}_{k - 1}\) y
+querremos ahora computar la versión filtrada de la pose actual
+\(\hat{X}_k\).
+
+\hypertarget{media-muxf3vil}{%
+\paragraph{Media móvil}\label{media-muxf3vil}}
+
+El primer filtro es una \emph{media móvil}. El estado de este filtro
+consiste de un historial de poses de los últimos \(m\) segundos. El
+método de actualización registra la pose de entrada y su timestamp en
+este historial interno. Para computar la pose de salida en esa
+timestamp, se toma el promedio de las poses de los últimos \(w < m\)
+segundos (por defecto 66 ms). El parámetro \(w\) es configurable por el
+usuario.
+
+Cabe aclarar, que si bien la forma de calcular el promedio para las
+posiciones \(p_i\) debería resultar clara, promediar las orientaciones
+\(q_i\) expresadas mediante cuaterniones no es trivial. En este caso,
+nos aprovecharemos del hecho de que \(w\) suele ser pequeño y por ende
+contiene orientaciones que no cambian significativamente. Esto nos
+permite utilizar el resultado expuesto en
+{[}\protect\hyperlink{ref-gramkowAveragingRotations2001}{Gramkow
+2001}{]} que muestra que, para rotaciones de menos de 40 grados,
+calcular la media usual (y posteriormente normalizarla) es una muy buena
+aproximación con un error de menos del 1\%.
+
+Tenemos entonces que el filtro queda definido por la siguiente ecuación.
+\begin{align}
+\hat{X}_k &= \frac{1}{|W|} \sum_{i \in W}{X_i}
+\quad \text{con} \\
+W &= \{ i : t_k - w \leq t_i \leq t_k \} \quad \text{(ventana del filtro)}
+\end{align}
+
+Notar que podemos definir el concepto de sumatoria componente a
+componente en \(\R^7\) gracias a la aproximación de los cuaterniones
+mencionada anteriormente.
+
+\hypertarget{suavizado-exponencial}{%
+\paragraph{Suavizado exponencial}\label{suavizado-exponencial}}
+
+Este filtro codifica en un único valor los datos históricos e integra
+nuevos datos con una intensidad dada por un \emph{factor de suavizado}
+\(\alpha \in [0, 1]\) configurable por el usuario (0.1 por defecto). En
+el caso de tener un único escalar \(x_k\) que filtrar, el suavizado
+exponencial queda definido de esta forma: \begin{align}
+\hat{x}_0 &= x_0 \\
+\hat{x}_k &= \alpha x_k + (1 - \alpha) \hat{x}_{k-1} \label{eq:exp-smoothing-scalar}
+\end{align}
+
+Reformulemos la \Cref{eq:exp-smoothing-scalar} de la siguiente manera:
+\begin{align}
+\hat{x}_k &= \alpha x_k + (1 - \alpha) \hat{x}_{k-1} \\
+&= \alpha x_k + \hat{x}_{k-1} - \alpha \hat{x}_{k-1} \\
+&= \hat{x}_{k-1} + \alpha (x_k - \hat{x}_{k-1})
+\end{align}
+
+Esto nos deja ver el paso de actualización del filtro como una
+interpolación (lineal) de \(\hat{x}_{k-1}\) hacia \(x_k\) con paso
+\(\alpha\). Utilizaremos esta idea para interpolar esféricamente la
+orientación de \(\hat{X}_k\). Tenemos entonces que el paso de
+actualización para este filtro queda definido como: \begin{align}
+\hat{X}_k &= (\hat{p}_k, \hat{q}_k) \\
+\hat{p}_k &= lerp(\hat{p}_{k-1}, p_k, \alpha) = \hat{p}_{k-1} + \alpha (p_k - \hat{p}_{k-1}) \\
+\hat{q}_k &= slerp(\hat{q}_{k-1}, q_k, \alpha) = \hat{q}_{k-1}
+(\hat{q}_{k-1}^{-1} q_k)^\alpha
+\end{align}
+
+\hypertarget{filtro-1}{%
+\paragraph{Filtro 1€}\label{filtro-1}}
+
+El filtro 1€
+{[}\protect\hyperlink{ref-casiezFilterSimpleSpeedbased2012}{Casiez et
+al. 2012}{]} se basa en el \Cref{sec:exponential-smoothing}, pero
+utiliza un factor \(\alpha\) dinámico que se adapta automáticamente con
+base a la tasa de cambio de la señal. Reusamos también la idea de
+interpolar esféricamente para la orientación presentada en el filtro
+anterior. El filtro queda definido para la posición \(p_k\) de la
+siguiente manera: \begin{align}
+\hat{p}_0 &= p_0 \\
+\hat{p}_k &= lerp(\hat{p}_{k-1}, p_k, \alpha)
+\end{align}
+
+Con \(\alpha\) que se adapta con la velocidad de la señal: \begin{align}
+\alpha &= \frac{1}{1 + \frac{\tau}{\Delta t_k}} \\
+\Delta t_k &= t_k - t_{k-1} \\
+\tau &= \frac{1}{2 \pi f_C}
+\end{align}
+
+A continuación, \(f_C\) es la llamada \emph{frecuencia de
+corte}\footnote{Algunos lectores reconocerán que el término ``frecuencia
+  de corte'' proviene de los filtros \emph{low-pass} y efectivamente,
+  notarán que el filtro 1€ es de este tipo con la particularidad de
+  tener una frecuencia de corte que dinámica.} y posee un mínimo
+ajustable por el usuario \(f_{C_{min}}\) y un parámetro de intensidad de
+actualización \(\beta\) también configurable\footnote{Frecuencias de
+  corte bajas reducen el ruido de las poses a costa de aumentar la
+  latencia. La forma en la que \(f_c\) es definida resulta en valores
+  altos (y por ende con baja latencia) cuando se presentan cambios
+  significativos en las poses, mientras que para movimientos más suaves
+  se reduce \(f_c\) para a su vez disminuir el ruido.}. \begin{align}
+f_C &= f_{C_{min}} + \beta | \hat{\dot{p}}_k |
+\end{align}
+
+La velocidad de la señal es a su vez ajustada con otro filtro de
+suavizado exponencial con factor de suavizado fijo \(f_{C_d}\), también
+configurable por el usuario. \begin{align}
+\hat{\dot{p}}_0 &= 0 \\
+\hat{\dot{p}}_k &= lerp(\hat{\dot{p}}_{k-1}, \dot{p}_k, f_{C_d})
+\end{align}
+
+Con velocidades instantáneas. \begin{align}
+\dot{p}_0 &= 0 \\
+\dot{p}_k &= \frac{p_k - \hat{p}_{k-1}}{\Delta t_k}
+\end{align}
+
+La versión del filtro utilizada para la orientación \(q_k\) es análoga a
+la definición anterior con algunas aclaraciones:
+
+\begin{itemize}
+\tightlist
+\item
+  En lugar de \(lerp\) se utiliza \(slerp\).
+\item
+  Sobrecargamos el operador de resta de cuaterniones de la siguiente
+  forma: \(q_a - q_b = q_b^{-1} q_a\).
+\item
+  La norma de un cuaternión es equivalente a la norma euclídea en
+  \(\R^4\), es decir \(|q| = \sqrt{q_x^2 + q_y^2 + q_z^2 + q_w^2}\).
+\end{itemize}
 
 \hypertarget{recapitulando}{%
 \subsection{Recapitulando}\label{recapitulando}}
 
-TODO: Resumiría todas las partes describiendo el flujo de datos como se
-vió en la imagen con la que arranca esta sección.
+Con la Figura \ref{fig:slam-tracker-dataflow} vista al principio de la
+sección en mente, hemos visto que se ha implementado una clase
+adaptadora \texttt{TrackerSlam} en Monado que funciona como punto
+central de comunicación con los sistemas de SLAM/VIO integrados. Esta
+clase además implementa funcionalidades de predicción y filtrado de
+poses que son configurables en runtime.
+
+Los controladores de dispositivos físicos serán los encargados de
+instanciar y comunicarse con esta clase. Veremos en la siguiente sección
+los dos controladores (y por ende dispositivos) que necesitaron ser
+expandidos para este trabajo y que constituyen una contribución
+importante al runtime.
 
 \hypertarget{controladores-en-monado}{%
 \section{Controladores en Monado}\label{controladores-en-monado}}
@@ -2131,11 +2382,25 @@ Boyd, S., 2018. \emph{Introduction to {Applied Linear Algebra}:
 {Vectors}, {Matrices}, and {Least Squares}} 1st edition., {Cambridge, UK
 ; New York, NY}: {Cambridge University Press}.
 
+\leavevmode\vadjust pre{\hypertarget{ref-casiezFilterSimpleSpeedbased2012}{}}%
+Casiez, G., Roussel, N. \& Vogel, D., 2012. 1 \texteuro{} filter: A
+simple speed-based low-pass filter for noisy input in interactive
+systems. In \emph{Proceedings of the {SIGCHI Conference} on {Human
+Factors} in {Computing Systems}}. {Austin Texas USA}: {ACM}, pp.
+2527--2530. Available at:
+\url{https://dl.acm.org/doi/10.1145/2207676.2208639} {[}Accessed
+December 28, 2021{]}.
+
 \leavevmode\vadjust pre{\hypertarget{ref-forsterOnManifoldPreintegrationRealTime2017}{}}%
 Forster, C. et al., 2017. On-{Manifold Preintegration} for {Real-Time
 Visual-Inertial Odometry}. \emph{IEEE Transactions on Robotics}, 33(1),
 pp.1--21. Available at: \url{http://arxiv.org/abs/1512.02363}
 {[}Accessed July 8, 2021{]}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-gramkowAveragingRotations2001}{}}%
+Gramkow, C., 2001. \href{https://doi.org/10.1023/A:1011217513455}{On
+{Averaging Rotations}}. \emph{Journal of Mathematical Imaging and
+Vision}, 15, pp.7--16.
 
 \leavevmode\vadjust pre{\hypertarget{ref-lakosLargeScaleSoftwareDesign1996}{}}%
 Lakos, J., 1996. \emph{Large-{Scale C}++ {Software Design}} 1st
@@ -2170,6 +2435,18 @@ Schubert, D. et al., 2018. {The TUM VI Benchmark} for {Evaluating
 Visual-Inertial Odometry}. \emph{2018 IEEE/RSJ International Conference
 on Intelligent Robots and Systems (IROS)}, pp.1680--1687. Available at:
 \url{http://arxiv.org/abs/1804.06120} {[}Accessed November 5, 2021{]}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-thekhronosgroupinc.OpenXRSpecification}{}}%
+The Khronos Group Inc., \emph{The {OpenXR Specification}}, Available at:
+\url{https://www.khronos.org/registry/OpenXR/specs/1.0-khr/pdf/xrspec.pdf}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-welchSCAATIncrementalTracking1997}{}}%
+Welch, G. \& Bishop, G., 1997. {SCAAT}: Incremental tracking with
+incomplete information. In \emph{Proceedings of the 24th annual
+conference on {Computer} graphics and interactive techniques -
+{SIGGRAPH} '97}. {Not Known}: {ACM Press}, pp. 333--344. Available at:
+\url{http://portal.acm.org/citation.cfm?doid=258734.258876} {[}Accessed
+December 27, 2021{]}.
 
 \leavevmode\vadjust pre{\hypertarget{ref-williamsPyramidalParametrics1983}{}}%
 Williams, L., 1983.

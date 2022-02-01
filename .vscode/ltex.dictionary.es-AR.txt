@@ -12,7 +12,8 @@ RPGO
 Robust
 Graph
 Optimization
-loop closure
+loop
+closure
 outliers
 microelectromecánicos
 MEMS
@@ -61,3 +62,16 @@ motion sickness
 callbacks
 instanciar
 instanciar este
+swimminess
+Kalman
+cuaterniones
+cuaternión
+smoothing
+ATE
+APE
+AOE
+RTE
+RPE
+ROE
+VR
+AR

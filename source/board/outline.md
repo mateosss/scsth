@@ -81,7 +81,7 @@ Notación:
           de mapeo global en Basalt, los problemas de Kimera, etc)
     - [DRAFT] Clase adaptadora (t_tracker_slam: pose correction, debug utilities, euroc recorder, etc)
     - [DRAFT] Predicción (explicar los distintos niveles)
-    - [TODO] Filtrado (explicar los distintos tipos, mencionar kalman?)
+    - [DRAFT] Filtrado (explicar los distintos tipos, mencionar kalman?)
   - [TODO] Controladores en Monado
     - [TODO] Controlador para dispositivos RealSense (rs_source, D455 and others)
     - [TODO] Controlador para dispositivos WMR (wmr_source, Odyssey+ and others)
@@ -104,10 +104,6 @@ Notación:
     - [MAYBENOT] Autoexposición
     - [MAYBENOT] Interpolación de muestras de IMU
     - [MAYBENOT] Cámaras OAK-D / Luxonis / Depth-aI
-- [WHAT|WAIT] Resultados: comparar basalt pre iccv2021, post iccv2021
-  float/double, orb-slam3 pre v1.0, post v1.0, kimera (actualizarlo con
-  march=native). Comparar rendimiento con análisis de los tiempos dados por
-  perfetto. Comparar precisión con colmap. Datasets facil-medio-dificil para
-  d455 y odyssey.
+- [TODO] Resultados
 - [TODO] Conclusion
 - [AUTO] Referencias

@@ -66,8 +66,9 @@ tex: md
 
 # TODO@end: Be sure to run this command twice or thrice to get all references properly
 pdf: tex
-		xelatex -output-directory=$(OUTPUTDIR)/latex $(OUTPUTDIR)/thesis.tex 2>&1 | tee output/logs/xelatex.pdf.log
-		mv $(OUTPUTDIR)/latex/thesis.pdf $(OUTPUTDIR)/
+		xelatex -halt-on-error -output-directory=$(OUTPUTDIR)/latex $(OUTPUTDIR)/thesis.tex 2>&1 &&\
+		mv $(OUTPUTDIR)/latex/thesis.pdf $(OUTPUTDIR)/ \
+		| tee output/logs/xelatex.pdf.log
 
 all: md tex pdf
 

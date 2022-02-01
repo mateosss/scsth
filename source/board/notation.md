@@ -22,15 +22,19 @@ haciendo. Revisar si después de reubicar todos los capítulos eso se arregla o 
   género.
  -->
 
+<!-- TODO@style: revisar templates de esta página http://www.latextemplates.com/template/tufte-book tienen buena pinta algunos
+Este! http://www.latextemplates.com/template/classicthesis-thesis
+También tienen tapas: http://www.latextemplates.com/cat/title-pages
+-->
 <!-- TODO@style: arreglar como se ven las citas en el pdf -->
 <!-- TODO@style: citation style is in ref_format.csl, update with one that is good -->
 <!-- TODO@style: que en vez de figure, diga figura (lo mismo para tablas y otros textos autogenerados) -->
 <!-- TODO@style: links con alguna marca/color -->
 <!-- TODO@style: caratula, copyright cc-0, UNC, FaMAF -->
-<!-- TODO@style: Por que las captions de las figuras cambian la tipografía -->
 <!-- TODO@style: Los links a las figuras deberían tener color o algo -->
 <!-- TODO@style: Los links a las footnotes no andan -->
 
+<!-- TODO@endbig: rehacer todas las figuras manuscritas -->
 <!-- TODO@end: todo lo que diga TODO@end hay que chequearlo al terminar el trabajo -->
 <!-- TODO@end: Revisar todos los conceptos introducidos con _negritas_ y ver si lo explico en la tesis -->
 <!-- TODO@end: chequear todo en busca de problemas de ortografía con LTeX -->
