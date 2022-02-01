@@ -1120,6 +1120,10 @@ implementación.
 
 ### Interfaz externa
 
+<!-- ### Interfaz externa -->
+<!-- TODO@automation: It would be awesome to be able to use just h1 headings
+(H1) and then be the parent that appends # to all headings -->
+
 <!-- TODO: mencionar que ORB-SLAM3 está en un fork separado de monado por GPL -->
 
 Desde un principio se entendió que se necesitaría utilizar sistemas ya
@@ -1245,7 +1249,10 @@ performance adecuada.
 
 \FloatBarrier
 
+
 ### Implementaciones de la interfaz
+
+<!-- ### Implementaciones de la interfaz -->
 
 A la hora de implementar la interfaz `slam_tracker` se documentan en los tres
 métodos principales `push_imu_sample`, `push_frame` y `try_dequeue_pose`
@@ -1368,6 +1375,7 @@ abajo Basalt.
 
 \FloatBarrier
 
+
 ### Clase adaptadora
 
 Para interactuar con la interfaz que detallamos en la sección anterior, se
@@ -1393,6 +1401,8 @@ _Nota: es debatible si el añadido de estas funcionalidades haría que
 ambas pueden ser deshabilitadas en tiempo de ejecución._
 
 #### Predicción de poses
+
+<!-- #### Predicción de poses -->
 
 ##### El problema
 
@@ -1752,7 +1762,10 @@ muestran en las figuras (p.ej. a 30 cuadros por segundo con la IMU a 250 hz,
 tenemos unas ~8 muestras de IMU entre cada par de cuadros consecutivos), lo cual
 mejora la precisión de la predicción aún más.
 
+
 #### Filtrado de poses
+
+<!-- #### Filtrado de poses -->
 
 Continuando con la descripción de la funcionalidad presente en la clase
 adaptadora `TrackerSlam` y luego de haber presentado el método de predicción que
@@ -1996,6 +2009,7 @@ definición anterior con algunas aclaraciones:
 - La norma de un cuaternión es equivalente a la norma euclídea en $\R^4$, es
   decir $|q| = \sqrt{q_x^2 + q_y^2 + q_z^2 + q_w^2}$.
 
+
 ### Recapitulando
 
 Con la Figura @fig:slam-tracker-dataflow vista al principio de la sección en
@@ -2199,6 +2213,7 @@ tracking interno de una T265 con los distintos sistemas externos integrados en
 este trabajo.
 
 ### Windows Mixed Reality
+
 
 
 
