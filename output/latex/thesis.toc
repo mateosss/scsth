@@ -29,4 +29,7 @@
 \contentsline {paragraph}{\numberline {4.2.3.2.3}Filtro 1€}{56}{paragraph.4.2.3.2.3}%
 \contentsline {subsection}{\numberline {4.2.4}Recapitulando}{58}{subsection.4.2.4}%
 \contentsline {section}{\numberline {4.3}Controladores en Monado}{58}{section.4.3}%
-\contentsline {chapter}{References}{59}{chapter*.19}%
+\contentsline {subsection}{\numberline {4.3.1}Consideraciones}{60}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}RealSense}{62}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.3}Windows Mixed Reality}{64}{subsection.4.3.3}%
+\contentsline {chapter}{References}{65}{chapter*.22}%
