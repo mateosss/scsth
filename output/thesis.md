@@ -2,7 +2,6 @@
 
 
 
-
 # Resumen (TODO) {.unnumbered .unlisted}
 
 
@@ -931,7 +930,6 @@ para uso futuro.
 <!-- TODO@future: punto de mejora para basalt: usar dogleg minimization en vez de levenberg-marquardt. No se si vale la pena mencionarlo -->
 <!-- TODO@question: question for basalt: why are they not using gtsam/g2o/ceres for the solvers? -->
 <!-- TODO@future: parallelization/vectorization of gauss newton seems very easy, levenberg marquardt not so much -->
-
 
 <!-- TODO: Qué es XR -->
 

@@ -35,6 +35,7 @@ md:
 	gpp -n -U "" "" "(" "," ")" "(" ")" "#" "" \
     -M "<!-- #\w" "-->\n" " " " " "-->\n" "(" ")" \
     +s "\"" "\"" "\\" \
+		-I $(INPUTDIR)/ \
     $(INPUTDIR)/main.md > $(OUTPUTDIR)/thesis.md
 
 # TODO: Define HTML, PDF, TEX macros and use them in sourcecode for conditional
