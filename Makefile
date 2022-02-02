@@ -15,7 +15,8 @@ help:
 	@echo ''
 	@echo 'Usage:'
 	@echo '   make install                     install pandoc plugins'
-	@echo '   make pdf                         generate a PDF file'
+	@echo '   make pdfull                      generate a PDF file with updated bib'
+	@echo '   make pdfast                      generate a PDF file'
 	@echo '   make tex                         generate a Latex file'
 	@echo ''
 	@echo ''
@@ -52,7 +53,6 @@ tex: md
 	pandoc \
 	--output="$(OUTPUTDIR)/thesis.tex" \
 	--template="$(STYLEDIR)/template.tex" \
-	--bibliography="$(BIBFILE)" \
 	--top-level-division=chapter \
 	--verbose \
 	"$(OUTPUTDIR)/thesis.md"
@@ -81,14 +81,19 @@ tex: md
 # 		--verbose \
 # 		2> $(OUTPUTDIR)/logs/pandoc.tex.log
 
-# TODO@end: Be sure to run this command twice or thrice to get all references properly
-pdf: tex
-		pdflatex -halt-on-error $(OUTPUTDIR)/thesis.tex
-# pdf: tex
-# 		pdflatex -halt-on-error -output-directory=$(OUTPUTDIR)/latex $(OUTPUTDIR)/thesis.tex 2>&1 &&\
-# 		mv $(OUTPUTDIR)/latex/thesis.pdf $(OUTPUTDIR)/ \
-# 		| tee output/logs/pdflatex.pdf.log
+PDFLATEXCMD = pdflatex -halt-on-error \
+	-output-directory=$(OUTPUTDIR)/latex $(OUTPUTDIR)/thesis.tex 2>&1 && \
+	mv $(OUTPUTDIR)/latex/thesis.pdf $(OUTPUTDIR)/ \
+	| tee output/logs/pdflatex.pdf.log
 
+pdfast: tex
+		$(PDFLATEXCMD)
+
+pdfull: tex
+		$(PDFLATEXCMD)
+		cd output/latex && bibtex thesis && cd ..
+		$(PDFLATEXCMD)
+		$(PDFLATEXCMD)
 all: md tex pdf
 
-.PHONY: help install md tex pdf
+.PHONY: help install md tex pdfull pdfast
