@@ -6,7 +6,8 @@ STYLEDIR=$(BASEDIR)/style
 SCRATCHDIR=$(BASEDIR)/scratch
 EXTERNALDIR=$(BASEDIR)/external
 
-BIBFILE=$(INPUTDIR)/references.bib
+# BIBFILE=$(INPUTDIR)/references.bib
+BIBFILE=Bibliography.bib
 
 help:
 	@echo ''
@@ -48,33 +49,45 @@ md:
 # procesado por gpp y chau
 
 tex: md
-		pandoc \
-		--output "$(OUTPUTDIR)/thesis.tex" \
-		--template="$(STYLEDIR)/template.tex" \
-		--include-in-header="$(EXTERNALDIR)/01mf02/pandocfilters/header.tex" \
-		--include-in-header="$(STYLEDIR)/preamble.tex" \
-		--variable=fontsize:11pt \
-		--variable=papersize:a4paper \
-		--variable=documentclass:report \
-		--metadata=link-citations:true \
-		--pdf-engine=xelatex \
-		"$(OUTPUTDIR)/thesis.md" \
-		"$(INPUTDIR)/metadata.yml" \
-		--filter=external/mparker2/pandoc-shortcaption.py \
-		--filter=pandoc-xnos \
-		--filter=external/01mf02/pandocfilters/all.py \
-		--bibliography="$(BIBFILE)" \
-		--citeproc \
-		--csl="$(STYLEDIR)/ref_format.csl" \
-		--number-sections \
-		--verbose \
-		2> output/logs/pandoc.tex.log
+	pandoc \
+	--output="$(OUTPUTDIR)/thesis.tex" \
+	--template="$(STYLEDIR)/template.tex" \
+	--bibliography="$(BIBFILE)" \
+	--verbose \
+	"$(OUTPUTDIR)/thesis.md"
+	2> $(OUTPUTDIR)/logs/pandoc.tex.log
+
+# tex: md
+# 		pandoc \
+# 		--output "$(OUTPUTDIR)/thesis.tex" \
+# 		--template="$(STYLEDIR)/template.tex" \
+# 		--include-in-header="$(EXTERNALDIR)/01mf02/pandocfilters/header.tex" \
+# 		--include-in-header="$(STYLEDIR)/preamble.tex" \
+# 		--variable=fontsize:11pt \
+# 		--variable=papersize:a4paper \
+# 		--variable=documentclass:report \
+# 		--metadata=link-citations:true \
+# 		--pdf-engine=xelatex \
+# 		"$(OUTPUTDIR)/thesis.md" \
+# 		"$(INPUTDIR)/metadata.yml" \
+# 		--filter=external/mparker2/pandoc-shortcaption.py \
+# 		--filter=pandoc-xnos \
+# 		--filter=external/01mf02/pandocfilters/all.py \
+# 		--bibliography="$(BIBFILE)" \
+# 		--citeproc \
+# 		--csl="$(STYLEDIR)/ref_format.csl" \
+# 		--number-sections \
+# 		--verbose \
+# 		2> $(OUTPUTDIR)/logs/pandoc.tex.log
 
 # TODO@end: Be sure to run this command twice or thrice to get all references properly
 pdf: tex
-		xelatex -halt-on-error -output-directory=$(OUTPUTDIR)/latex $(OUTPUTDIR)/thesis.tex 2>&1 &&\
-		mv $(OUTPUTDIR)/latex/thesis.pdf $(OUTPUTDIR)/ \
-		| tee output/logs/xelatex.pdf.log
+		pdflatex -halt-on-error $(OUTPUTDIR)/thesis.tex 2>&1 \
+		| tee output/logs/pdflatex.pdf.log
+# pdf: tex
+# 		pdflatex -halt-on-error -output-directory=$(OUTPUTDIR)/latex $(OUTPUTDIR)/thesis.tex 2>&1 &&\
+# 		mv $(OUTPUTDIR)/latex/thesis.pdf $(OUTPUTDIR)/ \
+# 		| tee output/logs/pdflatex.pdf.log
 
 all: md tex pdf
 

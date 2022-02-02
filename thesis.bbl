@@ -1,0 +1,730 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.1 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated as
+% required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+\datalist[entry]{nyt/global//global/global}
+  \entry{adams:1996}{book}{}
+    \name{author}{1}{}{%
+      {{hash=AS}{%
+         family={Adams},
+         familyi={A\bibinitperiod},
+         given={Scott},
+         giveni={S\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Harper Business}%
+    }
+    \strng{namehash}{AS1}
+    \strng{fullhash}{AS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{A}
+    \field{sortinithash}{A}
+    \field{title}{The Dilbert Principle}
+    \list{location}{1}{%
+      {New York, NY, USA}%
+    }
+    \field{year}{1996}
+  \endentry
+
+  \entry{adams:2013}{book}{}
+    \name{author}{1}{}{%
+      {{hash=AS}{%
+         family={Adams},
+         familyi={A\bibinitperiod},
+         given={Scott},
+         giveni={S\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Portfolio Penguin}%
+    }
+    \strng{namehash}{AS1}
+    \strng{fullhash}{AS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{A}
+    \field{sortinithash}{A}
+    \field{title}{How to Fail at Almost Everything and Still Win Big: Kind of
+  the Story of My Life}
+    \list{location}{1}{%
+      {London, United Kingdom}%
+    }
+    \field{year}{2013}
+  \endentry
+
+  \entry{aurelius:2002}{book}{}
+    \name{author}{1}{}{%
+      {{hash=AM}{%
+         family={Aurelius},
+         familyi={A\bibinitperiod},
+         given={Marcus},
+         giveni={M\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Modern Library}%
+    }
+    \strng{namehash}{AM1}
+    \strng{fullhash}{AM1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{A}
+    \field{sortinithash}{A}
+    \field{title}{Meditations (A New Translation)}
+    \list{location}{1}{%
+      {New York, NY, USA}%
+    }
+    \field{year}{2002}
+  \endentry
+
+  \entry{bentley:1999}{book}{}
+    \name{author}{1}{}{%
+      {{hash=BJ}{%
+         family={Bentley},
+         familyi={B\bibinitperiod},
+         given={Jon},
+         giveni={J\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Ad\-dison--Wesley}%
+    }
+    \strng{namehash}{BJ1}
+    \strng{fullhash}{BJ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{B}
+    \field{sortinithash}{B}
+    \field{edition}{2}
+    \field{title}{{P}rogramming {P}earls}
+    \list{location}{1}{%
+      {Boston, MA, USA}%
+    }
+    \field{year}{1999}
+  \endentry
+
+  \entry{bringhurst:2002}{book}{}
+    \name{author}{1}{}{%
+      {{hash=BR}{%
+         family={Bringhurst},
+         familyi={B\bibinitperiod},
+         given={Robert},
+         giveni={R\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Hartley \& Marks Publishers}%
+    }
+    \strng{namehash}{BR1}
+    \strng{fullhash}{BR1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{B}
+    \field{sortinithash}{B}
+    \field{series}{Version 4.0: 20th Anniversary Edition}
+    \field{title}{{T}he {E}lements of {T}ypographic {S}tyle}
+    \list{location}{1}{%
+      {Point Roberts, WA, USA}%
+    }
+    \field{year}{2013}
+  \endentry
+
+  \entry{cialdini:1984}{book}{}
+    \name{author}{1}{}{%
+      {{hash=CRB}{%
+         family={Cialdini},
+         familyi={C\bibinitperiod},
+         given={Robert\bibnamedelima B.},
+         giveni={R\bibinitperiod\bibinitdelim B\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Harper Business}%
+    }
+    \strng{namehash}{CRB1}
+    \strng{fullhash}{CRB1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{C}
+    \field{sortinithash}{C}
+    \field{title}{Influence: The Psychology of Persuasion}
+    \list{location}{1}{%
+      {New York, NY, USA}%
+    }
+    \field{year}{1984}
+  \endentry
+
+  \entry{cormen:2001}{book}{}
+    \name{author}{4}{}{%
+      {{hash=CTH}{%
+         family={Cormen},
+         familyi={C\bibinitperiod},
+         given={Thomas\bibnamedelima H.},
+         giveni={T\bibinitperiod\bibinitdelim H\bibinitperiod},
+      }}%
+      {{hash=LCE}{%
+         family={Leiserson},
+         familyi={L\bibinitperiod},
+         given={Charles\bibnamedelima E.},
+         giveni={C\bibinitperiod\bibinitdelim E\bibinitperiod},
+      }}%
+      {{hash=RRL}{%
+         family={Rivest},
+         familyi={R\bibinitperiod},
+         given={Ronald\bibnamedelima L.},
+         giveni={R\bibinitperiod\bibinitdelim L\bibinitperiod},
+      }}%
+      {{hash=SC}{%
+         family={Stein},
+         familyi={S\bibinitperiod},
+         given={Clifford},
+         giveni={C\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {The MIT Press}%
+    }
+    \strng{namehash}{CTH+1}
+    \strng{fullhash}{CTHLCERRLSC1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{C}
+    \field{sortinithash}{C}
+    \field{edition}{3}
+    \field{title}{{I}ntroduction to {A}lgorithms}
+    \list{location}{1}{%
+      {Cambridge, MA, USA}%
+    }
+    \field{year}{2009}
+  \endentry
+
+  \entry{dueck:trio}{book}{}
+    \name{author}{1}{}{%
+      {{hash=DG}{%
+         family={Dueck},
+         familyi={D\bibinitperiod},
+         given={Gunter},
+         giveni={G\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Springer}%
+    }
+    \strng{namehash}{DG1}
+    \strng{fullhash}{DG1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{D}
+    \field{sortinithash}{D}
+    \field{title}{{D}ueck's {T}rilogie 2.1: {O}mnisophie -- {S}upramanie --
+  {T}opothesie}
+    \list{location}{1}{%
+      {Berlin, Germany}%
+    }
+    \field{year}{2013}
+  \endentry
+
+  \entry{ferriss:2016}{book}{}
+    \name{author}{1}{}{%
+      {{hash=FT}{%
+         family={Ferriss},
+         familyi={F\bibinitperiod},
+         given={Timothy},
+         giveni={T\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Houghton Mifflin Harcourt}%
+    }
+    \strng{namehash}{FT1}
+    \strng{fullhash}{FT1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{F}
+    \field{sortinithash}{F}
+    \field{title}{Tools of Titans: The Tactics, Routines, and Habits of
+  Billionaires, Icons, and World-Class Performers}
+    \list{location}{1}{%
+      {Boston, MA, USA}%
+    }
+    \field{year}{2016}
+  \endentry
+
+  \entry{feynman:1985}{book}{}
+    \name{author}{1}{}{%
+      {{hash=FRP}{%
+         family={Feynman},
+         familyi={F\bibinitperiod},
+         given={Richard\bibnamedelima P.},
+         giveni={R\bibinitperiod\bibinitdelim P\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {W. W. Norton}%
+    }
+    \strng{namehash}{FRP1}
+    \strng{fullhash}{FRP1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{F}
+    \field{sortinithash}{F}
+    \field{title}{{S}urely {Y}ou're {J}oking, {M}r. {F}eynman: {A}dventures of
+  a {C}urious {C}haracter}
+    \list{location}{1}{%
+      {New York, NY, USA}%
+    }
+    \field{year}{1985}
+  \endentry
+
+  \entry{frankl:1959}{book}{}
+    \name{author}{1}{}{%
+      {{hash=FVE}{%
+         family={Frankl},
+         familyi={F\bibinitperiod},
+         given={Viktor\bibnamedelima E.},
+         giveni={V\bibinitperiod\bibinitdelim E\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Beacon Press}%
+    }
+    \strng{namehash}{FVE1}
+    \strng{fullhash}{FVE1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{F}
+    \field{sortinithash}{F}
+    \field{title}{Man's Search for Meaning}
+    \list{location}{1}{%
+      {Boston, MA, USA}%
+    }
+    \field{year}{1959}
+  \endentry
+
+  \entry{greenwald:2014}{book}{}
+    \name{author}{1}{}{%
+      {{hash=GG}{%
+         family={Greenwald},
+         familyi={G\bibinitperiod},
+         given={Glenn},
+         giveni={G\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Metropolitan Books}%
+    }
+    \strng{namehash}{GG1}
+    \strng{fullhash}{GG1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{G}
+    \field{sortinithash}{G}
+    \field{title}{{N}o {P}lace to {H}ide: {E}dward {S}nowden, the {NSA}, and
+  the {S}urveillance {S}tate}
+    \list{location}{1}{%
+      {New York, NY, USA}%
+    }
+    \field{year}{2014}
+  \endentry
+
+  \entry{harari:2014}{book}{}
+    \name{author}{1}{}{%
+      {{hash=HYN}{%
+         family={Harari},
+         familyi={H\bibinitperiod},
+         given={Yuval\bibnamedelima Noah},
+         giveni={Y\bibinitperiod\bibinitdelim N\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Random House}%
+    }
+    \strng{namehash}{HYN1}
+    \strng{fullhash}{HYN1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{H}
+    \field{sortinithash}{H}
+    \field{title}{Sapiens: A Brief History of Humankind}
+    \list{location}{1}{%
+      {New York, NY, USA}%
+    }
+    \field{year}{2014}
+  \endentry
+
+  \entry{knuth:1974}{article}{}
+    \name{author}{1}{}{%
+      {{hash=KDE}{%
+         family={Knuth},
+         familyi={K\bibinitperiod},
+         given={Donald\bibnamedelima E.},
+         giveni={D\bibinitperiod\bibinitdelim E\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {ACM Press}%
+    }
+    \strng{namehash}{KDE1}
+    \strng{fullhash}{KDE1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{K}
+    \field{sortinithash}{K}
+    \field{number}{12}
+    \field{pages}{667\bibrangedash 673}
+    \field{title}{{C}omputer {P}rogramming as an {A}rt}
+    \field{volume}{17}
+    \list{location}{1}{%
+      {New York, NY, USA}%
+    }
+    \field{journaltitle}{Communications of the ACM}
+    \field{year}{1974}
+  \endentry
+
+  \entry{knuth:1976}{article}{}
+    \name{author}{1}{}{%
+      {{hash=KDE}{%
+         family={Knuth},
+         familyi={K\bibinitperiod},
+         given={Donald\bibnamedelima E.},
+         giveni={D\bibinitperiod\bibinitdelim E\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {ACM Press}%
+    }
+    \strng{namehash}{KDE1}
+    \strng{fullhash}{KDE1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{K}
+    \field{sortinithash}{K}
+    \field{number}{2}
+    \field{pages}{18\bibrangedash 24}
+    \field{title}{{B}ig {O}micron and {B}ig {O}mega and {B}ig {T}heta}
+    \field{volume}{8}
+    \list{location}{1}{%
+      {New York, NY, USA}%
+    }
+    \field{journaltitle}{SIGACT News}
+    \field{year}{1976}
+  \endentry
+
+  \entry{munger:2008}{book}{}
+    \name{author}{1}{}{%
+      {{hash=MCT}{%
+         family={Munger},
+         familyi={M\bibinitperiod},
+         given={Charles\bibnamedelima T.},
+         giveni={C\bibinitperiod\bibinitdelim T\bibinitperiod},
+      }}%
+    }
+    \name{editor}{1}{}{%
+      {{hash=KPD}{%
+         family={Kaufman},
+         familyi={K\bibinitperiod},
+         given={Peter\bibnamedelima D.},
+         giveni={P\bibinitperiod\bibinitdelim D\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Donning Company}%
+    }
+    \strng{namehash}{MCT1}
+    \strng{fullhash}{MCT1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{M}
+    \field{sortinithash}{M}
+    \field{edition}{3}
+    \field{title}{Poor Charlie's Almanack: The Wit and Wisdom of Charles T.
+  Munger}
+    \list{location}{1}{%
+      {Virginia Beach, VA, USA}%
+    }
+    \field{year}{2008}
+  \endentry
+
+  \entry{orwell:1949}{book}{}
+    \name{author}{1}{}{%
+      {{hash=OG}{%
+         family={Orwell},
+         familyi={O\bibinitperiod},
+         given={George},
+         giveni={G\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Secker \& Warburg}%
+    }
+    \strng{namehash}{OG1}
+    \strng{fullhash}{OG1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{O}
+    \field{sortinithash}{O}
+    \field{title}{Nineteen Eighty-Four}
+    \list{location}{1}{%
+      {London, United Kingdom}%
+    }
+    \field{year}{1949}
+  \endentry
+
+  \entry{pausch:2008}{book}{}
+    \name{author}{1}{}{%
+      {{hash=PR}{%
+         family={Pausch},
+         familyi={P\bibinitperiod},
+         given={Randy},
+         giveni={R\bibinitperiod},
+      }}%
+    }
+    \name{editor}{1}{}{%
+      {{hash=ZJ}{%
+         family={Zaslow},
+         familyi={Z\bibinitperiod},
+         given={Jeffrey},
+         giveni={J\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Hodder \& Stoughton}%
+    }
+    \strng{namehash}{PR1}
+    \strng{fullhash}{PR1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{P}
+    \field{sortinithash}{P}
+    \field{title}{The Last Lecture}
+    \list{location}{1}{%
+      {London, United Kingdom}%
+    }
+    \field{year}{2008}
+  \endentry
+
+  \entry{peterson:2018}{book}{}
+    \name{author}{1}{}{%
+      {{hash=PJB}{%
+         family={Peterson},
+         familyi={P\bibinitperiod},
+         given={Jordan\bibnamedelima B.},
+         giveni={J\bibinitperiod\bibinitdelim B\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Random House Canada}%
+    }
+    \strng{namehash}{PJB1}
+    \strng{fullhash}{PJB1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{P}
+    \field{sortinithash}{P}
+    \field{title}{12 Rules for Life: An Antidote to Chaos}
+    \list{location}{1}{%
+      {Toronto, ON, Canada}%
+    }
+    \field{year}{2018}
+  \endentry
+
+  \entry{postman:2005}{book}{}
+    \name{author}{1}{}{%
+      {{hash=PN}{%
+         family={Postman},
+         familyi={P\bibinitperiod},
+         given={Neil},
+         giveni={N\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Penguin Books}%
+    }
+    \strng{namehash}{PN1}
+    \strng{fullhash}{PN1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{P}
+    \field{sortinithash}{P}
+    \field{title}{Amusing Ourselves to Death: Public Discourse in the Age of
+  Show Business (20th Anniversary Edition)}
+    \list{location}{1}{%
+      {New York, NY, USA}%
+    }
+    \field{year}{2005}
+  \endentry
+
+  \entry{seneca}{book}{}
+    \name{author}{1}{}{%
+      {{hash=SL}{%
+         family={Seneca},
+         familyi={S\bibinitperiod},
+         given={Lucius},
+         giveni={L\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Penguin}%
+    }
+    \strng{namehash}{SL1}
+    \strng{fullhash}{SL1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{S}
+    \field{sortinithash}{S}
+    \field{title}{Letters from a Stoic: Epistulae Morales ad Lucilium}
+    \list{location}{1}{%
+      {Harmondsworth, United Kingdom}%
+    }
+    \field{year}{1969}
+  \endentry
+
+  \entry{sommerville:1992}{book}{}
+    \name{author}{1}{}{%
+      {{hash=SI}{%
+         family={Sommerville},
+         familyi={S\bibinitperiod},
+         given={Ian},
+         giveni={I\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Addison-Wesley}%
+    }
+    \strng{namehash}{SI1}
+    \strng{fullhash}{SI1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{S}
+    \field{sortinithash}{S}
+    \field{edition}{10}
+    \field{title}{{S}oftware {E}ngineering}
+    \list{location}{1}{%
+      {Boston, MA, USA}%
+    }
+    \field{year}{2015}
+  \endentry
+
+  \entry{taleb:2010}{book}{}
+    \name{author}{1}{}{%
+      {{hash=TNN}{%
+         family={Taleb},
+         familyi={T\bibinitperiod},
+         given={Nassim\bibnamedelima Nicholas},
+         giveni={N\bibinitperiod\bibinitdelim N\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Random House}%
+    }
+    \strng{namehash}{TNN1}
+    \strng{fullhash}{TNN1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{T}
+    \field{sortinithash}{T}
+    \field{title}{The Black Swan: The Impact of the Highly Improbable}
+    \list{location}{1}{%
+      {New York, NY, USA}%
+    }
+    \field{year}{2010}
+  \endentry
+
+  \entry{taleb:2012}{book}{}
+    \name{author}{1}{}{%
+      {{hash=TNN}{%
+         family={Taleb},
+         familyi={T\bibinitperiod},
+         given={Nassim\bibnamedelima Nicholas},
+         giveni={N\bibinitperiod\bibinitdelim N\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Random House}%
+    }
+    \strng{namehash}{TNN1}
+    \strng{fullhash}{TNN1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{T}
+    \field{sortinithash}{T}
+    \field{title}{{A}ntifragile: {T}hings {T}hat {G}ain from {D}isorder}
+    \list{location}{1}{%
+      {New York, NY, USA}%
+    }
+    \field{year}{2012}
+  \endentry
+
+  \entry{taleb:2018}{book}{}
+    \name{author}{1}{}{%
+      {{hash=TNN}{%
+         family={Taleb},
+         familyi={T\bibinitperiod},
+         given={Nassim\bibnamedelima Nicholas},
+         giveni={N\bibinitperiod\bibinitdelim N\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Random House}%
+    }
+    \strng{namehash}{TNN1}
+    \strng{fullhash}{TNN1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{T}
+    \field{sortinithash}{T}
+    \field{title}{Skin in the Game: Hidden Asymmetries in Daily Life}
+    \list{location}{1}{%
+      {New York, NY, USA}%
+    }
+    \field{year}{2018}
+  \endentry
+
+  \entry{trump:1987}{book}{}
+    \name{author}{2}{}{%
+      {{hash=TDJ}{%
+         family={Trump},
+         familyi={T\bibinitperiod},
+         given={Donald\bibnamedelima J.},
+         giveni={D\bibinitperiod\bibinitdelim J\bibinitperiod},
+      }}%
+      {{hash=ST}{%
+         family={Schwartz},
+         familyi={S\bibinitperiod},
+         given={Tony},
+         giveni={T\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Random House}%
+    }
+    \strng{namehash}{TDJST1}
+    \strng{fullhash}{TDJST1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{T}
+    \field{sortinithash}{T}
+    \field{title}{Trump: The Art of the Deal}
+    \list{location}{1}{%
+      {New York, NY, USA}%
+    }
+    \field{year}{1987}
+  \endentry
+\enddatalist
+\endinput
