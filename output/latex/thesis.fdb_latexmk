@@ -1,6 +1,6 @@
 # Fdb version 3
-["pdflatex"] 1643827603 "/home/mateo/Documents/Dropbox/projects/tesisboard/scsth/output/thesis.tex" "latex/thesis.pdf" "thesis" 1643827603
-  "/home/mateo/Documents/Dropbox/projects/tesisboard/scsth/output/thesis.tex" 1643827602 5075 c24d798c2f2769af5b1f4f796567dae4 ""
+["pdflatex"] 1643835812 "/home/mateo/Documents/Dropbox/projects/tesisboard/scsth/output/thesis.tex" "latex/thesis.pdf" "thesis" 1643835812
+  "/home/mateo/Documents/Dropbox/projects/tesisboard/scsth/output/thesis.tex" 1643835811 34336 e37c79e553cef47a5881add1f08ed3ae ""
   "/usr/local/texlive/2021/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2021/texmf-dist/fonts/tfm/public/cm/cmr10.tfm" 1136768653 1296 45809c5a464d5f32c8f98ba97c1bb47f ""
   "/usr/local/texlive/2021/texmf-dist/tex/latex/footmisc/footmisc.sty" 1312311212 25776 d28bd6d82f168f8cb2268584b67a2a98 ""
@@ -20,8 +20,8 @@
   "/usr/local/texlive/2021/texmf.cnf" 1634159170 455 5b996dcaa0eb4ef14a83b026bc0a008c ""
   "classicthesis-config.tex" 0 -1 0 ""
   "latex/classicthesis-config.tex" 0 -1 0 ""
-  "latex/thesis.aux" 1643827603 32 3985256e7290058c681f74d7a3565a19 ""
-  "thesis.tex" 1643827602 5075 c24d798c2f2769af5b1f4f796567dae4 ""
+  "latex/thesis.aux" 1643835812 32 3985256e7290058c681f74d7a3565a19 ""
+  "thesis.tex" 1643835811 34336 e37c79e553cef47a5881add1f08ed3ae ""
   (generated)
-  "latex/thesis.log"
   "latex/thesis.pdf"
+  "latex/thesis.log"

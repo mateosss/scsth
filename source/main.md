@@ -1,3 +1,6 @@
+<!-- Posibles valores de MODE: DRAFT, RELEASE -->
+<!-- #define MODE RELEASE -->
+
 \cleardoublepage
 \pagestyle{scrheadings}
 \pagenumbering{arabic}
@@ -7,7 +10,8 @@
 \cleardoublepage
 \part{Some Kind of Manual}\label{pt:manual}
 
-\include{Chapters/Chapter01}
+<!-- #include Chapters/Chapter01.tex -->
+\clearpage
 
 \cleardoublepage
 \ctparttext{You can put some informational part preamble text here.
@@ -18,14 +22,18 @@ interlingua se que. Al via multo esser specimen, campo responder que
 da. Le usate medical addresses pro, europa origine sanctificate nos se.}
 \part{The Showcase}\label{pt:showcase}
 
-\include{Chapters/Chapter02}
-\include{Chapters/Chapter03}
+<!-- #include Chapters/Chapter02.tex -->
+\clearpage
+<!-- #include Chapters/Chapter03.tex -->
+\clearpage
+
+\appendix
+\cleardoublepage
+\part{Appendix}
+<!-- #include Chapters/Chapter0A.tex -->
+\clearpage
 
 <!-- #if 0 -->
-<!-- Posibles valores de MODE: DRAFT, RELEASE -->
-<!-- #define MODE RELEASE -->
-
-<!-- #if 1 -->
 <!-- #include abstract.md -->
 <!-- #include acknowledgements.md -->
 <!-- #include indices.md -->
@@ -46,9 +54,6 @@ da. Le usate medical addresses pro, europa origine sanctificate nos se.}
 <!-- #include to_delete/15_conclusion.md -->
 <!-- #include to_delete/16_appendix_1.md -->
 <!-- #include to_delete/17_appendix_2.md -->
-<!-- #endif -->
-<!-- #else -->
-<!-- #include contents/contributions/index.md -->
 <!-- #endif -->
 # Bibliografía {.unnumbered}
 

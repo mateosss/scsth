@@ -1,6 +1,10 @@
+<!-- #if 0 -->
 %************************************************
 \chapter{Math Test Chapter}\label{ch:mathtest} % $\mathbb{ZNR}$
 %************************************************
+<!-- #else -->
+\chapter{Math Test Chapter}\label{ch:mathtest}
+<!-- #endif -->
 Ei choro aeterno antiopam mea, labitur bonorum pri no. His no decore
 nemore graecis. In eos meis nominavi, liber soluta vim cu. Sea commune
 suavitate interpretaris eu, vix eu libris efficiantur.
@@ -27,11 +31,11 @@ section heads. Consider the \texttt{pdfspacing} option.}
 \end{equation}
 $E_{\textrm{max}}$ is the maximum transferable energy in a single
 collision with an atomic electron.
-\[
+\begin{equation*}
 E_{\textrm{max}} =\frac{2 m_{\textrm{e}} \beta^2\gamma^2 }{1 +
 2\gamma m_{\textrm{e}}/m_{\textrm{x}} + \left ( m_{\textrm{e}}
 /m_{\textrm{x}}\right)^2}\ ,
-\]
+\end{equation*}
 where $\gamma = E/m_{\textrm{x}}$, $E$ is energy and
 $m_{\textrm{x}}$ the mass of the incident particle,
 $\beta^2 = 1 - 1/\gamma^2$ and $m_{\textrm{e}}$ is the electron mass.
@@ -57,7 +61,7 @@ $\kappa$ measures the contribution of the collisions with energy
 transfer close to $E_{\textrm{max}}$.  For a given absorber, $\kappa$
 tends
 towards large values if $\delta x$ is large and/or if $\beta$ is
-small.  Likewise, $\kappa$ tends towards zero if $\delta x $ is small
+small.  Likewise, $\kappa$ tends towards zero if $\delta x$ is small
 and/or if $\beta$ approaches $1$.
 
 The value of $\kappa$ distinguishes two regimes which occur in the
@@ -86,19 +90,21 @@ description of ionisation fluctuations:
 
 \section{Various Mathematical Examples}
 If $n > 2$, the identity
-\[
+\begin{equation*}
     t[u_1,\dots,u_n] = t\bigl[t[u_1,\dots,u_{n_1}], t[u_2,\dots,u_n]
     \bigr]
-\]
+\end{equation*}
 defines $t[u_1,\dots,u_n]$ recursively, and it can be shown that the
 alternative definition
-\[
+\begin{equation*}
     t[u_1,\dots,u_n] = t\bigl[t[u_1,u_2],\dots,t[u_{n-1},u_n]\bigr]
-\]
+\end{equation*}
 gives the same result.
 
+<!-- #if 0 -->
 %*****************************************
 %*****************************************
 %*****************************************
 %*****************************************
 %*****************************************
+<!-- #endif -->

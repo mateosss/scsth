@@ -53,6 +53,7 @@ tex: md
 	--output="$(OUTPUTDIR)/thesis.tex" \
 	--template="$(STYLEDIR)/template.tex" \
 	--bibliography="$(BIBFILE)" \
+	--top-level-division=chapter \
 	--verbose \
 	"$(OUTPUTDIR)/thesis.md"
 	2> $(OUTPUTDIR)/logs/pandoc.tex.log
@@ -82,8 +83,7 @@ tex: md
 
 # TODO@end: Be sure to run this command twice or thrice to get all references properly
 pdf: tex
-		pdflatex -halt-on-error $(OUTPUTDIR)/thesis.tex 2>&1 \
-		| tee output/logs/pdflatex.pdf.log
+		pdflatex -halt-on-error $(OUTPUTDIR)/thesis.tex
 # pdf: tex
 # 		pdflatex -halt-on-error -output-directory=$(OUTPUTDIR)/latex $(OUTPUTDIR)/thesis.tex 2>&1 &&\
 # 		mv $(OUTPUTDIR)/latex/thesis.pdf $(OUTPUTDIR)/ \

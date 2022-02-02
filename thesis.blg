@@ -10,10 +10,6 @@ A level-1 auxiliary file: FrontBackmatter/Abstract.aux
 A level-1 auxiliary file: FrontBackmatter/Publications.aux
 A level-1 auxiliary file: FrontBackmatter/Acknowledgments.aux
 A level-1 auxiliary file: FrontBackmatter/Contents.aux
-A level-1 auxiliary file: Chapters/Chapter01.aux
-A level-1 auxiliary file: Chapters/Chapter02.aux
-A level-1 auxiliary file: Chapters/Chapter03.aux
-A level-1 auxiliary file: Chapters/Chapter0A.aux
 A level-1 auxiliary file: FrontBackmatter/Bibliography.aux
 A level-1 auxiliary file: FrontBackmatter/Declaration.aux
 A level-1 auxiliary file: FrontBackmatter/Colophon.aux
@@ -40,7 +36,7 @@ Reallocated wiz_functions (elt_size=4) to 9000 items from 6000.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 You've used 27 entries,
             6393 wiz_defined-function locations,
-            1349 strings with 12059 characters,
+            1345 strings with 11971 characters,
 and the built_in function-call counts, 145001 in all, are:
 = -- 10360
 > -- 3084
