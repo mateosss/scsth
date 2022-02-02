@@ -72,7 +72,7 @@ GNU/Linux.
 
 Lo primero que se necesita para poder utilizar estos dispositivos para SLAM es
 conseguir el acceso a los datos que estos generan; o sea los flujos de imágenes
-y muestras de IMU. La forma y protocolos necesarios para comunicarse conestos
+y muestras de IMU. La forma y protocolos necesarios para comunicarse con estos
 dispositivos se realiza de maneras específicas para cada uno veremos en las
 secciones dedicadas, y este es uno de los trabajos fundamentales de un
 controlador. Además, un controlador tiene que ser capaz, no solo de obtener esta
@@ -128,17 +128,19 @@ realizarán cuando una aplicación OpenXR solicite la predicción de una pose a 
 tiempo dado.
 
 Entrando a problemas que afectan a sensores específicos, todos los sistemas de
-SLAM estudiados esperan muestras de IMU que combinen en una única timestamp los
+SLAM estudiados esperan datos de IMU que combinen en una única timestamp los
 valores del acelerómetro y los del giroscopio. De lo contrario será necesario
-realizar algún tipo de transformación sobre las muestras de la IMU para simular
-esta condición. Por el lado de los sensores de la cámara, será importante que
-los sensores ópticos sean del tipo _global shutter_, es decir que todos los
-píxeles sean capturados en el mismo instante. Por el contrario, las cámaras que
-se utilizan habitualmente en dispositivos de consumo como teléfonos
-inteligentes, presentan un _rolling shutter_ en dónde los píxeles son capturados
-en un "barrido" vertical, fila por fila. Esto genera
+realizar algún tipo de transformación sobre las muestras para simular esta
+condición. Por el lado de los sensores de la cámara, será importante que el
+obturador o _shutter_[^shutter] de las cámaras sea un _global shutter_, es decir
+que todos los píxeles sean capturados en el mismo instante. Por el contrario,
+las cámaras que se utilizan habitualmente en dispositivos de consumo como
+teléfonos inteligentes, presentan un _rolling shutter_ en dónde los píxeles son
+capturados en un "barrido", fila por fila. Esto genera
 distorsiones[^rolling-shutter-name] significativas en presencia de movimientos
-rápidos como se ve en la Figura @fig:rolling-shutter.
+suficientemente rápidos como se ve en la Figura @fig:rolling-shutter. Estas
+distorsiones afectan negativamente la capacidad de los algoritmos de SLAM para
+reconocer y trackear features de forma estable.
 
 ![
 Ejemplo de la distorsión que se genera en cámaras con rolling shutter que
@@ -148,17 +150,61 @@ de alta velocidad como los de la hélice. Esto no sucede con cámaras con global
 shutter que capturan todos los píxeles en el mismo momento.
 ](source/figures/rolling-shutter.jpg "Efecto rolling shutter"){#fig:rolling-shutter width=100%}
 
+[^shutter]: El término obturador proviene de los sensores ópticos tradicionales.
+Un obturador era una pieza mecánica en movimiento que controlaba el tiempo
+durante el cual la película fotográfica era expuesta a la luz de la escena.
+Actualmente el proceso de control de exposición se realiza con interruptores
+en los sensores ópticos.
+
 [^rolling-shutter-name]: Esta distorsión es homónima al tipo de cámara y se
 denomina el efecto de rolling shutter.
 
+Otro aspecto muy importante a la hora de presentar muestras de imágenes a
+sistemas de SLAM es el de utilizar valores adecuados de _exposición (exposure)_
+y _ganancia (gain)_. La exposición o exposure es la cantidad de tiempo que el
+obturador de la cámara habilita la entrada de luz a los sensores ópticos por
+cada cuadro. Por otro lado, la ganancia controla el nivel de amplificación
+(usualmente digital) que ocurrirá sobre la señal original.
+
+Además de las problemáticas presentadas en la Figura @fig:expgain-grids, existen
+otros problemas a considerar relacionados también a estos parámetros y la
+iluminación del entorno del usuario. Uno de ellos es la _sobreexposición_,
+cuando se presentan fuentes de iluminación muy intensas y la exposición (y
+también la ganancia) se encuentra en valores relativamente altos, los sensores
+ópticos son saturados y se pierde información. Esto se puede observar levemente
+en la imagen de la figura con mayor valor de exposición y ganancia. La
+problemática opuesta es cuando el usuario no posee suficiente cantidad de luz en
+su entorno y entonces el sistema de SLAM no es capaz de distinguir features. Una
+regla de pulgar
+
+![
+Ejemplos tomados con la D455 sobre los efectos de la exposición y ganancia sobre
+las muestras de imágenes. A izquierda se observa una región de 256 píxeles
+cuadrados con distintas configuraciones de tiempos de exposición y valores de
+ganancia. En esta región se encuentra un objeto en movimiento (el cuaderno con
+cuadrados). A derecha tenemos otra región más pequeña de 32 píxeles cuadrados
+provenientes de las mismas imágenes. Se puede observar en ambas grillas que
+aumentar ambos valores también incrementa el brillo de la imagen. Por su parte
+en la figura derecha podemos ver que aumentar la ganancia incrementa el ruido,
+mientras que en la figura izquierda se observa que valores altos de exposición
+incrementan el motion blur del objeto en movimiento.
+](source/figures/expgain-grids.pdf "Exposición y ganancia"){#fig:expgain-grids width=100%}
+
 <!-- #if 0 -->
+
+HABLAR DEL PROBLEMA DE FLICKER, hablar de AUTOEXPOSURE
+Datasets TUM-VI, EuRoC?
+quizás todo esto debería estar mencionado en una sección de datasets en la parte
+de fundamentos ?
+
 TODO: terminar de mencionar las caracteristicas que falta acá,
 despues describirlas rápidamente en la seccion de realsense
 despues hablar de lo que me interese de WMR
 despues describir las caracteristica srapidamente tambien en la seccion de WMR
 y finalmente presentar una tabla comparativa (o capaz eso hacerlo antes?)
+
 -------------------------------
-NO SALIR DE VSCODE UNA VEZ QUE ARRANCO (APAGAR MONITOR EXTRA)
+
 -[x]imu/frame sinks
 -[x]communication con OpenXR app y TrackerSlam
 -[]pose correction: per system

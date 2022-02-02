@@ -75,3 +75,7 @@ RPE
 ROE
 VR
 AR
+exposure
+gain
+motion
+blur
