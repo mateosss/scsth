@@ -42,6 +42,11 @@ md:
 # stuff like: BEGIN_FORMULA(), which would pick $$ or \begin{align} based on
 # type of compilation
 
+# TODO: Generar buenas macros con gpp para el uso de imagenes, margins, etc
+# ver https://narkive.com/WEV34A29:3.378.60
+# Olvidarme del visor de vscode, a ese lo puedo usar sobre el archivo ya
+# procesado por gpp y chau
+
 tex: md
 		pandoc \
 		--output "$(OUTPUTDIR)/thesis.tex" \

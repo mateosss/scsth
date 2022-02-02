@@ -30,7 +30,7 @@ También tienen tapas: http://www.latextemplates.com/cat/title-pages
 <!-- TODO@style: citation style is in ref_format.csl, update with one that is good -->
 <!-- TODO@style: que en vez de figure, diga figura (lo mismo para tablas y otros textos autogenerados) -->
 <!-- TODO@style: links con alguna marca/color -->
-<!-- TODO@style: caratula, copyright cc-0, UNC, FaMAF -->
+<!-- TODO@style: caratula, copyright cc-0, UNC, FaMAF. Borrar de paso las imagenes de style/ que no me sirven mas como univ_logo.eps  -->
 <!-- TODO@style: Los links a las figuras deberían tener color o algo -->
 <!-- TODO@style: Los links a las footnotes no andan -->
 
