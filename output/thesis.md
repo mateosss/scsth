@@ -1804,14 +1804,17 @@ significativos de los sistemas de SLAM.
 ##### Análisis de un ejemplo
 
 \fig{fig:prediction-timeline}{source/figures/prediction-timeline.png}{Línea de tiempo de predicción}{%
-Línea de tiempo con timestamps normalizadas. El evento \mono{REQUEST\_TO\_PREDICTION}
-significa algo.
+Línea de tiempo con timestamps normalizadas. Las barras representan las
+siguientes duraciones:
+\mono{REQUEST\_TO\_PREDICTION}: Del momento en que una predicción es solicitada hasta la timestamp de la predicción.
+\mono{SHOT\_TO\_RECEIVED}: Captura de imagen en el dispositivo hasta su recepción en Monado.
+\mono{RECEIVED\_TO\_PUSHED}: Transferencia de Monado a Basalt.
+\mono{PUSHED\_TO\_PROCESSED}: Cómputo de la estimación de pose.
 }
 
-
 En la \figref{fig:prediction-timeline} se puede apreciar una captura de pantalla
-de la interfaz de *Perfetto* [^perfetto-web] que, en conjunto con *Percetto*
-[^percetto-web], son herramientas de medición de tiempos preferidas para Monado.
+de la interfaz de *Perfetto*[^perfetto-web] que, en conjunto con *Percetto*[^percetto-web],
+son herramientas de medición de tiempos preferidas para Monado.
 Esta captura es sobre una corrida en tiempo real con Monado, Basalt y una cámara
 RealSense D455 con imágenes estéreo de resolución 640x480 a 30 cuadros por
 segundo. La figura muestra un tramo de unos 35 ms con la particularidad de que
@@ -1829,7 +1832,10 @@ muestra de la cámara (`[A]` y `[G]`).
 A tiempo `[C]` las imágenes llegan al host luego de haber sido transferidas por
 un cable USB 3.2 con una demora de unos 13.5 ms representada por la barra
 `SHOT_TO_RECEIVED`. En ese momento ocurre una pequeña copia de Monado hacia
-Basalt `RECEIVED_TO_PUSHED` y luego de unos 12 ms representados por
+Basalt `RECEIVED_TO_PUSHED`\marginnote{Esta copia es necesaria por un detalle en la
+implementación del \mono{slam\_tracker} para Basalt. Si bien es solucionable,
+como se ve en el gráfico, no afecta significativamente al rendimiento del
+pipeline}, y luego de unos 12 ms representados por
 `PUSHED_TO_PROCESSED`, a tiempo `[F]`, la pose estimada para el tiempo `[A]`
 está computada. Es decir, tenemos una demora de unos 25.5 ms desde que la
 muestra es capturada hasta que el sistema de SLAM/VIO es capaz de estimar la

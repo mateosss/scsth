@@ -24,3 +24,7 @@
 \newcommand{\mono}{\texttt}
 \renewcommand{\bold}{\spacedlowsmallcaps}
 \newcommand{\italic}{\textit}
+
+\newcounter{mparcnt}
+\renewcommand\themparcnt{${}^{\arabic{footnote}}$}
+\newcommand\marginnote[1]{\stepcounter{footnote}\themparcnt \marginpar{\themparcnt #1}}
