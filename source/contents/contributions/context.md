@@ -25,28 +25,27 @@ OpenXR, realidad virtual y aumentada entre otras. OpenXR por su parte, provee
 una API estandarizada con soporte para extensiones de fabricante que permiten
 añadir características peculiares de ser necesitadas por algún fabricante en
 particular. El estándar ha tenido un gran éxito al haber sido adoptado por una
-gran cantidad de fabricantes (Fig. @fig:openxr-companies) como reemplazo a sus
+gran cantidad de fabricantes (Fig. \figref{fig:openxr-companies}) como reemplazo a sus
 antiguos SDK propietarios. De esta forma, los motores de juego y desarrolladores
-solo necesitan interactuar con una única API (Fig. @fig:openxr) que además les
+solo necesitan interactuar con una única API (Fig. \figref{fig:openxr}) que además les
 permite aprovechar cualquier característica peculiar ofrecida por alguna
 extensión.
 
-![
-**Antes de OpenXR (izquierda)** aplicaciones y motores necesitaban código
-propietario separado para cada dispositivo en el mercado. **OpenXR (derecha)**
+\fig{fig:openxr}{source/figures/openxr.png}{OpenXR}{%
+\bold{Antes de OpenXR} (izquierda) aplicaciones y motores necesitaban código
+propietario separado para cada dispositivo en el mercado. \bold{OpenXR} (derecha)
 provee una única API multiplataforma de alta performance entre las aplicaciones
 y todos los dispositivos compatibles
-](source/figures/openxr.png "OpenXR"){#fig:openxr width=100%}
+}
 
-![
+\fig{fig:openxr-companies}{source/figures/openxr-companies.png}{Compañías OpenXR}{%
 Compañías respaldando públicamente el estándar OpenXR
-](source/figures/openxr-companies.png "Compañías OpenXR"){#fig:openxr-companies
-width=100%}
+}
 
 OpenXR es exclusivamente la [especificación][openxr-spec] de una API y por lo
 tanto requiere una implementación, o _runtime_, sobre el que ser ejecutado. Las
 implementaciones son provistas por los distintos fabricantes interesados en
-soportar el estándar, en la Figura @fig:openxr-companies vemos algunas de las
+soportar el estándar, en la \figref{fig:openxr-companies} vemos algunas de las
 implementaciones ya desarrolladas. En este trabajo nos enfocaremos en una de
 ellas, _Monado_. Monado es un runtime (por ahora el único) de la especificación
 OpenXR de código abierto, licenciada bajo la _Boost Software License 1.0

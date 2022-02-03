@@ -69,15 +69,15 @@ private:
 Este header está presente en Monado, pero su implementación no. Esta debe ser
 provista por el sistema externo, lo cual implica tener que mantener una copia, o
 _fork_, levemente modificado de los distintos sistemas que se quieran utilizar,
-ver Figura @fig:slam-tracker-hpp.
+ver \figref{fig:slam-tracker-hpp}.
 
 <!-- TODO@fig: La parte de basalt está mal, no hay hilo consumidor de muestras,
 el hilo ese estaría en las "Partes Internas de Basalt". Otros problemas es que
 no se relaciona las colas dibujadas con nada, ni con Monado ni con la copia de slam_tracker.hpp -->
 
-![
+\fig{fig:slam-tracker-hpp}{source/figures/slam-tracker-hpp.pdf}{Interfaz de SLAM tracker}{%
 Interacción entre Monado y sistemas SLAM mediante la interfaz en C++.
-](source/figures/slam-tracker-hpp.pdf "Interfaz de SLAM tracker"){#fig:slam-tracker-hpp width=100%}
+}
 
 La versión actual de esta clase es el
 resultado de varias iteraciones y generaliza adecuadamente los tres sistemas

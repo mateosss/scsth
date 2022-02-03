@@ -135,16 +135,16 @@ individual y es por donde las muestras del par de cámaras estéreo ingresan al
 pipeline de Basalt. Inicialmente se genera una representación piramidal de las
 imágenes, o también llamada de _mipmaps_, esta es una forma tradicional
 [@williamsPyramidalParametrics1983] de almacenar una imagen en memoria junto a versiones
-reescaladas de la misma (Fig. @fig:mipmap). Los mipmaps tienen múltiples utilidades en
+reescaladas de la misma (Fig. \figref{fig:mipmap}). Los mipmaps tienen múltiples utilidades en
 computación gráfica (e.g., _filtrado trilineal_, _LODs_, reducción de
 _patrones moiré_) pero en el caso de Basalt serán utilizados para darle robustez
 al algoritmo de seguimiento de features (_feature tracking_).
 
 [`frametoframeopticalflow`]: TODO
 
-![
+\fig{fig:mipmap}{source/figures/mipmap.jpg}{Mipmaps}{%
 Representación piramidal (mipmaps) de un cuadro del conjunto de datos EuRoC.
-](source/figures/mipmap.jpg "Mipmaps"){#fig:mipmap width=100%}
+}
 
 Posteriormente se realiza la detección de features nuevas sobre las imágenes
 utilizando el algoritmo _FAST_ para detección de esquinas
@@ -319,13 +319,13 @@ llamada pre-integración de muestras consecutivas de la IMU. Considerando que
 estas muestras arriban a mayores frecuencias que las de las cámaras,
 pre-integrarlas es un proceso que intenta resumir las muestras entre los cuadros
 a una única pseudo-muestra que sucede en los mismos instantes de tiempo que los
-cuadros como se muestra en el ejemplo de @fig:sample-frequencies.
+cuadros como se muestra en el ejemplo de \figref{fig:sample-frequencies}.
 
-![
+\fig{fig:sample-frequencies}{source/figures/sample-frequencies.pdf}{%
+Ejemplo de frecuencias}{%
 Frecuencia de distintos eventos para un ejemplo con cámaras a 30fps y muestras
 de la IMU a 240hz.
-](source/figures/sample-frequencies.pdf "Ejemplo de
-frecuencias"){#fig:sample-frequencies width=100%}
+}
 
 El proceso de pre-integración es el siguiente. Dado el cuadro previo $i$ con
 timestamp $t_i$ y el cuadro posterior $j$ con timestamp $t_j$, se intenta
@@ -520,21 +520,21 @@ Como se ve en la definición de `Landmark`, la posición 3D de estos puntos de
 interés no se almacena exactamente de la misma forma que la triangulación los
 produce. En particular, no se almacena el bearing vector directamente, sino que
 se utiliza un punto 2D más compacto `direction` que lo codifica (para esto se
-utiliza una proyección estereográfica como se explica en la Figura
-@fig:stereographic-projection) junto a `inverse_distance`, la distancia inversa
+utiliza una proyección estereográfica como se explica en la
+\figref{fig:stereographic-projection}) junto a `inverse_distance`, la distancia inversa
 a este punto producto de la triangulación, de esta forma la posición de la
 landmark queda ligada al keyframe que la aloja.
 
-![
+\fig{fig:stereographic-projection}{source/figures/stereographic-projection.png}{Proyección estereográfica}{%
 Interpretación geométrica de la proyección estereográfica utilizada para
-representar bearing vectors. Las coordenadas definidas por la propiedad `Vector2
-direction` definen un punto en el plano $XY$ ($Z=0$) mostrado en azul. Para
+representar bearing vectors. Las coordenadas definidas por la propiedad \mono{Vector2
+direction} definen un punto en el plano $XY$ ($Z=0$) mostrado en azul. Para
 obtener el vector unitario correspondiente, se traza una línea desde el punto
-$(0 0 -1)^T$ hacia `direction` en el plano $XY$. El vector en el que esta línea
+$(0 0 -1)^T$ hacia \mono{direction} en el plano $XY$. El vector en el que esta línea
 interseca a la esfera unitaria será el bearing vector codificado. Se muestran
 tres ejemplos en rojo, verde y amarillo, con lineas punteadas que representan
 las líneas trazadas y flechas representando los bearing vectors obtenidos.
-](source/figures/stereographic-projection.png "Stereographic Projection"){#fig:stereographic-projection width=100%}
+}
 
 Si todos los procedimientos relacionados a la triangulación de estos dos cuadros
 fueron correctos, se almacena la landmark nueva en la base de datos. De haber

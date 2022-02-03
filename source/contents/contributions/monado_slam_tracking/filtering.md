@@ -34,7 +34,7 @@ VR en dónde las pantallas ocupan todo el campo de visión del usuario;
 movimientos de este tipo pueden fácilmente inducir cinetosis.
 
 Por sobre esto, el método de predicción presentado en la sección anterior en la
-Figura @fig:prediction-with-imu presenta problemas que no fueron tratados. En
+\figref{fig:prediction-with-imu} presenta problemas que no fueron tratados. En
 particular, la predicción que realizamos está basada en una única pose del
 sistema SLAM y las muestras nueva de la IMU, pero no comparte ningún otro estado
 en común. Entonces podría esperarse que la diferencia entre las poses que se
@@ -42,18 +42,18 @@ fueron prediciendo con la nueva pose que el sistema estimará sea significativa.
 Más aún, en la realidad el error acumulado por la IMU, a pesar de verse limitado
 a un intervalo corto de unas decenas de milisegundos, es un término más que
 afectaría esta diferencia. Todo esto puede verse en el error marcado en la
-Figura @fig:prediction-offset-jump. Este tipo de desfasaje sería reintroducido
+\figref{fig:prediction-offset-jump}. Este tipo de desfasaje sería reintroducido
 de forma repetitiva afectando las predicciones cada vez que una nueva pose es
 estimada, causando así constantes micro saltos (ruido), especialmente en los
 momentos en los que la pose estimada por SLAM y la pose predicha por nuestro
 método difieran significativamente.
 
-![
+\fig{fig:prediction-offset-jump}{source/figures/prediction-offset-jump.pdf}{Predicción sin uso de muestras IMU}{%
 Desfasaje esperado entre el método de predicción por muestras promediadas y la
-pose `C` estimada de SLAM cuando `C` aún no pertenece al historial de espacios.
+pose \mono{C} estimada de SLAM cuando \mono{C} aún no pertenece al historial de espacios.
 Se muestra la incidencia de la acumulación de errores de la IMU. Este desfasaje
 causará micro saltos que serían disruptivos en una experiencia de VR.
-](source/figures/prediction-offset-jump.pdf "Predicción sin uso de muestras IMU"){#fig:prediction-offset-jump width=100%}
+}
 
 Es entonces por estas razones, que se implementaron tres métodos sencillos de
 filtrado combinables para suavizar las trayectorias estimadas y que intentan

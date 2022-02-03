@@ -13,7 +13,7 @@ referirnos a una única funcionalidad que soporta tanto sistemas externos de SLA
 y como de VIO.
 
 Antes de comenzar, vale la pena entender la arquitectura general de Monado como
-se muestra en la Figura @fig:monado-arch. Una aplicación que hace uso de OpenXR
+se muestra en la \figref{fig:monado-arch}. Una aplicación que hace uso de OpenXR
 mediante Monado puede ser corrida en dos modalidades dependiendo de como se
 compiló el runtime. De la forma tradicional, se compila como una librería de
 manera **autónoma**, significando que cuando la aplicación intenta cargar
@@ -34,9 +34,9 @@ de tener realidad virtual renderizada en la nube.
 <!-- TODO@fig: Tiene que estar en español y agregar "Filtrado" arriba de "Prediction" -->
 <!-- TODO@fig: Podría usar los nombres `TrackerSlam` y `slam_tracker` me
 parece por que los referencio bastante -->
-![
+\fig{fig:monado-arch}{source/figures/monado-arch.pdf}{Arquitectura de Monado}{%
 Arquitectura de Monado.
-](source/figures/monado-arch.pdf "Arquitectura de Monado"){#fig:monado-arch width=100%}
+}
 
 \FloatBarrier
 
@@ -61,24 +61,24 @@ trabajo.
 La implementación de un pipeline en Monado que permita la comunicación entre
 dispositivos, sistemas de SLAM y la aplicación OpenXR requirió desarrollar la
 infraestructura y herramientas necesarias dentro de Monado. El pipeline en
-cuestión está esquematizado en la Figura @fig:slam-tracker-dataflow. Este,
+cuestión está esquematizado en la \figref{fig:slam-tracker-dataflow}. Este,
 requiere un gran nivel de modularidad, ya que sus componentes fundamentales
 necesitan poder ser intercambiables: dispositivos, aplicaciones y el sistema que
 provee el SLAM en sí. El resto de esta subsección está dedicada a explicar la
 infraestructura y los distintos componentes que se necesitaron implementar y
 adaptar para obtener un pipeline de SLAM modular corriendo en Monado como se
-intenta mostrar en la Figura @fig:slam-tracker-dataflow.
+intenta mostrar en la \figref{fig:slam-tracker-dataflow}.
 
 <!-- TODO@fig: Agregar a esta figura referencia al filtrado de poses -->
 <!-- TODO@fig: Hacer versión final -->
 
-![
+\fig{fig:slam-tracker-dataflow}{source/figures/slam-tracker-dataflow.pdf}{Flujo de datos de la implementación}{%
 Diagrama esquemático de como ocurre el flujo de los datos desde que se generan
 las muestras en los dispositivos XR hasta que la aplicación OpenXR obtiene una
 pose utilizable. Notar que las flechas esconden múltiples hilos de ejecución,
 colas de procesamiento, y desfasajes temporales con los que hay que lidiar en la
 implementación.
-](source/figures/slam-tracker-dataflow.pdf "Flujo de datos de la implementación"){#fig:slam-tracker-dataflow width=100%}
+}
 
 \FloatBarrier
 
@@ -94,7 +94,7 @@ implementación.
 
 Para interactuar con la interfaz que detallamos en la sección anterior, se
 implementa en Monado una clase adaptadora en el módulo auxiliar de tracking
-(recordar Figura @fig:monado-arch) y que sirve de nexo entre los
+(recordar \figref{fig:monado-arch}) y que sirve de nexo entre los
 controladores de dispositivos de hardware y la interfaz `slam_tracker`. Este
 adaptador recibe el nombre, un poco confuso, de `TrackerSlam` siguiendo las
 convenciones de Monado para con los trackers ya existentes.
@@ -125,7 +125,7 @@ como veremos, ambas pueden ser deshabilitadas en tiempo de ejecución._
 
 ### Recapitulando
 
-Con la Figura @fig:slam-tracker-dataflow vista al principio de la sección en
+Con la \figref{fig:slam-tracker-dataflow} vista al principio de la sección en
 mente, hemos visto que se ha implementado una clase adaptadora `TrackerSlam` en
 Monado que funciona como punto central de comunicación con los sistemas de
 SLAM/VIO integrados. Esta clase además implementa funcionalidades de predicción

@@ -96,8 +96,8 @@ archivo de configuración.
 
 Respecto a las interfaces gráficas, todos estos sistemas presentan la
 posibilidad de poder visualizar, al menos, la trayectoria estimada junto a las
-features detectadas en los cuadros entrantes como se muestra en la Figura
-@fig:trackers-ui. En todos los casos, siempre se intenta permitir la posibilidad
+features detectadas en los cuadros entrantes como se muestra en la
+\figref{fig:trackers-ui}. En todos los casos, siempre se intenta permitir la posibilidad
 de utilizar estas herramientas de visualización de forma opcional al utilizar la
 clase `slam_tracker`. Para Kimera y ORB-SLAM3 las interfaces funcionan
 automáticamente al habilitarlas en los archivos de configuración, mientras que
@@ -113,10 +113,10 @@ lidiar respecto a shared libraries (https://www.akkadia.org/drepper/dsohowto.pdf
 <!-- TODO@fig: Varias figuras están ocupando toda una página por si solas y
 dejando una banda de espacio en blanco. -->
 
-![
+\fig{fig:trackers-ui}{source/figures/trackers-ui.pdf}{Visualizadores de SLAM trackers}{%
 Las distintas interfaces gráficas y formas de visualizar presentadas por cada
 uno de los sistemas adaptados. Arriba a izquierda Kimera, ORB-SLAM3 a derecha;
 abajo Basalt.
-](source/figures/trackers-ui.pdf "Visualizadores de SLAM trackers"){#fig:trackers-ui width=100%}
+}
 
 \FloatBarrier

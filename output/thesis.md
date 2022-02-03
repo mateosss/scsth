@@ -846,16 +846,16 @@ individual y es por donde las muestras del par de cámaras estéreo ingresan al
 pipeline de Basalt. Inicialmente se genera una representación piramidal de las
 imágenes, o también llamada de _mipmaps_, esta es una forma tradicional
 [@williamsPyramidalParametrics1983] de almacenar una imagen en memoria junto a versiones
-reescaladas de la misma (Fig. @fig:mipmap). Los mipmaps tienen múltiples utilidades en
+reescaladas de la misma (Fig. \figref{fig:mipmap}). Los mipmaps tienen múltiples utilidades en
 computación gráfica (e.g., _filtrado trilineal_, _LODs_, reducción de
 _patrones moiré_) pero en el caso de Basalt serán utilizados para darle robustez
 al algoritmo de seguimiento de features (_feature tracking_).
 
 [`frametoframeopticalflow`]: TODO
 
-![
+\fig{fig:mipmap}{source/figures/mipmap.jpg}{Mipmaps}{%
 Representación piramidal (mipmaps) de un cuadro del conjunto de datos EuRoC.
-](source/figures/mipmap.jpg "Mipmaps"){#fig:mipmap width=100%}
+}
 
 Posteriormente se realiza la detección de features nuevas sobre las imágenes
 utilizando el algoritmo _FAST_ para detección de esquinas
@@ -1030,13 +1030,13 @@ llamada pre-integración de muestras consecutivas de la IMU. Considerando que
 estas muestras arriban a mayores frecuencias que las de las cámaras,
 pre-integrarlas es un proceso que intenta resumir las muestras entre los cuadros
 a una única pseudo-muestra que sucede en los mismos instantes de tiempo que los
-cuadros como se muestra en el ejemplo de @fig:sample-frequencies.
+cuadros como se muestra en el ejemplo de \figref{fig:sample-frequencies}.
 
-![
+\fig{fig:sample-frequencies}{source/figures/sample-frequencies.pdf}{%
+Ejemplo de frecuencias}{%
 Frecuencia de distintos eventos para un ejemplo con cámaras a 30fps y muestras
 de la IMU a 240hz.
-](source/figures/sample-frequencies.pdf "Ejemplo de
-frecuencias"){#fig:sample-frequencies width=100%}
+}
 
 El proceso de pre-integración es el siguiente. Dado el cuadro previo $i$ con
 timestamp $t_i$ y el cuadro posterior $j$ con timestamp $t_j$, se intenta
@@ -1231,21 +1231,21 @@ Como se ve en la definición de `Landmark`, la posición 3D de estos puntos de
 interés no se almacena exactamente de la misma forma que la triangulación los
 produce. En particular, no se almacena el bearing vector directamente, sino que
 se utiliza un punto 2D más compacto `direction` que lo codifica (para esto se
-utiliza una proyección estereográfica como se explica en la Figura
-@fig:stereographic-projection) junto a `inverse_distance`, la distancia inversa
+utiliza una proyección estereográfica como se explica en la
+\figref{fig:stereographic-projection}) junto a `inverse_distance`, la distancia inversa
 a este punto producto de la triangulación, de esta forma la posición de la
 landmark queda ligada al keyframe que la aloja.
 
-![
+\fig{fig:stereographic-projection}{source/figures/stereographic-projection.png}{Proyección estereográfica}{%
 Interpretación geométrica de la proyección estereográfica utilizada para
-representar bearing vectors. Las coordenadas definidas por la propiedad `Vector2
-direction` definen un punto en el plano $XY$ ($Z=0$) mostrado en azul. Para
+representar bearing vectors. Las coordenadas definidas por la propiedad \mono{Vector2
+direction} definen un punto en el plano $XY$ ($Z=0$) mostrado en azul. Para
 obtener el vector unitario correspondiente, se traza una línea desde el punto
-$(0 0 -1)^T$ hacia `direction` en el plano $XY$. El vector en el que esta línea
+$(0 0 -1)^T$ hacia \mono{direction} en el plano $XY$. El vector en el que esta línea
 interseca a la esfera unitaria será el bearing vector codificado. Se muestran
 tres ejemplos en rojo, verde y amarillo, con lineas punteadas que representan
 las líneas trazadas y flechas representando los bearing vectors obtenidos.
-](source/figures/stereographic-projection.png "Stereographic Projection"){#fig:stereographic-projection width=100%}
+}
 
 Si todos los procedimientos relacionados a la triangulación de estos dos cuadros
 fueron correctos, se almacena la landmark nueva en la base de datos. De haber
@@ -1287,28 +1287,27 @@ OpenXR, realidad virtual y aumentada entre otras. OpenXR por su parte, provee
 una API estandarizada con soporte para extensiones de fabricante que permiten
 añadir características peculiares de ser necesitadas por algún fabricante en
 particular. El estándar ha tenido un gran éxito al haber sido adoptado por una
-gran cantidad de fabricantes (Fig. @fig:openxr-companies) como reemplazo a sus
+gran cantidad de fabricantes (Fig. \figref{fig:openxr-companies}) como reemplazo a sus
 antiguos SDK propietarios. De esta forma, los motores de juego y desarrolladores
-solo necesitan interactuar con una única API (Fig. @fig:openxr) que además les
+solo necesitan interactuar con una única API (Fig. \figref{fig:openxr}) que además les
 permite aprovechar cualquier característica peculiar ofrecida por alguna
 extensión.
 
-![
-**Antes de OpenXR (izquierda)** aplicaciones y motores necesitaban código
-propietario separado para cada dispositivo en el mercado. **OpenXR (derecha)**
+\fig{fig:openxr}{source/figures/openxr.png}{OpenXR}{%
+\bold{Antes de OpenXR} (izquierda) aplicaciones y motores necesitaban código
+propietario separado para cada dispositivo en el mercado. \bold{OpenXR} (derecha)
 provee una única API multiplataforma de alta performance entre las aplicaciones
 y todos los dispositivos compatibles
-](source/figures/openxr.png "OpenXR"){#fig:openxr width=100%}
+}
 
-![
+\fig{fig:openxr-companies}{source/figures/openxr-companies.png}{Compañías OpenXR}{%
 Compañías respaldando públicamente el estándar OpenXR
-](source/figures/openxr-companies.png "Compañías OpenXR"){#fig:openxr-companies
-width=100%}
+}
 
 OpenXR es exclusivamente la [especificación][openxr-spec] de una API y por lo
 tanto requiere una implementación, o _runtime_, sobre el que ser ejecutado. Las
 implementaciones son provistas por los distintos fabricantes interesados en
-soportar el estándar, en la Figura @fig:openxr-companies vemos algunas de las
+soportar el estándar, en la \figref{fig:openxr-companies} vemos algunas de las
 implementaciones ya desarrolladas. En este trabajo nos enfocaremos en una de
 ellas, _Monado_. Monado es un runtime (por ahora el único) de la especificación
 OpenXR de código abierto, licenciada bajo la _Boost Software License 1.0
@@ -1380,7 +1379,7 @@ referirnos a una única funcionalidad que soporta tanto sistemas externos de SLA
 y como de VIO.
 
 Antes de comenzar, vale la pena entender la arquitectura general de Monado como
-se muestra en la Figura @fig:monado-arch. Una aplicación que hace uso de OpenXR
+se muestra en la \figref{fig:monado-arch}. Una aplicación que hace uso de OpenXR
 mediante Monado puede ser corrida en dos modalidades dependiendo de como se
 compiló el runtime. De la forma tradicional, se compila como una librería de
 manera **autónoma**, significando que cuando la aplicación intenta cargar
@@ -1401,9 +1400,9 @@ de tener realidad virtual renderizada en la nube.
 <!-- TODO@fig: Tiene que estar en español y agregar "Filtrado" arriba de "Prediction" -->
 <!-- TODO@fig: Podría usar los nombres `TrackerSlam` y `slam_tracker` me
 parece por que los referencio bastante -->
-![
+\fig{fig:monado-arch}{source/figures/monado-arch.pdf}{Arquitectura de Monado}{%
 Arquitectura de Monado.
-](source/figures/monado-arch.pdf "Arquitectura de Monado"){#fig:monado-arch width=100%}
+}
 
 \FloatBarrier
 
@@ -1428,24 +1427,24 @@ trabajo.
 La implementación de un pipeline en Monado que permita la comunicación entre
 dispositivos, sistemas de SLAM y la aplicación OpenXR requirió desarrollar la
 infraestructura y herramientas necesarias dentro de Monado. El pipeline en
-cuestión está esquematizado en la Figura @fig:slam-tracker-dataflow. Este,
+cuestión está esquematizado en la \figref{fig:slam-tracker-dataflow}. Este,
 requiere un gran nivel de modularidad, ya que sus componentes fundamentales
 necesitan poder ser intercambiables: dispositivos, aplicaciones y el sistema que
 provee el SLAM en sí. El resto de esta subsección está dedicada a explicar la
 infraestructura y los distintos componentes que se necesitaron implementar y
 adaptar para obtener un pipeline de SLAM modular corriendo en Monado como se
-intenta mostrar en la Figura @fig:slam-tracker-dataflow.
+intenta mostrar en la \figref{fig:slam-tracker-dataflow}.
 
 <!-- TODO@fig: Agregar a esta figura referencia al filtrado de poses -->
 <!-- TODO@fig: Hacer versión final -->
 
-![
+\fig{fig:slam-tracker-dataflow}{source/figures/slam-tracker-dataflow.pdf}{Flujo de datos de la implementación}{%
 Diagrama esquemático de como ocurre el flujo de los datos desde que se generan
 las muestras en los dispositivos XR hasta que la aplicación OpenXR obtiene una
 pose utilizable. Notar que las flechas esconden múltiples hilos de ejecución,
 colas de procesamiento, y desfasajes temporales con los que hay que lidiar en la
 implementación.
-](source/figures/slam-tracker-dataflow.pdf "Flujo de datos de la implementación"){#fig:slam-tracker-dataflow width=100%}
+}
 
 \FloatBarrier
 
@@ -1522,15 +1521,15 @@ private:
 Este header está presente en Monado, pero su implementación no. Esta debe ser
 provista por el sistema externo, lo cual implica tener que mantener una copia, o
 _fork_, levemente modificado de los distintos sistemas que se quieran utilizar,
-ver Figura @fig:slam-tracker-hpp.
+ver \figref{fig:slam-tracker-hpp}.
 
 <!-- TODO@fig: La parte de basalt está mal, no hay hilo consumidor de muestras,
 el hilo ese estaría en las "Partes Internas de Basalt". Otros problemas es que
 no se relaciona las colas dibujadas con nada, ni con Monado ni con la copia de slam_tracker.hpp -->
 
-![
+\fig{fig:slam-tracker-hpp}{source/figures/slam-tracker-hpp.pdf}{Interfaz de SLAM tracker}{%
 Interacción entre Monado y sistemas SLAM mediante la interfaz en C++.
-](source/figures/slam-tracker-hpp.pdf "Interfaz de SLAM tracker"){#fig:slam-tracker-hpp width=100%}
+}
 
 La versión actual de esta clase es el
 resultado de varias iteraciones y generaliza adecuadamente los tres sistemas
@@ -1681,8 +1680,8 @@ archivo de configuración.
 
 Respecto a las interfaces gráficas, todos estos sistemas presentan la
 posibilidad de poder visualizar, al menos, la trayectoria estimada junto a las
-features detectadas en los cuadros entrantes como se muestra en la Figura
-@fig:trackers-ui. En todos los casos, siempre se intenta permitir la posibilidad
+features detectadas en los cuadros entrantes como se muestra en la
+\figref{fig:trackers-ui}. En todos los casos, siempre se intenta permitir la posibilidad
 de utilizar estas herramientas de visualización de forma opcional al utilizar la
 clase `slam_tracker`. Para Kimera y ORB-SLAM3 las interfaces funcionan
 automáticamente al habilitarlas en los archivos de configuración, mientras que
@@ -1698,11 +1697,11 @@ lidiar respecto a shared libraries (https://www.akkadia.org/drepper/dsohowto.pdf
 <!-- TODO@fig: Varias figuras están ocupando toda una página por si solas y
 dejando una banda de espacio en blanco. -->
 
-![
+\fig{fig:trackers-ui}{source/figures/trackers-ui.pdf}{Visualizadores de SLAM trackers}{%
 Las distintas interfaces gráficas y formas de visualizar presentadas por cada
 uno de los sistemas adaptados. Arriba a izquierda Kimera, ORB-SLAM3 a derecha;
 abajo Basalt.
-](source/figures/trackers-ui.pdf "Visualizadores de SLAM trackers"){#fig:trackers-ui width=100%}
+}
 
 \FloatBarrier
 
@@ -1711,7 +1710,7 @@ abajo Basalt.
 
 Para interactuar con la interfaz que detallamos en la sección anterior, se
 implementa en Monado una clase adaptadora en el módulo auxiliar de tracking
-(recordar Figura @fig:monado-arch) y que sirve de nexo entre los
+(recordar \figref{fig:monado-arch}) y que sirve de nexo entre los
 controladores de dispositivos de hardware y la interfaz `slam_tracker`. Este
 adaptador recibe el nombre, un poco confuso, de `TrackerSlam` siguiendo las
 convenciones de Monado para con los trackers ya existentes.
@@ -1804,13 +1803,13 @@ significativos de los sistemas de SLAM.
 
 ##### Análisis de un ejemplo
 
-![
-Línea de tiempo con timestamps normalizadas. El evento `REQUEST_TO_PREDICTION`
+\fig{fig:prediction-timeline}{source/figures/prediction-timeline.png}{Línea de tiempo de predicción}{%
+Línea de tiempo con timestamps normalizadas. El evento \mono{REQUEST\_TO\_PREDICTION}
 significa algo.
-](source/figures/prediction-timeline.png "Línea de tiempo de predicción"){#fig:prediction-timeline width=100%}
+}
 
 
-En la Figura @fig:prediction-timeline se puede apreciar una captura de pantalla
+En la \figref{fig:prediction-timeline} se puede apreciar una captura de pantalla
 de la interfaz de *Perfetto* [^perfetto-web] que, en conjunto con *Percetto*
 [^percetto-web], son herramientas de medición de tiempos preferidas para Monado.
 Esta captura es sobre una corrida en tiempo real con Monado, Basalt y una cámara
@@ -1942,16 +1941,16 @@ orientación del dispositivo como puede verse en su definición en el
 velocidades con base a los pares de poses adyacentes que tengamos en el
 historial. Estas poses tienen su timestamp correspondiente, entonces es sencillo
 computar la diferencia entre las mismas respecto a la unidad de tiempo, dando
-como resultado una estimación de la velocidad del espacio. La Figura
-@fig:prediction-with-space-history muestra como funcionaría este tipo de
+como resultado una estimación de la velocidad del espacio. La
+\figref{fig:prediction-with-space-history} muestra como funcionaría este tipo de
 predicción en un ejemplo simplificado en 2D y en el que asumimos que las poses
 estimadas por el sistema de SLAM/VIO coinciden perfectamente con la trayectoria
 real del dispositivo.
 
-![
+\fig{fig:prediction-with-space-history}{source/figures/prediction-with-space-history.pdf}{Predicción con historial de espacios}{%
 Ejemplo de predicción con el historial de espacios. Se asume que las poses
 estimadas por el sistema de SLAM son perfectas por simplicidad.
-](source/figures/prediction-with-space-history.pdf "Predicción con historial de espacios"){#fig:prediction-with-space-history width=100%}
+}
 
 \FloatBarrier
 
@@ -1959,8 +1958,8 @@ estimadas por el sistema de SLAM son perfectas por simplicidad.
 
 Esto es una buena primera solución al problema, y es la opción más básica que la
 clase adaptadora `TrackerSlam` le ofrece a los usuarios de Monado.
-Desafortunadamente, si vemos el ejemplo estudiado en la Figura
-@fig:prediction-timeline notaremos que la frecuencia de poses que se computan es
+Desafortunadamente, si vemos el ejemplo estudiado en la
+\figref{fig:prediction-timeline} notaremos que la frecuencia de poses que se computan es
 muy baja en comparación a la cantidad de veces que la aplicación OpenXR requiere
 una nueva prdicción. En el ejemplo se tenían muestras (y por ende estimaciones)
 a 30 cuadros por segundo mientras que se renderizaba a 60. En ese ejemplo se
@@ -1978,7 +1977,7 @@ Para mejorar nuestras predicciones, visto el problema de que las estimaciones
 computadas se encuentran muy espaciadas, respecto a las peticiones de
 predicción, vamos a utilizar las muestras de IMU. Estas vienen usualmente a
 frecuencias mucho mayores que las de renderizado; 250 Hz en el caso del ejemplo
-estudiado en la Figura @fig:prediction-timeline. Además, a pesar de sufrir de
+estudiado en la \figref{fig:prediction-timeline}. Además, a pesar de sufrir de
 severos problemas de drift, al utilizarlas en ventanas cortas de tiempo (unos
 pocos milisegundos), estos se ven reducidos en gran medida y la odometría que
 sus sensores proveen resulta suficientemente precisa.
@@ -2048,7 +2047,7 @@ proveer información sobre los cambios de velocidad, y no sobre la velocidad
 inicial; para esta usamos la dada por `r` que es computada con la diferencia de
 las dos poses en `relation_history` más recientes.
 
-Mostramos en la Figura @fig:prediction-with-imu un ejemplo simplificado del
+Mostramos en la \figref{fig:prediction-with-imu} un ejemplo simplificado del
 algoritmo implementado utilizando esta idea de promediar muestras de odometría
 de la IMU para predecir puntos de tiempo posteriores a `B` cuando `C` todavía no
 pertenece al historial de espacios. En el ejemplo se muestra como iría
@@ -2062,25 +2061,25 @@ la trayectoria real del dispositivo.
 
 <!-- TODO@end: estaríá bueno que ambas figuras aparezcan en la misma página -->
 
-![
+\fig{fig:prediction-with-imu}{source/figures/prediction-with-imu.pdf}{Predicción con promediado de muestras IMU}{%
 Ejemplo de predicción para tiempos $t \in \{1,45; 1,75; 1.95\}$ utilizando la
 idea de promediar muestras de la IMU posteriores a la pose más reciente del
-historial (`B` en este caso, se considera que `C` no pertenece al historial
+historial (\mono{B} en este caso, se considera que \mono{C} no pertenece al historial
 aún). Se asume que las poses estimadas por el sistema de SLAM y las muestras de
 la IMU son perfectas por simplicidad.
-](source/figures/prediction-with-imu.pdf "Predicción con promediado de muestras IMU"){#fig:prediction-with-imu width=100%}
+}
 
 Para contrastar esto con el caso en el que se ignoran las muestras de la IMU y
-solo se utiliza el historial de poses, se muestra en la Figura
-@fig:prediction-without-imu los errores de esta predicción para el mismo
+solo se utiliza el historial de poses, se muestra en la
+\figref{fig:prediction-without-imu} los errores de esta predicción para el mismo
 escenario.
 
-![
+\fig{fig:prediction-without-imu}{source/figures/prediction-without-imu.pdf}{Predicción sin uso de muestras IMU}{%
 Ejemplo de predicción para tiempos $t \in \{1,45; 1,75; 1.95\}$ ignorando las
-muestras de IMU y utilizando unicamente el historial de poses con `A` y `B` como
-últimas muestras (esto es antes de que llegue `C`). De vuelta, asumimos que las
+muestras de IMU y utilizando unicamente el historial de poses con \mono{A} y \mono{B} como
+últimas muestras (esto es antes de que llegue \mono{C}). De vuelta, asumimos que las
 estimaciones y no contienen error por simplicidad.
-](source/figures/prediction-without-imu.pdf "Predicción sin uso de muestras IMU"){#fig:prediction-without-imu width=100%}
+}
 
 Finalmente, cabe aclarar que la trayectoria presentada en estas figuras es
 particularmente desafiante. Considerando que estos dispositivos XR están
@@ -2133,7 +2132,7 @@ VR en dónde las pantallas ocupan todo el campo de visión del usuario;
 movimientos de este tipo pueden fácilmente inducir cinetosis.
 
 Por sobre esto, el método de predicción presentado en la sección anterior en la
-Figura @fig:prediction-with-imu presenta problemas que no fueron tratados. En
+\figref{fig:prediction-with-imu} presenta problemas que no fueron tratados. En
 particular, la predicción que realizamos está basada en una única pose del
 sistema SLAM y las muestras nueva de la IMU, pero no comparte ningún otro estado
 en común. Entonces podría esperarse que la diferencia entre las poses que se
@@ -2141,18 +2140,18 @@ fueron prediciendo con la nueva pose que el sistema estimará sea significativa.
 Más aún, en la realidad el error acumulado por la IMU, a pesar de verse limitado
 a un intervalo corto de unas decenas de milisegundos, es un término más que
 afectaría esta diferencia. Todo esto puede verse en el error marcado en la
-Figura @fig:prediction-offset-jump. Este tipo de desfasaje sería reintroducido
+\figref{fig:prediction-offset-jump}. Este tipo de desfasaje sería reintroducido
 de forma repetitiva afectando las predicciones cada vez que una nueva pose es
 estimada, causando así constantes micro saltos (ruido), especialmente en los
 momentos en los que la pose estimada por SLAM y la pose predicha por nuestro
 método difieran significativamente.
 
-![
+\fig{fig:prediction-offset-jump}{source/figures/prediction-offset-jump.pdf}{Predicción sin uso de muestras IMU}{%
 Desfasaje esperado entre el método de predicción por muestras promediadas y la
-pose `C` estimada de SLAM cuando `C` aún no pertenece al historial de espacios.
+pose \mono{C} estimada de SLAM cuando \mono{C} aún no pertenece al historial de espacios.
 Se muestra la incidencia de la acumulación de errores de la IMU. Este desfasaje
 causará micro saltos que serían disruptivos en una experiencia de VR.
-](source/figures/prediction-offset-jump.pdf "Predicción sin uso de muestras IMU"){#fig:prediction-offset-jump width=100%}
+}
 
 Es entonces por estas razones, que se implementaron tres métodos sencillos de
 filtrado combinables para suavizar las trayectorias estimadas y que intentan
@@ -2344,7 +2343,7 @@ definición anterior con algunas aclaraciones:
 
 ### Recapitulando
 
-Con la Figura @fig:slam-tracker-dataflow vista al principio de la sección en
+Con la \figref{fig:slam-tracker-dataflow} vista al principio de la sección en
 mente, hemos visto que se ha implementado una clase adaptadora `TrackerSlam` en
 Monado que funciona como punto central de comunicación con los sistemas de
 SLAM/VIO integrados. Esta clase además implementa funcionalidades de predicción
@@ -2359,7 +2358,7 @@ trabajo y que constituyen una contribución importante al runtime.
 
 En Monado, la interacción con la gran variedad de dispositivos que el runtime
 soporta es realizada mediante _drivers_ o _controladores_. Estos, como se puede
-ver en la @fig:slam-tracker-dataflow, le permiten a Monado interactuar con
+ver en la \figref{fig:slam-tracker-dataflow}, le permiten a Monado interactuar con
 sistemas XR físicos mediante abstracciones derivadas de los requisitos de
 OpenXR. Un sistema XR en este contexto hace referencia a un conjunto de
 dispositivos XR. Un dispositivo XR en forma intuitiva, es algún tipo de hardware
@@ -2376,17 +2375,17 @@ diferenció el concepto de _fuente de datos_ del de dispositivo ya que es en
 definitiva esto en lo que estaremos interesados para SLAM, obtener fuentes de
 datos de IMU y cámaras.
 
-![
+\fig{fig:devices-ody-d455}{source/figures/devices-ody-d455.jpg}{Dispositivos XR utilizados}{%
 Dispositivos XR utilizados en este trabajo. A izquierda un casco Samsung
 Odyssey+ y a derecha una cámara Intel RealSense D455.
-](source/figures/devices-ody-d455.jpg "Dispositivos XR utilizados"){#fig:devices-ody-d455 width=100%}
+}
 
 <!-- TODO@def: no defino que es SDK, o bindings -->
 <!-- TODO@def: uso el termino seis grados de libertad -->
 <!-- TODO@def: uso upstream -->
 
-En este trabajo se desarrolló con los dos dispositivos mostrados en la Figura
-@fig:devices-ody-d455 como principales fuentes de datos para SLAM. A la derecha
+En este trabajo se desarrolló con los dos dispositivos mostrados en la
+\figref{fig:devices-ody-d455} como principales fuentes de datos para SLAM. A la derecha
 de la imagen tenemos una cámara de profundidad _Intel RealSense D455_[^d455]
 mientras que a izquierda tenemos un casco _Samsung Odyssey+_. La línea de
 cámaras y módulos RealSense de Intel se enfoca en aplicaciones de robótica y
@@ -2495,17 +2494,17 @@ las cámaras que se utilizan habitualmente en dispositivos de consumo como
 teléfonos inteligentes, presentan un _rolling shutter_ en dónde los píxeles son
 capturados en un "barrido", fila por fila. Esto genera
 distorsiones[^rolling-shutter-name] significativas en presencia de movimientos
-suficientemente rápidos como se ve en la Figura @fig:rolling-shutter. Estas
+suficientemente rápidos como se ve en la \figref{fig:rolling-shutter}. Estas
 distorsiones afectan negativamente la capacidad de los algoritmos de SLAM para
 reconocer y trackear features de forma estable.
 
-![
+\fig{fig:rolling-shutter}{source/figures/rolling-shutter.jpg}{Efecto rolling shutter}{%
 Ejemplo de la distorsión que se genera en cámaras con rolling shutter que
 capturan la imagen barriendo por filas de píxeles. Esto genera distorsiones en
 los objetos rígidos que son particularmente notables en presencia de movimientos
 de alta velocidad como los de la hélice. Esto no sucede con cámaras con global
 shutter que capturan todos los píxeles en el mismo momento.
-](source/figures/rolling-shutter.jpg "Efecto rolling shutter"){#fig:rolling-shutter width=100%}
+}
 
 [^shutter]: El término obturador proviene de los sensores ópticos tradicionales.
 Un obturador era una pieza mecánica en movimiento que controlaba el tiempo
@@ -2523,7 +2522,7 @@ obturador de la cámara habilita la entrada de luz a los sensores ópticos por
 cada cuadro. Por otro lado, la ganancia controla el nivel de amplificación
 (usualmente digital) que ocurrirá sobre la señal original.
 
-Además de las problemáticas presentadas en la Figura @fig:expgain-grids, existen
+Además de las problemáticas presentadas en la \figref{fig:expgain-grids}, existen
 otros problemas a considerar relacionados también a estos parámetros y la
 iluminación del entorno del usuario. Uno de ellos es la _sobreexposición_,
 cuando se presentan fuentes de iluminación muy intensas y la exposición (y
@@ -2534,7 +2533,7 @@ problemática opuesta es cuando el usuario no posee suficiente cantidad de luz e
 su entorno y entonces el sistema de SLAM no es capaz de distinguir features. Una
 regla de pulgar
 
-![
+\fig{fig:expgain-grids}{source/figures/expgain-grids.pdf}{Exposición y ganancia}{%
 Ejemplos tomados con la D455 sobre los efectos de la exposición y ganancia sobre
 las muestras de imágenes. A izquierda se observa una región de 256 píxeles
 cuadrados con distintas configuraciones de tiempos de exposición y valores de
@@ -2545,7 +2544,7 @@ aumentar ambos valores también incrementa el brillo de la imagen. Por su parte
 en la figura derecha podemos ver que aumentar la ganancia incrementa el ruido,
 mientras que en la figura izquierda se observa que valores altos de exposición
 incrementan el motion blur del objeto en movimiento.
-](source/figures/expgain-grids.pdf "Exposición y ganancia"){#fig:expgain-grids width=100%}
+}
 
 
 
@@ -2562,12 +2561,12 @@ interacción del host. Este controlador se encargaba únicamente de inicializar 
 módulo interno de SLAM de la cámara y obtener las poses computadas por la misma
 para uso en las aplicacions OpenXR. Uno de sus usuarios clave era el casco libre
 del proyecto North Star [^north-star] que la utiliza como principal forma de
-tracking; en a figura @fig:northstar-t265.jpg se puede ver uno de estos cascos
+tracking; en la \figref{fig:northstar-t265}.jpg se puede ver uno de estos cascos
 con la cámara sujeta al mismo en la parte superior.
 
-![
+\fig{fig:northstar-t265}{source/figures/northstar-t265.jpg}{T265 y proyecto North Star}{%
 El casco AR libre del proyecto North Star con una camara T265 sujeta en la parte superior.
-](source/figures/northstar-t265.jpg "T265 y proyecto North Star"){#fig:northstar-t265 width=100%}
+}
 
 
 [^t265]: https://www.intelrealsense.com/tracking-camera-t265/

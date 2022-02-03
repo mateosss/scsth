@@ -68,13 +68,13 @@ significativos de los sistemas de SLAM.
 
 ##### Análisis de un ejemplo
 
-![
-Línea de tiempo con timestamps normalizadas. El evento `REQUEST_TO_PREDICTION`
+\fig{fig:prediction-timeline}{source/figures/prediction-timeline.png}{Línea de tiempo de predicción}{%
+Línea de tiempo con timestamps normalizadas. El evento \mono{REQUEST\_TO\_PREDICTION}
 significa algo.
-](source/figures/prediction-timeline.png "Línea de tiempo de predicción"){#fig:prediction-timeline width=100%}
+}
 
 
-En la Figura @fig:prediction-timeline se puede apreciar una captura de pantalla
+En la \figref{fig:prediction-timeline} se puede apreciar una captura de pantalla
 de la interfaz de *Perfetto* [^perfetto-web] que, en conjunto con *Percetto*
 [^percetto-web], son herramientas de medición de tiempos preferidas para Monado.
 Esta captura es sobre una corrida en tiempo real con Monado, Basalt y una cámara
@@ -206,16 +206,16 @@ orientación del dispositivo como puede verse en su definición en el
 velocidades con base a los pares de poses adyacentes que tengamos en el
 historial. Estas poses tienen su timestamp correspondiente, entonces es sencillo
 computar la diferencia entre las mismas respecto a la unidad de tiempo, dando
-como resultado una estimación de la velocidad del espacio. La Figura
-@fig:prediction-with-space-history muestra como funcionaría este tipo de
+como resultado una estimación de la velocidad del espacio. La
+\figref{fig:prediction-with-space-history} muestra como funcionaría este tipo de
 predicción en un ejemplo simplificado en 2D y en el que asumimos que las poses
 estimadas por el sistema de SLAM/VIO coinciden perfectamente con la trayectoria
 real del dispositivo.
 
-![
+\fig{fig:prediction-with-space-history}{source/figures/prediction-with-space-history.pdf}{Predicción con historial de espacios}{%
 Ejemplo de predicción con el historial de espacios. Se asume que las poses
 estimadas por el sistema de SLAM son perfectas por simplicidad.
-](source/figures/prediction-with-space-history.pdf "Predicción con historial de espacios"){#fig:prediction-with-space-history width=100%}
+}
 
 \FloatBarrier
 
@@ -223,8 +223,8 @@ estimadas por el sistema de SLAM son perfectas por simplicidad.
 
 Esto es una buena primera solución al problema, y es la opción más básica que la
 clase adaptadora `TrackerSlam` le ofrece a los usuarios de Monado.
-Desafortunadamente, si vemos el ejemplo estudiado en la Figura
-@fig:prediction-timeline notaremos que la frecuencia de poses que se computan es
+Desafortunadamente, si vemos el ejemplo estudiado en la
+\figref{fig:prediction-timeline} notaremos que la frecuencia de poses que se computan es
 muy baja en comparación a la cantidad de veces que la aplicación OpenXR requiere
 una nueva prdicción. En el ejemplo se tenían muestras (y por ende estimaciones)
 a 30 cuadros por segundo mientras que se renderizaba a 60. En ese ejemplo se
@@ -242,7 +242,7 @@ Para mejorar nuestras predicciones, visto el problema de que las estimaciones
 computadas se encuentran muy espaciadas, respecto a las peticiones de
 predicción, vamos a utilizar las muestras de IMU. Estas vienen usualmente a
 frecuencias mucho mayores que las de renderizado; 250 Hz en el caso del ejemplo
-estudiado en la Figura @fig:prediction-timeline. Además, a pesar de sufrir de
+estudiado en la \figref{fig:prediction-timeline}. Además, a pesar de sufrir de
 severos problemas de drift, al utilizarlas en ventanas cortas de tiempo (unos
 pocos milisegundos), estos se ven reducidos en gran medida y la odometría que
 sus sensores proveen resulta suficientemente precisa.
@@ -312,7 +312,7 @@ proveer información sobre los cambios de velocidad, y no sobre la velocidad
 inicial; para esta usamos la dada por `r` que es computada con la diferencia de
 las dos poses en `relation_history` más recientes.
 
-Mostramos en la Figura @fig:prediction-with-imu un ejemplo simplificado del
+Mostramos en la \figref{fig:prediction-with-imu} un ejemplo simplificado del
 algoritmo implementado utilizando esta idea de promediar muestras de odometría
 de la IMU para predecir puntos de tiempo posteriores a `B` cuando `C` todavía no
 pertenece al historial de espacios. En el ejemplo se muestra como iría
@@ -326,25 +326,25 @@ la trayectoria real del dispositivo.
 
 <!-- TODO@end: estaríá bueno que ambas figuras aparezcan en la misma página -->
 
-![
+\fig{fig:prediction-with-imu}{source/figures/prediction-with-imu.pdf}{Predicción con promediado de muestras IMU}{%
 Ejemplo de predicción para tiempos $t \in \{1,45; 1,75; 1.95\}$ utilizando la
 idea de promediar muestras de la IMU posteriores a la pose más reciente del
-historial (`B` en este caso, se considera que `C` no pertenece al historial
+historial (\mono{B} en este caso, se considera que \mono{C} no pertenece al historial
 aún). Se asume que las poses estimadas por el sistema de SLAM y las muestras de
 la IMU son perfectas por simplicidad.
-](source/figures/prediction-with-imu.pdf "Predicción con promediado de muestras IMU"){#fig:prediction-with-imu width=100%}
+}
 
 Para contrastar esto con el caso en el que se ignoran las muestras de la IMU y
-solo se utiliza el historial de poses, se muestra en la Figura
-@fig:prediction-without-imu los errores de esta predicción para el mismo
+solo se utiliza el historial de poses, se muestra en la
+\figref{fig:prediction-without-imu} los errores de esta predicción para el mismo
 escenario.
 
-![
+\fig{fig:prediction-without-imu}{source/figures/prediction-without-imu.pdf}{Predicción sin uso de muestras IMU}{%
 Ejemplo de predicción para tiempos $t \in \{1,45; 1,75; 1.95\}$ ignorando las
-muestras de IMU y utilizando unicamente el historial de poses con `A` y `B` como
-últimas muestras (esto es antes de que llegue `C`). De vuelta, asumimos que las
+muestras de IMU y utilizando unicamente el historial de poses con \mono{A} y \mono{B} como
+últimas muestras (esto es antes de que llegue \mono{C}). De vuelta, asumimos que las
 estimaciones y no contienen error por simplicidad.
-](source/figures/prediction-without-imu.pdf "Predicción sin uso de muestras IMU"){#fig:prediction-without-imu width=100%}
+}
 
 Finalmente, cabe aclarar que la trayectoria presentada en estas figuras es
 particularmente desafiante. Considerando que estos dispositivos XR están

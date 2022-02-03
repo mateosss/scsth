@@ -2,7 +2,7 @@
 
 En Monado, la interacción con la gran variedad de dispositivos que el runtime
 soporta es realizada mediante _drivers_ o _controladores_. Estos, como se puede
-ver en la @fig:slam-tracker-dataflow, le permiten a Monado interactuar con
+ver en la \figref{fig:slam-tracker-dataflow}, le permiten a Monado interactuar con
 sistemas XR físicos mediante abstracciones derivadas de los requisitos de
 OpenXR. Un sistema XR en este contexto hace referencia a un conjunto de
 dispositivos XR. Un dispositivo XR en forma intuitiva, es algún tipo de hardware
@@ -19,17 +19,17 @@ diferenció el concepto de _fuente de datos_ del de dispositivo ya que es en
 definitiva esto en lo que estaremos interesados para SLAM, obtener fuentes de
 datos de IMU y cámaras.
 
-![
+\fig{fig:devices-ody-d455}{source/figures/devices-ody-d455.jpg}{Dispositivos XR utilizados}{%
 Dispositivos XR utilizados en este trabajo. A izquierda un casco Samsung
 Odyssey+ y a derecha una cámara Intel RealSense D455.
-](source/figures/devices-ody-d455.jpg "Dispositivos XR utilizados"){#fig:devices-ody-d455 width=100%}
+}
 
 <!-- TODO@def: no defino que es SDK, o bindings -->
 <!-- TODO@def: uso el termino seis grados de libertad -->
 <!-- TODO@def: uso upstream -->
 
-En este trabajo se desarrolló con los dos dispositivos mostrados en la Figura
-@fig:devices-ody-d455 como principales fuentes de datos para SLAM. A la derecha
+En este trabajo se desarrolló con los dos dispositivos mostrados en la
+\figref{fig:devices-ody-d455} como principales fuentes de datos para SLAM. A la derecha
 de la imagen tenemos una cámara de profundidad _Intel RealSense D455_[^d455]
 mientras que a izquierda tenemos un casco _Samsung Odyssey+_. La línea de
 cámaras y módulos RealSense de Intel se enfoca en aplicaciones de robótica y
@@ -138,17 +138,17 @@ las cámaras que se utilizan habitualmente en dispositivos de consumo como
 teléfonos inteligentes, presentan un _rolling shutter_ en dónde los píxeles son
 capturados en un "barrido", fila por fila. Esto genera
 distorsiones[^rolling-shutter-name] significativas en presencia de movimientos
-suficientemente rápidos como se ve en la Figura @fig:rolling-shutter. Estas
+suficientemente rápidos como se ve en la \figref{fig:rolling-shutter}. Estas
 distorsiones afectan negativamente la capacidad de los algoritmos de SLAM para
 reconocer y trackear features de forma estable.
 
-![
+\fig{fig:rolling-shutter}{source/figures/rolling-shutter.jpg}{Efecto rolling shutter}{%
 Ejemplo de la distorsión que se genera en cámaras con rolling shutter que
 capturan la imagen barriendo por filas de píxeles. Esto genera distorsiones en
 los objetos rígidos que son particularmente notables en presencia de movimientos
 de alta velocidad como los de la hélice. Esto no sucede con cámaras con global
 shutter que capturan todos los píxeles en el mismo momento.
-](source/figures/rolling-shutter.jpg "Efecto rolling shutter"){#fig:rolling-shutter width=100%}
+}
 
 [^shutter]: El término obturador proviene de los sensores ópticos tradicionales.
 Un obturador era una pieza mecánica en movimiento que controlaba el tiempo
@@ -166,7 +166,7 @@ obturador de la cámara habilita la entrada de luz a los sensores ópticos por
 cada cuadro. Por otro lado, la ganancia controla el nivel de amplificación
 (usualmente digital) que ocurrirá sobre la señal original.
 
-Además de las problemáticas presentadas en la Figura @fig:expgain-grids, existen
+Además de las problemáticas presentadas en la \figref{fig:expgain-grids}, existen
 otros problemas a considerar relacionados también a estos parámetros y la
 iluminación del entorno del usuario. Uno de ellos es la _sobreexposición_,
 cuando se presentan fuentes de iluminación muy intensas y la exposición (y
@@ -177,7 +177,7 @@ problemática opuesta es cuando el usuario no posee suficiente cantidad de luz e
 su entorno y entonces el sistema de SLAM no es capaz de distinguir features. Una
 regla de pulgar
 
-![
+\fig{fig:expgain-grids}{source/figures/expgain-grids.pdf}{Exposición y ganancia}{%
 Ejemplos tomados con la D455 sobre los efectos de la exposición y ganancia sobre
 las muestras de imágenes. A izquierda se observa una región de 256 píxeles
 cuadrados con distintas configuraciones de tiempos de exposición y valores de
@@ -188,7 +188,7 @@ aumentar ambos valores también incrementa el brillo de la imagen. Por su parte
 en la figura derecha podemos ver que aumentar la ganancia incrementa el ruido,
 mientras que en la figura izquierda se observa que valores altos de exposición
 incrementan el motion blur del objeto en movimiento.
-](source/figures/expgain-grids.pdf "Exposición y ganancia"){#fig:expgain-grids width=100%}
+}
 
 <!-- #if 0 -->
 
@@ -242,12 +242,12 @@ interacción del host. Este controlador se encargaba únicamente de inicializar 
 módulo interno de SLAM de la cámara y obtener las poses computadas por la misma
 para uso en las aplicacions OpenXR. Uno de sus usuarios clave era el casco libre
 del proyecto North Star [^north-star] que la utiliza como principal forma de
-tracking; en a figura @fig:northstar-t265.jpg se puede ver uno de estos cascos
+tracking; en la \figref{fig:northstar-t265}.jpg se puede ver uno de estos cascos
 con la cámara sujeta al mismo en la parte superior.
 
-![
+\fig{fig:northstar-t265}{source/figures/northstar-t265.jpg}{T265 y proyecto North Star}{%
 El casco AR libre del proyecto North Star con una camara T265 sujeta en la parte superior.
-](source/figures/northstar-t265.jpg "T265 y proyecto North Star"){#fig:northstar-t265 width=100%}
+}
 
 
 [^t265]: https://www.intelrealsense.com/tracking-camera-t265/
