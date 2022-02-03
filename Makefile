@@ -53,6 +53,8 @@ tex: md
 	pandoc \
 	--output="$(OUTPUTDIR)/thesis.tex" \
 	--template="$(STYLEDIR)/template.tex" \
+	--include-in-header="$(STYLEDIR)/preamble.new.tex" \
+	--listings \
 	--top-level-division=chapter \
 	--verbose \
 	"$(OUTPUTDIR)/thesis.md"

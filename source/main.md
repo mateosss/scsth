@@ -11,6 +11,11 @@
 \part{Some Kind of Manual}\label{pt:manual}
 
 <!-- #include Chapters/Chapter01.tex -->
+
+<!-- #include contents/fundamentals/fundamentals.md -->
+<!-- #include contents/basalt/basalt.md -->
+<!-- #include contents/contributions/contributions.md -->
+
 \clearpage
 
 \cleardoublepage
