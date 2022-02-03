@@ -52,6 +52,19 @@
 %*******************************************************
 %\hyphenation{put special hyphenation here}
 
+\usepackage{placeins}
+\usepackage{algorithm}
+\usepackage[noabbrev,capitalize,nameinlink,spanish]{cleveref}
+\creflabelformat{equation}{#2\textup{#1}#3}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\usepackage{amssymb}
+\newcommand{\passthrough}[1]{#1}
+\lstset{%
+  literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+}
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 % ********************************************************************
 % GO!GO!GO! MOVE IT!
 %*******************************************************
@@ -463,6 +476,2278 @@ the sources for theses, books, CVs, etc. that were created using
 \texttt{classicthesis}.
 
 Postcards are still highly appreciated.
+
+\hypertarget{fundamentos}{%
+\chapter{Fundamentos}\label{fundamentos}}
+
+\hypertarget{optimizaciuxf3n-por-cuadrados-muxednimos}{%
+\section{Optimización por cuadrados
+mínimos}\label{optimizaciuxf3n-por-cuadrados-muxednimos}}
+
+Como se verá más adelante, muchos de los problemas fundamentales de SLAM
+son problemas de optimización. Querremos minimizar una \emph{función de
+error} o \emph{energía} no-lineal que integre las múltiples mediciones
+que contienen información conflictiva, ruido, outliers, y demás
+problemáticas propias de la toma de datos mediante sensores físicos. Se
+utiliza como algoritmo principal para la optimización de estos sistemas
+el algoritmo de Gauss-Newton, y es el que explicaremos en esta sección.
+Cabe aclarar que existen algoritmos ligeramente más sofisticados como
+\emph{Levenberg-Marquardt} o el \emph{método dogleg} que pueden
+aplicarse; no nos explayaremos en ellos en este trabajo, pero serán
+mencionados cuando sea pertinente.
+
+\hypertarget{cuadrados-muxednimos-lineales}{%
+\subsection{Cuadrados mínimos
+lineales}\label{cuadrados-muxednimos-lineales}}
+
+Comencemos con el caso lineal que será necesario para luego aproximar el
+no-lineal.
+
+Querremos encontrar algún punto \(x \in \R^n\) que cumpla una serie de
+\(m\) restricciones \textbf{lineales} \(f_i(x) = b_i\) con
+\(f_i \in \R^n \rightarrow \R\) combinación lineal de los componentes
+\(x\); \(\ b \in \R^m\) y con \(i = 1, ..., m\). Además definimos
+\(f(x) = [f_1(x) \dots f_m(x)]^T\) y al ser \(f_i\) combinaciones
+lineales de \(x\), tenemos que existe una transformación lineal
+\(A \in \R^{m \times n}\) tal que \(f(x) = Ax\). De esta forma podemos
+replantear nuestras ecuaciones como el sistema \(Ax = b\).
+
+Será usual que \(m > n\) y que \(A\) tenga columnas linealmente
+independientes así que solo consideraremos este caso. Al tener más
+ecuaciones que incógnitas tenemos un sistema \emph{sobre-determinado} en
+el cual, para valores usuales de \(b\), no tendremos solución.
+Buscaremos entonces el \(x\) que ``mejor'' cumpla con estas
+restricciones en algún sentido de la palabra. Utilizaremos el criterio
+de minimizar los \emph{residuales} \(r_i(x) = f_i(x) - b_i\) y definimos
+al vector residual como \(r(x) = [r_1(x) \dots r_m(x)]^T\). Querremos
+encontrar un \(x\) que minimice la siguiente función de \emph{error} o
+\emph{energía} \(E(x)\) basada en los residuales. \begin{align}
+E(x) = \sum_{i=1}^m{r_i(x) ^ 2} = \| r(x) \| ^ 2
+\end{align}
+
+Notar que la definición de \(E(x)\) coincide con la de la \emph{norma
+euclídea} al cuadrado de \(r(x)\). Encontrar \(x\) que minimice \(E(x)\)
+con residuales lineales es el \emph{problema de los cuadrados mínimos
+lineales}; a \(x\) le decimos \emph{solución} de tal problema. Notar que
+\(r_i = (Ax - b)_i\), o sea el componente \(i\) del vector
+\(Ax - b \in \R^m\), y por ende \(r(x) = Ax - b\). \begin{align}
+E(x) = \sum_{i=1}^m{(Ax - b)_i^2} = \| Ax - b \| ^ 2
+\end{align}
+
+Lo que queremos minimizar es entonces equivalente a la norma cuadrada
+del vector residual \(Ax - b\). Introduciremos a continuación una serie
+de conceptos y teoremas necesarios para poder presentar una forma
+sucinta de minimizar esta norma.
+
+Aceptaremos el siguiente teorema sin demostración.
+
+\begin{description}
+\tightlist
+\item[Theorem thm:li1inv2nots3]
+Son equivalentes:
+
+\begin{enumerate}
+  \item Las columnas de $A$ son linealmente independientes.
+  \item $A$ es invertible.
+  \item $Ax = 0 \Leftrightarrow x = 0$.
+\end{enumerate}
+\end{description}
+
+Otras definiciones y resultados que necesitaremos a continuación.
+
+\begin{description}
+\tightlist
+\item[Definition def:grammat]
+La matriz de Gram de \(A\) es \(A^T A \in \R^{n \times n}\).
+\item[Theorem thm:aligraminv]
+La matriz de Gram de \(A\) es invertible si y solo si \(A\) tiene
+columnas linealmente independientes.
+\end{description}
+
+\begin{description}
+\tightlist
+\item[Proof]
+Como \(A\) tiene columnas linealmente independientes, por
+\protect\hyperlink{thm:li1inv2nots3}{} (3) tenemos que
+\(x = 0 \Leftrightarrow Ax = 0\), nos basta con ver que
+\(Ax = 0 \Leftrightarrow A^T A x = 0\).
+
+\begin{itemize}
+  \item $\Rightarrow)$ Si $Ax = 0$ entonces $A^T A x = A^T (A x) = A^T 0 = 0$
+  \item $\Leftarrow)$ Si $A^T A x = 0$ entonces $0 = x^T A^T A x = (x^T A^T) A x =
+(A x)^T (Ax) = \| Ax \|^2 = 0$ y esta norma es $0$ si y solo si $Ax = 0$
+\end{itemize}
+\item[Definition def:pseudoinverse]
+Sea \(A\) con columnas linealmente independientes. La matriz
+pseudo-inversa de \(A\) es \(A^{\dagger} = (A^T A)^{-1} A^T\)
+\end{description}
+
+Notar que \((A^T A)^{-1}\) existe por
+\protect\hyperlink{thm:aligraminv}{}. Finalmente, la siguiente
+observación:
+
+\begin{description}
+\tightlist
+\item[Remark rmk:sqnormofsum]
+Sean \(a, b \in \R^k\) para algún \(k \in \N\), tenemos que
+\(\| a + b \| ^ 2 = \|a\|^2 + \|b\|^2 + 2 a^T b\).
+\item[Proof]
+Desarrollemos: \begin{align}
+\| a + b \| ^ 2 &= (a_1 + b_1)^2 + \dots + (a_k + b_k)^2 \\
+&= (a_1^2 + b_1^2 + 2 a_1 b_1) + ... + (a_k^2 + b_k^2 + 2 a_k b_k) \\
+&= \| a \| ^2 + \| b \|^2 + 2 \langle a, b \rangle \\
+&= \| a \| ^2 + \| b \|^2 + 2 a^T b
+\end{align}
+\end{description}
+
+Con estas herramientas, estamos en posición de presentar la solución
+directa al problema de los cuadrados mínimos lineales.
+
+\begin{description}
+\tightlist
+\item[Theorem thm:linleastsquaresol]
+\(\hat{x} = A^{\dagger} b\) es \textbf{la} solución del problema de los
+cuadrados mínimos lineales. Es decir
+\(\forall x \in \R^n: E(\hat{x}) = \| A\hat{x} - b \| ^ 2 \leq \| Ax - b \| ^ 2 = E(x)\).
+\item[Proof]
+Tenemos primero que \begin{align}
+  & \hat{x} = A^\dagger b \\
+  &\Leftrightarrow \hat{x} = (A^T A)^{-1} A^T b \\
+  &\Leftrightarrow A^T A \hat{x} = A^T b \\
+  &\Leftrightarrow A^T (A \hat{x} - b) = 0 \label{eq:ataxmbis0}
+\end{align} Las últimas dos ecuaciones reciben nombres particulares
+\footnote{La expresión \(A^T A x = A^T b\) suele ser referida como
+  \emph{ecuaciones normales}. La derivación de la solución de cuadrados
+  mínimos presentada en este trabajo no es la única. De hecho, es común
+  encarar el problema mediante cálculo diferencial. En ese contexto, las
+  ecuaciones normales surgen naturalmente a la hora de optimizar
+  \(E(x)\) igualando su gradiente a \(0\). Para una demostración
+  mediante cálculo referirse a {[}@nocedalNumericalOptimization2006,
+  cap. 10{]}.} \footnote{La expresión \(A^T (A\hat{x} - b) = 0\) es
+  interesante, ya que muestra que las columnas de \(A\) son ortogonales
+  al residual óptimo \(A\hat{x} - b\) al ser su producto interno \(0\).
+  Esto suele llamarse el \emph{principio de ortogonalidad}.}. Veamos
+ahora para un \(x \in \R^n\) cualquiera. \begin{align}
+  \| Ax - b \|^2 &= \| (Ax - A\hat{x}) + (A\hat{x} - b) \|^2 \\
+  \text{(\cref{rmk:sqnormofsum})}\quad
+  &= \| A(x - \hat{x}) \|^2 +  \| A\hat{x} - b \|^2 + 2 (A(x - \hat{x}))^T
+  (A\hat{x} - b) \\
+  &= \| A(x - \hat{x}) \|^2 +  \| A\hat{x} - b \|^2 + 2 (x - \hat{x})^T A^T
+  (A\hat{x} - b) \\
+  \text{(\cref{eq:ataxmbis0})}\quad
+  &= \| A(x - \hat{x}) \|^2 +  \| A\hat{x} - b \|^2 \\
+  &\therefore \|Ax-b\|^2 \geq \|A\hat{x}-b\|^2
+\end{align} Más aún, esta solución es única ya que la igualdad en la
+última ecuación solo se da si \(\|A(x-\hat{x})\|^2 = 0\), y como \(A\)
+es no-singular, esto solo pasa cuando \(x=\hat{x}\).
+\end{description}
+
+\hypertarget{cuadrados-muxednimos-no-lineales}{%
+\subsection{Cuadrados mínimos no
+lineales}\label{cuadrados-muxednimos-no-lineales}}
+
+Generalizaremos el problema anterior para que también considere
+funciones no lineales. Reutilizaremos la notación introducida en la
+sección anterior.
+
+En este caso permitimos ahora que las \(f_i\) sean no lineales, aunque
+requerimos que continúen siendo diferenciables. Además, ignoraremos el
+vector \(b\) haciendo que \(f(x) = r(x)\). Es decir querremos que
+\(f(x) = 0\) en lugar de \(f(x) = b\). En el caso de necesitar la
+segunda restricción, podemos construir nuevas funciones
+\(\tilde{f}_i(x) = f_i(x) - b_i\) y utilizar estas en su lugar. Nuestra
+función de error es entonces: \begin{align}
+E(x) = \sum_{i=1}^m{f_i(x)^2} = \| f(x) \| ^ 2
+\end{align}
+
+Encontrar \(x\) solución que minimice tal error es el \emph{problema de
+los cuadrados mínimos no lineales}. En este caso, al no ser necesario
+que los residuales sean \emph{funciones afines} (lineales más un
+escalar), no podemos dar una matriz \(A\) y utilizar ideas como las de
+la pseudo inversa \(A^{\dagger}\). Más aún, en el caso lineal, si bien
+no lo mostramos, se cumple que la solución no solo es única, sino que es
+el único punto con gradiente \(\nabla f(x) = 0\), es decir, el único
+punto optimizador, es un mínimo global. Para una demostración de esto,
+se utilizan argumentos de \emph{convexidad} sobre \(E(x)\); referirse a
+{[}@nocedalNumericalOptimization2006, cap. 10{]}. En el caso no lineal
+sin embargo, no tenemos ninguna de estas garantías, pueden existir
+infinitos máximos y mínimos globales, locales y cualquier combinación de
+estos.
+
+Lo que se hace entonces es utilizar algoritmos heurísticos; en nuestro
+caso el algoritmo de \emph{Gauss-Newton} que busca un mínimo de forma
+iterativa comenzando desde un punto que, si se encuentra lo
+suficientemente cerca a la solución, convergerá a ella. Como veremos más
+adelante, este requerimiento de proveer un punto inicial adecuado es muy
+razonable en sistemas de SLAM/VIO, ya que usualmente contaremos con
+dicha información.
+
+Gauss-Newton genera la secuencia de puntos \(x^{(1)},\ x^{(2)}, ...\) al
+ser un algoritmo iterativo. Es posible juzgar cada iteración \(k\)
+evaluando \(E(x^{(k)}) = \| f(x^{(k)})\|^2\). Como es usual existen
+varios criterios de terminación apropiados: se alcanza un cierto número
+fijo de iteraciones \(k^{max}\), el error del último iterando
+\(E(x^{(k)})\) es suficientemente cercano a \(0\), o las últimas dos
+iteraciones tienen un error muy similar a los fines prácticos
+\(E(x^{(k)}) \sim E(x^{(k + 1)})\).
+
+En cada iteración \(k\) el algoritmo cuenta con dos etapas. La etapa de
+\textbf{linealización} aproxima a \(f(x)\) linealmente con su expansión
+de Taylor de primer orden centrada en el iterando actual \(x^{(k)}\);
+llamaremos a esta aproximación \(f^{(k)}(x)\). En la etapa de
+\textbf{actualización} utilizamos el hecho de que \(f^{(k)}(x)\) es una
+función afín para encontrar una solución al problema de cuadrados
+mínimos \emph{lineales} sobre ella. Esta solución será el valor de
+nuestro próximo iterando \(x^{(k+1)}\) y, por ende, la estimación que
+damos como solución del problema no-lineal. Es decir, como sabemos que
+\(x^{(k+1)}\) minimiza a \(f^{(k)}\), esperaríamos que sea una buena
+aproximación al mínimo de \(f\) sabiendo que comenzamos el algoritmo
+cerca de su mínimo.
+
+\textbf{Linealización}. Definimos \(f^{(k)}(x)\) como la expansión de
+Taylor de \(f(x)\) centrada en \(x^{(k)}\). Es decir: \begin{align}
+f^{(k)}(x) = f(x^{(k)}) + A(x^{(k)}) (x - x^{(k)})
+\end{align}
+
+con \(A: \R^n \rightarrow \R^{m \times n}\) la matriz jacobiana de
+\(f\). \begin{align}
+A = \begin{bmatrix}
+  \frac{\partial f_1}{\partial x_1} & \dots & \frac{\partial f_1}{\partial x_n} \\
+  \vdots & \ddots & \vdots \\
+  \frac{\partial f_m}{\partial x_1} & \dots & \frac{\partial f_m}{\partial x_n}
+\end{bmatrix}
+\end{align}
+
+Notar que \(f^{(k)}\) es afín; una transformación lineal \(A(x^{(k)})\)
+aplicada sobre \(x\), más un vector. Reacomodemos los términos para
+dejarlo explícito e introduzcamos la notación \(A_k = A(x^{(k)})\).
+\begin{align}
+f^{(k)}(x) = f(x^{(k)}) + A_k (x - x^{(k)}) \\
+f^{(k)}(x) = A_k x - (A_k x^{(k)} - f(x^{(k)}))
+\end{align}
+
+\textbf{Actualización}. Teniendo en mente que queremos encontrar el
+mínimo de \(\| f(x) \| ^ 2\), lo aproximamos con el mínimo (y próximo
+iterando) \(x^{(k+1 )}\) de \(\| f^{(k)}(x) \| ^ 2\) pero como
+\(f^{(k)}\) es afín, esto se reduce a buscar la solución del problema de
+cuadrados mínimos \emph{lineales}. Sabemos por
+\protect\hyperlink{thm:linleastsquaresol}{Teorema} la solución exacta
+para este caso en base a la matriz pseudo-inversa
+\(A_k^{\dagger} = (A_k^T A_k)^{-1} A_k^T\). \begin{align}
+\| f^{(k)}(x) \| ^ 2 = \| A_k x - (A_k x^{(k)} - f(x^{(k)})) \|^2
+\end{align}
+
+Se minimiza por \protect\hyperlink{thm:linleastsquaresol}{Teorema}
+cuando \begin{align}
+x &= A_k^{\dagger} (A_k x^{(k)} - f(x^{(k)})) \\
+&=A_k^{\dagger} A_k x^{(k)} - A_k^{\dagger} f(x^{(k)}) \\
+&= x^{(k)} - A_k^{\dagger} f(x^{(k)})
+\end{align}
+
+Entonces el algoritmo de Gauss-Newton queda definido de la siguiente
+manera:
+
+\begin{algorithm}
+\caption{Algoritmo Gauss-Newton para cuadrados mínimos no lineales}
+
+Dada $f : \R^n \rightarrow \R^m$ diferenciable y un punto inicial $x^{(1)}$.
+Con $k = 1, 2, ..., k^{max}$. \newline
+
+1. Linealizar $f$ alrededor de $x^{(k)}$ computando el jacobiano $A_k$ y definiendo:
+\begin{align}
+f^{(k)}(x) = f(x^{(k)}) + A_k (x - x^{(k)})
+\end{align}
+
+2. Actualizar el iterador a $x^{(k+1)}$ como el mínimo de $\| f^{(k)}(x) \|^2$
+utilizando la solución al problema de cuadrados mínimos lineales dada en el
+\cref{thm:linleastsquaresol}. Se necesitará computar $A_k^{\dagger}$ con
+la inversa de la matriz de Gram de $A_k$:
+\begin{align}
+x^{(k+1)} = x^{(k)} - A_k^{\dagger} f(x^{(k)}) =
+x^{(k)} - (A_k^T A_k)^{-1} A_k^T f(x^{(k)})
+\end{align}
+
+\end{algorithm}
+
+Gauss-Newton y minimización lineal con la pseudo-inversa serán de gran
+utilidad para expresar numerosos tipos de problemas de optimización. Se
+utilizará para problemas como ajustar la posición de un punto de interés
+tri-dimensional que es observado por múltiples cámaras, desproyectar
+puntos de cámaras con modelos de proyección que no tienen expresiones
+cerradas para su inversa, incluso veremos que la optimización central de
+los sistemas de SLAM/VIO, el bundle adjustment, son usualmente
+expresados y resueltos como una minimización de cuadrados no lineales.
+El desarrollo de esta sección está basada en
+{[}@nocedalNumericalOptimization2006, cap. 1, 2 y 10{]} y
+{[}@boydIntroductionAppliedLinear2018, cap. 11, 12, 15 y 18{]}; en esos
+trabajos se puede encontrar derivaciones alternativas e información de
+alternativas a Gauss-Newton más sofisticadas como Levenberg-Marquardt o
+el método dogleg.
+
+\hypertarget{basalt}{%
+\chapter{Basalt}\label{basalt}}
+
+\hypertarget{problemuxe1ticas-preliminares}{%
+\section{Problemáticas
+preliminares}\label{problemuxe1ticas-preliminares}}
+
+Un problema central en este tipo de sistemas es el de poder generar un
+mapa y una trayectoria que sea \emph{globalmente consistente}. Con esto
+nos referimos a que nuevas mediciones tengan en cuenta todas las
+mediciones anteriores en el sistema. Una forma ingenua de encarar este
+problema sería realizando \emph{bundle adjustment} sobre todas las
+imágenes capturadas a lo largo de una corrida, integrando de alguna
+forma todas las mediciones provenientes de la IMU. Desafortunadamente,
+este método excede rápidamente cualquier capacidad de cómputo de la que
+dispongamos, y aún más teniendo en cuenta que nuestro objetivo es
+localizar en tiempo real al dispositivo de XR.
+
+Por esta razón, es usual recurrir a distintas formas de reducir la
+complejidad del problema. Para realizar \emph{odometría visual-inercial
+(VIO)}, es común que se ejecute la función de optimización sobre una
+\emph{ventana local} de cuadros y muestras recientemente capturadas,
+ignorando muestras históricas y acumulando error en las estimaciones a
+lo largo del tiempo. Además, este enfoque tiene la problemática añadida
+de que una porción significativa de los fotogramas capturados tienen
+posiciones similares que no añaden información al estimador, o incluso
+que algunos fotogramas puedan ser de baja calidad por contener
+\emph{motion blur} u otro tipo de anomalías. Por otro lado, soluciones
+que intenta realizar \emph{mapeo visual-inercial} realizan el bundle
+adjustment sin utilizar todas las imágenes capturadas, si no que se
+limitan a la utilización de algunos fotogramas clave, o \emph{keyframes}
+elegidos mediante criterios que priorizan cuadros nítidos y con
+distancias (\emph{baselines}) prudenciales entre ellos.
+
+Como las muestras de IMU vienen a altas frecuencias, es común que estas
+se pre integren de forma tal de combinar muestras simultáneas entre dos
+keyframes en una única entrada del optimizador. Sin embargo, un problema
+en el que esta integración incurre, es que las mediciones de las IMU son
+altamente ruidosas, y acumularlas durante tiempos prolongados acumula
+también cantidades significativas de error. Este factor nos limita el
+tiempo que puede transcurrir entre dos keyframes; como ejemplo en
+{[}@mur-artalVisualInertialMonocularSLAM2017{]} se habla de keyframes
+que no pueden tener más de 0.5 segundos entre sí. A su vez, tener
+keyframes a muy bajas frecuencias afecta la calidad de las estimaciones
+de velocidad y biases; estos últimos son offsets de medición
+inherentemente variables de los acelerómetros y giroscopios a los que es
+necesario estimar para compensar por ellos en la medición final.
+
+\hypertarget{propuesta}{%
+\section{Propuesta}\label{propuesta}}
+
+La novedad de Basalt es que formula el mapeo visual-inercial como un
+problema de bundle adjustment con mediciones visuales e inerciales a
+altas frecuencias. Utiliza un \emph{grafo de factores} similarmente a
+otros sistemas, también llamado \emph{grafo de poses} en este contexto
+por contener poses a estimar como nodos. En lugar de utilizar todos los
+fotogramas se propone realizar la optimización en dos capas. La capa de
+VIO, emplea un sistema de odometría visual-inercial, que ya de por sí
+supera a otros sistemas del mismo tipo, proveyendo estimaciones de
+movimiento a la misma frecuencia que el sensor de la cámara provee
+imágenes. Luego, se seleccionan keyframes y se introducen \emph{factores
+no-lineales} entre estos que estiman la diferencia de posición relativa
+entre estos. Estos dos factores, keyframes y poses relativas, se
+utilizan en la capa de bundle-adjustment global.
+
+La capa de VIO, utiliza features que son rápidas y buenas para tracking
+(\emph{optical flow}), mientras que en la capa de mapeo se usan features
+adecuadas para \emph{loop closing} que son indiferentes a las
+condiciones de luz o al punto de vista de la cámara. De esta forma
+tenemos un sistema que es capaz de utilizar las mediciones a alta
+frecuencias de los sensores y al mismo tiempo tiene la capacidad de
+detectar a frecuencias más bajas cuando se está en ubicaciones ya
+visitadas, obteniendo así un mapa que es globalmente consistente.
+Además, el problema de optimización se reduce, ya que a diferencia de
+otros sistemas, no es necesario estimar velocidades ni biases.
+
+\hypertarget{implementaciuxf3n}{%
+\section{Implementación}\label{implementaciuxf3n}}
+
+A continuación se describe la arquitectura e implementación de Basalt de
+una manera más detallada. Esta sección surge directamente de la lectura
+del código fuente del sistema e intenta proveer detalles más bien
+pragmáticos que se encuentran en el mismo, pero que pueden quedar
+escondidos en publicaciones de más alto nivel. A su vez, se toman
+ciertas licencias literarias que deberían ayudar al entendimiento y que
+no son posibles a la hora de escribir código.
+
+\hypertarget{odometruxeda-visual-inercial}{%
+\subsection{Odometría
+visual-inercial}\label{odometruxeda-visual-inercial}}
+
+Cómo vimos en la introducción, el funcionamiento de Basalt se divide en
+dos etapas. La primera etapa de odometría visual-inercial (VIO), en el
+cual se emplea un sistema de VIO que supera a sistemas equivalentes de
+vanguardia mientras que la segunda etapa de mapeo visual-inercial (VIM),
+toma keyframes producidos por la capa de VIO y ejecuta un algoritmo de
+\emph{bundle adjustment} para obtener un mapa global consistente. Algo
+que no se mencionó en la introducción es que estas dos capas son
+completamente independientes. En una corrida usual de un dataset, lo que
+se realiza es la ejecución pura y exclusiva del sistema VIO y es este el
+que decide y almacena persistentemente qué cuadros y con qué información
+el sistema de VIM, de ejecutarse, debería utilizar al realizar el
+proceso de \emph{bundle adjustment}.
+
+Esta sección explora los componentes fundamentales de la capa de VIO:
+\emph{optical flow}, \emph{bundle adjustment visual-inercial} y
+finalmente el proceso de \emph{optimización y de marginalización
+parcial}.
+
+\hypertarget{optical-flow}{%
+\subsubsection{Optical flow}\label{optical-flow}}
+
+El módulo de VIO toma dos tipos de entrada, una de ellas son las
+muestras raw de la IMU; y la otra, contra intuitivamente, no son las
+imágenes raw provenientes de las cámaras, sino que son los
+\emph{keypoints} resultantes de ellas. Recordemos que los keypoints no
+son más que la ubicación y rotación en dos dimensiones sobre el plano de
+la imagen de las \emph{features} detectadas. Las features a su vez son
+la representación de los puntos de interés o \emph{landmarks} de la
+escena tri-dimensional proyectados sobre las imágenes. El proceso de
+detectar features, computar su transformación entre distintos cuadros, y
+producir los keypoints de entrada para el módulo de VIO, está a cargo
+del módulo de \emph{optical flow} (o \emph{flujo óptico}). Cabe aclarar
+que optical flow es el nombre que recibe tanto el campo vectorial que
+representa el movimiento aparente de puntos entre dos imágenes, como el
+proceso de estimarlo. Este puede ser denso, si se considera el flujo de
+todos los píxeles, o no (\emph{sparse}) si solo se computa el flujo de
+algunos keypoints como en el caso que veremos.
+
+El \href{TODO}{módulo} de optical flow corre en un thread individual y
+es por donde las muestras del par de cámaras estéreo ingresan al
+pipeline de Basalt. Inicialmente se genera una representación piramidal
+de las imágenes, o también llamada de \emph{mipmaps}, esta es una forma
+tradicional {[}@williamsPyramidalParametrics1983{]} de almacenar una
+imagen en memoria junto a versiones reescaladas de la misma (Fig.
+@fig:mipmap). Los mipmaps tienen múltiples utilidades en computación
+gráfica (e.g., \emph{filtrado trilineal}, \emph{LODs}, reducción de
+\emph{patrones moiré}) pero en el caso de Basalt serán utilizados para
+darle robustez al algoritmo de seguimiento de features (\emph{feature
+tracking}).
+
+\begin{figure}
+\hypertarget{fig:mipmap}{%
+\centering
+\includegraphics[width=1\textwidth,height=\textheight]{source/figures/mipmap.jpg}
+\caption{Representación piramidal (mipmaps) de un cuadro del conjunto de
+datos EuRoC.}\label{fig:mipmap}
+}
+\end{figure}
+
+Posteriormente se realiza la detección de features nuevas sobre las
+imágenes utilizando el algoritmo \emph{FAST} para detección de esquinas
+{[}@rostenFasterBetterMachine2010a{]} implementado sobre OpenCV. Aquí es
+notable aclarar que Basalt es uno de los sistemas que menos depende de
+OpenCV, ya que tiende a re implementar muchas de las técnicas y
+algoritmia de forma especializada y, como veremos en otros módulos,
+otras tareas razonablemente complejas como la optimización de grafos de
+poses se implementan también dentro del proyecto y sin recurrir a
+librerías externas. Esta es una de las varias razones por las que este
+sistema logra tan buen rendimiento, ya que las librerías externas suelen
+tener campos y comprobaciones dedicadas al caso general del problema que
+intenta solucionar, mientras que Basalt puede prescindir de todas las
+que no apliquen al problema de VIO. Siguiendo con la detección de
+features, una heurística particular de Basalt es la división del cuadro
+completo en celdas de tamaño configurable (por defecto 50 por 50
+píxeles) en donde se detectan las nuevas features, por celda solo se
+conserva la feature de mejor calidad o con mejor \emph{respuesta
+(response)} (aunque la cantidad a conservar es también configurable), y
+siempre que la celda tenga alguna feature localizada de frames
+anteriores, no se intenta detectar nuevas. Esto contrasta con sistemas
+como Kimera-VIO que corren la detección FAST sobre el cuadro entero y
+evitan la redetección mediante el uso de \emph{máscaras} que le
+instruyen al algoritmo a obviar esas secciones. Desafortunadamente la
+construcción de tales máscaras suele ser costosa y la heurística de
+Basalt, a pesar de desperdiciar espacio por no permitir la detección de
+nuevas características entre celdas, es más eficiente ya que en
+situaciones comunes se logran detectar una cantidad razonable de
+features sin problemas. Esta detección de features nuevas se realiza
+unicamente sobre la primera cámara (usualmente la izquierda), mientras
+que en la otra cámara se reutiliza el método de seguimiento de keypoints
+que se describe a continuación.
+
+En cada instante de tiempo que entran un nuevo par de imágenes se tiene
+acceso a toda la información recolectada del instante anterior, en
+particular a sus keypoints. Una suposición razonable es que las imágenes
+correspondientes a este nuevo instante van a compartir mucho de los
+keypoints con las imágenes anteriores y en posiciones similares. En base
+a esa suposición Basalt logra ahorrarse tener que volver a detectar
+features de la imagen con FAST y en cambio el problema se transforma en,
+dado una imagen anterior (inicial), sus keypoints y una imagen nueva
+(objetivo), estimar donde ocurren esos mismos keypoints en la imagen
+nueva. Para esto, por cada keypoint anterior, se genera un parche
+\(\Omega\) alrededor de su ubicación de, por defecto, 52 coordenadas de
+píxeles (i.e., un círculo rasterizado en un bloque de 8 por 8 píxeles).
+Considerando entonces que este parche debería estar en la imagen nueva
+en coordenadas cercanas a las del keypoint anterior, queremos encontrar
+la transformación \(T \in SE(2)\) que le ocurrió al parche, y por ende
+al nuevo keypoint que se encontraría en el centro de este nuevo parche.
+Basalt emplea entonces optimización por cuadrados mínimos mediante el
+algoritmo iterativo de Gauss-Newton para encontrar \(T\) utilizando un
+residual \(r\) con:
+
+\[
+r_i =
+  \frac{I_{t + 1}(\mathbf{T} \mathbf{x}_i)}{\overline{I_{t + 1}}} -
+  \frac{I_{t}(\mathbf{x}_i)}{\overline{I_{t}}}
+  \ \ \ \ \forall \mathbf{x}_i \in \Omega
+\]
+
+con \(I_t(\mathbf{x})\) la intensidad de la imagen anterior en el pixel
+ubicado en las coordenadas \(\mathbf{x}\) (análogamente
+\(I_{t + 1}(\mathbf{x})\) para la imagen objetivo); y
+\(\overline{I_{t}}\) siendo la intensidad media del parche \(\Omega\) en
+la imagen inicial (análogamente \(\overline{I_{t + 1}}\) para la imagen
+objetivo y el parche transformado \(\mathbf{T}\Omega\)). Notar que al
+normalizar las intensidades obtenemos un valor que es invariante incluso
+ante cambios de iluminación.
+
+Los detalles del cálculo de gradientes y jacobianos están basados en el
+método de Lucas-Kanade para tracking de features (\emph{KLT})
+{[}@lucasIterativeImageRegistration1981{]}. El uso adicional de mipmaps
+sobre KLT fue originalmente expuesto en
+{[}@bouguetPyramidalImplementationLucas1999{]}.
+
+Para asegurar que la estimación fue exitosa, se invierte el problema y
+se intenta trackear desde la imagen nueva hacia la inicial y, si el
+resultados está muy alejado de la posición inicial, el nuevo keypoint se
+considera inválido y se descarta. Otro detalle a aclarar es que,
+recordando que la detección de features con FAST solo ocurre en las
+imágenes de una de las cámaras, es posible ahora entender que las
+features en la segunda cámara son ``detectadas'' con este método, es
+decir, simplemente se considera la imagen de la segunda cámara en el
+mismo instante de tiempo como la imagen objetivo.
+
+Finalmente, el último de los pasos que ocurre cuando el módulo de
+optical flow procesa un cuadro es el de filtrado de keypoints, en el
+cual se desproyectan los keypoints a posiciones en la escena
+tri-dimensional y en caso de que el error epipolar supere cierto umbral,
+estos keypoints serán descartados.
+
+\hypertarget{bundle-adjustment-visual-inercial}{%
+\subsubsection{Bundle adjustment
+visual-inercial}\label{bundle-adjustment-visual-inercial}}
+
+En un hilo separado al módulo de optical flow, corre el estimador de VIO
+encargado de realizar en bundle adjustment sobre los cuadros y muestras
+de la IMU recientes para estimar la pose. Este toma como entrada las
+muestras de la IMU junto a los keypoints 2D detectados para cada imagen,
+o sea la salida del módulo de optical flow. Este módulo es el que
+efectivamente realizará la integración y optimización con toda la
+información recibida y producirá como salida en una cola, la estimación
+de los estados del agente a localizar.
+
+\hypertarget{basalt-preintegration}{%
+\paragraph{Inicialización y
+pre-integración}\label{basalt-preintegration}}
+
+Para comenzar, el hilo de procesamiento de este módulo espera a que la
+primera muestra de la IMU arribe. Estas muestras son recibidas de forma
+raw y antes de tratarlas, Basalt utiliza los parámetros de calibración
+estáticos provistos por archivos de configuración para corregirlas. La
+corrección, o calibración, ocurre como se explica en la sección de
+``Calibración de IMU'' sin considerar todavía los parámetros de los
+procesos aleatorios detallados en la misma. Una particularidad de
+Basalt, es que el acelerómetro es utilizado como origen del agente
+localizado y, fundándose en esto, se fija su orientación. Es decir, no
+se aplica ningún tipo de corrección de orientación al calibrar las
+muestras del acelerómetro. Esto hace que la matriz de alineamiento para
+el acelerómetro tenga ceros en su triángulo superior (ver
+{[}@schubertBasaltTUMVI2018 secc. IV.B{]} y \emph{discusión relacionada
+\footnote{\url{https://gitlab.com/VladyslavUsenko/basalt-headers/-/issues/8}}}).
+
+Luego de recibir esta primer muestra de la IMU se comienza la ejecución
+del bucle principal, el cual espera indefinidamente por resultados
+encolados por el módulo de optical flow para realizar una iteración. El
+primer par de muestras de cámara junto a la primera muestra de la IMU
+posterior al par estéreo son utilizados para inicializar el estado del
+agente en el primer cuadro. Esto es ya que a cada cuadro se le asigna un
+estado que se compone de la posición, orientación, velocidad y biases
+del giroscopio y acelerómetro que se estimaron para tal cuadro. Notar
+que en Basalt, hablar de cuadros es equivalente a hablar de instantes de
+tiempo, ya que los únicos puntos en el tiempo considerados son las
+timestamps del par estéreo de imágenes recibidas.
+
+Para inicializar el primer estado se toman varias suposiciones. En
+particular, se asume que el dispositivo comienza en la posición
+\((0, 0, 0)\) y sin aceleración ni velocidad, esto permite utilizar el
+vector de aceleración reportado por la muestra del acelerómetro como el
+vector de gravedad y computar así la inclinación del agente. Notar que
+esta inclinación no es capaz de informar la orientación de forma
+completa al no poder contemplar uno de los ejes de rotación del cuerpo.
+Por esta razón es recomendable iniciar la corrida con el agente rotado
+con su eje \(+\mathbf{Z}\) paralelo al vector gravedad, esto hará que
+Basalt compute la orientación identidad. Tal rotación suele corresponder
+con la posición de reposo pensada por el fabricante, o al menos este ha
+sido el caso en los dispositivos utilizados en este trabajo. Además, es
+conveniente posicionar el agente mirando hacia ``adelante'' (ajustar el
+\emph{yaw}), como el usuario considere apropiado según su entorno.
+
+En instantes posteriores (i.e., al recibir nuevas imágenes), se realiza
+la llamada pre-integración de muestras consecutivas de la IMU.
+Considerando que estas muestras arriban a mayores frecuencias que las de
+las cámaras, pre-integrarlas es un proceso que intenta resumir las
+muestras entre los cuadros a una única pseudo-muestra que sucede en los
+mismos instantes de tiempo que los cuadros como se muestra en el ejemplo
+de @fig:sample-frequencies.
+
+\begin{figure}
+\hypertarget{fig:sample-frequencies}{%
+\centering
+\includegraphics[width=1\textwidth,height=\textheight]{source/figures/sample-frequencies.pdf}
+\caption{Frecuencia de distintos eventos para un ejemplo con cámaras a
+30fps y muestras de la IMU a 240hz.}\label{fig:sample-frequencies}
+}
+\end{figure}
+
+El proceso de pre-integración es el siguiente. Dado el cuadro previo
+\(i\) con timestamp \(t_i\) y el cuadro posterior \(j\) con timestamp
+\(t_j\), se intenta computar una pseudo-muestra
+\(\Delta \mathbf{s} = (\Delta \mathbf{R}, \Delta \mathbf{v}, \Delta \mathbf{p})\)
+que representa cambios de orientación, velocidad y posición
+respectivamente según las mediciones de la IMU que ocurrieron desde
+\(t_i\) hasta \(t_j\). Para cada timestamp \(t\) de la IMU tal que
+\(t_i < t \leq t_j\) tenemos la muestra de aceleración lineal
+\(\mathbf{a}_t\) y de velocidad angular \(\mathbf{\omega}_t\). Definimos
+entonces de forma recursiva la pseudo-muestra \(\Delta \mathbf{s}\) de
+la siguiente manera:
+
+\begin{align}
+\label{eq:imu-preintegration}
+(\Delta \mathbf{R}_{t_i}, \Delta \mathbf{v}_{t_i}, \Delta
+\mathbf{p}_{t_i}) & := (\mathbf{I}, \mathbf{0}, \mathbf{0})
+\\
+\Delta \mathbf{R}_{t+1} & := \Delta \mathbf{R}_t Exp(\mathbf{\omega}_{t+1} \Delta t)
+\\
+\Delta \mathbf{v}_{t+1} & := \Delta \mathbf{v}_t + \Delta{\mathbf{R}_t}
+\mathbf{a}_{t+1} \Delta t
+\\
+\Delta \mathbf{p}_{t+1} & := \Delta \mathbf{p}_t + \Delta \mathbf{v}_t \Delta t
+\\
+\Delta \mathbf{s}_{t} & := (\Delta \mathbf{R}_{t}, \Delta \mathbf{v}_{t}, \Delta
+\mathbf{p}_{t})
+\\
+\Delta \mathbf{s} & := \Delta \mathbf{s}_{t_j}
+\end{align}
+
+Es destacable mencionar que este tipo de pre-integración es también
+utilizado por los otros sistemas estudiados Kimera y ORB-SLAM3. La
+ventaja que presenta es que sus características son bien conocidas
+gracias al trabajo de {[}@forsterOnManifoldPreintegrationRealTime2017{]}
+y las expresiones necesarias para el cómputo de residuales, como sus
+jacobianos, son cerradas y fueron derivadas de forma ejemplar en dicho
+trabajo.
+
+Entonces, con esta muestra pre-integrada junto a los datos del nuevo
+cuadro (sus keypoints), se procede a la etapa de
+\passthrough{\lstinline!measure!} del módulo de VIO. Aquí lo primero que
+se hace es predecir que el estado de este nuevo instante estará basado
+en el estado del instante anterior más la adición de las muestras
+pre-integradas de la IMU. El resto de la etapa de
+\passthrough{\lstinline!measure!} se basa en el manejo y actualización
+de la base de datos de los puntos de interés en 3D, o \emph{landmarks},
+y sus observaciones, junto a algo que, en Basalt, está fuertemente
+ligado: la toma de cuadros clave, o \emph{keyframes}.
+
+\hypertarget{base-de-datos-de-landmarks}{%
+\paragraph{Base de datos de
+landmarks}\label{base-de-datos-de-landmarks}}
+
+Recordemos que el módulo de optical flow encuentra keypoints en cada
+cuadro, esto es, una landmark o punto de interés en la escena 3D
+proyectada sobre el plano de la imagen 2D. Más aún este módulo era capaz
+de hacer el seguimiento de keypoints similares mediante optical flow, es
+decir, de keypoints que observan a la misma landmark. Parte de nuestro
+objetivo entonces será triangular las posiciones de estas landmarks
+considerando las observaciones tomadas. Consideremos además la
+naturaleza altamente ruidosa de estas observaciones, con landmarks que
+aparecen y desaparecen de la visión de los cuadros por múltiples razones
+como: ser ocluidas por objetos de escena, ser distorsionadas por el
+ángulo del observador, artefactos intrínsecos de los sensores ópticos
+como el motion blur o el ruido introducido por la ganancia del
+amplificador de señal digital, o simplemente porque dejan de estar en el
+campo de visión de las cámaras. Por estas razones entonces, será
+fundamental la correcta gestión de la información de las landmarks y sus
+observaciones. En Basalt, la clase que se encarga de esto es la
+\passthrough{\lstinline!LandmarkDatabase!} con la siguiente estructura.
+
+\begin{lstlisting}[language={C++}]
+class LandmarkDatabase {
+  map<LandmarkId, Landmark> landmarks;
+  map<FrameId, map<FrameId, Keypoint>> observations;
+}
+
+class Landmark {
+ FrameId keyframe;
+ Vector2 direction;
+ double inverse_distance;
+}
+
+class Keypoint {
+  LandmarkId landmark_id;
+  Vector2 position;
+}
+\end{lstlisting}
+
+En la implementación de este Módulo, los términos de keypoint y landmark
+tienden a utilizarse de forma intercambiable, significando keypoint algo
+distinto a lo que era en el módulo de optical flow. Para evitar
+confusión, se han diferenciado los términos de manera explícita en el
+pseudo código anterior. \passthrough{\lstinline!Landmark!} se utilizará
+para referirse al punto de interés en la escena tridimensional, mientras
+que \passthrough{\lstinline!Keypoint!} será un punto 2D que observa la
+proyección de una landmark definida por
+\passthrough{\lstinline!landmark\_id!}. Entonces la
+\passthrough{\lstinline!LandmarkDatabase!} es simplemente una colección
+de todas las \passthrough{\lstinline!landmarks!} de interés y de los
+keypoints que la observaron en \passthrough{\lstinline!observations!}.
+
+Una \passthrough{\lstinline!Landmark!} surge de un keypoint observado en
+el módulo de optical flow en algún cuadro y comparte el mismo
+identificador. Explicaremos los campos
+\passthrough{\lstinline!direction!} e
+\passthrough{\lstinline!inverse\_distance!} que determinan la posición
+en 3D de la misma más adelante. Un cuadro se identifica tanto por la
+timestamp en el que fue tomado como por cuál de las dos cámaras lo tomó;
+\passthrough{\lstinline!FrameId!} tiene esta información. Una landmark
+existe en referencia a un cuadro, y un cuadro que es referenciado por
+landmarks debe ser un keyframe por la implementación; decimos que el
+keyframe aloja estas landmarks. Una observación en
+\passthrough{\lstinline!observations!} tiene entonces un mapeo de
+keyframes a los \passthrough{\lstinline!Keypoints!} que observan a las
+landmarks alojadas en el keyframe. Un \passthrough{\lstinline!Keypoint!}
+es reconocido en un cuadro particular, y solo tiene sentido como
+coordenadas en ese cuadro, es esto lo que representa el segundo
+\passthrough{\lstinline!FrameId!} de la definición de
+\passthrough{\lstinline!observations!}.
+
+Habiendo dicho esto, al recibir un nuevo cuadro
+\passthrough{\lstinline!measure!} simplemente recorre todas las
+observaciones o \passthrough{\lstinline!Keypoint!}s que este trae y se
+añaden a la base de datos las observaciones de landmarks ya existente en
+la misma. Observaciones de landmarks no registradas en la base de dato
+se guardan para poder determinar si el módulo amerita la toma de un
+nuevo keyframe.
+
+\hypertarget{keyframes}{%
+\paragraph{Keyframes}\label{keyframes}}
+
+En contraste con sistemas como Kimera y ORB-SLAM3 que tienen condiciones
+más intrincadas, en Basalt, la heurística para decidir si el cuadro
+actual será un keyframe es muy sencilla: si \emph{más del 30\% de las
+observaciones del cuadro actual corresponden a landmarks no registradas
+y han sucedido más de, por defecto, 5 cuadros consecutivos que no fueron
+keyframes}, el cuadro actual será tomado como un keyframe. La toma de
+keyframes es lo que registra nuevas landmarks a la base de datos y
+realiza la estimación inicial de su posición.
+
+En primer lugar, todas las observaciones \emph{``desconectadas''}
+correspondientes al 30\% o más anterior que no correspondían a ninguna
+landmark, intentarán ser registradas en la base de datos. Para esto es
+necesario poder encontrar una segunda observación con la que realizar la
+triangulación y poder así estimar la posición tridimensional de la
+landmark al registrarla.
+
+Se tiene entonces que para cada observación desconectada
+\(\mathbf{p}_h \in \R^2\) producida por la cámara \(h\) del keyframe se
+recorrerán todos los cuadros desde el último keyframe, buscando por una
+segunda observación \(\mathbf{p}_t \in \R^2\) de esta landmark producida
+en alguna cámara \(t\). En caso de encontrarla se sigue considerando lo
+siguiente.
+
+\begin{itemize}
+\item
+  La cámara \(h\) dels keyframe tiene una pose estimada para la IMU en
+  esa timestamp que denominaremos \(\mathbf{T}_{i_h} \in SE(3)\).
+  Similarmente tendremos \(\mathbf{T}_{i_t}\) para la cámara \(t\).
+\item
+  A su vez como los parámetros de calibración son estáticos y conocidos,
+  conocemos la función de proyección \(\pi_h\), sus parámetros
+  intrínsecos \(\mathbf{i}_h\) y la pose relativa de la cámara \(h\)
+  respecto a la IMU. Llamaremos a esta transformación fija
+  \(\mathbf{T}_{i_h c_h} \in SE(3)\). Similarmente con \(\pi_t\),
+  \(\mathbf{i}_t\) y \(\mathbf{T}_{i_t c_t}\) para la cámara \(t\).
+\item
+  Podemos ahora desproyectar \(\mathbf{p}_h\) y \(\mathbf{p}_t\) a sus
+  respectivas posiciones 3D estimadas
+  \(\mathbf{p}'_h := \pi^{-1}_h(\mathbf{p}_h, \mathbf{i}_h)\) y
+  \(\mathbf{p}'_t := \pi^{-1}_t(\mathbf{p}_t, \mathbf{i}_t)\) con
+  \(\mathbf{p}'_h, \mathbf{p}'_t \in \R^3\).
+\item
+  Computamos ahora la transformación de la IMU de \(h\) a la IMU de
+  \(t\) dada por
+  \(\mathbf{T}_{i_h i_t} := \mathbf{T}_{i_h}^{-1} \mathbf{T}_{i_t}\)
+\item
+  Luego podemos tener la transformación de la cámara \(h\) a \(t\) con
+  \(\mathbf{T}_{c_h c_t} := \mathbf{T}_{i_h c_h}^{-1} \mathbf{T}_{i_h i_t} \mathbf{T}_{i_t c_t}\)
+\item
+  Finalmente con estos tres datos \(\mathbf{p}'_h\), \(\mathbf{p}'_t\) y
+  \(\mathbf{T}_{c_h c_t}\) es posible realizar la triangulación
+  utilizando DLT con SVD como se explicó en la sección ``DLT con SVD''
+  para obtener un punto en coordenadas homogéneas en \(\R^4\) con el
+  cuarto componente representando el inverso de la distancia entre la
+  cámara y el punto de interés, mientras que los tres primeros
+  componentes corresponden al \emph{bearing vector}, es decir, un vector
+  unitario que determina la dirección desde la cámara hacia la landmark.
+\end{itemize}
+
+Un detalle a considerar es que Basalt comprueba que la distancia
+relativa entre los dos cuadros, la baseline, sea lo suficientemente
+grande para considerar la triangulación exitosa, de lo contrario se
+busca un nuevo cuadro para comparar con el keyframe. Esta comprobación
+se reduce a revisar que la norma del vector de traslación contenido en
+\(\mathbf{T}_{c_h c_t}\) sea de, por defecto, más de 5cm.
+
+Como se ve en la definición de \passthrough{\lstinline!Landmark!}, la
+posición 3D de estos puntos de interés no se almacena exactamente de la
+misma forma que la triangulación los produce. En particular, no se
+almacena el bearing vector directamente, sino que se utiliza un punto 2D
+más compacto \passthrough{\lstinline!direction!} que lo codifica (para
+esto se utiliza una proyección estereográfica como se explica en la
+Figura @fig:stereographic-projection) junto a
+\passthrough{\lstinline!inverse\_distance!}, la distancia inversa a este
+punto producto de la triangulación, de esta forma la posición de la
+landmark queda ligada al keyframe que la aloja.
+
+\begin{figure}
+\hypertarget{fig:stereographic-projection}{%
+\centering
+\includegraphics[width=1\textwidth,height=\textheight]{source/figures/stereographic-projection.png}
+\caption{Interpretación geométrica de la proyección estereográfica
+utilizada para representar bearing vectors. Las coordenadas definidas
+por la propiedad \passthrough{\lstinline!Vector2 direction!} definen un
+punto en el plano \(XY\) (\(Z=0\)) mostrado en azul. Para obtener el
+vector unitario correspondiente, se traza una línea desde el punto
+\((0 0 -1)^T\) hacia \passthrough{\lstinline!direction!} en el plano
+\(XY\). El vector en el que esta línea interseca a la esfera unitaria
+será el bearing vector codificado. Se muestran tres ejemplos en rojo,
+verde y amarillo, con lineas punteadas que representan las líneas
+trazadas y flechas representando los bearing vectors
+obtenidos.}\label{fig:stereographic-projection}
+}
+\end{figure}
+
+Si todos los procedimientos relacionados a la triangulación de estos dos
+cuadros fueron correctos, se almacena la landmark nueva en la base de
+datos. De haber otras observaciones de esta landmark no se utilizan
+todavía para añadir información a su posición, si no que simplemente se
+añaden las observaciones para uso futuro.
+
+\hypertarget{contribuciones}{%
+\chapter{Contribuciones}\label{contribuciones}}
+
+\hypertarget{contexto}{%
+\section{Contexto}\label{contexto}}
+
+Por su naturaleza, el área de XR involucra una gran cantidad de partes
+interconectadas y de dispositivos muy diversos con configuraciones
+difíciles de generalizar, y más aún de predecir. Por esta razón hasta
+hace muy poco tiempo no existían estándares razonables en el área lo
+cual agravaba la situación con un ecosistema altamente fragmentado en
+soluciones propietarias que causaban a los desarrolladores de
+aplicaciones finales grandes problemas. En el mejor de los casos, la
+carga de soportar los distintos SDK propietarios recaía sobre frameworks
+y motores de juegos (p.~ej. \emph{Unreal Engine}, \emph{Unity},
+\emph{Godot}) y esto forzaba a los desarrolladores a elegir alguna de
+estas soluciones para realizar su aplicación de XR. En caso de no querer
+hacerlo, se vería obligado a realizar un esfuerzo no trivial para portar
+su aplicación a cada uno de estos SDK, y eso sin considerar el manejo de
+características especiales que algunas plataformas exponen y otras no.
+
+Luego de unos años de sufrir esta fragmentación, en julio de 2019 se
+presenta la primera versión de \emph{OpenXR} de la mano del
+\emph{Khronos Group}. El Khronos Group es un consorcio abierto y sin
+fines de lucro compuesto de 170 organizaciones que desarrolla estándares
+en distintas áreas de la industria como computación gráfica,
+(\emph{OpenGL}, \emph{Vulkan}), computación paralela (\emph{OpenCL},
+\emph{SYCL}) y, con OpenXR, realidad virtual y aumentada entre otras.
+OpenXR por su parte, provee una API estandarizada con soporte para
+extensiones de fabricante que permiten añadir características peculiares
+de ser necesitadas por algún fabricante en particular. El estándar ha
+tenido un gran éxito al haber sido adoptado por una gran cantidad de
+fabricantes (Fig. @fig:openxr-companies) como reemplazo a sus antiguos
+SDK propietarios. De esta forma, los motores de juego y desarrolladores
+solo necesitan interactuar con una única API (Fig. @fig:openxr) que
+además les permite aprovechar cualquier característica peculiar ofrecida
+por alguna extensión.
+
+\begin{figure}
+\hypertarget{fig:openxr}{%
+\centering
+\includegraphics[width=1\textwidth,height=\textheight]{source/figures/openxr.png}
+\caption{\textbf{Antes de OpenXR (izquierda)} aplicaciones y motores
+necesitaban código propietario separado para cada dispositivo en el
+mercado. \textbf{OpenXR (derecha)} provee una única API multiplataforma
+de alta performance entre las aplicaciones y todos los dispositivos
+compatibles}\label{fig:openxr}
+}
+\end{figure}
+
+\begin{figure}
+\hypertarget{fig:openxr-companies}{%
+\centering
+\includegraphics[width=1\textwidth,height=\textheight]{source/figures/openxr-companies.png}
+\caption{Compañías respaldando públicamente el estándar
+OpenXR}\label{fig:openxr-companies}
+}
+\end{figure}
+
+OpenXR es exclusivamente la \href{TODO}{especificación} de una API y por
+lo tanto requiere una implementación, o \emph{runtime}, sobre el que ser
+ejecutado. Las implementaciones son provistas por los distintos
+fabricantes interesados en soportar el estándar, en la Figura
+@fig:openxr-companies vemos algunas de las implementaciones ya
+desarrolladas. En este trabajo nos enfocaremos en una de ellas,
+\emph{Monado}. Monado es un runtime (por ahora el único) de la
+especificación OpenXR de código abierto, licenciada bajo la \emph{Boost
+Software License 1.0 (\href{TODO}{BSL-1.0})}. La plataforma principal
+sobre la que Monado corre y se desarrolla es GNU/Linux, pero es capaz de
+ser ejecutarse en otras como Android y Windows. Su desarrollo está
+soportado por \emph{Collabora Ltd.}, quien es parte del grupo de trabajo
+de OpenXR desde sus inicios. Las contribuciones a Monado listadas en
+esta sección fueron hechas durante una pasantía en Collabora.
+
+Además de proveer una implementación de OpenXR, Monado es altamente
+modular e implementa distintos componentes reutilizables para XR como un
+compositor especializado para realidad virtual; controladores para una
+gran variedad de dispositivos, incluyendo hardware propietario y de
+consumo masivo sobre los que la comunidad ha realizado ingeniería
+inversa para poder utilizar; herramientas varias de calibración y
+configuración de hardware; así como también distintos sistemas de fusión
+de sensores para tracking; y recientemente incluso un módulo de
+localización de manos mediante visión por computadora y aprendizaje
+automático.
+
+Una característica faltante en Monado era la posibilidad de realizar
+localización visual-inercial mediante sistemas de SLAM/VIO. Este tipo de
+tracking ha cobrado gran popularidad en los últimos años por resultar
+sumamente convenientes al no requerir sensores externos al dispositivo
+de XR. Sistemas de este tipo son empleados en productos como el
+\emph{Meta Quest}, los cascos \emph{Windows Mixed Reality} o incluso los
+SDK \emph{ARCore} y \emph{ARKit} presentes en dispositivos móviles.
+Desafortunadamente, todas estas soluciones son privativas y, por lo
+tanto, no es posible obtener acceso a sus códigos fuentes para
+reusarlos, modificarlos o simplemente estudiarlos sin obtener licencias
+especiales de sus fabricantes. Más aún, existen compañías que se
+especializan en desarrollar soluciones comerciales de SLAM como
+\emph{SLAMCore\footnote{https://www.slamcore.com/}},
+\emph{Arcturus\footnote{https://arcturus.industries/}} y
+\emph{Spectacular AI\footnote{https://www.spectacularai.com/}} entre
+otras.
+
+Este trabajo se concentró entonces en el estudio de implementaciones de
+código abierto de sistemas de tracking visual-inercial (ya sea mediante
+SLAM o solamente VIO) y en la integración de estos sobre Monado. Se
+necesitó armar la infraestructura para soportar una interacción modular
+con los sistemas mediante el desarrollo de interfaces, herramientas,
+controladores, y mejoras principalmente en Monado, pero también en los
+sistemas a integrar o en sus \emph{forks} (clones específicos de las
+implementaciones de SLAM/VIO para uso en Monado).
+
+\hypertarget{tracking-por-slam-para-monado}{%
+\section{Tracking por SLAM para
+Monado}\label{tracking-por-slam-para-monado}}
+
+En esta sección explicaremos los distintos módulos y funcionalidad
+implementada en Monado para permitirle proveer tracking mediante
+SLAM/VIO a distintos controladores de dispositivos y de esta forma, a
+las aplicaciones OpenXR que utilizan estos dispositivos como medios de
+interacción y corren sobre Monado. Cabe aclarar que a partir de ahora
+usaremos de forma intercambiable los términos SLAM y VIO, ya que, a
+pesar de ser distintos, para los fines prácticos de la implementación
+son equivalentes: piezas de software que consumen imágenes y muestras de
+IMU y devuelven poses estimadas como resultado. Es por esto que
+hablaremos de un localizador SLAM o \emph{SLAM tracker} que se ha
+implementado para referirnos a una única funcionalidad que soporta tanto
+sistemas externos de SLAM y como de VIO.
+
+Antes de comenzar, vale la pena entender la arquitectura general de
+Monado como se muestra en la Figura @fig:monado-arch. Una aplicación que
+hace uso de OpenXR mediante Monado puede ser corrida en dos modalidades
+dependiendo de como se compiló el runtime. De la forma tradicional, se
+compila como una librería de manera \textbf{autónoma}, significando que
+cuando la aplicación intenta cargar dinámicamente alguna implementación
+de OpenXR provista por el sistema, se enlaza la librería compartida (o
+\emph{shared library}) de Monado, y al interactuar con cualquier
+interfaz a OpenXR, se correría tal procedimiento en el mismo hilo que la
+aplicación consumidora. Esta modalidad puede tener ciertos beneficios
+para depuración de código, pero el modo más usual de compilar y correr
+Monado es mediante \emph{Inter-Process Communication} o \emph{IPC}. De
+esta manera el runtime se corre en un proceso independiente que debe ser
+lanzado con anterioridad a cualquier aplicación OpenXR. Lo que se
+termina enlazando a la aplicación final es simplemente un cliente IPC
+que es capaz de comunicarse con Monado. Esto ofrece ventajas como la
+posibilidad de correr múltiples aplicaciones sobre la misma instancia
+del runtime. Además, se quita la necesidad de ejecutar ambos procesos
+sobre el mismo nodo de cómputo, lo cual facilita la posibilidad de tener
+realidad virtual renderizada en la nube.
+
+\begin{figure}
+\hypertarget{fig:monado-arch}{%
+\centering
+\includegraphics[width=1\textwidth,height=\textheight]{source/figures/monado-arch.pdf}
+\caption{Arquitectura de Monado.}\label{fig:monado-arch}
+}
+\end{figure}
+
+\FloatBarrier
+
+No interiorizaremos en los aspectos de comunicación con la
+\emph{plataforma} ni del \emph{compositor} de Monado, pero es bueno
+saber que estos son partes significativas del runtime. Son los
+\emph{controladores} (o \emph{drivers}) específicos en Monado los que
+interactúan con el hardware especializado como cascos, controles,
+cámaras, entre otros dispositivos que quieran utilizarse para la
+experiencia de XR. Sensores como las IMU y cámaras sobre los que
+adquirir las muestras necesitarán ser implementados en este nivel.
+Finalmente, hay una gran variedad de módulos auxiliares reutilizables
+que exponen funcionalidades matemáticas, de interacción con el sistema
+operativo, con OpenGL o Vulkan, entre otras. Es en estos módulos
+auxiliares en donde encontramos componentes relacionados exclusivamente
+al problema tracking y a tipos específicos de tracking. Se implementan
+herramientas de calibración de cámaras, de depuración, filtros de
+distinto tipo (p.~ej. \emph{Kalman} y \emph{low-pass}), entre otra
+algoritmia genérica de fusión de sensores. Conforman este módulo también
+sistemas completos de tracking para \emph{PlayStation Move},
+\emph{PlayStation VR}, y tracking de manos en general. Es aquí entonces
+en donde se comienza la implementación del SLAM tracker presentado en
+este trabajo.
+
+La implementación de un pipeline en Monado que permita la comunicación
+entre dispositivos, sistemas de SLAM y la aplicación OpenXR requirió
+desarrollar la infraestructura y herramientas necesarias dentro de
+Monado. El pipeline en cuestión está esquematizado en la Figura
+@fig:slam-tracker-dataflow. Este, requiere un gran nivel de modularidad,
+ya que sus componentes fundamentales necesitan poder ser
+intercambiables: dispositivos, aplicaciones y el sistema que provee el
+SLAM en sí. El resto de esta subsección está dedicada a explicar la
+infraestructura y los distintos componentes que se necesitaron
+implementar y adaptar para obtener un pipeline de SLAM modular corriendo
+en Monado como se intenta mostrar en la Figura
+@fig:slam-tracker-dataflow.
+
+\begin{figure}
+\hypertarget{fig:slam-tracker-dataflow}{%
+\centering
+\includegraphics[width=1\textwidth,height=\textheight]{source/figures/slam-tracker-dataflow.pdf}
+\caption{Diagrama esquemático de como ocurre el flujo de los datos desde
+que se generan las muestras en los dispositivos XR hasta que la
+aplicación OpenXR obtiene una pose utilizable. Notar que las flechas
+esconden múltiples hilos de ejecución, colas de procesamiento, y
+desfasajes temporales con los que hay que lidiar en la
+implementación.}\label{fig:slam-tracker-dataflow}
+}
+\end{figure}
+
+\FloatBarrier
+
+\hypertarget{interfaz-externa}{%
+\subsection{Interfaz externa}\label{interfaz-externa}}
+
+Desde un principio se entendió que se necesitaría utilizar sistemas ya
+desarrollados como punto de partida. Estos sistemas son complejos y
+suelen utilizar conceptos teóricos de significativa profundidad, por lo
+que su creación suele estar limitado a grupos de investigación expertos
+durante tiempos significativos de desarrollo. Los tres sistemas
+estudiados por ejemplo, promedian las 25.000 líneas de código (o 25
+\emph{KLOC}) cada uno.
+
+Ahora bien, en muchos casos, haber intentado integrar el código del
+sistema directamente dentro de un componente de Monado no era una
+opción. Dejando de lado las dificultades técnicas, los problemas de
+compatibilidad de licencia fueron de particular interés. La gran mayoría
+de sistemas SLAM producidos en la academia son liberados bajo licencias
+abiertas ``contagiosas'' como \emph{GPL} que obligan a desarrolladores
+que utilizan código del sistema a liberar y licenciar su código con la
+misma licencia. Esto contrasta con la licencia abierta y permisiva de
+Monado, la \emph{BSL-1.0}, que no impone restricciones sobre como los
+usuarios deben licenciar su código.
+
+Estas fueron algunas razones para intentar desacoplar el sistema a
+utilizar lo más que se pueda de Monado. Además, considerando la
+naturaleza experimental de este trabajo, la posibilidad de que más de un
+sistema necesitase ser integrado era razonable.
+
+Monado está desarrollado principalmente en el lenguaje C, pero gran
+parte de su código de tracking está implementado en C++ al igual que
+todos los sistemas de SLAM contemplados. Adicionalmente tanto Monado
+como estos sistemas suelen hacer un uso extensivo de la librería
+\emph{OpenCV}, y en particular su clase contenedora de imágenes/matrices
+\passthrough{\lstinline!cv::Mat!}. Es por esto que se terminó optando
+por el uso de un archivo \emph{header} C++, en el cual se declara la
+clase \passthrough{\lstinline!slam\_tracker!} que será utilizada por
+Monado como punto de comunicación con sistemas de SLAM arbitrarios y se
+utilizan \passthrough{\lstinline!cv::Mat!} como contenedor de imágenes.
+Luego de varias iteraciones la clase
+\passthrough{\lstinline!slam\_tracker!} tiene una interfaz que, quitando
+detalles de tipos de C++, se puede resumir en algo como esto:
+
+\begin{lstlisting}[language={C++}, caption={Interfaz a implementar por sistemas de SLAM}, label=lst:slam-tracker-def]
+class slam_tracker {
+public:
+  // (1) Constructor y funciones de inicio/fin
+  slam_tracker(string config_file);
+  void start();
+  void stop();
+
+  // (2) Métodos principales de la interfaz
+  void push_imu_sample(
+     long timestamp, vec3 accelerometer, vec3 gyroscope);
+  void push_frame(long timestamp, cv::Mat frame, bool is_left);
+  bool try_dequeue_pose(
+    long &out_timestamp, vec3 &out_position, quat &out_rotation);
+
+  // (3) Características dinámicas opcionales
+  bool supports_feature(int feature_id);
+  void* use_feature(int feature_id, void* params);
+
+private:
+  // (4) Puntero a la implementación (patrón PIMPL)
+  void* impl;
+}
+\end{lstlisting}
+
+Este header está presente en Monado, pero su implementación no. Esta
+debe ser provista por el sistema externo, lo cual implica tener que
+mantener una copia, o \emph{fork}, levemente modificado de los distintos
+sistemas que se quieran utilizar, ver Figura @fig:slam-tracker-hpp.
+
+\begin{figure}
+\hypertarget{fig:slam-tracker-hpp}{%
+\centering
+\includegraphics[width=1\textwidth,height=\textheight]{source/figures/slam-tracker-hpp.pdf}
+\caption{Interacción entre Monado y sistemas SLAM mediante la interfaz
+en C++.}\label{fig:slam-tracker-hpp}
+}
+\end{figure}
+
+La versión actual de esta clase es el resultado de varias iteraciones y
+generaliza adecuadamente los tres sistemas actualmente en uso. Algunas
+consideraciones de los puntos marcados en el código:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  El parámetro \passthrough{\lstinline!config\_file!} del constructor
+  surge, ya que todos los sistemas con los que se trató requieren
+  proveer información de calibración y puesta a punto de parámetros
+  previo a la corrida mediante un archivo de configuración. Además estos
+  sistemas suelen tener etapas de creación e inicialización de recursos,
+  así como de liberación de los mismos que quedan representados en el
+  par de métodos
+  \passthrough{\lstinline!start()!}/\passthrough{\lstinline!stop()!}.
+\item
+  Los sistemas corren en hilos separados de Monado y es por esto que es
+  fundamental implementar colas concurrentes a la hora de intercambiar
+  datos. Monado ingresa muestras mediante los métodos
+  \passthrough{\lstinline!push\_imu\_sample!} y
+  \passthrough{\lstinline!push\_frame!} mientras que sondea si hay poses
+  ya estimadas por el sistema y las obtiene mediante
+  \passthrough{\lstinline!try\_dequeue\_pose!}.
+\item
+  Algo natural del desarrollo de una interfaz de algo que no se conoce
+  del todo es que va a haber varios cambios en la misma durante su
+  creación. Si además esta interfaz es compartida por múltiples sistemas
+  y repositorios, mantener todas las versiones sincronizadas se vuelve
+  rápidamente insostenible. Una forma de aliviar este problema fue la
+  implementación de características dinámicas. En ellas, Monado evalúa
+  antes de utilizar alguna característica específica si el sistema la
+  implementa. El ejemplo para el que esto fue utilizado fue la
+  automatización del envío de datos de calibración sin pasar por el
+  archivo \passthrough{\lstinline!config\_file!}. Se reserva una
+  \passthrough{\lstinline!feature\_id!} para tal característica en la
+  nueva versión de \passthrough{\lstinline!slam\_tracker.hpp!} de Monado
+  y del fork particular, se implementa tal característica en este
+  último, y en Monado tenemos cuidado de solo utilizarla si el sistema
+  la reporta como disponible. De esta forma nos evitamos tener que
+  actualizar la versión del header de otros forks en los que, o la
+  característica no tenga sentido, o simplemente no se desee implementar
+  de momento.
+\item
+  El miembro \passthrough{\lstinline!impl!} es una forma de ligar la
+  definición compacta de \passthrough{\lstinline!slam\_tracker!} con una
+  clase que implementa el estado y métodos privados necesarios para
+  proveer la funcionalidad requerida. Este patrón de desarrollo es
+  usualmente conocido como \emph{pointer to implementation} (o
+  \emph{PIMPL}), a \passthrough{\lstinline!impl!} se lo denomina un
+  \emph{puntero opaco} {[}@lakosLargeScaleSoftwareDesign1996{]}.
+\end{enumerate}
+
+Esta interfaz no es perfecta: no contempla magnetómetros, asume una
+configuración de a lo sumo dos cámaras, asume que el sistema utiliza
+OpenCV y es difícil de actualizar con cambios no contemplados por el
+concepto de características dinámicas. A pesar de estos problemas, ha
+sido suficientemente buena para generalizar todos los sistemas
+propuestos y correrlos con una performance adecuada.
+
+\FloatBarrier
+
+\hypertarget{implementaciones-de-la-interfaz}{%
+\subsection{Implementaciones de la
+interfaz}\label{implementaciones-de-la-interfaz}}
+
+A la hora de implementar la interfaz
+\passthrough{\lstinline!slam\_tracker!} se documentan en los tres
+métodos principales \passthrough{\lstinline!push\_imu\_sample!},
+\passthrough{\lstinline!push\_frame!} y
+\passthrough{\lstinline!try\_dequeue\_pose!} precondiciones que el
+usuario de la interfaz, Monado en este caso, y su implementación deben
+cumplir:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Debe haber un único hilo productor llamando a los métodos
+  \passthrough{\lstinline!push\_*!}
+\item
+  Las muestras deben tener marcas de tiempo (\emph{timestamps})
+  monótonas crecientes.
+\item
+  La implementación de los métodos \passthrough{\lstinline!push\_*!} no
+  debe ser bloqueante.
+\item
+  Del punto anterior se desprende que las muestras deben ser procesadas
+  en un hilo consumidor separado.
+\item
+  Las muestras de imágenes estéreo deben tener la misma timestamp.
+\item
+  Las muestras de imágenes estéreo deben ser enviadas de forma
+  intercalada en orden izquierda-derecha.
+\item
+  Debe haber un único hilo consumidor llamando a
+  \passthrough{\lstinline!try\_dequeue\_pose!}.
+\end{enumerate}
+
+Estas condiciones fueron desarrollándose mientras la interfaz
+evolucionaba y nuevos sistemas se iban adaptando. Intentan ser
+indicaciones que evitarían implementaciones deficientes mientras que son
+lo suficientemente generales como para que todas las soluciones
+estudiadas puedan acatarlas.
+
+La precondición \textbf{1} para el usuario le permite a la
+implementación utilizar colas enfocadas al caso de un único productor,
+de las cuales puede obtenerse mayor rendimiento comparado a las
+versiones que no tienen esta limitación. Más aún, se suelen utilizar
+colas libres de \emph{locks} (primitiva de sincronización, también
+conocido como \emph{mutex}). El punto \textbf{2} facilita el trabajo a
+la implementación mientras que suele ser trivial de cumplir para el
+usuario, ya que los dispositivos tienden a reportar las muestras del
+mismo tipo en orden temporal creciente. El punto \textbf{3} obliga a la
+implementación de los métodos \passthrough{\lstinline!push\_*!} a
+terminar lo antes posible sin realizar ningún tipo de procesamiento en
+esas funciones. Esto es fundamental, ya que Monado también recibe
+muestras de dispositivos mediante colas y simplemente las redirige al
+\passthrough{\lstinline!slam\_tracker!}, y demorarse en estos métodos
+hace que las colas internas de Monado se llenen y muestras se pierdan.
+El inciso \textbf{4} es simplemente una aclaración de en dónde se
+procesarían las muestras; dado que no pueden procesarse en los métodos
+\passthrough{\lstinline!push\_*!} se necesita un hilo consumidor que
+esté esperando por muestras nuevas en las distintas colas de la
+implementación para procesar. El punto \textbf{5} es un requerimiento
+razonable de algunos sistemas, ya que es común que cámaras estéreo
+pensadas para SLAM tengan sincronización por hardware de sus timestamps.
+El punto \textbf{6} facilita algunos procedimientos y chequeos en la
+implementación. Y finalmente, la precondición \textbf{7} es similar al
+punto 1 en donde se le permite a la implementación utilizar colas de un
+único consumidor que sean de mayor rendimiento comparado a otras colas
+concurrentes.
+
+La interfaz \passthrough{\lstinline!slam\_tracker!} se implementó en los
+tres forks presentados en este trabajo; Kimera, ORB-SLAM3 y Basalt. La
+idea general de las implementaciones es similar: permitir a Monado, el
+usuario de la interfaz, utilizar el sistema de SLAM/VIO realizando las
+conversiones adecuadas para poder comunicarse con la solución
+subyacente. Sin embargo hay algunas consideraciones a remarcar en cada
+versión.
+
+Respecto al manejo de muestras entrantes, Kimera y Basalt encolan las
+muestras directamente a las colas de entrada de sus respectivos
+pipelines que corren en hilos separados. Para ORB-SLAM3, al ser
+necesario ejecutar explícitamente el paso de estimación con el par de
+imágenes estéreo y muestras IMU nuevas, se necesitó implementar colas
+dedicadas para muestras de cámara izquierda, derecha e IMU, junto a un
+hilo consumidor que ejecuta la estimación cuando cuadros nuevos arriban.
+Cabe mencionar que Basalt no utiliza el tipo
+\passthrough{\lstinline!cv::Mat!} de OpenCV como contenedor para sus
+imágenes a diferencia de los otros sistemas. Más aún, espera imágenes
+con intensidad de píxeles de 16 bits para soportar conjuntos de datos
+como TUM-VI que provee imágenes de este tipo. Sin embargo, las imágenes
+monocromáticas usadas comúnmente en estas aplicaciones suelen utilizar
+un rango de 8 bits y por ende los dispositivos generan imágenes de este
+tipo. Al no haber una forma sencilla de utilizar 8 bits en Basalt, es
+necesario realizar una copia a un tipo de imagen de 16 bits cada vez que
+se presentan nuevos cuadros. Este es un punto a mejorar en el futuro
+sobre Basalt que no se trató de resolver en este trabajo, ya que no se
+encontraron problemas de performance incluso con esta copia innecesaria.
+
+Respecto a la cola de poses estimadas, Kimera implementa un sistema de
+\emph{callbacks} en el cual una función que encola los resultados del
+pipeline es llamada tan pronto como estén listos. Basalt por su parte ya
+expone una cola con las estimaciones computadas que la implementación de
+\passthrough{\lstinline!slam\_tracker!} simplemente utiliza. ORB-SLAM3
+devuelve la estimación de la misma llamada explícita al estimador, y
+nuestra implementación se encarga de encolar esos resultados que luego
+serán consultados por Monado mediante
+\passthrough{\lstinline!try\_dequeue\_pose!}.
+
+Respecto al archivo de configuración referenciado por el parámetro
+\passthrough{\lstinline!config\_file!}, Basalt por defecto utiliza dos
+archivos, uno para parámetros de calibración y el otro para
+configuraciones del sistema en sí; se necesitó entonces crear un tipo de
+archivo nuevo que referencie a estos dos y sea utilizado como
+\passthrough{\lstinline!config\_file!}. Kimera a su vez también posee
+múltiples archivos que son referenciados por uno central. ORB-SLAM3 por
+su parte tiene un único archivo de configuración.
+
+Respecto a las interfaces gráficas, todos estos sistemas presentan la
+posibilidad de poder visualizar, al menos, la trayectoria estimada junto
+a las features detectadas en los cuadros entrantes como se muestra en la
+Figura @fig:trackers-ui. En todos los casos, siempre se intenta permitir
+la posibilidad de utilizar estas herramientas de visualización de forma
+opcional al utilizar la clase \passthrough{\lstinline!slam\_tracker!}.
+Para Kimera y ORB-SLAM3 las interfaces funcionan automáticamente al
+habilitarlas en los archivos de configuración, mientras que Basalt
+utiliza sus herramientas de visualización de manera más ad hoc y por lo
+tanto fue necesario implementar una clase de visualización dedicada para
+el \passthrough{\lstinline!slam\_tracker!}.
+
+\begin{figure}
+\hypertarget{fig:trackers-ui}{%
+\centering
+\includegraphics[width=1\textwidth,height=\textheight]{source/figures/trackers-ui.pdf}
+\caption{Las distintas interfaces gráficas y formas de visualizar
+presentadas por cada uno de los sistemas adaptados. Arriba a izquierda
+Kimera, ORB-SLAM3 a derecha; abajo Basalt.}\label{fig:trackers-ui}
+}
+\end{figure}
+
+\FloatBarrier
+
+\hypertarget{clase-adaptadora}{%
+\subsection{Clase adaptadora}\label{clase-adaptadora}}
+
+Para interactuar con la interfaz que detallamos en la sección anterior,
+se implementa en Monado una clase adaptadora en el módulo auxiliar de
+tracking (recordar Figura @fig:monado-arch) y que sirve de nexo entre
+los controladores de dispositivos de hardware y la interfaz
+\passthrough{\lstinline!slam\_tracker!}. Este adaptador recibe el
+nombre, un poco confuso, de \passthrough{\lstinline!TrackerSlam!}
+siguiendo las convenciones de Monado para con los trackers ya
+existentes.
+
+El funcionamiento de \passthrough{\lstinline!TrackerSlam!} es sencillo,
+los controladores que quieran ser localizados por SLAM y puedan proveer
+imágenes y muestras de IMU deben instanciar este adaptador e
+inicializarlo. Por detrás, esto simplemente llama a los métodos
+adecuados de la interfaz \passthrough{\lstinline!slam\_tracker!} con el
+sistema externo. Ahora bien, se aprovecha esta clase
+adaptadora\footnote{Es debatible si el añadido de estas funcionalidades
+  haría que \passthrough{\lstinline!TrackerSlam!} deje de ser
+  considerada una clase adaptadora, ya que como veremos, ambas pueden
+  ser deshabilitadas en tiempo de ejecución.\_} para proveer dos
+funcionalidades fundamentales que escapan al alcance de los sistemas de
+SLAM/VIO y serán explicados a continuación: \textbf{predicción} y
+\textbf{filtrado} de poses.
+
+\hypertarget{predicciuxf3n-de-poses}{%
+\subsubsection{Predicción de poses}\label{predicciuxf3n-de-poses}}
+
+\hypertarget{el-problema}{%
+\paragraph{El problema}\label{el-problema}}
+
+Las aplicaciones XR requieren poder localizar constantemente a los
+distintos dispositivos de entrada y salida soportados que son utilizados
+por el usuario. En la especificación de OpenXR las dos principales
+funciones que le permiten a la aplicación pedirle al runtime las poses
+de estos dispositivos son \passthrough{\lstinline!xrLocateSpace!} y
+\passthrough{\lstinline!xrLocateViews!}. La primera se utiliza para
+solicitar poses de dispositivos ``comunes'' (suelen ser distintos tipos
+de mandos) mientras que la segunda es un poco más compleja, ya que
+concierne a la ubicación de las pantallas que renderizan la escena
+(p.~ej. la ubicación de las pantallas de un casco VR). Para nuestro
+propósito, podemos resumir las signaturas de ambas funciones a:
+
+\begin{lstlisting}[language={C++}]
+XrPosef xrLocateSpace(XrSpace id, XrTime time);
+XrPosef xrLocateViews(XrSpace id, XrTime time);
+\end{lstlisting}
+
+Ambas devuelven una pose a un tiempo \passthrough{\lstinline!time!} para
+el ``\emph{espacio}'' identificado por \passthrough{\lstinline!id!}. Un
+espacio o \emph{espacio de referencia} es un término utilizado en la
+especificación para diferenciar cualquier punto que nos interese
+trackear desde la aplicación y que en definitiva identifica a un sistema
+de referencia inercial con rotaciones.
+
+Para obtener estos espacios, la aplicación solicita las características
+que desea. Si se solicitara el espacio de un control o mando el runtime,
+Monado en este caso, intentará conseguir el más adecuado dentro de los
+disponibles en el sistema. Entonces, la aplicación OpenXR es indiferente
+a qué dispositivos están siendo utilizados, ni siquiera se asumen que
+estos espacios sean dispositivos, podrían ser cualquier otro objeto de
+interés que está siendo localizado por mecanismos externos (por visión
+por computadora por ejemplo) o incluso dispositivos emulados por
+software\footnote{Una de las primeras contribuciones realizadas para
+  familiarizarse con el código fuente de Monado fue la implementación
+  del controlador \passthrough{\lstinline!qwerty!} que le permite a los
+  usuarios emular de forma modular un casco y/o mandos mediante teclado
+  y ratón.
+  \url{https://gitlab.freedesktop.org/monado/monado/-/merge_requests/714}}.
+Los espacios que aplican a nuestro caso son aquellos que representaran
+dispositivos que posean sensores IMU y cámaras que puedan utilizarse en
+nuestros sistemas de SLAM/VIO.
+
+Otro importante aspecto a considerar es que el punto en el tiempo
+\passthrough{\lstinline!time!} para la cual la pose debe ser estimada es
+provisto por el usuario, y como tal, resulta arbitrario para el runtime.
+Sin embargo los sistemas de SLAM/VIO suelen ser sistemas de tiempo
+discreto, es decir solo dan estimaciones para puntos en el tiempo para
+los cuales tienen muestras. En el mejor de los casos esto implica que
+pueden dar una estimación por cada muestra de IMU, las cuales vienen a
+altas frecuencias (p.~ej. 200hz); Kimera cumple con esto. En el caso más
+usual sin embargo, y el que más nos afecta en este trabajo, las
+estimaciones vienen a la misma frecuencia que los cuadros de las
+cámaras. Esta frecuencia suele ser al menos un orden de magnitud menor
+(p.~ej. 20hz); ORB-SLAM3 y Basalt funcionan de esta manera.
+
+Para complicar más las cosas, los tiempos en los que el programador
+solicita las poses suelen estar ligados a momentos en los cuales hay que
+renderizar un nuevo cuadro en la pantalla del usuario. Al ser este un
+proceso que (en el caso usual) ocurre enteramente en el mismo nodo de
+cómputo, suelen ser tiempos muy cercanos al presente. Para el pipeline
+de SLAM sin embargo, siempre nos encontramos levemente en el pasado por
+tener que lidiar con las demoras inherentes a la captura de muestras,
+las transmisiones de datos y los tiempos de cómputo significativos de
+los sistemas de SLAM.
+
+\hypertarget{anuxe1lisis-de-un-ejemplo}{%
+\paragraph{Análisis de un ejemplo}\label{anuxe1lisis-de-un-ejemplo}}
+
+\begin{figure}
+\hypertarget{fig:prediction-timeline}{%
+\centering
+\includegraphics[width=1\textwidth,height=\textheight]{source/figures/prediction-timeline.png}
+\caption{Línea de tiempo con timestamps normalizadas. El evento
+\passthrough{\lstinline!REQUEST\_TO\_PREDICTION!} significa
+algo.}\label{fig:prediction-timeline}
+}
+\end{figure}
+
+En la Figura @fig:prediction-timeline se puede apreciar una captura de
+pantalla de la interfaz de \emph{Perfetto} \footnote{Librería de
+  perfilación Perfetto: \url{https://perfetto.dev}} que, en conjunto con
+\emph{Percetto} \footnote{Wrapper de Perfetto para C:
+  \url{https://github.com/olvaffe/percetto}}, son herramientas de
+medición de tiempos preferidas para Monado. Esta captura es sobre una
+corrida en tiempo real con Monado, Basalt y una cámara RealSense D455
+con imágenes estéreo de resolución 640x480 a 30 cuadros por segundo. La
+figura muestra un tramo de unos 35 ms con la particularidad de que el
+tiempo en el que el usuario pide una predicción y el par estéreo de
+imágenes son capturadas por la cámara coinciden en
+\passthrough{\lstinline![A]!}. Como la tarea de renderizado para esta
+captura ocurría a unos 60 cuadros por segundo, tenemos que
+aproximadamente dos predicciones (en \passthrough{\lstinline![A]!},
+\passthrough{\lstinline![D]!}) son solicitadas entre cada muestra de la
+cámara (\passthrough{\lstinline![A]!} y \passthrough{\lstinline![G]!}).
+
+\FloatBarrier
+
+A tiempo \passthrough{\lstinline![C]!} las imágenes llegan al host luego
+de haber sido transferidas por un cable USB 3.2 con una demora de unos
+13.5 ms representada por la barra
+\passthrough{\lstinline!SHOT\_TO\_RECEIVED!}. En ese momento ocurre una
+pequeña copia de Monado hacia Basalt
+\passthrough{\lstinline!RECEIVED\_TO\_PUSHED!} y luego de unos 12 ms
+representados por \passthrough{\lstinline!PUSHED\_TO\_PROCESSED!}, a
+tiempo \passthrough{\lstinline![F]!}, la pose estimada para el tiempo
+\passthrough{\lstinline![A]!} está computada. Es decir, tenemos una
+demora de unos 25.5 ms desde que la muestra es capturada hasta que el
+sistema de SLAM/VIO es capaz de estimar la pose correspondiente al
+momento de captura de la muestra. Cabe aclarar que estos tiempos son muy
+variables incluso en la misma corrida, al depender de la calidad de la
+conexión USB, el sistema utilizado, y las propias muestras que pueden
+complicar las iteraciones de los algoritmos de optimización que ocurren
+en el sistema.
+
+Por otro lado, tenemos que a tiempo \passthrough{\lstinline![A]!}, la
+aplicación OpenXR solicita a Monado una predicción de a dónde el runtime
+piensa que el dispositivo se va a encontrar 7 ms en el futuro, en
+\passthrough{\lstinline![B]!}. Cabe aclarar que la solicitud debe ser
+respondida de forma inmediata y la barra
+\passthrough{\lstinline!REQUEST\_TO\_PREDICTION!} no implica ninguna
+espera hasta \passthrough{\lstinline![B]!}, es solo una forma de
+visualizar los 7 ms. Notar que en ese punto, todavía faltan 25.5 ms para
+tener la predicción de Basalt para \passthrough{\lstinline![A]!}, más
+aún, una predicción dada por Basalt para el futuro
+\passthrough{\lstinline![B]!} ni siquiera existirá, ya que el sistema
+solo estima poses para los tiempos de las muestras, es decir la próxima
+estimación correspondería al tiempo \passthrough{\lstinline![G]!}.
+Además de esto, tenemos que mientras todavía se está procesando la
+muestra, otra petición a tiempo \passthrough{\lstinline![D]!} para
+\passthrough{\lstinline![E]!} debe ser respondida.
+
+En conclusión, tenemos un \textbf{desfasaje temporal} que hace que las
+poses estimadas siempre estén levemente en el pasado; en el tramo
+seleccionado fue de 25.5ms (más los 7 ms de predicción), pero es
+variable durante la corrida. Además, las poses se estiman para
+\textbf{puntos discretos} de tiempo, mientras que el usuario puede pedir
+una predicción para cualquier punto arbitrario. Entonces, si queremos
+ser capaces de proveer al usuario una pose para el tiempo solicitado,
+necesitemos implementar formas de interpolar y \textbf{\emph{predecir}}
+la ubicación de un espacio. Es decir, no utilizamos las poses devueltas
+por el sistema de SLAM/VIO de forma directa, sino como parte fundamental
+de un procedimiento constante de predicción que se realiza del lado de
+Monado. En este se intenta utilizar todos los datos disponibles en el
+runtime para proveer la pose más razonable en el punto de tiempo
+requerido.
+
+\hypertarget{implementaciuxf3n-1}{%
+\paragraph{Implementación}\label{implementaciuxf3n-1}}
+
+Se encara la solución a estos problemas de manera progresiva y haciendo
+uso de algunas de las herramientas e ideas ya presentes en Monado.
+
+Dentro de Monado, el concepto de espacio de referencia o
+\passthrough{\lstinline!XrSpace!} de de OpenXR, es nombrado como una
+\emph{relación espacial} y se representa con un
+\passthrough{\lstinline!struct!} muy similar al siguiente.
+
+\begin{lstlisting}[language={C++}]
+struct xrt_space_relation {
+  struct vec3 position;
+  struct quat orientation;
+  struct vec3 linear_velocity;
+  struct vec3 angular_velocity;
+};
+\end{lstlisting}
+
+En él, no solo se guarda la información de la pose
+(\passthrough{\lstinline!position!} y
+\passthrough{\lstinline!orientation!}) sino que además tenemos el estado
+de la velocidad lineal y angular de este espacio. Esto es muy útil, ya
+que si sabemos que a tiempo \(t_1\) tenemos cierto espacio con pose
+\(T_1 \in SE(3)\) y velocidades \(v_1, \omega_1 \in \R^3\), podemos
+predecir que a un tiempo \(t_2 = t_1 + \Delta t\) tendremos el espacio
+con pose \(T_2 = \Delta T \ T_1\) con
+
+\begin{align}
+\label{eq:predicted-space-delta}
+\Delta T = \begin{bmatrix}
+Exp(\Delta t \ \hat\omega) & \Delta t \ v \\
+0 & 1
+\end{bmatrix} \in \R^{4x4}
+\end{align}
+
+Monado provee varias herramientas que facilitan tareas que suelen ser
+recurrentes en diversos sistemas de tracking. La tarea de estimar
+espacios futuros basándose en uno dado con sus velocidades es una de
+estas funcionalidades ya incluidas. Más aún, Monado implementa una
+estructura de datos que permite almacenar un ``historial'' de estos
+espacios en una cola circular y generar las interpolaciones y
+extrapolaciones, tanto a futuro como a pasado, necesarias para cualquier
+timestamp requerida por un usuario. Para las interpolaciones se utiliza
+una simple interpolación lineal\footnote{En el caso de la orientación es
+  una interpolación esférica lineal o \emph{slerp}
+  \url{https://en.wikipedia.org/wiki/Slerp\#Quaternion_Slerp}} o
+\emph{lerp} de a trozos entre cada par de espacios del historial. Para
+extrapolar hacia el futuro, se usa la pose y velocidad almacenada en el
+espacio más reciente del historial para realizar el cómputo con
+\(\Delta T\) como se definió en la
+\protect\hyperlink{eq:predicted-space-delta}{}. Simétricamente para
+extrapolar hacia el pasado lejano\footnote{La especificación de OpenXR
+  tiene una sección dedicada a las restricciones y condiciones a los que
+  el runtime está sujeto respecto a solicitudes en el pasado y en el
+  futuro por parte del usuario. Ver
+  {[}@thekhronosgroupinc.OpenXRSpecification, secc. 2.14{]}}, o sea
+fuera del registro del historial, se utilizará el espacio más antiguo
+almacenado y \(\Delta T^{-1}\).
+
+Sería razonable, como primera aproximación a nuestro problema, utilizar
+este historial de espacios. Esto nos garantiza que podamos proveerle al
+usuario una pose para cualquier punto arbitrario en el tiempo que
+solicite, basándonos en las estimaciones del sistema de SLAM que
+asumimos son precisas. Sin embargo, un leve problema que surge es que no
+existe ningún requerimiento para los sistemas sobre la estimación de
+velocidades, ya que no todos estiman esta variable. La interfaz
+\passthrough{\lstinline!slam\_tracker.hpp!} solo garantizan la
+estimación de la posición y orientación del dispositivo como puede verse
+en su definición en el \protect\hyperlink{lst:slam-tracker-def}{}. Lo
+que haremos para solventar esto es computar las velocidades con base a
+los pares de poses adyacentes que tengamos en el historial. Estas poses
+tienen su timestamp correspondiente, entonces es sencillo computar la
+diferencia entre las mismas respecto a la unidad de tiempo, dando como
+resultado una estimación de la velocidad del espacio. La Figura
+@fig:prediction-with-space-history muestra como funcionaría este tipo de
+predicción en un ejemplo simplificado en 2D y en el que asumimos que las
+poses estimadas por el sistema de SLAM/VIO coinciden perfectamente con
+la trayectoria real del dispositivo.
+
+\begin{figure}
+\hypertarget{fig:prediction-with-space-history}{%
+\centering
+\includegraphics[width=1\textwidth,height=\textheight]{source/figures/prediction-with-space-history.pdf}
+\caption{Ejemplo de predicción con el historial de espacios. Se asume
+que las poses estimadas por el sistema de SLAM son perfectas por
+simplicidad.}\label{fig:prediction-with-space-history}
+}
+\end{figure}
+
+\FloatBarrier
+
+Esto es una buena primera solución al problema, y es la opción más
+básica que la clase adaptadora \passthrough{\lstinline!TrackerSlam!} le
+ofrece a los usuarios de Monado. Desafortunadamente, si vemos el ejemplo
+estudiado en la Figura @fig:prediction-timeline notaremos que la
+frecuencia de poses que se computan es muy baja en comparación a la
+cantidad de veces que la aplicación OpenXR requiere una nueva prdicción.
+En el ejemplo se tenían muestras (y por ende estimaciones) a 30 cuadros
+por segundo mientras que se renderizaba a 60. En ese ejemplo se está
+utilizando un monitor de computadora estándar como pantalla, pero en
+cascos de realidad virtual sin embargo, las frecuencias de renderizado
+alcanzan fácilmente los 90 o 120 cuadros por segundo, haciendo que la
+cantidad de predicciones que hacemos entre estimación y estimación
+crezca. Esto empeora la calidad de las predicciones significativamente,
+generando movimientos imprecisos y ruidosos, y agravando los efectos de
+\emph{motion sickness} o \emph{cinetosis}\footnote{\url{https://es.wikipedia.org/wiki/Cinetosis}}
+que estas experiencias pueden producir.
+
+Para mejorar nuestras predicciones, visto el problema de que las
+estimaciones computadas se encuentran muy espaciadas, respecto a las
+peticiones de predicción, vamos a utilizar las muestras de IMU. Estas
+vienen usualmente a frecuencias mucho mayores que las de renderizado;
+250 Hz en el caso del ejemplo estudiado en la Figura
+@fig:prediction-timeline. Además, a pesar de sufrir de severos problemas
+de drift, al utilizarlas en ventanas cortas de tiempo (unos pocos
+milisegundos), estos se ven reducidos en gran medida y la odometría que
+sus sensores proveen resulta suficientemente precisa.
+
+La clase adaptadora tiene acceso a estas muestras, ya que las intercepta
+para redirigirlas hacia los sistemas de SLAM. Utilizaremos un concepto
+similar al de la pre-integración de muestras de IMU explorado en la
+sección @seq:basalt-preintegration con algunas ideas relacionadas con
+las ecuaciones presentadas a partir de la
+\protect\hyperlink{eq:imu-preintegration}{}. Consideremos que no vamos a
+querer interferir de ninguna manera con las estimaciones generadas por
+los sistemas de SLAM, ya que no querremos distorsionar dichas poses. El
+proceso de pre-integración correrá de forma completamente aislada de los
+sistemas. Más aún, será un proceso mayormente efímero que solo tendrá
+consecuencias sobre puntos de tiempos para los cuales el sistema de SLAM
+todavía no tenga una estimación posterior. En particular, nos
+limitaremos a refinar las estimaciones de la velocidad lineal y angular,
+dejando que las herramientas de predicción de Monado que se basan en el
+último espacio del historial, computen la pose adecuada para la
+timestamp requerida. Acumularemos promedios de las mediciones recientes
+para reducir el impacto del ruido presente en las muestras de la IMU.
+
+Tenemos entonces que el algoritmo utilizado finalmente es similar al
+pseudo código que se presenta a continuación. Cabe aclarar que la
+función \passthrough{\lstinline!predict\_pose(t)!} es llamada cuando el
+usuario quiere una predicción a tiempo \passthrough{\lstinline!t!}.
+Además las herramientas de Monado son representadas por
+\passthrough{\lstinline!relation\_history!} (el historial de relaciones)
+y \passthrough{\lstinline!predict\_from\_space!} (la función de
+predicción en base a un espacio).
+
+\begin{lstlisting}[language={C++}]
+struct xrt_space_relation predict_pose(timestamp t) {
+   if (relation_history.is_empty()) return {0};
+
+   struct xrt_space_relation r = relation_history.get_latest();
+   timestamp rt = timestamp_of(r);
+
+   if (predicción deshabilitada) return r;
+   if (uso de IMU deshabilitado or t < rt) relation_history.predict(t);
+   if (uso de giroscopio habilitado) {
+      vec3 avg_gyro = gyro_average_between(rt, t);
+      vec3 world_gyro = rotate_angular_velocity(r.orientation, avg_gyro);
+      r.angular_velocity = world_gyro;
+   }
+   if (uso de acelerómetro habilitado) {
+      vec3 avg_accel = accel_average_between(rt, t);
+      vec3 world_accel = rotate_linear_acceleration(r.orientation, avg_accel);
+      world_accel += gravity_vector;
+      double dt = last_imu_timestamp - rt;
+      r.linear_velocity += world_accel * dt;
+   }
+
+   return predict_from_space(r, t);
+}
+\end{lstlisting}
+
+Es interesante notar la naturaleza modular del algoritmo representada
+por las condiciones de los \passthrough{\lstinline!if!}, en donde
+distintos componentes que proveen información a la predicción pueden
+deshabilitarse. Notar que la velocidad angular provista por el
+giroscopio es local y necesita ser ajustada a coordenadas globales; esto
+se realiza con la orientación estimada en \passthrough{\lstinline!r!},
+la pose más reciente computada por el sistema de SLAM. Similarmente el
+acelerómetro debe ser corregido, y a este además se le suma una
+corrección con el vector de la gravedad\footnote{El vector de gravedad
+  puede computarse dinámicamente con la IMU, detectando momentos en los
+  que el dispositivo está quieto y registrando el vector medido por el
+  acelerómetro.}. A diferencia del giroscopio, el acelerómetro solo nos
+puede proveer información sobre los cambios de velocidad, y no sobre la
+velocidad inicial; para esta usamos la dada por
+\passthrough{\lstinline!r!} que es computada con la diferencia de las
+dos poses en \passthrough{\lstinline!relation\_history!} más recientes.
+
+Mostramos en la Figura @fig:prediction-with-imu un ejemplo simplificado
+del algoritmo implementado utilizando esta idea de promediar muestras de
+odometría de la IMU para predecir puntos de tiempo posteriores a
+\passthrough{\lstinline!B!} cuando \passthrough{\lstinline!C!} todavía
+no pertenece al historial de espacios. En el ejemplo se muestra como
+iría actualizándose el vector promediado (en verde) al integrar las tres
+muestras (en azul) que ocurren entre \(t=1\) y \(t=2\). Además, se
+muestra como estos vectores promedios se utilizan para extrapolar
+linealmente para los tiempos requeridos por un usuario
+\(t \in \{1,45; 1,75; 1.95\}\) (en anaranjado). Por simplicidad, el
+ejemplo asume que tanto las muestras de odometría de la IMU a tiempos
+\(t \in \{1,3; 1,6; 1.9\}\) como las estimaciones
+\passthrough{\lstinline!B!} y \passthrough{\lstinline!C!} coinciden
+perfectamente con la trayectoria real del dispositivo.
+
+\begin{figure}
+\hypertarget{fig:prediction-with-imu}{%
+\centering
+\includegraphics[width=1\textwidth,height=\textheight]{source/figures/prediction-with-imu.pdf}
+\caption{Ejemplo de predicción para tiempos
+\(t \in \{1,45; 1,75; 1.95\}\) utilizando la idea de promediar muestras
+de la IMU posteriores a la pose más reciente del historial
+(\passthrough{\lstinline!B!} en este caso, se considera que
+\passthrough{\lstinline!C!} no pertenece al historial aún). Se asume que
+las poses estimadas por el sistema de SLAM y las muestras de la IMU son
+perfectas por simplicidad.}\label{fig:prediction-with-imu}
+}
+\end{figure}
+
+Para contrastar esto con el caso en el que se ignoran las muestras de la
+IMU y solo se utiliza el historial de poses, se muestra en la Figura
+@fig:prediction-without-imu los errores de esta predicción para el mismo
+escenario.
+
+\begin{figure}
+\hypertarget{fig:prediction-without-imu}{%
+\centering
+\includegraphics[width=1\textwidth,height=\textheight]{source/figures/prediction-without-imu.pdf}
+\caption{Ejemplo de predicción para tiempos
+\(t \in \{1,45; 1,75; 1.95\}\) ignorando las muestras de IMU y
+utilizando unicamente el historial de poses con
+\passthrough{\lstinline!A!} y \passthrough{\lstinline!B!} como últimas
+muestras (esto es antes de que llegue \passthrough{\lstinline!C!}). De
+vuelta, asumimos que las estimaciones y no contienen error por
+simplicidad.}\label{fig:prediction-without-imu}
+}
+\end{figure}
+
+Finalmente, cabe aclarar que la trayectoria presentada en estas figuras
+es particularmente desafiante. Considerando que estos dispositivos XR
+están usualmente sujetos a partes como la cabeza o las manos del
+usuario, es improbable encontrar trayectorias demasiado abruptas entre
+los tiempos de estimación de las poses de SLAM. Estos, al coincidir con
+la frecuencia de muestreo de las cámaras, suelen ser menores a 50ms
+(p.ej. a 30 cuadros por segundo, tenemos \textasciitilde33ms entre pose
+y pose). Por otro lado, es usual tener una mayor cantidad de muestras de
+IMU entre estimaciones y no solo las 3 que se muestran en las figuras
+(p.ej. a 30 cuadros por segundo con la IMU a 250 hz, tenemos unas
+\textasciitilde8 muestras de IMU entre cada par de cuadros
+consecutivos), lo cual mejora la precisión de la predicción aún más.
+
+\hypertarget{filtrado-de-poses}{%
+\subsubsection{Filtrado de poses}\label{filtrado-de-poses}}
+
+Continuando con la descripción de la funcionalidad presente en la clase
+adaptadora \passthrough{\lstinline!TrackerSlam!} y luego de haber
+presentado el método de predicción que se emplea en Monado, veremos
+ahora la siguiente funcionalidad que
+\passthrough{\lstinline!TrackerSlam!} implementa: el \textbf{filtrado}
+de poses.
+
+También llamado \emph{smoothing}, alisado o suavizado, el filtro de
+señales, curvas o, en este caso poses, es una forma de minimizar o
+\emph{filtrar} el ruido presente en alguna fuente de información y
+suavizar los cambios abruptos en las poses. Lo que sucede en nuestro
+caso es que por la naturaleza del problema en cuestión y por algunas de
+las decisiones tomadas, se pueden notar la presencia de micro
+movimientos de alta frecuencia que existen en la trayectoria estimada.
+Estas alteraciones no son más que ruido proveniente de distintos
+factores.
+
+Por un lado, los sistemas de SLAM/VIO en el área no necesariamente
+priorizan el caso de uso de XR y suelen estar mayormente interesados en
+aplicaciones de robótica. En este campo, la ``sensación'' que produciría
+el tracking no es un factor de importancia comparado a la precisión
+absoluta del mismo. En particular, las métricas más utilizadas en estos
+trabajos son las que evalúan el error absoluto de la trayectoria en su
+totalidad (ATE, APE, AOE). Es intuitivo ver que estas métricas, a
+diferencias de sus versiones relativas (RTE, RPE, ROE), incentivan
+correcciones abruptas en la trayectoria cuando los sistemas determinan
+que su pose actual no es la mejor posible (p.~ej. en momentos de loop
+closure). Más aún, minimizar el ruido en la trayectoria no es uno de sus
+objetivos, ya que la aplicación artificial de filtros que suavicen la
+trayectoria podría tender a empeorar el puntaje obtenido en estos
+conjuntos de datos. Todo esto hace que muchas veces las trayectorias
+computadas por los sistemas en condiciones no óptimas tiendan a
+presentar una gran cantidad de movimientos bruscos. Estos pueden
+resultar particularmente notables en sistemas VR en dónde las pantallas
+ocupan todo el campo de visión del usuario; movimientos de este tipo
+pueden fácilmente inducir cinetosis.
+
+Por sobre esto, el método de predicción presentado en la sección
+anterior en la Figura @fig:prediction-with-imu presenta problemas que no
+fueron tratados. En particular, la predicción que realizamos está basada
+en una única pose del sistema SLAM y las muestras nueva de la IMU, pero
+no comparte ningún otro estado en común. Entonces podría esperarse que
+la diferencia entre las poses que se fueron prediciendo con la nueva
+pose que el sistema estimará sea significativa. Más aún, en la realidad
+el error acumulado por la IMU, a pesar de verse limitado a un intervalo
+corto de unas decenas de milisegundos, es un término más que afectaría
+esta diferencia. Todo esto puede verse en el error marcado en la Figura
+@fig:prediction-offset-jump. Este tipo de desfasaje sería reintroducido
+de forma repetitiva afectando las predicciones cada vez que una nueva
+pose es estimada, causando así constantes micro saltos (ruido),
+especialmente en los momentos en los que la pose estimada por SLAM y la
+pose predicha por nuestro método difieran significativamente.
+
+\begin{figure}
+\hypertarget{fig:prediction-offset-jump}{%
+\centering
+\includegraphics[width=1\textwidth,height=\textheight]{source/figures/prediction-offset-jump.pdf}
+\caption{Desfasaje esperado entre el método de predicción por muestras
+promediadas y la pose \passthrough{\lstinline!C!} estimada de SLAM
+cuando \passthrough{\lstinline!C!} aún no pertenece al historial de
+espacios. Se muestra la incidencia de la acumulación de errores de la
+IMU. Este desfasaje causará micro saltos que serían disruptivos en una
+experiencia de VR.}\label{fig:prediction-offset-jump}
+}
+\end{figure}
+
+Es entonces por estas razones, que se implementaron tres métodos
+sencillos de filtrado combinables para suavizar las trayectorias
+estimadas y que intentan minimizar los problemas expuestos. Se deja como
+trabajo futuro el uso de filtros más elaborados como los filtros Kalman
+{[}@welchSCAATIncrementalTracking1997, ap. B{]}. Cabe aclarar que en
+general, el uso de filtros también presenta una desventaja fundamental.
+Esta es, la introducción de latencia artificial al sistema, ya que para
+poder suavizar este ruido, los filtros tienden a reducir cambios
+abruptos en la trayectoria, incluso cuando estos sean realmente los
+movimientos que el usuario realizó físicamente.
+
+Presentaremos tres filtros, con el más sofisticado basado en
+{[}@casiezFilterSimpleSpeedbased2012{]}. Además, dicho trabajo cubre el
+resto de filtros presentados, muestra gráficas comparativas, y es
+también una buena lectura para contextualizar el uso de filtros para
+tracking de movimientos humanos. Los filtros presentados aquí y en el
+trabajo mencionado pueden visualizarse interactivamente en la siguiente
+aplicación web:
+\url{https://cristal.univ-lille.fr/~casiez/1euro/InteractiveDemo/}.
+
+El funcionamiento esquemático de un filtro es muy sencillo: es un
+contenedor de \textbf{estado}, con un método de \textbf{actualización}
+que recibe un nuevo \textbf{dato} con una \textbf{timestamp} posterior a
+las provistas hasta el momento; con esto, el filtro computa el valor de
+la \textbf{señal filtrada} para una timestamp requerida. En nuestro
+caso, esta timestamp coincidirá con la del dato de entrada. En Monado,
+ubicaremos el filtro al final del pipeline de
+\passthrough{\lstinline!TrackerSlam!}, justo antes de devolverle la pose
+a la aplicación OpenXR, es decir luego de haber pasado por el
+procedimiento de predicción. Los filtros habilitados interceptan la pose
+con sus métodos de actualización respectivos y devuelven en su lugar una
+nueva pose filtrada con la misma timestamp. Los tres filtros se
+encuentran uno detrás del otro y son combinables.
+
+Expresado más formalmente, lo que tendremos es un conjunto de poses
+\(X_0, ..., X_k \in \R^7\) que ocurren a tiempos \(t_0 < ... < t_k\)
+respectivamente. Para \(i = 0, ..., k\) definimos \(X_i = (p_i, q_i)\)
+con \(p_i \in \R^3\) definido por los primeros tres componentes de
+\(X_i\) para representar la posición, mientras que definimos el
+cuaternión \(q_i\) para representar la orientación con coeficientes
+dados por los últimos cuatro componentes. Tenemos además las versiones
+filtradas de las poses anteriores \(\hat{X}_0, ..., \hat{X}_{k - 1}\) y
+querremos ahora computar la versión filtrada de la pose actual
+\(\hat{X}_k\).
+
+\hypertarget{media-muxf3vil}{%
+\paragraph{Media móvil}\label{media-muxf3vil}}
+
+El primer filtro es una \emph{media móvil}. El estado de este filtro
+consiste de un historial de poses de los últimos \(m\) segundos. El
+método de actualización registra la pose de entrada y su timestamp en
+este historial interno. Para computar la pose de salida en esa
+timestamp, se toma el promedio de las poses de los últimos \(w < m\)
+segundos (por defecto 66 ms). El parámetro \(w\) es configurable por el
+usuario.
+
+Cabe aclarar, que si bien la forma de calcular el promedio para las
+posiciones \(p_i\) debería resultar clara, promediar las orientaciones
+\(q_i\) expresadas mediante cuaterniones no es trivial. En este caso,
+nos aprovecharemos del hecho de que \(w\) suele ser pequeño y por ende
+contiene orientaciones que no cambian significativamente. Esto nos
+permite utilizar el resultado expuesto en
+{[}@gramkowAveragingRotations2001{]} que muestra que, para rotaciones de
+menos de 40 grados, calcular la media usual (y posteriormente
+normalizarla) es una muy buena aproximación con un error de menos del
+1\%.
+
+Tenemos entonces que el filtro queda definido por la siguiente ecuación.
+\begin{align}
+\hat{X}_k &= \frac{1}{|W|} \sum_{i \in W}{X_i}
+\quad \text{con} \\
+W &= \{ i : t_k - w \leq t_i \leq t_k \} \quad \text{(ventana del filtro)}
+\end{align}
+
+Notar que podemos definir el concepto de sumatoria componente a
+componente en \(\R^7\) gracias a la aproximación de los cuaterniones
+mencionada anteriormente.
+
+\hypertarget{suavizado-exponencial}{%
+\paragraph{Suavizado exponencial}\label{suavizado-exponencial}}
+
+Este filtro codifica en un único valor los datos históricos e integra
+nuevos datos con una intensidad dada por un \emph{factor de suavizado}
+\(\alpha \in [0, 1]\) configurable por el usuario (0.1 por defecto). En
+el caso de tener un único escalar \(x_k\) que filtrar, el suavizado
+exponencial queda definido de esta forma: \begin{align}
+\hat{x}_0 &= x_0 \\
+\hat{x}_k &= \alpha x_k + (1 - \alpha) \hat{x}_{k-1} \label{eq:exp-smoothing-scalar}
+\end{align}
+
+Reformulemos la \protect\hyperlink{eq:exp-smoothing-scalar}{Ecuación} de
+la siguiente manera: \begin{align}
+\hat{x}_k &= \alpha x_k + (1 - \alpha) \hat{x}_{k-1} \\
+&= \alpha x_k + \hat{x}_{k-1} - \alpha \hat{x}_{k-1} \\
+&= \hat{x}_{k-1} + \alpha (x_k - \hat{x}_{k-1})
+\end{align}
+
+Esto nos deja ver el paso de actualización del filtro como una
+interpolación (lineal) de \(\hat{x}_{k-1}\) hacia \(x_k\) con paso
+\(\alpha\). Utilizaremos esta idea para interpolar esféricamente la
+orientación de \(\hat{X}_k\). Tenemos entonces que el paso de
+actualización para este filtro queda definido como: \begin{align}
+\hat{X}_k &= (\hat{p}_k, \hat{q}_k) \\
+\hat{p}_k &= lerp(\hat{p}_{k-1}, p_k, \alpha) = \hat{p}_{k-1} + \alpha (p_k - \hat{p}_{k-1}) \\
+\hat{q}_k &= slerp(\hat{q}_{k-1}, q_k, \alpha) = \hat{q}_{k-1}
+(\hat{q}_{k-1}^{-1} q_k)^\alpha
+\end{align}
+
+\hypertarget{filtro-1}{%
+\paragraph{Filtro 1€}\label{filtro-1}}
+
+El filtro 1€ {[}@casiezFilterSimpleSpeedbased2012{]} se basa en el
+\protect\hyperlink{sec:exponential-smoothing}{Suavizado exponencial},
+pero utiliza un factor \(\alpha\) dinámico que se adapta automáticamente
+con base a la tasa de cambio de la señal. Reusamos también la idea de
+interpolar esféricamente para la orientación presentada en el filtro
+anterior. El filtro queda definido para la posición \(p_k\) de la
+siguiente manera: \begin{align}
+\hat{p}_0 &= p_0 \\
+\hat{p}_k &= lerp(\hat{p}_{k-1}, p_k, \alpha)
+\end{align}
+
+Con \(\alpha\) que se adapta con la velocidad de la señal: \begin{align}
+\alpha &= \frac{1}{1 + \frac{\tau}{\Delta t_k}} \\
+\Delta t_k &= t_k - t_{k-1} \\
+\tau &= \frac{1}{2 \pi f_C}
+\end{align}
+
+A continuación, \(f_C\) es la llamada \emph{frecuencia de
+corte}\footnote{Algunos lectores reconocerán que el término ``frecuencia
+  de corte'' proviene de los filtros \emph{low-pass} y efectivamente,
+  notarán que el filtro 1€ es de este tipo con la particularidad de
+  tener una frecuencia de corte que dinámica.} y posee un mínimo
+ajustable por el usuario \(f_{C_{min}}\) y un parámetro de intensidad de
+actualización \(\beta\) también configurable\footnote{Frecuencias de
+  corte bajas reducen el ruido de las poses a costa de aumentar la
+  latencia. La forma en la que \(f_c\) es definida resulta en valores
+  altos (y por ende con baja latencia) cuando se presentan cambios
+  significativos en las poses, mientras que para movimientos más suaves
+  se reduce \(f_c\) para a su vez disminuir el ruido.}. \begin{align}
+f_C &= f_{C_{min}} + \beta | \hat{\dot{p}}_k |
+\end{align}
+
+La velocidad de la señal es a su vez ajustada con otro filtro de
+suavizado exponencial con factor de suavizado fijo \(f_{C_d}\), también
+configurable por el usuario. \begin{align}
+\hat{\dot{p}}_0 &= 0 \\
+\hat{\dot{p}}_k &= lerp(\hat{\dot{p}}_{k-1}, \dot{p}_k, f_{C_d})
+\end{align}
+
+Con velocidades instantáneas. \begin{align}
+\dot{p}_0 &= 0 \\
+\dot{p}_k &= \frac{p_k - \hat{p}_{k-1}}{\Delta t_k}
+\end{align}
+
+La versión del filtro utilizada para la orientación \(q_k\) es análoga a
+la definición anterior con algunas aclaraciones:
+
+\begin{itemize}
+\tightlist
+\item
+  En lugar de \(lerp\) se utiliza \(slerp\).
+\item
+  Sobrecargamos el operador de resta de cuaterniones de la siguiente
+  forma: \(q_a - q_b = q_b^{-1} q_a\).
+\item
+  La norma de un cuaternión es equivalente a la norma euclídea en
+  \(\R^4\), es decir \(|q| = \sqrt{q_x^2 + q_y^2 + q_z^2 + q_w^2}\).
+\end{itemize}
+
+\hypertarget{recapitulando}{%
+\subsection{Recapitulando}\label{recapitulando}}
+
+Con la Figura @fig:slam-tracker-dataflow vista al principio de la
+sección en mente, hemos visto que se ha implementado una clase
+adaptadora \passthrough{\lstinline!TrackerSlam!} en Monado que funciona
+como punto central de comunicación con los sistemas de SLAM/VIO
+integrados. Esta clase además implementa funcionalidades de predicción y
+filtrado de poses que son configurables en runtime.
+
+Los controladores de dispositivos físicos serán los encargados de
+instanciar y comunicarse con esta clase. Veremos en la siguiente sección
+los dos controladores (y por ende dispositivos) que necesitaron ser
+expandidos para este trabajo y que constituyen una contribución
+importante al runtime.
+
+\hypertarget{controladores-en-monado}{%
+\section{Controladores en Monado}\label{controladores-en-monado}}
+
+En Monado, la interacción con la gran variedad de dispositivos que el
+runtime soporta es realizada mediante \emph{drivers} o
+\emph{controladores}. Estos, como se puede ver en la
+@fig:slam-tracker-dataflow, le permiten a Monado interactuar con
+sistemas XR físicos mediante abstracciones derivadas de los requisitos
+de OpenXR. Un sistema XR en este contexto hace referencia a un conjunto
+de dispositivos XR. Un dispositivo XR en forma intuitiva, es algún tipo
+de hardware que permite la entrada o salida de información con
+simulaciones de XR. Un caso paradigmático de un sistema XR podría
+considerarse el conjunto de casco y un par de mandos provistos por un
+fabricante.
+
+El concepto que se termina implementando en Monado es un poco más
+general, ya que además de sistemas físicos, soporta sistemas simulados
+que proveen distintas funcionalidades, como la capacidad de conectar
+dispositivos de forma remota, emulación de dispositivos con teclado y
+ratón (o mediante otros dispositivos que puedan ser de más fácil acceso
+como placas Arduino). En este trabajo se diferenció el concepto de
+\emph{fuente de datos} del de dispositivo ya que es en definitiva esto
+en lo que estaremos interesados para SLAM, obtener fuentes de datos de
+IMU y cámaras.
+
+\begin{figure}
+\hypertarget{fig:devices-ody-d455}{%
+\centering
+\includegraphics[width=1\textwidth,height=\textheight]{source/figures/devices-ody-d455.jpg}
+\caption{Dispositivos XR utilizados en este trabajo. A izquierda un
+casco Samsung Odyssey+ y a derecha una cámara Intel RealSense
+D455.}\label{fig:devices-ody-d455}
+}
+\end{figure}
+
+En este trabajo se desarrolló con los dos dispositivos mostrados en la
+Figura @fig:devices-ody-d455 como principales fuentes de datos para
+SLAM. A la derecha de la imagen tenemos una cámara de profundidad
+\emph{Intel RealSense D455}\footnote{https://www.intelrealsense.com/depth-camera-d455/}
+mientras que a izquierda tenemos un casco \emph{Samsung Odyssey+}. La
+línea de cámaras y módulos RealSense de Intel se enfoca en aplicaciones
+de robótica y visión por computadora, presentan distintos modelos con
+múltiples sensores especializados (en nuestro caso nos limitaremos a
+utilizar su IMU y cámaras estéreo). Estos vienen precalibrados, y además
+se tiene un SDK\footnote{https://github.com/IntelRealSense/librealsense}
+de código abierto en C/C++ (con \emph{bindings} para otros lenguajes)
+que facilita la obtención y manipulación de datos. En contraste con
+esto, el casco de Samsung es un casco ligado a la plataforma privativa
+\emph{Windows Mixed Reality (WMR)}\footnote{https://www.microsoft.com/en-us/mixed-reality/windows-mixed-reality}
+que solo funciona en sistemas operativos Windows. WMR incluye algoritmos
+propietarios de tracking por SLAM desarrollados por Microsoft.
+
+Mientras que la cámara D455 funcionó como un dispositivo sumamente
+versátil para el prototipado y experimentación con sistemas de SLAM, el
+Odyssey+ presenta serios desafíos que requirieron trabajo con la
+comunidad e ingeniería inversa para poder tener acceso a las fuentes de
+datos necesarias para el tracking por SLAM. Cabe aclarar, que anterior a
+este trabajo, y según mi mejor entendimiento, no existía forma de
+utilizar este tipo de cascos con tracking con seis grados para correr
+aplicaciones OpenXR sobre sistemas operativos basados en GNU/Linux
+\footnote{A pesar de que aún queda mucho por hacer para que el tracking
+  presentado en este trabajo llegue a niveles de calidad comparables a
+  la versión privativa de WMR, la contribución presentada deja asentada
+  en upstream una infraestructura sobre la que extender y mejorar el
+  ecosistema de VR para GNU/Linux.} \footnote{Cuando hablamos de
+  GNU/Linux nos referimos a sistemas operativos enfocados a computadoras
+  personales como Ubuntu o Manjaro. Técnicamente, los dispositivos
+  autónomos Oculus Quest de Meta (y otros), corren sobre sistemas
+  operativos basados en Android, que a su vez está basado en GNU/Linux.}.
+
+\hypertarget{consideraciones}{%
+\subsection{Consideraciones}\label{consideraciones}}
+
+Lo primero que se necesita para poder utilizar estos dispositivos para
+SLAM es conseguir el acceso a los datos que estos generan; o sea los
+flujos de imágenes y muestras de IMU. La forma y protocolos necesarios
+para comunicarse con estos dispositivos se realiza de maneras
+específicas para cada uno veremos en las secciones dedicadas, y este es
+uno de los trabajos fundamentales de un controlador. Además, un
+controlador tiene que ser capaz, no solo de obtener esta información
+sino que también de redirigirla a los módulos adecuados de Monado. En la
+implementación de estas ideas surge naturalmente una idea de fuentes y
+sumideros de datos. En el runtime, estos conceptos existían pero de
+forma específica para imágenes, y fueron extendidos para el manejo de
+muestras de IMU. Los dispositivos entonces funcionan como fuentes de
+datos, que instancian un \passthrough{\lstinline!TrackerSlam!} el cual
+les provee sumideros a los que redirigir sus muestras de IMU e imágenes.
+
+A la hora de implementar un controlador para una familia de dispositivos
+enfocado a SLAM, hay una serie de cuestiones a tener en cuenta. Desde el
+punto de vista de sistemas de SLAM/VIO, lo único que nos interesa es un
+flujo adecuado de imágenes de cámaras y muestras de IMU. Es en la
+definición de adecuado en donde se esconden varios detalles importantes.
+
+En primer lugar, es necesario acceder a la información de calibración,
+tanto intrínseca como extrínseca, de los dispositivos en cuestión, para
+poder comunicársela de alguna forma a los sistemas de SLAM. Esto incluye
+la calibración para los cuatro sensores usuales: giroscopio,
+acelerómetro y el par de cámaras estéreo. A pesar de ser conveniente
+recalibrar estos sistemas, ya que sus parámetros van modificandose con
+el tiempo, es usual que los fabricantes proveean alguna forma de acceder
+a parámetros para ciertos modelos de calibración y preferiremos usar
+estos para facilitarle la experiencia al usuario que no tendrá que
+calibrar sus dispositivos. Es vital que losk sistemas de SLAM soporten
+estos modelos, de lo contrario se necesitarán correcciones que
+usualmente terminan siendo mucho más costosas que si los sistemas
+hubieran soportado los modelos nativamente. Ejemplos de esto son la
+desdistorsión\footnote{Documentación de
+  \passthrough{\lstinline!cv::initUndistortRectifyMap!}:
+  https://docs.opencv.org/3.4/da/d54/group\_\_imgproc\_\_transform.html\#ga7dfb72c9cf9780a347fbe3d1c47e5d5a}
+y rectificación\footnote{Documentación de
+  \passthrough{\lstinline!cv::stereoRectify!}:
+  https://docs.opencv.org/3.4/d9/d0c/group\_\_calib3d.html\#ga617b1685d4059c6040827800e72ad2b6}
+de imágenes sobre la cual no nos explayaremos aquí, pero basta con
+entender que es una transformación aplicada a todos los píxeles de las
+imágenes para ``normalizarla'' de forma tal que a los sistemas se les
+facilite su utilización.
+
+Otro problema escencial que debe solucionarse es el de la sincronización
+de timestamps. Cualquier dispositivo que quiera utilizarse para SLAM,
+debería tener las muestras de todos sus sensores sincronizadas por
+hardware. Es decir, con timestamps que reflejen lo más precisamente
+posible los tiempos internos en los que las muestras se tomaron.
+Siguiendo con esta línea de problemas de marcas de tiempo, se necesita
+sincronizar de alguna manera los relojes del dispositivo con los del
+host para poder dar sentido a las estimaciones que los sistemas de SLAM
+realizarán cuando una aplicación OpenXR solicite la predicción de una
+pose a un tiempo dado.
+
+Entrando a problemas que afectan a sensores específicos, todos los
+sistemas de SLAM estudiados esperan datos de IMU que combinen en una
+única timestamp los valores del acelerómetro y los del giroscopio. De lo
+contrario será necesario realizar algún tipo de transformación sobre las
+muestras para simular esta condición. Por el lado de los sensores de la
+cámara, será importante que el obturador o \emph{shutter}\footnote{El
+  término obturador proviene de los sensores ópticos tradicionales. Un
+  obturador era una pieza mecánica en movimiento que controlaba el
+  tiempo durante el cual la película fotográfica era expuesta a la luz
+  de la escena. Actualmente el proceso de control de exposición se
+  realiza con interruptores en los sensores ópticos.} de las cámaras sea
+un \emph{global shutter}, es decir que todos los píxeles sean capturados
+en el mismo instante. Por el contrario, las cámaras que se utilizan
+habitualmente en dispositivos de consumo como teléfonos inteligentes,
+presentan un \emph{rolling shutter} en dónde los píxeles son capturados
+en un ``barrido'', fila por fila. Esto genera distorsiones\footnote{Esta
+  distorsión es homónima al tipo de cámara y se denomina el efecto de
+  rolling shutter.} significativas en presencia de movimientos
+suficientemente rápidos como se ve en la Figura @fig:rolling-shutter.
+Estas distorsiones afectan negativamente la capacidad de los algoritmos
+de SLAM para reconocer y trackear features de forma estable.
+
+\begin{figure}
+\hypertarget{fig:rolling-shutter}{%
+\centering
+\includegraphics[width=1\textwidth,height=\textheight]{source/figures/rolling-shutter.jpg}
+\caption{Ejemplo de la distorsión que se genera en cámaras con rolling
+shutter que capturan la imagen barriendo por filas de píxeles. Esto
+genera distorsiones en los objetos rígidos que son particularmente
+notables en presencia de movimientos de alta velocidad como los de la
+hélice. Esto no sucede con cámaras con global shutter que capturan todos
+los píxeles en el mismo momento.}\label{fig:rolling-shutter}
+}
+\end{figure}
+
+Otro aspecto muy importante a la hora de presentar muestras de imágenes
+a sistemas de SLAM es el de utilizar valores adecuados de
+\emph{exposición (exposure)} y \emph{ganancia (gain)}. La exposición o
+exposure es la cantidad de tiempo que el obturador de la cámara habilita
+la entrada de luz a los sensores ópticos por cada cuadro. Por otro lado,
+la ganancia controla el nivel de amplificación (usualmente digital) que
+ocurrirá sobre la señal original.
+
+Además de las problemáticas presentadas en la Figura @fig:expgain-grids,
+existen otros problemas a considerar relacionados también a estos
+parámetros y la iluminación del entorno del usuario. Uno de ellos es la
+\emph{sobreexposición}, cuando se presentan fuentes de iluminación muy
+intensas y la exposición (y también la ganancia) se encuentra en valores
+relativamente altos, los sensores ópticos son saturados y se pierde
+información. Esto se puede observar levemente en la imagen de la figura
+con mayor valor de exposición y ganancia. La problemática opuesta es
+cuando el usuario no posee suficiente cantidad de luz en su entorno y
+entonces el sistema de SLAM no es capaz de distinguir features. Una
+regla de pulgar
+
+\begin{figure}
+\hypertarget{fig:expgain-grids}{%
+\centering
+\includegraphics[width=1\textwidth,height=\textheight]{source/figures/expgain-grids.pdf}
+\caption{Ejemplos tomados con la D455 sobre los efectos de la exposición
+y ganancia sobre las muestras de imágenes. A izquierda se observa una
+región de 256 píxeles cuadrados con distintas configuraciones de tiempos
+de exposición y valores de ganancia. En esta región se encuentra un
+objeto en movimiento (el cuaderno con cuadrados). A derecha tenemos otra
+región más pequeña de 32 píxeles cuadrados provenientes de las mismas
+imágenes. Se puede observar en ambas grillas que aumentar ambos valores
+también incrementa el brillo de la imagen. Por su parte en la figura
+derecha podemos ver que aumentar la ganancia incrementa el ruido,
+mientras que en la figura izquierda se observa que valores altos de
+exposición incrementan el motion blur del objeto en
+movimiento.}\label{fig:expgain-grids}
+}
+\end{figure}
+
+\hypertarget{realsense}{%
+\subsection{RealSense}\label{realsense}}
+
+Para soportar la cámara D455, se extendió significativamente en Monado
+el controlador de dispositivos RealSense. Hasta el momento, la única
+cámara de esta línea soportadas por Monado era la T265\footnote{https://www.intelrealsense.com/tracking-camera-t265/}.
+Esta cámara es curiosa ya que presenta un algoritmo de SLAM privativo
+que corre dentro del dispositivo sin interacción del host. Este
+controlador se encargaba únicamente de inicializar el módulo interno de
+SLAM de la cámara y obtener las poses computadas por la misma para uso
+en las aplicacions OpenXR. Uno de sus usuarios clave era el casco libre
+del proyecto North Star \footnote{El proyecto North Star de UltraLeap
+  (prev. LeapMotion) es un casco AR ``DIY'' que puede fabricarse con
+  piezas impresas en 3D y la compra de algunos componentes.
+  https://developer.leapmotion.com/northstar} que la utiliza como
+principal forma de tracking; en a figura @fig:northstar-t265.jpg se
+puede ver uno de estos cascos con la cámara sujeta al mismo en la parte
+superior.
+
+\begin{figure}
+\hypertarget{fig:northstar-t265}{%
+\centering
+\includegraphics[width=1\textwidth,height=\textheight]{source/figures/northstar-t265.jpg}
+\caption{El casco AR libre del proyecto North Star con una camara T265
+sujeta en la parte superior.}\label{fig:northstar-t265}
+}
+\end{figure}
+
+Al no haber ningún tipo de manejo de las imágenes o muestras de IMU
+provistas por la cámara, se tuvo que implementar la gestión de estos
+sensores. Es ahora posible utilizar cualquier cámara de la línea
+RealSense que posea un par de cámaras estéreo y una IMU. Como trabajo
+futuro, sería interesante comparar el tracking interno de una T265 con
+los distintos sistemas externos integrados en este trabajo.
+
+\hypertarget{windows-mixed-reality}{%
+\subsection{Windows Mixed Reality}\label{windows-mixed-reality}}
 
 \clearpage
 

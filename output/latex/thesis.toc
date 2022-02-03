@@ -32,42 +32,108 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {paragraph}{{classicthesis Authors' note:}}{9}{paragraph*.5}%
 \defcounter {refsection}{0}\relax 
-\contentsline {part}{\numberline {ii}{The Showcase}}{11}{part.2}%
+\contentsline {chapter}{\numberline {2}{Fundamentos}}{11}{chapter.2}%
 \defcounter {refsection}{0}\relax 
-\contentsline {chapter}{\numberline {2}{Examples}}{13}{chapter.2}%
+\contentsline {section}{\numberline {2.1}{Optimización por cuadrados mínimos}}{11}{section.2.1}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {2.1}{A New Section}}{13}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}{Cuadrados mínimos lineales}}{11}{subsection.2.1.1}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.1.1}{Test for a Subsection}}{13}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}{Cuadrados mínimos no lineales}}{13}{subsection.2.1.2}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.1.2}{Autem Timeam}}{13}{subsection.2.1.2}%
+\contentsline {chapter}{\numberline {3}{Basalt}}{17}{chapter.3}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {2.2}{Another Section in This Chapter}}{14}{section.2.2}%
+\contentsline {section}{\numberline {3.1}{Problemáticas preliminares}}{17}{section.3.1}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.2.1}{Personas Initialmente}}{14}{subsection.2.2.1}%
+\contentsline {section}{\numberline {3.2}{Propuesta}}{18}{section.3.2}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {2.2.1.1}{A Subsubsection}}{14}{subsubsection.2.2.1.1}%
+\contentsline {section}{\numberline {3.3}{Implementación}}{18}{section.3.3}%
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{{A Paragraph Example}}{14}{paragraph*.8}%
+\contentsline {subsection}{\numberline {3.3.1}{Odometría visual-inercial}}{18}{subsection.3.3.1}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.2.2}{Linguistic Registrate}}{15}{subsection.2.2.2}%
+\contentsline {subsubsection}{\numberline {3.3.1.1}{Optical flow}}{19}{subsubsection.3.3.1.1}%
 \defcounter {refsection}{0}\relax 
-\contentsline {chapter}{\numberline {3}{Math Test Chapter}}{17}{chapter.3}%
+\contentsline {subsubsection}{\numberline {3.3.1.2}{Bundle adjustment visual-inercial}}{22}{subsubsection.3.3.1.2}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {3.1}{Some Formulas}}{17}{section.3.1}%
+\contentsline {paragraph}{{Inicialización y pre-integración}}{22}{paragraph*.7}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {3.2}{Various Mathematical Examples}}{18}{section.3.2}%
+\contentsline {paragraph}{{Base de datos de landmarks}}{25}{paragraph*.9}%
 \defcounter {refsection}{0}\relax 
-\contentsline {part}{\numberline {iii}{Appendix}}{19}{part.3}%
+\contentsline {paragraph}{{Keyframes}}{26}{paragraph*.10}%
 \defcounter {refsection}{0}\relax 
-\contentsline {chapter}{\numberline {A}{Appendix Test}}{21}{appendix.A}%
+\contentsline {chapter}{\numberline {4}{Contribuciones}}{31}{chapter.4}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {A.1}{Appendix Section Test}}{21}{section.A.1}%
+\contentsline {section}{\numberline {4.1}{Contexto}}{31}{section.4.1}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {A.2}{Another Appendix Section Test}}{21}{section.A.2}%
+\contentsline {section}{\numberline {4.2}{Tracking por SLAM para Monado}}{34}{section.4.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.2.1}{Interfaz externa}}{39}{subsection.4.2.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.2.2}{Implementaciones de la interfaz}}{42}{subsection.4.2.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.2.3}{Clase adaptadora}}{46}{subsection.4.2.3}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {4.2.3.1}{Predicción de poses}}{46}{subsubsection.4.2.3.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{{El problema}}{46}{paragraph*.18}%
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{{Análisis de un ejemplo}}{47}{paragraph*.19}%
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{{Implementación}}{49}{paragraph*.21}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {4.2.3.2}{Filtrado de poses}}{55}{subsubsection.4.2.3.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{{Media móvil}}{60}{paragraph*.26}%
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{{Suavizado exponencial}}{60}{paragraph*.27}%
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{{Filtro 1€}}{61}{paragraph*.28}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.2.4}{Recapitulando}}{62}{subsection.4.2.4}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {4.3}{Controladores en Monado}}{62}{section.4.3}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.3.1}{Consideraciones}}{65}{subsection.4.3.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.3.2}{RealSense}}{69}{subsection.4.3.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.3.3}{Windows Mixed Reality}}{69}{subsection.4.3.3}%
+\defcounter {refsection}{0}\relax 
+\contentsline {part}{\numberline {ii}{The Showcase}}{71}{part.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {5}{Examples}}{73}{chapter.5}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {5.1}{A New Section}}{73}{section.5.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {5.1.1}{Test for a Subsection}}{73}{subsection.5.1.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {5.1.2}{Autem Timeam}}{73}{subsection.5.1.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {5.2}{Another Section in This Chapter}}{74}{section.5.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {5.2.1}{Personas Initialmente}}{74}{subsection.5.2.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {5.2.1.1}{A Subsubsection}}{74}{subsubsection.5.2.1.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {paragraph}{{A Paragraph Example}}{74}{paragraph*.35}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {5.2.2}{Linguistic Registrate}}{75}{subsection.5.2.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {6}{Math Test Chapter}}{77}{chapter.6}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {6.1}{Some Formulas}}{77}{section.6.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {6.2}{Various Mathematical Examples}}{78}{section.6.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {part}{\numberline {iii}{Appendix}}{79}{part.3}%
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {A}{Appendix Test}}{81}{appendix.A}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {A.1}{Appendix Section Test}}{81}{section.A.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {A.2}{Another Appendix Section Test}}{81}{section.A.2}%
 \defcounter {refsection}{0}\relax 
 \vspace {\beforebibskip }
 \defcounter {refsection}{0}\relax 
-\contentsline {chapter}{\numberline {}{Bibliography}}{23}{section*.14}%
+\contentsline {chapter}{\numberline {}{Bibliography}}{83}{section*.41}%
 \defcounter {refsection}{0}\relax 
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 
