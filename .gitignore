@@ -1,4 +1,2 @@
 !.vscode/
 style/latex
-output/*
-!output/thesis.*
