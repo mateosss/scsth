@@ -8,35 +8,27 @@
 <!-- %\setcounter{page}{90} -->
 <!-- % use \cleardoublepage here to avoid problems with pdfbookmark -->
 \cleardoublepage
-\part{Some Kind of Manual}\label{pt:manual}
-
-<!-- #include Chapters/Chapter01.tex -->
-
+\ctparttext{Esta primera parte está enfocada a intentar entender el problema
+encarado en este trabajo. Además de una \italic{introducción} general a algunos
+de los conceptos de XR y SLAM, veremos los \italic{fundamentos} que serán
+utilizados de referencia a lo largo del escrito.}
 <!-- #include contents/fundamentals/fundamentals.md -->
+
+\cleardoublepage
+\ctparttext{En esta parte contextualizaremos los distintos sistemas estudiados y
+profundizaremos en uno de ellos: \italic{Basalt}. El estudio detallado de una
+implementación será particularmente esclarecedor al hilar sin generalizaciones
+multitud de métodos y algoritmos utilizados en contextos concretos y con
+objetivos bien definidos.}
 <!-- #include contents/basalt/basalt.md -->
+
+\cleardoublepage
+\ctparttext{En esta parte contextualizaremos los distintos sistemas estudiados y
+profundizaremos en uno de ellos: \italic{Basalt}. El estudio detallado de una
+implementación será particularmente esclarecedor al hilar sin generalizaciones
+multitud de métodos y algoritmos utilizados en contextos concretos y con
+objetivos bien definidos.}
 <!-- #include contents/contributions/contributions.md -->
-
-\clearpage
-
-\cleardoublepage
-\ctparttext{You can put some informational part preamble text here.
-Illo principalmente su nos. Non message \emph{occidental} angloromanic
-da. Debitas effortio simplificate sia se, auxiliar summarios da que,
-se avantiate publicationes via. Pan in terra summarios, capital
-interlingua se que. Al via multo esser specimen, campo responder que
-da. Le usate medical addresses pro, europa origine sanctificate nos se.}
-\part{The Showcase}\label{pt:showcase}
-
-<!-- #include Chapters/Chapter02.tex -->
-\clearpage
-<!-- #include Chapters/Chapter03.tex -->
-\clearpage
-
-\appendix
-\cleardoublepage
-\part{Appendix}
-<!-- #include Chapters/Chapter0A.tex -->
-\clearpage
 
 <!-- #if 0 -->
 <!-- #include abstract.md -->

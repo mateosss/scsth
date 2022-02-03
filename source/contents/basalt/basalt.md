@@ -17,7 +17,7 @@ scheme) que podría ser interesante discutir -->
 <!-- TODO@ref: Checkear que los 6 papers de basalt esten siendo citados -->
 <!-- TODO@ref: Los papers de orbslam y kimera deberían estar citados -->
 
-# Basalt
+# Implementación de Basalt
 
 ## Problemáticas preliminares
 

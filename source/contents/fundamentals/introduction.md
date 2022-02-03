@@ -1,7 +1,7 @@
-# Introducción (TODO)
+## Introducción (TODO)
 
 <!-- #if MODE == DRAFT -->
-## Resumen de los capítulos
+### Resumen de los capítulos
 
 \lipsum[1-3]
 <!-- #endif -->

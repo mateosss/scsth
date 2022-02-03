@@ -10,7 +10,7 @@ linear algebra done right?: aca ver si esta el teorema que uso sin demo si lo pu
 
 <!-- TODO@def: definir una función afín cuando explique SE(2)/SE(3) estaría bueno -->
 
-## Optimización por cuadrados mínimos
+### Optimización por cuadrados mínimos
 
 Como se verá más adelante, muchos de los problemas fundamentales de SLAM son
 problemas de optimización. Querremos minimizar una _función de error_ o
@@ -23,7 +23,7 @@ más sofisticados como _Levenberg-Marquardt_ o el _método dogleg_ que pueden
 aplicarse; no nos explayaremos en ellos en este trabajo, pero serán mencionados
 cuando sea pertinente.
 
-### Cuadrados mínimos lineales
+#### Cuadrados mínimos lineales
 
 Comencemos con el caso lineal que será necesario para luego aproximar el
 no-lineal.
@@ -173,7 +173,7 @@ ya que muestra que las columnas de $A$ son ortogonales al residual óptimo
 $A\hat{x} - b$ al ser su producto interno $0$. Esto suele llamarse el _principio
 de ortogonalidad_.
 
-### Cuadrados mínimos no lineales
+#### Cuadrados mínimos no lineales
 
 Generalizaremos el problema anterior para que también considere funciones no
 lineales. Reutilizaremos la notación introducida en la sección anterior.

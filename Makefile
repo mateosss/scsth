@@ -55,7 +55,7 @@ tex: md
 	--template="$(STYLEDIR)/template.tex" \
 	--include-in-header="$(STYLEDIR)/preamble.new.tex" \
 	--listings \
-	--top-level-division=chapter \
+	--top-level-division=part \
 	--verbose \
 	"$(OUTPUTDIR)/thesis.md"
 	2> $(OUTPUTDIR)/logs/pandoc.tex.log
