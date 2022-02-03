@@ -1667,22 +1667,31 @@ código que se presenta a continuación. Cabe aclarar que la función
 base a un espacio).
 
 <!-- TODO@end: chequear que este algoritmo no se corte en dos páginas -->
+<!-- TODO@fix: Add caption -->
 
 ```c++
 struct xrt_space_relation predict_pose(timestamp t) {
    if (relation_history.is_empty()) return {0};
 
+   // Espacio más reciente estimado con SLAM/VIO
    struct xrt_space_relation r = relation_history.get_latest();
    timestamp rt = timestamp_of(r);
 
-   if (predicción deshabilitada) return r;
-   if (uso de IMU deshabilitado or t < rt) relation_history.predict(t);
-   if (uso de giroscopio habilitado) {
+   // Variables configuradas por el usuario en tiempo de ejecución
+   bool pred_on = /* predicción habilitada por usuario? */
+   bool gyro_on = /* giroscopio habilitado por usuario? */
+   bool acc_on = /* acelerómetro habilitado por usuario? */
+   bool imu_on = gyro_on or acc_on;
+
+   // Flujo condicional de la predicción según la configuración
+   if (pred_on) return r;
+   if (!imu_on or t <= rt) relation_history.predict(t);
+   if (gyro_on) {
       vec3 avg_gyro = gyro_average_between(rt, t);
       vec3 world_gyro = rotate_angular_velocity(r.orientation, avg_gyro);
       r.angular_velocity = world_gyro;
    }
-   if (uso de acelerómetro habilitado) {
+   if (acc_on) {
       vec3 avg_accel = accel_average_between(rt, t);
       vec3 world_accel = rotate_linear_acceleration(r.orientation, avg_accel);
       world_accel += gravity_vector;

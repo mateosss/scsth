@@ -36,7 +36,7 @@
   linedheaders=false,       % chaper headers will have line above and beneath
   floatperchapter=true,     % numbering per chapter for all floats (i.e., Figure 1.1)
   eulermath=false,  % use awesome Euler fonts for mathematical formulae (only with pdfLaTeX)
-  beramono=true,    % toggle a nice monospaced font (w/ bold)
+  beramono=false,    % toggle a nice monospaced font (w/ bold)
   palatino=true,    % deactivate standard font for loading another one, see the last section at the end of this file for suggestions
   style=classicthesis % classicthesis, arsclassica
 }{classicthesis}
@@ -98,6 +98,8 @@
 
 \PassOptionsToPackage{fleqn}{amsmath}       % math environments and more by the AMS
   \usepackage{amsmath}
+\usepackage{amssymb}
+
 
 % ********************************************************************
 % General useful packages
@@ -135,24 +137,50 @@
 % 5. Setup code listings
 % ****************************************************************************************************
 \usepackage{listings}
-%\lstset{emph={trueIndex,root},emphstyle=\color{BlueViolet}}%\underbar} % for special keywords
-\lstset{language=[LaTeX]Tex,%C++,
+\usepackage{lstfiracode}
+% Special keywords
+\lstset{%
+  emph={%
+    % Types considered predefined
+    map,
+    LandmarkId,
+    FrameId,
+    Vector2,
+    XrPosef,
+    XrSpace,
+    XrTime,
+    timestamp,
+    vec3,
+    quat,
+    string,
+    % Types defined in this work by us
+    LandmarkDatabase,
+    Landmark,
+    Keypoint,
+    slam_tracker,
+    xrt_space_relation
+  },
+  emphstyle=\color{YellowOrange}
+}
+
+\lstset{language=C++,%[LaTeX]Tex,
   morekeywords={PassOptionsToPackage,selectlanguage},
-  keywordstyle=\color{RoyalBlue},%\bfseries,
+  style=FiraCodeStyle,
   basicstyle=\small\ttfamily,
-  %identifierstyle=\color{NavyBlue},
+  keywordstyle=\color{WildStrawberry},%\bfseries,
+  identifierstyle=\color{NavyBlue},
   commentstyle=\color{Green}\ttfamily,
-  stringstyle=\rmfamily,
-  numbers=none,%left,%
-  numberstyle=\scriptsize,%\tiny
-  stepnumber=5,
+  stringstyle=\color{Green}\ttfamily,
+  numbers=left,%left,%
+  numberstyle=\scriptsize\color{Gray},%\tiny
+  stepnumber=1,
   numbersep=8pt,
   showstringspaces=false,
-  breaklines=true,
-  %frameround=ftff,
-  %frame=single,
+  breaklines=false,
+  % frameround=ffff,
+  frame=lines,
   belowcaptionskip=.75\baselineskip
-  %frame=L
+  % frame=L
 }
 % ****************************************************************************************************
 

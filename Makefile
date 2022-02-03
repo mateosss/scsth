@@ -83,19 +83,19 @@ tex: md
 # 		--verbose \
 # 		2> $(OUTPUTDIR)/logs/pandoc.tex.log
 
-PDFLATEXCMD = pdflatex -halt-on-error \
+LATEXCMD = xelatex -halt-on-error \
 	-output-directory=$(OUTPUTDIR)/latex $(OUTPUTDIR)/thesis.tex 2>&1 && \
 	mv $(OUTPUTDIR)/latex/thesis.pdf $(OUTPUTDIR)/ \
-	| tee output/logs/pdflatex.pdf.log
+	| tee output/logs/xelatex.pdf.log
 
 pdfast: tex
-		$(PDFLATEXCMD)
+		$(LATEXCMD)
 
 pdfull: tex
-		$(PDFLATEXCMD)
+		$(LATEXCMD)
 		cd output/latex && bibtex thesis && cd ..
-		$(PDFLATEXCMD)
-		$(PDFLATEXCMD)
+		$(LATEXCMD)
+		$(LATEXCMD)
 all: md tex pdf
 
 .PHONY: help install md tex pdfull pdfast

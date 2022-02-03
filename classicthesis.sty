@@ -168,7 +168,7 @@
        }{\relax} % use class' default font
      \ifthenelse{\boolean{ct@beramono}}%
        {\setmonofont[Scale=0.85]{DejaVu Sans Mono}} % like Bera; Scale=MatchLowercase
-       {\setmonofont[Scale=1]{Latin Modern Mono}}
+       {\setmonofont[Scale=0.8]{Fira Code}[Contextuals=Alternate]}
      % font for the chapter numbers will be defined in the old way below
      % because there is no OpenType Euler font; this is how it should be done:
      %\newfontface\chapterNumber[Scale=7,Color=000000]{TeX Gyre Pagella Bold}
@@ -323,8 +323,8 @@
     \ifthenelse{\boolean{xetex}}{ % use fontspec features; \OR\boolean{luatex} does not work well
       \PackageInfo{classicthesis}{Using fontspec for character spacing.}%
       \microtypesetup{expansion=false}
-      \DeclareRobustCommand{\spacedallcaps}[1]{{\addfontfeature{LetterSpace=18.0}\ct@caps\MakeTextUppercase{#1}}}% WordSpace=1.8
-      \DeclareRobustCommand{\spacedlowsmallcaps}[1]{{\addfontfeatures{LetterSpace=14.0}\ct@caps\MakeTextLowercase{#1}}}% WordSpace=1.8
+      \DeclareRobustCommand{\spacedallcaps}[1]{{\addfontfeatures{LetterSpace=12.85}\ct@caps\MakeTextUppercase{#1}}}% WordSpace=1.8
+      \DeclareRobustCommand{\spacedlowsmallcaps}[1]{{\addfontfeatures{LetterSpace=10.0,Scale=1.072}\ct@caps\MakeTextLowercase{#1}}}% WordSpace=1.8
       }{\relax}
 
 % ********************************************************************
