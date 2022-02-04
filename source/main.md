@@ -30,17 +30,6 @@ multitud de métodos y algoritmos utilizados en contextos concretos y con
 objetivos bien definidos.}
 <!-- #include contents/contributions/contributions.md -->
 
-<!-- #if 0 -->
-<!-- #include abstract.md -->
-<!-- #include acknowledgements.md -->
-<!-- #include indices.md -->
-
-<!-- #include introduction.md -->
-
-<!-- #include contents/fundamentals/fundamentals.md -->
-<!-- #include contents/basalt/basalt.md -->
-<!-- #include contents/contributions/contributions.md -->
-
 <!-- #if MODE == DRAFT -->
 <!-- TODO: Delete these files once I'm done using their showcased features -->
 <!-- #include to_delete/10_chapter_2.md -->
@@ -51,7 +40,4 @@ objetivos bien definidos.}
 <!-- #include to_delete/15_conclusion.md -->
 <!-- #include to_delete/16_appendix_1.md -->
 <!-- #include to_delete/17_appendix_2.md -->
-<!-- #endif -->
-# Bibliografía {.unnumbered}
-
 <!-- #endif -->

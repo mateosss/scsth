@@ -45,12 +45,15 @@
 %********************************************************************
 % Bibliographies
 %*******************************************************
-\addbibresource{../../Bibliography.bib}
+\addbibresource{../../source/references.bib}
 
 %********************************************************************
 % Hyphenation
 %*******************************************************
 %\hyphenation{put special hyphenation here}
+% For using pandoc's --csl= option with a csl file. It works pretty well but I
+% wanted to preserve the bibliography section style. Finding a csl file that did
+% that was hard so I went with the --biblatex flag.
 
 \usepackage{placeins}
 \usepackage{algorithm}
@@ -275,12 +278,13 @@ Tenemos primero que \begin{align}
   encarar el problema mediante cálculo diferencial. En ese contexto, las
   ecuaciones normales surgen naturalmente a la hora de optimizar
   \(E(x)\) igualando su gradiente a \(0\). Para una demostración
-  mediante cálculo referirse a {[}@nocedalNumericalOptimization2006,
-  cap. 10{]}.} \footnote{La expresión \(A^T (A\hat{x} - b) = 0\) es
-  interesante, ya que muestra que las columnas de \(A\) son ortogonales
-  al residual óptimo \(A\hat{x} - b\) al ser su producto interno \(0\).
-  Esto suele llamarse el \emph{principio de ortogonalidad}.}. Veamos
-ahora para un \(x \in \R^n\) cualquiera. \begin{align}
+  mediante cálculo referirse a \autocite[cap.
+  10]{nocedalNumericalOptimization2006}.} \footnote{La expresión
+  \(A^T (A\hat{x} - b) = 0\) es interesante, ya que muestra que las
+  columnas de \(A\) son ortogonales al residual óptimo \(A\hat{x} - b\)
+  al ser su producto interno \(0\). Esto suele llamarse el
+  \emph{principio de ortogonalidad}.}. Veamos ahora para un
+\(x \in \R^n\) cualquiera. \begin{align}
   \| Ax - b \|^2 &= \| (Ax - A\hat{x}) + (A\hat{x} - b) \|^2 \\
   \text{(\cref{rmk:sqnormofsum})}\quad
   &= \| A(x - \hat{x}) \|^2 +  \| A\hat{x} - b \|^2 + 2 (A(x - \hat{x}))^T
@@ -322,10 +326,10 @@ no lo mostramos, se cumple que la solución no solo es única, sino que es
 el único punto con gradiente \(\nabla f(x) = 0\), es decir, el único
 punto optimizador, es un mínimo global. Para una demostración de esto,
 se utilizan argumentos de \emph{convexidad} sobre \(E(x)\); referirse a
-{[}@nocedalNumericalOptimization2006, cap. 10{]}. En el caso no lineal
-sin embargo, no tenemos ninguna de estas garantías, pueden existir
-infinitos máximos y mínimos globales, locales y cualquier combinación de
-estos.
+\autocite[cap. 10]{nocedalNumericalOptimization2006}. En el caso no
+lineal sin embargo, no tenemos ninguna de estas garantías, pueden
+existir infinitos máximos y mínimos globales, locales y cualquier
+combinación de estos.
 
 Lo que se hace entonces es utilizar algoritmos heurísticos; en nuestro
 caso el algoritmo de \emph{Gauss-Newton} que busca un mínimo de forma
@@ -430,12 +434,12 @@ puntos de cámaras con modelos de proyección que no tienen expresiones
 cerradas para su inversa, incluso veremos que la optimización central de
 los sistemas de SLAM/VIO, el bundle adjustment, son usualmente
 expresados y resueltos como una minimización de cuadrados no lineales.
-El desarrollo de esta sección está basada en
-{[}@nocedalNumericalOptimization2006, cap. 1, 2 y 10{]} y
-{[}@boydIntroductionAppliedLinear2018, cap. 11, 12, 15 y 18{]}; en esos
-trabajos se puede encontrar derivaciones alternativas e información de
-alternativas a Gauss-Newton más sofisticadas como Levenberg-Marquardt o
-el método dogleg.
+El desarrollo de esta sección está basada en \autocite[cap. 1, 2 y
+10]{nocedalNumericalOptimization2006} y \autocite[cap. 11, 12, 15 y
+18]{boydIntroductionAppliedLinear2018}; en esos trabajos se puede
+encontrar derivaciones alternativas e información de alternativas a
+Gauss-Newton más sofisticadas como Levenberg-Marquardt o el método
+dogleg.
 
 \cleardoublepage
 \ctparttext{En esta parte contextualizaremos los distintos sistemas estudiados y
@@ -485,12 +489,13 @@ en el que esta integración incurre, es que las mediciones de las IMU son
 altamente ruidosas, y acumularlas durante tiempos prolongados acumula
 también cantidades significativas de error. Este factor nos limita el
 tiempo que puede transcurrir entre dos keyframes; como ejemplo en
-{[}@mur-artalVisualInertialMonocularSLAM2017{]} se habla de keyframes
-que no pueden tener más de 0.5 segundos entre sí. A su vez, tener
-keyframes a muy bajas frecuencias afecta la calidad de las estimaciones
-de velocidad y biases; estos últimos son offsets de medición
-inherentemente variables de los acelerómetros y giroscopios a los que es
-necesario estimar para compensar por ellos en la medición final.
+\autocite{mur-artalVisualInertialMonocularSLAM2017} se habla de
+keyframes que no pueden tener más de 0.5 segundos entre sí. A su vez,
+tener keyframes a muy bajas frecuencias afecta la calidad de las
+estimaciones de velocidad y biases; estos últimos son offsets de
+medición inherentemente variables de los acelerómetros y giroscopios a
+los que es necesario estimar para compensar por ellos en la medición
+final.
 
 \hypertarget{propuesta}{%
 \chapter{Propuesta}\label{propuesta}}
@@ -576,7 +581,7 @@ El \href{TODO}{módulo} de optical flow corre en un thread individual y
 es por donde las muestras del par de cámaras estéreo ingresan al
 pipeline de Basalt. Inicialmente se genera una representación piramidal
 de las imágenes, o también llamada de \emph{mipmaps}, esta es una forma
-tradicional {[}@williamsPyramidalParametrics1983{]} de almacenar una
+tradicional \autocite{williamsPyramidalParametrics1983} de almacenar una
 imagen en memoria junto a versiones reescaladas de la misma (Fig.
 \figref{fig:mipmap}). Los mipmaps tienen múltiples utilidades en
 computación gráfica (e.g., \emph{filtrado trilineal}, \emph{LODs},
@@ -590,10 +595,10 @@ Representación piramidal (mipmaps) de un cuadro del conjunto de datos EuRoC.
 
 Posteriormente se realiza la detección de features nuevas sobre las
 imágenes utilizando el algoritmo \emph{FAST} para detección de esquinas
-{[}@rostenFasterBetterMachine2010a{]} implementado sobre OpenCV. Aquí es
-notable aclarar que Basalt es uno de los sistemas que menos depende de
-OpenCV, ya que tiende a re implementar muchas de las técnicas y
-algoritmia de forma especializada y, como veremos en otros módulos,
+\autocite{rostenFasterBetterMachine2010a} implementado sobre OpenCV.
+Aquí es notable aclarar que Basalt es uno de los sistemas que menos
+depende de OpenCV, ya que tiende a re implementar muchas de las técnicas
+y algoritmia de forma especializada y, como veremos en otros módulos,
 otras tareas razonablemente complejas como la optimización de grafos de
 poses se implementan también dentro del proyecto y sin recurrir a
 librerías externas. Esta es una de las varias razones por las que este
@@ -658,9 +663,9 @@ ante cambios de iluminación.
 
 Los detalles del cálculo de gradientes y jacobianos están basados en el
 método de Lucas-Kanade para tracking de features (\emph{KLT})
-{[}@lucasIterativeImageRegistration1981{]}. El uso adicional de mipmaps
-sobre KLT fue originalmente expuesto en
-{[}@bouguetPyramidalImplementationLucas1999{]}.
+\autocite{lucasIterativeImageRegistration1981}. El uso adicional de
+mipmaps sobre KLT fue originalmente expuesto en
+\autocite{bouguetPyramidalImplementationLucas1999}.
 
 Para asegurar que la estimación fue exitosa, se invierte el problema y
 se intenta trackear desde la imagen nueva hacia la inicial y, si el
@@ -706,8 +711,8 @@ Basalt, es que el acelerómetro es utilizado como origen del agente
 localizado y, fundándose en esto, se fija su orientación. Es decir, no
 se aplica ningún tipo de corrección de orientación al calibrar las
 muestras del acelerómetro. Esto hace que la matriz de alineamiento para
-el acelerómetro tenga ceros en su triángulo superior (ver
-{[}@schubertBasaltTUMVI2018 secc. IV.B{]} y \emph{discusión relacionada
+el acelerómetro tenga ceros en su triángulo superior (ver \autocite[
+secc. IV.B]{schubertBasaltTUMVI2018} y \emph{discusión relacionada
 \footnote{\url{https://gitlab.com/VladyslavUsenko/basalt-headers/-/issues/8}}}).
 
 Luego de recibir esta primer muestra de la IMU se comienza la ejecución
@@ -784,10 +789,10 @@ la siguiente manera:
 Es destacable mencionar que este tipo de pre-integración es también
 utilizado por los otros sistemas estudiados Kimera y ORB-SLAM3. La
 ventaja que presenta es que sus características son bien conocidas
-gracias al trabajo de {[}@forsterOnManifoldPreintegrationRealTime2017{]}
-y las expresiones necesarias para el cómputo de residuales, como sus
-jacobianos, son cerradas y fueron derivadas de forma ejemplar en dicho
-trabajo.
+gracias al trabajo de
+\autocite{forsterOnManifoldPreintegrationRealTime2017} y las expresiones
+necesarias para el cómputo de residuales, como sus jacobianos, son
+cerradas y fueron derivadas de forma ejemplar en dicho trabajo.
 
 Entonces, con esta muestra pre-integrada junto a los datos del nuevo
 cuadro (sus keypoints), se procede a la etapa de
@@ -1298,7 +1303,7 @@ consideraciones de los puntos marcados en el código:
   proveer la funcionalidad requerida. Este patrón de desarrollo es
   usualmente conocido como \emph{pointer to implementation} (o
   \emph{PIMPL}), a \passthrough{\lstinline!impl!} se lo denomina un
-  \emph{puntero opaco} {[}@lakosLargeScaleSoftwareDesign1996{]}.
+  \emph{puntero opaco} \autocite{lakosLargeScaleSoftwareDesign1996}.
 \end{enumerate}
 
 Esta interfaz no es perfecta: no contempla magnetómetros, asume una
@@ -1685,10 +1690,10 @@ espacio más reciente del historial para realizar el cómputo con
 extrapolar hacia el pasado lejano\footnote{La especificación de OpenXR
   tiene una sección dedicada a las restricciones y condiciones a los que
   el runtime está sujeto respecto a solicitudes en el pasado y en el
-  futuro por parte del usuario. Ver
-  {[}@thekhronosgroupinc.OpenXRSpecification, secc. 2.14{]}}, o sea
-fuera del registro del historial, se utilizará el espacio más antiguo
-almacenado y \(\Delta T^{-1}\).
+  futuro por parte del usuario. Ver \autocite[secc.
+  2.14]{thekhronosgroupinc.OpenXRSpecification}}, o sea fuera del
+registro del historial, se utilizará el espacio más antiguo almacenado y
+\(\Delta T^{-1}\).
 
 Sería razonable, como primera aproximación a nuestro problema, utilizar
 este historial de espacios. Esto nos garantiza que podamos proveerle al
@@ -1747,8 +1752,8 @@ odometría que sus sensores proveen resulta suficientemente precisa.
 La clase adaptadora tiene acceso a estas muestras, ya que las intercepta
 para redirigirlas hacia los sistemas de SLAM. Utilizaremos un concepto
 similar al de la pre-integración de muestras de IMU explorado en la
-sección @seq:basalt-preintegration con algunas ideas relacionadas con
-las ecuaciones presentadas a partir de la
+sección \textcite{seq:basalt-preintegration} con algunas ideas
+relacionadas con las ecuaciones presentadas a partir de la
 \protect\hyperlink{eq:imu-preintegration}{}. Consideremos que no vamos a
 querer interferir de ninguna manera con las estimaciones generadas por
 los sistemas de SLAM, ya que no querremos distorsionar dichas poses. El
@@ -1937,7 +1942,7 @@ Es entonces por estas razones, que se implementaron tres métodos
 sencillos de filtrado combinables para suavizar las trayectorias
 estimadas y que intentan minimizar los problemas expuestos. Se deja como
 trabajo futuro el uso de filtros más elaborados como los filtros Kalman
-{[}@welchSCAATIncrementalTracking1997, ap. B{]}. Cabe aclarar que en
+\autocite[ap. B]{welchSCAATIncrementalTracking1997}. Cabe aclarar que en
 general, el uso de filtros también presenta una desventaja fundamental.
 Esta es, la introducción de latencia artificial al sistema, ya que para
 poder suavizar este ruido, los filtros tienden a reducir cambios
@@ -1945,8 +1950,8 @@ abruptos en la trayectoria, incluso cuando estos sean realmente los
 movimientos que el usuario realizó físicamente.
 
 Presentaremos tres filtros, con el más sofisticado basado en
-{[}@casiezFilterSimpleSpeedbased2012{]}. Además, dicho trabajo cubre el
-resto de filtros presentados, muestra gráficas comparativas, y es
+\autocite{casiezFilterSimpleSpeedbased2012}. Además, dicho trabajo cubre
+el resto de filtros presentados, muestra gráficas comparativas, y es
 también una buena lectura para contextualizar el uso de filtros para
 tracking de movimientos humanos. Los filtros presentados aquí y en el
 trabajo mencionado pueden visualizarse interactivamente en la siguiente
@@ -1995,10 +2000,10 @@ posiciones \(p_i\) debería resultar clara, promediar las orientaciones
 nos aprovecharemos del hecho de que \(w\) suele ser pequeño y por ende
 contiene orientaciones que no cambian significativamente. Esto nos
 permite utilizar el resultado expuesto en
-{[}@gramkowAveragingRotations2001{]} que muestra que, para rotaciones de
-menos de 40 grados, calcular la media usual (y posteriormente
-normalizarla) es una muy buena aproximación con un error de menos del
-1\%.
+\autocite{gramkowAveragingRotations2001} que muestra que, para
+rotaciones de menos de 40 grados, calcular la media usual (y
+posteriormente normalizarla) es una muy buena aproximación con un error
+de menos del 1\%.
 
 Tenemos entonces que el filtro queda definido por la siguiente ecuación.
 \begin{align}
@@ -2044,7 +2049,7 @@ actualización para este filtro queda definido como: \begin{align}
 \hypertarget{filtro-1}{%
 \subsubsection{Filtro 1€}\label{filtro-1}}
 
-El filtro 1€ {[}@casiezFilterSimpleSpeedbased2012{]} se basa en el
+El filtro 1€ \autocite{casiezFilterSimpleSpeedbased2012} se basa en el
 \protect\hyperlink{sec:exponential-smoothing}{Suavizado exponencial},
 pero utiliza un factor \(\alpha\) dinámico que se adapta automáticamente
 con base a la tasa de cambio de la señal. Reusamos también la idea de
@@ -2337,7 +2342,8 @@ futuro, sería interesante comparar el tracking interno de una T265 con
 los distintos sistemas externos integrados en este trabajo.
 
 \hypertarget{windows-mixed-reality}{%
-\section{Windows Mixed Reality}\label{windows-mixed-reality}}
+\section*{Windows Mixed Reality}\label{windows-mixed-reality}}
+\addcontentsline{toc}{section}{Windows Mixed Reality}
 
 %********************************************************************
 % Other Stuff in the Back

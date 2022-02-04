@@ -6,8 +6,7 @@ STYLEDIR=$(BASEDIR)/style
 SCRATCHDIR=$(BASEDIR)/scratch
 EXTERNALDIR=$(BASEDIR)/external
 
-# BIBFILE=$(INPUTDIR)/references.bib
-BIBFILE=Bibliography.bib
+BIBFILE=$(INPUTDIR)/references.bib
 
 help:
 	@echo ''
@@ -56,6 +55,10 @@ tex: md
 	--include-in-header="$(STYLEDIR)/preamble.new.tex" \
 	--listings \
 	--top-level-division=part \
+	--metadata=link-citations:true \
+	--bibliography="$(BIBFILE)" \
+	--biblatex \
+	--citeproc \
 	--verbose \
 	"$(OUTPUTDIR)/thesis.md"
 	2> $(OUTPUTDIR)/logs/pandoc.tex.log
