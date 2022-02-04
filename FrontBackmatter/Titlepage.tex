@@ -2,36 +2,52 @@
 % Titlepage
 %*******************************************************
 \begin{titlepage}
-    %\pdfbookmark[1]{\myTitle}{titlepage}
-    % if you want the titlepage to be centered, uncomment and fine-tune the line below (KOMA classes environment)
     \begin{addmargin}[-1cm]{-3cm}
     \begin{center}
-        \large
 
-        \hfill
+    \vspace*{.06\textheight}
+    % {\scshape\LARGE \myUni \\ \myLocation\par}\vspace{1.5cm} % University name
+    {\scshape\LARGE \myUni\par}\vspace{1.5cm} % University name
+    \textsc{\Large Trabajo Especial}\\[0.5cm] % Thesis type
 
-        \vfill
+    \HRule \\[0.4cm] % Horizontal line
+    % {\huge \bfseries \spacedallcaps{\myTitle}\par}\vspace{0.4cm} % Thesis title
+    {\Large \bfseries \spacedallcaps{\myTitle}\par}\vspace{0.4cm} % Thesis title
+    \HRule \\[1.5cm] % Horizontal line
 
-        \begingroup
-            \color{CTtitle}\spacedallcaps{\myTitle} \\ \bigskip
-        \endgroup
+    \begin{minipage}[t]{0.4\textwidth}
+    \begin{flushleft} \large
+    \emph{Autor:}\\
+    \href{https://www.famaf.unc.edu.ar/~mdemayo366/}{\myName} % Author name - remove the \href bracket to remove the link
+    \end{flushleft}
+    \end{minipage}
+    \begin{minipage}[t]{0.4\textwidth}
+    \begin{flushright} \large
+    \emph{Director:} \\
+    \href{https://cs.famaf.unc.edu.ar/~nicolasw/}{\mySupervisor} % Supervisor name - remove the \href bracket to remove the link
+    \end{flushright}
+    \end{minipage}\\[2cm]
 
-        \spacedlowsmallcaps{\myName}
+    \large \textit{\myDegree}\\[0.5cm] % University requirement text
+    \myUni\\ \myLocation\\[2cm] % Research group name and department name
 
-        \vfill
+    \includegraphics[height=1cm]{style/ccby.pdf}\\[0.3cm]
+    \textit{Esta obra está bajo una Licencia Creative Commons\\ Atribución 4.0 Internacional.}\\[1cm]
 
-        \includegraphics[width=6cm]{style/unc.pdf} \\ \medskip
 
-        \mySubtitle \\ \medskip
-        % \myDegree \\
-        %\myDepartment \\
-        %\myFaculty \\
-        %\myUni \\ \bigskip
+    % \vfill
 
-        \myTime\ -- \myVersion
+    {\large \myTime}
 
-        \vfill
+    \vfill
+
+    \begin{center}
+        \includegraphics[height=2cm]{style/unc.pdf}
+        \includegraphics[height=2cm]{style/famaf.pdf}
+    \end{center}
+    % \vfill
+
 
     \end{center}
-  \end{addmargin}
+    \end{addmargin}
 \end{titlepage}

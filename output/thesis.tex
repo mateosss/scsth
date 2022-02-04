@@ -86,6 +86,8 @@
 \newcounter{mparcnt}
 \renewcommand\themparcnt{${}^{\arabic{footnote}}$}
 \newcommand\marginnote[1]{\stepcounter{footnote}\themparcnt \marginpar{\themparcnt #1}}
+
+\newcommand{\HRule}{\rule{.9\linewidth}{.6pt}} % New command to make the lines in the
 % ********************************************************************
 % GO!GO!GO! MOVE IT!
 %*******************************************************
@@ -101,14 +103,14 @@
 %********************************************************************
 % Frontmatter
 %*******************************************************
-\include{FrontBackmatter/DirtyTitlepage}
+% \include{FrontBackmatter/DirtyTitlepage}
 \include{FrontBackmatter/Titlepage}
-\include{FrontBackmatter/Titleback}
-\cleardoublepage\include{FrontBackmatter/Dedication}
+% \include{FrontBackmatter/Titleback}
+% \cleardoublepage\include{FrontBackmatter/Dedication}
 %\cleardoublepage\include{FrontBackmatter/Foreword}
 \cleardoublepage\include{FrontBackmatter/Abstract}
-\cleardoublepage\include{FrontBackmatter/Publications}
-\cleardoublepage\include{FrontBackmatter/Acknowledgments}
+% \cleardoublepage\include{FrontBackmatter/Publications}
+% \cleardoublepage\include{FrontBackmatter/Acknowledgments}
 \cleardoublepage\include{FrontBackmatter/Contents}
 
 % Mainmatter and backmatter start (appendix)
@@ -2341,8 +2343,8 @@ los distintos sistemas externos integrados en este trabajo.
 % Other Stuff in the Back
 %*******************************************************
 \cleardoublepage\include{FrontBackmatter/Bibliography}
-\cleardoublepage\include{FrontBackmatter/Declaration}
-\cleardoublepage\include{FrontBackmatter/Colophon}
+% \cleardoublepage\include{FrontBackmatter/Declaration}
+% \cleardoublepage\include{FrontBackmatter/Colophon}
 % ********************************************************************
 % Game Over: Restore, Restart, or Quit?
 %*******************************************************
