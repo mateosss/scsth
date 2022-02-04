@@ -45,18 +45,14 @@
 % ****************************************************************************************************
 % 2. Personal data and user ad-hoc commands (insert your own data here)
 % ****************************************************************************************************
-\newcommand{\myTitle}{A Classic Thesis Style\xspace}
-\newcommand{\mySubtitle}{An Homage to The Elements of Typographic Style\xspace}
-\newcommand{\myDegree}{Doktor-Ingenieur (Dr.-Ing.)\xspace}
-\newcommand{\myName}{André Miede \& Ivo Pletikosić\xspace}
-\newcommand{\myProf}{Put name here\xspace}
-\newcommand{\myOtherProf}{Put name here\xspace}
-\newcommand{\mySupervisor}{Put name here\xspace}
-\newcommand{\myFaculty}{Put data here\xspace}
-\newcommand{\myDepartment}{Put data here\xspace}
-\newcommand{\myUni}{Put data here\xspace}
-\newcommand{\myLocation}{Saarbrücken\xspace}
-\newcommand{\myTime}{June 2018\xspace}
+\newcommand{\myTitle}{Localización en tiempo real con VIO/SLAM para aplicaciones de XR\xspace}
+\newcommand{\mySubtitle}{Extensión del runtime OpenXR de código libre Monado con sistemas de VIO/SLAM\xspace}
+\newcommand{\myDegree}{Licenciatura en Ciencias de la Computación\xspace}
+\newcommand{\myName}{Mateo de Mayo\xspace}
+\newcommand{\mySupervisor}{Nicolás Wolovick\xspace}
+\newcommand{\myUni}{Universidad Nacional de Córdoba\xspace}
+\newcommand{\myLocation}{Facultad de Matemática, Astronomía, Física y Computación\xspace}
+\newcommand{\myTime}{Marzo 2022\xspace}
 \newcommand{\myVersion}{\classicthesis}
 
 % ********************************************************************
@@ -76,10 +72,10 @@
 % ********************************************************************
 % Packages with options that might require adjustments
 % ********************************************************************
-\PassOptionsToPackage{ngerman,american}{babel} % change this to your language(s), main language last
 % Spanish languages need extra options in order to work with this template
-%\PassOptionsToPackage{spanish,es-lcroman}{babel}
-    \usepackage{babel}
+% \PassOptionsToPackage{spanish,es-lcroman}{babel}
+% \PassOptionsToPackage{american}{babel} % change this to your language(s), main language last
+\usepackage[spanish, es-lcroman]{babel}
 
 \usepackage{csquotes}
 \PassOptionsToPackage{%
@@ -212,7 +208,7 @@
   urlcolor=CTurl, linkcolor=CTlink, citecolor=CTcitation, %pagecolor=RoyalBlue,%
   %urlcolor=Black, linkcolor=Black, citecolor=Black, %pagecolor=Black,%
   pdftitle={\myTitle},%
-  pdfauthor={\textcopyright\ \myName, \myUni, \myFaculty},%
+  pdfauthor={\myName},%
   pdfsubject={},%
   pdfkeywords={},%
   pdfcreator={pdfLaTeX},%
@@ -232,24 +228,23 @@
 \makeatletter
 \@ifpackageloaded{babel}%
   {%
-    \addto\extrasamerican{%
-      \renewcommand*{\figureautorefname}{Figure}%
-      \renewcommand*{\tableautorefname}{Table}%
-      \renewcommand*{\partautorefname}{Part}%
-      \renewcommand*{\chapterautorefname}{Chapter}%
-      \renewcommand*{\sectionautorefname}{Section}%
-      \renewcommand*{\subsectionautorefname}{Section}%
-      \renewcommand*{\subsubsectionautorefname}{Section}%
-    }%
-    \addto\extrasngerman{%
-      \renewcommand*{\paragraphautorefname}{Absatz}%
-      \renewcommand*{\subparagraphautorefname}{Unterabsatz}%
-      \renewcommand*{\footnoteautorefname}{Fu\"snote}%
-      \renewcommand*{\FancyVerbLineautorefname}{Zeile}%
-      \renewcommand*{\theoremautorefname}{Theorem}%
-      \renewcommand*{\appendixautorefname}{Anhang}%
-      \renewcommand*{\equationautorefname}{Gleichung}%
-      \renewcommand*{\itemautorefname}{Punkt}%
+    \addto\extrasspanish{%
+      \renewcommand*{\figureautorefname}{Figura}%
+      \renewcommand*{\tableautorefname}{Tabla}%
+      \renewcommand*{\partautorefname}{Parte}%
+      \renewcommand*{\chapterautorefname}{Capítulo}%
+      \renewcommand*{\sectionautorefname}{Sección}%
+      \renewcommand*{\subsectionautorefname}{Sección}%
+      \renewcommand*{\subsubsectionautorefname}{Sección}%
+      \renewcommand*{\paragraphautorefname}{Párrafo}%
+      \renewcommand*{\subparagraphautorefname}{Subpárrafo}%
+      \renewcommand*{\footnoteautorefname}{Nota al pie}%
+      \renewcommand*{\FancyVerbLineautorefname}{Línea}%
+      \renewcommand*{\theoremautorefname}{Teorema}%
+      \renewcommand*{\appendixautorefname}{Apéndice}%
+      \renewcommand*{\equationautorefname}{Ecuación}%
+      \renewcommand*{\itemautorefname}{Ítem}%
+      \renewcommand*{\contentsname}{Índice general}%
     }%
       % Fix to getting autorefs for subfigures right (thanks to Belinda Vogt for changing the definition)
       \providecommand{\subfigureautorefname}{\figureautorefname}%
