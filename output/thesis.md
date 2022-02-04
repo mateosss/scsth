@@ -191,7 +191,7 @@ presentada en este trabajo no es la única. De hecho, es común encarar el
 problema mediante cálculo diferencial. En ese contexto, las ecuaciones normales
 surgen naturalmente a la hora de optimizar $E(x)$ igualando su gradiente a $0$.
 Para una demostración mediante cálculo referirse a
-[@nocedalNumericalOptimization2006, cap. 10].
+@nocedalNumericalOptimization2006, cap. 10.
 
 [^orthogonalityprinciple]: La expresión $A^T (A\hat{x} - b) = 0$ es interesante,
 ya que muestra que las columnas de $A$ son ortogonales al residual óptimo
@@ -226,7 +226,7 @@ lineal, si bien no lo mostramos, se cumple que la solución no solo es única,
 sino que es el único punto con gradiente $\nabla f(x) = 0$, es decir, el único
 punto optimizador, es un mínimo global. Para una demostración de esto, se
 utilizan argumentos de _convexidad_ sobre $E(x)$; referirse a
-[@nocedalNumericalOptimization2006, cap. 10]. En el caso no lineal sin embargo,
+@nocedalNumericalOptimization2006, cap. 10. En el caso no lineal sin embargo,
 no tenemos ninguna de estas garantías, pueden existir infinitos máximos y
 mínimos globales, locales y cualquier combinación de estos.
 
@@ -340,8 +340,8 @@ proyección que no tienen expresiones cerradas para su inversa, incluso veremos
 que la optimización central de los sistemas de SLAM/VIO, el bundle adjustment,
 son usualmente expresados y resueltos como una minimización de cuadrados no
 lineales. El desarrollo de esta sección está basada en
-[@nocedalNumericalOptimization2006, cap. 1, 2 y 10] y
-[@boydIntroductionAppliedLinear2018, cap. 11, 12, 15 y 18]; en esos trabajos se
+@nocedalNumericalOptimization2006, cap. 1, 2 y 10 y
+@boydIntroductionAppliedLinear2018, cap. 11, 12, 15 y 18; en esos trabajos se
 puede encontrar derivaciones alternativas e información de alternativas a
 Gauss-Newton más sofisticadas como Levenberg-Marquardt o el método dogleg.
 
@@ -410,7 +410,7 @@ una única entrada del optimizador. Sin embargo, un problema en el que esta
 integración incurre, es que las mediciones de las IMU son altamente ruidosas, y
 acumularlas durante tiempos prolongados acumula también cantidades
 significativas de error. Este factor nos limita el tiempo que puede transcurrir
-entre dos keyframes; como ejemplo en [@mur-artalVisualInertialMonocularSLAM2017]
+entre dos keyframes; como ejemplo en @mur-artalVisualInertialMonocularSLAM2017
 se habla de keyframes que no pueden tener más de 0.5 segundos entre sí. A su
 vez, tener keyframes a muy bajas frecuencias afecta la calidad de las
 estimaciones de velocidad y biases; estos últimos son offsets de medición
@@ -506,8 +506,8 @@ Representación piramidal (mipmaps) de un cuadro del conjunto de datos EuRoC.
 }
 
 Posteriormente se realiza la detección de features nuevas sobre las imágenes
-utilizando el algoritmo _FAST_ para detección de esquinas
-[@rostenFasterBetterMachine2010a] implementado sobre OpenCV. Aquí es notable
+utilizando el algoritmo _FAST_ [@rostenFasterBetterMachine2010a] para detección
+de esquinas implementado sobre OpenCV. Aquí es notable
 aclarar que Basalt es uno de los sistemas que menos depende de OpenCV, ya que
 tiende a re implementar muchas de las técnicas y algoritmia de forma
 especializada y, como veremos en otros módulos, otras tareas razonablemente
@@ -576,9 +576,9 @@ normalizar las intensidades obtenemos un valor que es invariante incluso ante
 cambios de iluminación.
 
 Los detalles del cálculo de gradientes y jacobianos están basados en el método
-de Lucas-Kanade para tracking de features (_KLT_)
-[@lucasIterativeImageRegistration1981]. El uso adicional de mipmaps sobre KLT
-fue originalmente expuesto en [@bouguetPyramidalImplementationLucas1999].
+de @lucasIterativeImageRegistration1981 para tracking de features (_KLT_). El
+uso adicional de mipmaps sobre KLT fue originalmente expuesto en
+@bouguetPyramidalImplementationLucas1999.
 
 <!-- TODO@def: "asegurar que la estimacion fue exitosa" == outlier filtering.
 Quizás hablar un poco de eso -->
@@ -634,7 +634,7 @@ de Basalt, es que el acelerómetro es utilizado como origen del agente localizad
 y, fundándose en esto, se fija su orientación. Es decir, no se aplica ningún
 tipo de corrección de orientación al calibrar las muestras del acelerómetro.
 Esto hace que la matriz de alineamiento para el acelerómetro tenga ceros en su
-triángulo superior (ver [@schubertBasaltTUMVI2018 secc. IV.B] y _discusión
+triángulo superior (ver @schubertBasaltTUMVI2018 secc. IV.B y _discusión
 relacionada [^basalt-headers-issue8]_).
 
 <!-- TODO@style: Make footnotes clickeable -->
@@ -726,7 +726,7 @@ $\Delta \mathbf{s}$ de la siguiente manera:
 Es destacable mencionar que este tipo de pre-integración es también utilizado
 por los otros sistemas estudiados Kimera y ORB-SLAM3. La ventaja que presenta es
 que sus características son bien conocidas gracias al trabajo de
-[@forsterOnManifoldPreintegrationRealTime2017] y las expresiones necesarias para
+@forsterOnManifoldPreintegrationRealTime2017 y las expresiones necesarias para
 el cómputo de residuales, como sus jacobianos, son cerradas y fueron derivadas
 de forma ejemplar en dicho trabajo.
 
@@ -1588,7 +1588,7 @@ antiguo almacenado y $\Delta T^{-1}$.
 [^openxr-time-limits]: La especificación de OpenXR tiene una sección dedicada a
 las restricciones y condiciones a los que el runtime está sujeto respecto a
 solicitudes en el pasado y en el futuro por parte del usuario. Ver
-[@thekhronosgroupinc.OpenXRSpecification, secc. 2.14]
+[@thekhronosgroupinc.OpenXRSpecification], secc. 2.14.
 
 Sería razonable, como primera aproximación a nuestro problema, utilizar este
 historial de espacios. Esto nos garantiza que podamos proveerle al usuario una
@@ -1836,7 +1836,7 @@ movimientos que el usuario realizó físicamente.
 <!-- TODO@style: estaría bueno que los links aparecieran en monospace quizás? -->
 
 Presentaremos tres filtros, con el más sofisticado basado en
-[@casiezFilterSimpleSpeedbased2012]. Además, dicho trabajo cubre el resto de
+@casiezFilterSimpleSpeedbased2012. Además, dicho trabajo cubre el resto de
 filtros presentados, muestra gráficas comparativas, y es también una buena
 lectura para contextualizar el uso de filtros para tracking de movimientos
 humanos. Los filtros presentados aquí y en el trabajo mencionado pueden

@@ -278,12 +278,12 @@ Tenemos primero que \begin{align}
   encarar el problema mediante cálculo diferencial. En ese contexto, las
   ecuaciones normales surgen naturalmente a la hora de optimizar
   \(E(x)\) igualando su gradiente a \(0\). Para una demostración
-  mediante cálculo referirse a \autocite[cap.
-  10]{nocedalNumericalOptimization2006}.} \footnote{La expresión
-  \(A^T (A\hat{x} - b) = 0\) es interesante, ya que muestra que las
-  columnas de \(A\) son ortogonales al residual óptimo \(A\hat{x} - b\)
-  al ser su producto interno \(0\). Esto suele llamarse el
-  \emph{principio de ortogonalidad}.}. Veamos ahora para un
+  mediante cálculo referirse a
+  \textcite{nocedalNumericalOptimization2006}, cap. 10.} \footnote{La
+  expresión \(A^T (A\hat{x} - b) = 0\) es interesante, ya que muestra
+  que las columnas de \(A\) son ortogonales al residual óptimo
+  \(A\hat{x} - b\) al ser su producto interno \(0\). Esto suele llamarse
+  el \emph{principio de ortogonalidad}.}. Veamos ahora para un
 \(x \in \R^n\) cualquiera. \begin{align}
   \| Ax - b \|^2 &= \| (Ax - A\hat{x}) + (A\hat{x} - b) \|^2 \\
   \text{(\cref{rmk:sqnormofsum})}\quad
@@ -326,7 +326,7 @@ no lo mostramos, se cumple que la solución no solo es única, sino que es
 el único punto con gradiente \(\nabla f(x) = 0\), es decir, el único
 punto optimizador, es un mínimo global. Para una demostración de esto,
 se utilizan argumentos de \emph{convexidad} sobre \(E(x)\); referirse a
-\autocite[cap. 10]{nocedalNumericalOptimization2006}. En el caso no
+\textcite{nocedalNumericalOptimization2006}, cap. 10. En el caso no
 lineal sin embargo, no tenemos ninguna de estas garantías, pueden
 existir infinitos máximos y mínimos globales, locales y cualquier
 combinación de estos.
@@ -434,12 +434,12 @@ puntos de cámaras con modelos de proyección que no tienen expresiones
 cerradas para su inversa, incluso veremos que la optimización central de
 los sistemas de SLAM/VIO, el bundle adjustment, son usualmente
 expresados y resueltos como una minimización de cuadrados no lineales.
-El desarrollo de esta sección está basada en \autocite[cap. 1, 2 y
-10]{nocedalNumericalOptimization2006} y \autocite[cap. 11, 12, 15 y
-18]{boydIntroductionAppliedLinear2018}; en esos trabajos se puede
-encontrar derivaciones alternativas e información de alternativas a
-Gauss-Newton más sofisticadas como Levenberg-Marquardt o el método
-dogleg.
+El desarrollo de esta sección está basada en
+\textcite{nocedalNumericalOptimization2006}, cap. 1, 2 y 10 y
+\textcite{boydIntroductionAppliedLinear2018}, cap. 11, 12, 15 y 18; en
+esos trabajos se puede encontrar derivaciones alternativas e información
+de alternativas a Gauss-Newton más sofisticadas como Levenberg-Marquardt
+o el método dogleg.
 
 \cleardoublepage
 \ctparttext{En esta parte contextualizaremos los distintos sistemas estudiados y
@@ -489,7 +489,7 @@ en el que esta integración incurre, es que las mediciones de las IMU son
 altamente ruidosas, y acumularlas durante tiempos prolongados acumula
 también cantidades significativas de error. Este factor nos limita el
 tiempo que puede transcurrir entre dos keyframes; como ejemplo en
-\autocite{mur-artalVisualInertialMonocularSLAM2017} se habla de
+\textcite{mur-artalVisualInertialMonocularSLAM2017} se habla de
 keyframes que no pueden tener más de 0.5 segundos entre sí. A su vez,
 tener keyframes a muy bajas frecuencias afecta la calidad de las
 estimaciones de velocidad y biases; estos últimos son offsets de
@@ -594,32 +594,32 @@ Representación piramidal (mipmaps) de un cuadro del conjunto de datos EuRoC.
 }
 
 Posteriormente se realiza la detección de features nuevas sobre las
-imágenes utilizando el algoritmo \emph{FAST} para detección de esquinas
-\autocite{rostenFasterBetterMachine2010a} implementado sobre OpenCV.
-Aquí es notable aclarar que Basalt es uno de los sistemas que menos
-depende de OpenCV, ya que tiende a re implementar muchas de las técnicas
-y algoritmia de forma especializada y, como veremos en otros módulos,
-otras tareas razonablemente complejas como la optimización de grafos de
-poses se implementan también dentro del proyecto y sin recurrir a
-librerías externas. Esta es una de las varias razones por las que este
-sistema logra tan buen rendimiento, ya que las librerías externas suelen
-tener campos y comprobaciones dedicadas al caso general del problema que
-intenta solucionar, mientras que Basalt puede prescindir de todas las
-que no apliquen al problema de VIO. Siguiendo con la detección de
-features, una heurística particular de Basalt es la división del cuadro
-completo en celdas de tamaño configurable (por defecto 50 por 50
-píxeles) en donde se detectan las nuevas features, por celda solo se
-conserva la feature de mejor calidad o con mejor \emph{respuesta
-(response)} (aunque la cantidad a conservar es también configurable), y
-siempre que la celda tenga alguna feature localizada de frames
-anteriores, no se intenta detectar nuevas. Esto contrasta con sistemas
-como Kimera-VIO que corren la detección FAST sobre el cuadro entero y
-evitan la redetección mediante el uso de \emph{máscaras} que le
-instruyen al algoritmo a obviar esas secciones. Desafortunadamente la
-construcción de tales máscaras suele ser costosa y la heurística de
-Basalt, a pesar de desperdiciar espacio por no permitir la detección de
-nuevas características entre celdas, es más eficiente ya que en
-situaciones comunes se logran detectar una cantidad razonable de
+imágenes utilizando el algoritmo \emph{FAST}
+\autocite{rostenFasterBetterMachine2010a} para detección de esquinas
+implementado sobre OpenCV. Aquí es notable aclarar que Basalt es uno de
+los sistemas que menos depende de OpenCV, ya que tiende a re implementar
+muchas de las técnicas y algoritmia de forma especializada y, como
+veremos en otros módulos, otras tareas razonablemente complejas como la
+optimización de grafos de poses se implementan también dentro del
+proyecto y sin recurrir a librerías externas. Esta es una de las varias
+razones por las que este sistema logra tan buen rendimiento, ya que las
+librerías externas suelen tener campos y comprobaciones dedicadas al
+caso general del problema que intenta solucionar, mientras que Basalt
+puede prescindir de todas las que no apliquen al problema de VIO.
+Siguiendo con la detección de features, una heurística particular de
+Basalt es la división del cuadro completo en celdas de tamaño
+configurable (por defecto 50 por 50 píxeles) en donde se detectan las
+nuevas features, por celda solo se conserva la feature de mejor calidad
+o con mejor \emph{respuesta (response)} (aunque la cantidad a conservar
+es también configurable), y siempre que la celda tenga alguna feature
+localizada de frames anteriores, no se intenta detectar nuevas. Esto
+contrasta con sistemas como Kimera-VIO que corren la detección FAST
+sobre el cuadro entero y evitan la redetección mediante el uso de
+\emph{máscaras} que le instruyen al algoritmo a obviar esas secciones.
+Desafortunadamente la construcción de tales máscaras suele ser costosa y
+la heurística de Basalt, a pesar de desperdiciar espacio por no permitir
+la detección de nuevas características entre celdas, es más eficiente ya
+que en situaciones comunes se logran detectar una cantidad razonable de
 features sin problemas. Esta detección de features nuevas se realiza
 unicamente sobre la primera cámara (usualmente la izquierda), mientras
 que en la otra cámara se reutiliza el método de seguimiento de keypoints
@@ -662,10 +662,10 @@ normalizar las intensidades obtenemos un valor que es invariante incluso
 ante cambios de iluminación.
 
 Los detalles del cálculo de gradientes y jacobianos están basados en el
-método de Lucas-Kanade para tracking de features (\emph{KLT})
-\autocite{lucasIterativeImageRegistration1981}. El uso adicional de
-mipmaps sobre KLT fue originalmente expuesto en
-\autocite{bouguetPyramidalImplementationLucas1999}.
+método de \textcite{lucasIterativeImageRegistration1981} para tracking
+de features (\emph{KLT}). El uso adicional de mipmaps sobre KLT fue
+originalmente expuesto en
+\textcite{bouguetPyramidalImplementationLucas1999}.
 
 Para asegurar que la estimación fue exitosa, se invierte el problema y
 se intenta trackear desde la imagen nueva hacia la inicial y, si el
@@ -711,9 +711,9 @@ Basalt, es que el acelerómetro es utilizado como origen del agente
 localizado y, fundándose en esto, se fija su orientación. Es decir, no
 se aplica ningún tipo de corrección de orientación al calibrar las
 muestras del acelerómetro. Esto hace que la matriz de alineamiento para
-el acelerómetro tenga ceros en su triángulo superior (ver \autocite[
-secc. IV.B]{schubertBasaltTUMVI2018} y \emph{discusión relacionada
-\footnote{\url{https://gitlab.com/VladyslavUsenko/basalt-headers/-/issues/8}}}).
+el acelerómetro tenga ceros en su triángulo superior (ver
+\textcite{schubertBasaltTUMVI2018} secc. IV.B y \emph{discusión
+relacionada \footnote{\url{https://gitlab.com/VladyslavUsenko/basalt-headers/-/issues/8}}}).
 
 Luego de recibir esta primer muestra de la IMU se comienza la ejecución
 del bucle principal, el cual espera indefinidamente por resultados
@@ -790,7 +790,7 @@ Es destacable mencionar que este tipo de pre-integración es también
 utilizado por los otros sistemas estudiados Kimera y ORB-SLAM3. La
 ventaja que presenta es que sus características son bien conocidas
 gracias al trabajo de
-\autocite{forsterOnManifoldPreintegrationRealTime2017} y las expresiones
+\textcite{forsterOnManifoldPreintegrationRealTime2017} y las expresiones
 necesarias para el cómputo de residuales, como sus jacobianos, son
 cerradas y fueron derivadas de forma ejemplar en dicho trabajo.
 
@@ -1690,10 +1690,10 @@ espacio más reciente del historial para realizar el cómputo con
 extrapolar hacia el pasado lejano\footnote{La especificación de OpenXR
   tiene una sección dedicada a las restricciones y condiciones a los que
   el runtime está sujeto respecto a solicitudes en el pasado y en el
-  futuro por parte del usuario. Ver \autocite[secc.
-  2.14]{thekhronosgroupinc.OpenXRSpecification}}, o sea fuera del
-registro del historial, se utilizará el espacio más antiguo almacenado y
-\(\Delta T^{-1}\).
+  futuro por parte del usuario. Ver
+  \autocite{thekhronosgroupinc.OpenXRSpecification}, secc. 2.14.}, o sea
+fuera del registro del historial, se utilizará el espacio más antiguo
+almacenado y \(\Delta T^{-1}\).
 
 Sería razonable, como primera aproximación a nuestro problema, utilizar
 este historial de espacios. Esto nos garantiza que podamos proveerle al
@@ -1950,7 +1950,7 @@ abruptos en la trayectoria, incluso cuando estos sean realmente los
 movimientos que el usuario realizó físicamente.
 
 Presentaremos tres filtros, con el más sofisticado basado en
-\autocite{casiezFilterSimpleSpeedbased2012}. Además, dicho trabajo cubre
+\textcite{casiezFilterSimpleSpeedbased2012}. Además, dicho trabajo cubre
 el resto de filtros presentados, muestra gráficas comparativas, y es
 también una buena lectura para contextualizar el uso de filtros para
 tracking de movimientos humanos. Los filtros presentados aquí y en el

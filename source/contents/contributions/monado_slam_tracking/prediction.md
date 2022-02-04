@@ -198,7 +198,7 @@ antiguo almacenado y $\Delta T^{-1}$.
 [^openxr-time-limits]: La especificación de OpenXR tiene una sección dedicada a
 las restricciones y condiciones a los que el runtime está sujeto respecto a
 solicitudes en el pasado y en el futuro por parte del usuario. Ver
-[@thekhronosgroupinc.OpenXRSpecification, secc. 2.14]
+[@thekhronosgroupinc.OpenXRSpecification], secc. 2.14.
 
 Sería razonable, como primera aproximación a nuestro problema, utilizar este
 historial de espacios. Esto nos garantiza que podamos proveerle al usuario una

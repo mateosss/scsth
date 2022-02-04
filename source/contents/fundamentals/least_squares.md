@@ -166,7 +166,7 @@ presentada en este trabajo no es la única. De hecho, es común encarar el
 problema mediante cálculo diferencial. En ese contexto, las ecuaciones normales
 surgen naturalmente a la hora de optimizar $E(x)$ igualando su gradiente a $0$.
 Para una demostración mediante cálculo referirse a
-[@nocedalNumericalOptimization2006, cap. 10].
+@nocedalNumericalOptimization2006, cap. 10.
 
 [^orthogonalityprinciple]: La expresión $A^T (A\hat{x} - b) = 0$ es interesante,
 ya que muestra que las columnas de $A$ son ortogonales al residual óptimo
@@ -201,7 +201,7 @@ lineal, si bien no lo mostramos, se cumple que la solución no solo es única,
 sino que es el único punto con gradiente $\nabla f(x) = 0$, es decir, el único
 punto optimizador, es un mínimo global. Para una demostración de esto, se
 utilizan argumentos de _convexidad_ sobre $E(x)$; referirse a
-[@nocedalNumericalOptimization2006, cap. 10]. En el caso no lineal sin embargo,
+@nocedalNumericalOptimization2006, cap. 10. En el caso no lineal sin embargo,
 no tenemos ninguna de estas garantías, pueden existir infinitos máximos y
 mínimos globales, locales y cualquier combinación de estos.
 
@@ -315,8 +315,8 @@ proyección que no tienen expresiones cerradas para su inversa, incluso veremos
 que la optimización central de los sistemas de SLAM/VIO, el bundle adjustment,
 son usualmente expresados y resueltos como una minimización de cuadrados no
 lineales. El desarrollo de esta sección está basada en
-[@nocedalNumericalOptimization2006, cap. 1, 2 y 10] y
-[@boydIntroductionAppliedLinear2018, cap. 11, 12, 15 y 18]; en esos trabajos se
+@nocedalNumericalOptimization2006, cap. 1, 2 y 10 y
+@boydIntroductionAppliedLinear2018, cap. 11, 12, 15 y 18; en esos trabajos se
 puede encontrar derivaciones alternativas e información de alternativas a
 Gauss-Newton más sofisticadas como Levenberg-Marquardt o el método dogleg.
 

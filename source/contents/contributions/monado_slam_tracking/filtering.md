@@ -68,7 +68,7 @@ movimientos que el usuario realizó físicamente.
 <!-- TODO@style: estaría bueno que los links aparecieran en monospace quizás? -->
 
 Presentaremos tres filtros, con el más sofisticado basado en
-[@casiezFilterSimpleSpeedbased2012]. Además, dicho trabajo cubre el resto de
+@casiezFilterSimpleSpeedbased2012. Además, dicho trabajo cubre el resto de
 filtros presentados, muestra gráficas comparativas, y es también una buena
 lectura para contextualizar el uso de filtros para tracking de movimientos
 humanos. Los filtros presentados aquí y en el trabajo mencionado pueden
