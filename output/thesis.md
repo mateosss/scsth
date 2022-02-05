@@ -1645,9 +1645,9 @@ sus sensores proveen resulta suficientemente precisa.
 
 La clase adaptadora tiene acceso a estas muestras, ya que las intercepta para
 redirigirlas hacia los sistemas de SLAM. Utilizaremos un concepto similar al de
-la pre-integración de muestras de IMU explorado en la sección
-@seq:basalt-preintegration con algunas ideas relacionadas con las ecuaciones
-presentadas a partir de la [](#eq:imu-preintegration). Consideremos que no vamos
+la pre-integración de muestras de IMU explorado en la \Cref{basalt-preintegration}
+con algunas ideas relacionadas con las ecuaciones presentadas a partir de la
+\cref{eq:imu-preintegration}. Consideremos que no vamos
 a querer interferir de ninguna manera con las estimaciones generadas por los
 sistemas de SLAM, ya que no querremos distorsionar dichas poses. El proceso de
 pre-integración correrá de forma completamente aislada de los sistemas. Más aún,

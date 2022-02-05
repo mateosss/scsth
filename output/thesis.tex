@@ -59,6 +59,8 @@
 \usepackage{algorithm}
 \usepackage[noabbrev,capitalize,nameinlink,spanish]{cleveref}
 \creflabelformat{equation}{#2\textup{#1}#3}
+\crefname{subsection}{sección}{secciones}
+\Crefname{subsection}{Sección}{Secciones}
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\passthrough}[1]{#1}
@@ -1752,20 +1754,20 @@ odometría que sus sensores proveen resulta suficientemente precisa.
 La clase adaptadora tiene acceso a estas muestras, ya que las intercepta
 para redirigirlas hacia los sistemas de SLAM. Utilizaremos un concepto
 similar al de la pre-integración de muestras de IMU explorado en la
-sección \textcite{seq:basalt-preintegration} con algunas ideas
-relacionadas con las ecuaciones presentadas a partir de la
-\protect\hyperlink{eq:imu-preintegration}{}. Consideremos que no vamos a
-querer interferir de ninguna manera con las estimaciones generadas por
-los sistemas de SLAM, ya que no querremos distorsionar dichas poses. El
-proceso de pre-integración correrá de forma completamente aislada de los
-sistemas. Más aún, será un proceso mayormente efímero que solo tendrá
-consecuencias sobre puntos de tiempos para los cuales el sistema de SLAM
-todavía no tenga una estimación posterior. En particular, nos
-limitaremos a refinar las estimaciones de la velocidad lineal y angular,
-dejando que las herramientas de predicción de Monado que se basan en el
-último espacio del historial, computen la pose adecuada para la
-timestamp requerida. Acumularemos promedios de las mediciones recientes
-para reducir el impacto del ruido presente en las muestras de la IMU.
+\Cref{basalt-preintegration} con algunas ideas relacionadas con las
+ecuaciones presentadas a partir de la \cref{eq:imu-preintegration}.
+Consideremos que no vamos a querer interferir de ninguna manera con las
+estimaciones generadas por los sistemas de SLAM, ya que no querremos
+distorsionar dichas poses. El proceso de pre-integración correrá de
+forma completamente aislada de los sistemas. Más aún, será un proceso
+mayormente efímero que solo tendrá consecuencias sobre puntos de tiempos
+para los cuales el sistema de SLAM todavía no tenga una estimación
+posterior. En particular, nos limitaremos a refinar las estimaciones de
+la velocidad lineal y angular, dejando que las herramientas de
+predicción de Monado que se basan en el último espacio del historial,
+computen la pose adecuada para la timestamp requerida. Acumularemos
+promedios de las mediciones recientes para reducir el impacto del ruido
+presente en las muestras de la IMU.
 
 Tenemos entonces que el algoritmo utilizado finalmente es similar al
 pseudo código que se presenta a continuación. Cabe aclarar que la
