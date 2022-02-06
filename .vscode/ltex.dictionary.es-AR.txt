@@ -79,3 +79,7 @@ exposure
 gain
 motion
 blur
+recalibración
+OpenVINS
+reference
+counting

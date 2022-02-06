@@ -7,6 +7,8 @@ La bibliografía de este trabajo está escrita mayormente en inglés, y es por e
 que muchas veces será más práctico utilizar el término en este idioma, aunque
 en varias ocasiones intentará brindar una traducción adecuada en español.
 
+<!-- TODO@nico: Tratar de no usar parentesis en el texto -->
+
 <!-- TODO@style: Cómo se va a referenciar código? notar que tienen que poder imprimirse, una idea es usar pies de páginas y/o url shorteners, otra sería referenciar a un apéndice de la tesis de alguna forma-->
 
 <!-- TODO@fig: Por alguna razón la lista de figuras para las figuras del template
@@ -40,6 +42,7 @@ También tienen tapas: http://www.latextemplates.com/cat/title-pages
 <!-- TODO@end: chequear todo en busca de problemas de ortografía con LTeX -->
 <!-- TODO@end: chequear ortografía con google drive -->
 <!-- TODO@end: chequear otros linters como markdownlint -->
+<!-- TODO@end: poner thesis.tex en overleaf y revisar todos los warnings que salgan -->
 <!-- TODO@end: leer todas las citas generadas a ver si se colgó algun link de mas o alguna nota de zotero que no iba. Otra cosa que se puede colgar es algo como [Basalt#1] en el nombre que no tiene que ir, osea notas mías. Tambien sacar cualquier referencia a pdfs -->
 <!-- TODO@end: ver que todos los títulos y subtítulos respeten tener solo mayúscula la primera letra (o nombres propios) -->
 <!-- TODO@end: revisar pandoc.pdf.log para ver que errores tengo (va no se, viendolo bien hay banda de falsos positivos) -->

@@ -58,6 +58,11 @@ Move_, _PlayStation VR_, y tracking de manos en general. Es aquí entonces en
 donde se comienza la implementación del SLAM tracker presentado en este
 trabajo.
 
+<!-- TODO@nico: Lo que le digo "slam tracker implementation" nico pensó que
+debería ser una "interface", implementación/interfaz/adaptador son bastante
+ambiguos así que deberí revisar que los uso de forma consistente -->
+<!-- TODO@fig: Del TODO de arriba, viene que tengo que modificar fig:slam-tracker-dataflow -->
+
 La implementación de un pipeline en Monado que permita la comunicación entre
 dispositivos, sistemas de SLAM y la aplicación OpenXR requirió desarrollar la
 infraestructura y herramientas necesarias dentro de Monado. El pipeline en

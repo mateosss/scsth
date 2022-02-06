@@ -78,9 +78,9 @@ fabricantes. Más aún, existen compañías que se especializan en desarrollar
 soluciones comerciales de SLAM como _SLAMCore[^slam-core]_,
 _Arcturus[^arcturus]_ y _Spectacular AI[^spectacular-ai]_ entre otras.
 
-[^slam-core]: https://www.slamcore.com/
-[^arcturus]: https://arcturus.industries/
-[^spectacular-ai]: https://www.spectacularai.com/
+[^slam-core]: <https://www.slamcore.com/>
+[^arcturus]: <https://arcturus.industries/>
+[^spectacular-ai]: <https://www.spectacularai.com/>
 
 Este trabajo se concentró entonces en el estudio de implementaciones de código
 abierto de sistemas de tracking visual-inercial (ya sea mediante SLAM o

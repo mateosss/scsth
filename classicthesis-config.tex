@@ -152,18 +152,21 @@
     vec3,
     quat,
     string,
+    xrt_frame,
+    cv::Mat,
     % Types defined in this work by us
     LandmarkDatabase,
     Landmark,
     Keypoint,
     slam_tracker,
-    xrt_space_relation
+    xrt_space_relation,
+    TrackerSlam
   },
   emphstyle=\color{YellowOrange}
 }
 
 \lstset{language=C++,%[LaTeX]Tex,
-  morekeywords={PassOptionsToPackage,selectlanguage},
+  % morekeywords={PassOptionsToPackage,selectlanguage}, % See morekeywords at https://ctan.dcc.uchile.cl/macros/latex/contrib/listings/listings.pdf#page=32
   style=FiraCodeStyle,
   basicstyle=\small\ttfamily,
   keywordstyle=\color{WildStrawberry},%\bfseries,
@@ -272,7 +275,8 @@
 % Changing the text area
 % ********************************************************************
 %\areaset[current]{312pt}{761pt} % 686 (factor 2.2) + 33 head + 42 head \the\footskip
-%\setlength{\marginparwidth}{7em}%
+\setlength{\marginparwidth}{9em}%
+\setlength{\marginparpush}{2em}%
 %\setlength{\marginparsep}{2em}%
 
 % ********************************************************************
