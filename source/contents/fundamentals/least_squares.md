@@ -45,22 +45,18 @@ minimizar los _residuales_ $r_i(x) = f_i(x) - b_i$ y definimos al vector
 residual como $r(x) = [r_1(x) \dots r_m(x)]^T$. Querremos encontrar un $x$ que
 minimice la siguiente función de _error_ o _energía_ $E(x)$ basada en los
 residuales.
-<!-- $$ -->
 \begin{align}
 E(x) = \sum_{i=1}^m{r_i(x) ^ 2} = \| r(x) \| ^ 2
 \end{align}
-<!-- $$ -->
 
 Notar que la definición de $E(x)$ coincide con la de la _norma euclídea_ al
 cuadrado de $r(x)$. Encontrar $x$ que minimice $E(x)$ con residuales lineales
 es el _problema de los cuadrados mínimos lineales_; a $x$ le decimos _solución_
 de tal problema. Notar que $r_i = (Ax - b)_i$, o sea el componente $i$ del
 vector $Ax - b \in \R^m$, y por ende $r(x) = Ax - b$.
-<!-- $$ -->
 \begin{align}
 E(x) = \sum_{i=1}^m{(Ax - b)_i^2} = \| Ax - b \| ^ 2
 \end{align}
-<!-- $$ -->
 
 Lo que queremos minimizar es entonces equivalente a la norma cuadrada del vector
 residual $Ax - b$. Introduciremos a continuación una serie de conceptos y
@@ -88,9 +84,6 @@ Theorem thm:aligraminv
 : La matriz de Gram de $A$ es invertible si y solo si $A$ tiene columnas
 linealmente independientes.
 
-<!-- TODO@def: Uso (AB)^T = B^T A^T -->
-<!-- TODO@def: Uso |A|^2 = A^T A -->
-
 Proof
 : Como $A$ tiene columnas linealmente independientes, por
 [](#thm:li1inv2nots3) (3) tenemos que $x = 0 \Leftrightarrow Ax = 0$, nos basta
@@ -114,14 +107,12 @@ Remark rmk:sqnormofsum
 
 Proof
 : Desarrollemos:
-<!-- $$ -->
 \begin{align}
 \| a + b \| ^ 2 &= (a_1 + b_1)^2 + \dots + (a_k + b_k)^2 \\
 &= (a_1^2 + b_1^2 + 2 a_1 b_1) + ... + (a_k^2 + b_k^2 + 2 a_k b_k) \\
 &= \| a \| ^2 + \| b \|^2 + 2 \langle a, b \rangle \\
 &= \| a \| ^2 + \| b \|^2 + 2 a^T b
 \end{align}
-<!-- $$ -->
 
 Con estas herramientas, estamos en posición de presentar la solución directa al
 problema de los cuadrados mínimos lineales.
@@ -133,17 +124,14 @@ lineales. Es decir $\forall x \in \R^n: E(\hat{x}) = \| A\hat{x} - b \| ^ 2
 
 Proof
 : Tenemos primero que
-<!-- $$ -->
 \begin{align}
   & \hat{x} = A^\dagger b \\
   &\Leftrightarrow \hat{x} = (A^T A)^{-1} A^T b \\
   &\Leftrightarrow A^T A \hat{x} = A^T b \\
   &\Leftrightarrow A^T (A \hat{x} - b) = 0 \label{eq:ataxmbis0}
 \end{align}
-<!-- $$ -->
 Las últimas dos ecuaciones reciben nombres particulares [^normalequations]
 [^orthogonalityprinciple]. Veamos ahora para un $x \in \R^n$ cualquiera.
-<!-- $$ -->
 \begin{align}
   \| Ax - b \|^2 &= \| (Ax - A\hat{x}) + (A\hat{x} - b) \|^2 \\
   \text{(\cref{rmk:sqnormofsum})}\quad
@@ -155,7 +143,6 @@ Las últimas dos ecuaciones reciben nombres particulares [^normalequations]
   &= \| A(x - \hat{x}) \|^2 +  \| A\hat{x} - b \|^2 \\
   &\therefore \|Ax-b\|^2 \geq \|A\hat{x}-b\|^2
 \end{align}
-<!-- $$ -->
 Más aún, esta solución es única ya que la igualdad en la última ecuación solo se
 da si $\|A(x-\hat{x})\|^2 = 0$, y como $A$ es no-singular, esto solo pasa
 cuando $x=\hat{x}$.
@@ -184,11 +171,9 @@ que $f(x) = r(x)$. Es decir querremos que $f(x) = 0$ en lugar de $f(x) = b$. En
 el caso de necesitar la segunda restricción, podemos construir nuevas
 funciones $\tilde{f}_i(x) = f_i(x) - b_i$ y utilizar estas en su lugar. Nuestra
 función de error es entonces:
-<!-- $$ -->
 \begin{align}
 E(x) = \sum_{i=1}^m{f_i(x)^2} = \| f(x) \| ^ 2
 \end{align}
-<!-- $$ -->
 
 <!-- TODO@def: creo que estoy "introduciendo" con _cursivas_ el término
 funcion afín, funciones afines, etc en una banda de lugares -->
@@ -233,14 +218,11 @@ sabiendo que comenzamos el algoritmo cerca de su mínimo.
 
 **Linealización**. Definimos $f^{(k)}(x)$ como la expansión de Taylor de $f(x)$
 centrada en $x^{(k)}$. Es decir:
-<!-- $$ -->
 \begin{align}
 f^{(k)}(x) = f(x^{(k)}) + A(x^{(k)}) (x - x^{(k)})
 \end{align}
-<!-- $$ -->
 
 con $A: \R^n \rightarrow \R^{m \times n}$ la matriz jacobiana de $f$.
-<!-- $$ -->
 \begin{align}
 A = \begin{bmatrix}
   \frac{\partial f_1}{\partial x_1} & \dots & \frac{\partial f_1}{\partial x_n} \\
@@ -248,17 +230,14 @@ A = \begin{bmatrix}
   \frac{\partial f_m}{\partial x_1} & \dots & \frac{\partial f_m}{\partial x_n}
 \end{bmatrix}
 \end{align}
-<!-- $$ -->
 
 Notar que $f^{(k)}$ es afín; una transformación lineal $A(x^{(k)})$ aplicada
 sobre $x$, más un vector. Reacomodemos los términos para dejarlo explícito
 e introduzcamos la notación $A_k = A(x^{(k)})$.
-<!-- $$ -->
 \begin{align}
 f^{(k)}(x) = f(x^{(k)}) + A_k (x - x^{(k)}) \\
 f^{(k)}(x) = A_k x - (A_k x^{(k)} - f(x^{(k)}))
 \end{align}
-<!-- $$ -->
 
 **Actualización**. Teniendo en mente que queremos encontrar el mínimo de $\|
 f(x) \| ^ 2$, lo aproximamos con el mínimo (y próximo iterando) $x^{(k+1 )}$ de
@@ -266,38 +245,33 @@ $\| f^{(k)}(x) \| ^ 2$ pero como $f^{(k)}$ es afín, esto se reduce a buscar la
 solución del problema de cuadrados mínimos _lineales_. Sabemos por
 [Teorema](#thm:linleastsquaresol) la solución exacta para este caso en base a la
 matriz pseudo-inversa $A_k^{\dagger} = (A_k^T A_k)^{-1} A_k^T$.
-<!-- $$ -->
 \begin{align}
 \| f^{(k)}(x) \| ^ 2 = \| A_k x - (A_k x^{(k)} - f(x^{(k)})) \|^2
 \end{align}
-<!-- $$ -->
 
 Se minimiza por [Teorema](#thm:linleastsquaresol) cuando
-<!-- $$ -->
 \begin{align}
 x &= A_k^{\dagger} (A_k x^{(k)} - f(x^{(k)})) \\
 &=A_k^{\dagger} A_k x^{(k)} - A_k^{\dagger} f(x^{(k)}) \\
 &= x^{(k)} - A_k^{\dagger} f(x^{(k)})
 \end{align}
-<!-- $$ -->
 
 Entonces el algoritmo de Gauss-Newton queda definido de la siguiente manera:
 
-\begin{algorithm}
-\caption{Algoritmo Gauss-Newton para cuadrados mínimos no lineales}
+\begin{algorithm}[H]
+\caption{Gauss-Newton para cuadrados mínimos no lineales}
 
 Dada $f : \R^n \rightarrow \R^m$ diferenciable y un punto inicial $x^{(1)}$.
 Con $k = 1, 2, ..., k^{max}$. \newline
 
-1. Linealizar $f$ alrededor de $x^{(k)}$ computando el jacobiano $A_k$ y definiendo:
+1. Linealizar $f$ alrededor de $x^{(k)}$ computando el jacobiano $A_k$:
 \begin{align}
-f^{(k)}(x) = f(x^{(k)}) + A_k (x - x^{(k)})
+f^{(k)}(x) &= f(x^{(k)}) + A_k (x - x^{(k)})
 \end{align}
 
-2. Actualizar el iterador a $x^{(k+1)}$ como el mínimo de $\| f^{(k)}(x) \|^2$
-utilizando la solución al problema de cuadrados mínimos lineales dada en el
-\cref{thm:linleastsquaresol}. Se necesitará computar $A_k^{\dagger}$ con
-la inversa de la matriz de Gram de $A_k$:
+1. Actualizar el iterador a $x^{(k+1)}$ con el minimizador de $\| f^{(k)}(x) \|^2$
+descripto en el \cref{thm:linleastsquaresol}. Se necesitará computar $A_k^{\dagger}$
+con la inversa de la matriz de Gram de $A_k$:
 \begin{align}
 x^{(k+1)} = x^{(k)} - A_k^{\dagger} f(x^{(k)}) =
 x^{(k)} - (A_k^T A_k)^{-1} A_k^T f(x^{(k)})

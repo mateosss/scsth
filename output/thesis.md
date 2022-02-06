@@ -71,22 +71,18 @@ minimizar los _residuales_ $r_i(x) = f_i(x) - b_i$ y definimos al vector
 residual como $r(x) = [r_1(x) \dots r_m(x)]^T$. Querremos encontrar un $x$ que
 minimice la siguiente función de _error_ o _energía_ $E(x)$ basada en los
 residuales.
-<!-- $$ -->
 \begin{align}
 E(x) = \sum_{i=1}^m{r_i(x) ^ 2} = \| r(x) \| ^ 2
 \end{align}
-<!-- $$ -->
 
 Notar que la definición de $E(x)$ coincide con la de la _norma euclídea_ al
 cuadrado de $r(x)$. Encontrar $x$ que minimice $E(x)$ con residuales lineales
 es el _problema de los cuadrados mínimos lineales_; a $x$ le decimos _solución_
 de tal problema. Notar que $r_i = (Ax - b)_i$, o sea el componente $i$ del
 vector $Ax - b \in \R^m$, y por ende $r(x) = Ax - b$.
-<!-- $$ -->
 \begin{align}
 E(x) = \sum_{i=1}^m{(Ax - b)_i^2} = \| Ax - b \| ^ 2
 \end{align}
-<!-- $$ -->
 
 Lo que queremos minimizar es entonces equivalente a la norma cuadrada del vector
 residual $Ax - b$. Introduciremos a continuación una serie de conceptos y
@@ -114,9 +110,6 @@ Theorem thm:aligraminv
 : La matriz de Gram de $A$ es invertible si y solo si $A$ tiene columnas
 linealmente independientes.
 
-<!-- TODO@def: Uso (AB)^T = B^T A^T -->
-<!-- TODO@def: Uso |A|^2 = A^T A -->
-
 Proof
 : Como $A$ tiene columnas linealmente independientes, por
 [](#thm:li1inv2nots3) (3) tenemos que $x = 0 \Leftrightarrow Ax = 0$, nos basta
@@ -140,14 +133,12 @@ Remark rmk:sqnormofsum
 
 Proof
 : Desarrollemos:
-<!-- $$ -->
 \begin{align}
 \| a + b \| ^ 2 &= (a_1 + b_1)^2 + \dots + (a_k + b_k)^2 \\
 &= (a_1^2 + b_1^2 + 2 a_1 b_1) + ... + (a_k^2 + b_k^2 + 2 a_k b_k) \\
 &= \| a \| ^2 + \| b \|^2 + 2 \langle a, b \rangle \\
 &= \| a \| ^2 + \| b \|^2 + 2 a^T b
 \end{align}
-<!-- $$ -->
 
 Con estas herramientas, estamos en posición de presentar la solución directa al
 problema de los cuadrados mínimos lineales.
@@ -159,17 +150,14 @@ lineales. Es decir $\forall x \in \R^n: E(\hat{x}) = \| A\hat{x} - b \| ^ 2
 
 Proof
 : Tenemos primero que
-<!-- $$ -->
 \begin{align}
   & \hat{x} = A^\dagger b \\
   &\Leftrightarrow \hat{x} = (A^T A)^{-1} A^T b \\
   &\Leftrightarrow A^T A \hat{x} = A^T b \\
   &\Leftrightarrow A^T (A \hat{x} - b) = 0 \label{eq:ataxmbis0}
 \end{align}
-<!-- $$ -->
 Las últimas dos ecuaciones reciben nombres particulares [^normalequations]
 [^orthogonalityprinciple]. Veamos ahora para un $x \in \R^n$ cualquiera.
-<!-- $$ -->
 \begin{align}
   \| Ax - b \|^2 &= \| (Ax - A\hat{x}) + (A\hat{x} - b) \|^2 \\
   \text{(\cref{rmk:sqnormofsum})}\quad
@@ -181,7 +169,6 @@ Las últimas dos ecuaciones reciben nombres particulares [^normalequations]
   &= \| A(x - \hat{x}) \|^2 +  \| A\hat{x} - b \|^2 \\
   &\therefore \|Ax-b\|^2 \geq \|A\hat{x}-b\|^2
 \end{align}
-<!-- $$ -->
 Más aún, esta solución es única ya que la igualdad en la última ecuación solo se
 da si $\|A(x-\hat{x})\|^2 = 0$, y como $A$ es no-singular, esto solo pasa
 cuando $x=\hat{x}$.
@@ -210,11 +197,9 @@ que $f(x) = r(x)$. Es decir querremos que $f(x) = 0$ en lugar de $f(x) = b$. En
 el caso de necesitar la segunda restricción, podemos construir nuevas
 funciones $\tilde{f}_i(x) = f_i(x) - b_i$ y utilizar estas en su lugar. Nuestra
 función de error es entonces:
-<!-- $$ -->
 \begin{align}
 E(x) = \sum_{i=1}^m{f_i(x)^2} = \| f(x) \| ^ 2
 \end{align}
-<!-- $$ -->
 
 <!-- TODO@def: creo que estoy "introduciendo" con _cursivas_ el término
 funcion afín, funciones afines, etc en una banda de lugares -->
@@ -259,14 +244,11 @@ sabiendo que comenzamos el algoritmo cerca de su mínimo.
 
 **Linealización**. Definimos $f^{(k)}(x)$ como la expansión de Taylor de $f(x)$
 centrada en $x^{(k)}$. Es decir:
-<!-- $$ -->
 \begin{align}
 f^{(k)}(x) = f(x^{(k)}) + A(x^{(k)}) (x - x^{(k)})
 \end{align}
-<!-- $$ -->
 
 con $A: \R^n \rightarrow \R^{m \times n}$ la matriz jacobiana de $f$.
-<!-- $$ -->
 \begin{align}
 A = \begin{bmatrix}
   \frac{\partial f_1}{\partial x_1} & \dots & \frac{\partial f_1}{\partial x_n} \\
@@ -274,17 +256,14 @@ A = \begin{bmatrix}
   \frac{\partial f_m}{\partial x_1} & \dots & \frac{\partial f_m}{\partial x_n}
 \end{bmatrix}
 \end{align}
-<!-- $$ -->
 
 Notar que $f^{(k)}$ es afín; una transformación lineal $A(x^{(k)})$ aplicada
 sobre $x$, más un vector. Reacomodemos los términos para dejarlo explícito
 e introduzcamos la notación $A_k = A(x^{(k)})$.
-<!-- $$ -->
 \begin{align}
 f^{(k)}(x) = f(x^{(k)}) + A_k (x - x^{(k)}) \\
 f^{(k)}(x) = A_k x - (A_k x^{(k)} - f(x^{(k)}))
 \end{align}
-<!-- $$ -->
 
 **Actualización**. Teniendo en mente que queremos encontrar el mínimo de $\|
 f(x) \| ^ 2$, lo aproximamos con el mínimo (y próximo iterando) $x^{(k+1 )}$ de
@@ -292,38 +271,33 @@ $\| f^{(k)}(x) \| ^ 2$ pero como $f^{(k)}$ es afín, esto se reduce a buscar la
 solución del problema de cuadrados mínimos _lineales_. Sabemos por
 [Teorema](#thm:linleastsquaresol) la solución exacta para este caso en base a la
 matriz pseudo-inversa $A_k^{\dagger} = (A_k^T A_k)^{-1} A_k^T$.
-<!-- $$ -->
 \begin{align}
 \| f^{(k)}(x) \| ^ 2 = \| A_k x - (A_k x^{(k)} - f(x^{(k)})) \|^2
 \end{align}
-<!-- $$ -->
 
 Se minimiza por [Teorema](#thm:linleastsquaresol) cuando
-<!-- $$ -->
 \begin{align}
 x &= A_k^{\dagger} (A_k x^{(k)} - f(x^{(k)})) \\
 &=A_k^{\dagger} A_k x^{(k)} - A_k^{\dagger} f(x^{(k)}) \\
 &= x^{(k)} - A_k^{\dagger} f(x^{(k)})
 \end{align}
-<!-- $$ -->
 
 Entonces el algoritmo de Gauss-Newton queda definido de la siguiente manera:
 
-\begin{algorithm}
-\caption{Algoritmo Gauss-Newton para cuadrados mínimos no lineales}
+\begin{algorithm}[H]
+\caption{Gauss-Newton para cuadrados mínimos no lineales}
 
 Dada $f : \R^n \rightarrow \R^m$ diferenciable y un punto inicial $x^{(1)}$.
 Con $k = 1, 2, ..., k^{max}$. \newline
 
-1. Linealizar $f$ alrededor de $x^{(k)}$ computando el jacobiano $A_k$ y definiendo:
+1. Linealizar $f$ alrededor de $x^{(k)}$ computando el jacobiano $A_k$:
 \begin{align}
-f^{(k)}(x) = f(x^{(k)}) + A_k (x - x^{(k)})
+f^{(k)}(x) &= f(x^{(k)}) + A_k (x - x^{(k)})
 \end{align}
 
-2. Actualizar el iterador a $x^{(k+1)}$ como el mínimo de $\| f^{(k)}(x) \|^2$
-utilizando la solución al problema de cuadrados mínimos lineales dada en el
-\cref{thm:linleastsquaresol}. Se necesitará computar $A_k^{\dagger}$ con
-la inversa de la matriz de Gram de $A_k$:
+1. Actualizar el iterador a $x^{(k+1)}$ con el minimizador de $\| f^{(k)}(x) \|^2$
+descripto en el \cref{thm:linleastsquaresol}. Se necesitará computar $A_k^{\dagger}$
+con la inversa de la matriz de Gram de $A_k$:
 \begin{align}
 x^{(k+1)} = x^{(k)} - A_k^{\dagger} f(x^{(k)}) =
 x^{(k)} - (A_k^T A_k)^{-1} A_k^T f(x^{(k)})
@@ -349,6 +323,69 @@ Gauss-Newton más sofisticadas como Levenberg-Marquardt o el método dogleg.
 <!-- TODO@ref: el tema de las citas con capítulos se ve bastante feo en el estilo ACM -->
 
 <!-- TODO: Acá se habla de weighted least squares: https://www.vectornav.com/resources/inertial-navigation-primer/math-fundamentals/math-leastsquares -->
+
+### Transformaciones
+
+0. Linear transforms and operators (skew symetric, cross product)
+1. Rotation representations: euler, axis/angle, quaternion, 3x3 intro
+2. Groups
+3. Exponential coordinates
+  1. Infinitesimal approximation
+  2. Mention Lie group/algebra (dont dive)
+  3. Exponential Map / Logarithm (and mention of rodrigues formula)
+  4. Same for SE(3): twist, exp, log, hat, vee
+  5. Pro: unconstrained optimization!!!!!!!
+
+
+
+Usualmente necesitaremos referirnos a transformaciones tridimensionales y ser
+capaces de manipularlas. El tipo de transformación en el que estamos interesados
+son los _movimientos de cuerpo rígido_. Estos pueden describirse mediante
+_traslaciones_ y _rotaciones_. A continuación, desarrollaremos algunos conceptos
+que nos ayudaran a describir estas ideas más formalmente.
+
+#### Operadores útiles
+
+Definición: Producto punto
+Observación: producto punto es x^t x (mover lo que está en least squares acá referenciarlo allá)
+Definición: Producto cruz
+Definición: Hat operator
+
+#### Transformaciones lineales
+
+Definición: Transformación lineal
+
+#### Transformaciones lineales y operadores
+
+#### Representraciones de rotaciones
+hat operator aca?
+
+#### Grupos
+
+#### Coordenadas exponenciales
+
+Groups:
+
+- General Linear Group: GL(n) = {invertible mats, @} = {A / det(A) != 0}
+- Special Linear Group: SL(n) = {A in GL(n) / det(A) = 1}
+- Orthogonal Group: O(n) = R orthogonal in M(n) = { R in M(n)/ RtR=I} (=> det(R) = +-1)
+- Special Orthogonal Group: SO(n) = {R in O(n) / det(R) = +1} (rotation matrices)
+- Affine Group: A(n) = L:Rn->Rn / L(x) = Ax + b con A in GL(n), b in Rn
+- Euclidean Group: E(n) = L:Rn->Rn / L(x) = Rx + T con R in O(n), T in Rn
+- Special Euclidean Group: SE(n) = {L(x) = Rx + T in E(n) / R in SO(n)}
+
+GL(n) in M(n)
+SL(n) in GL(n)
+SO(n) in SL(n)
+SO(n) in O(n)
+A(n) in GL(n + 1)
+E(n) in A(n)
+SE(n) in E(n) with R(n) in SO(n)
+
+
+- citar https://ethaneade.com/lie_groups.pdf (o https://ethaneade.com/lie.pdf)
+- citar multiple view geometry zisserman
+- citar state estimation barfoot
 
 
 
@@ -412,7 +449,7 @@ integración incurre, es que las mediciones de las IMU son altamente ruidosas, y
 acumularlas durante tiempos prolongados acumula también cantidades
 significativas de error. Este factor nos limita el tiempo que puede transcurrir
 entre dos keyframes; como ejemplo en @mur-artalVisualInertialMonocularSLAM2017
-se habla de keyframes que no pueden tener más de 0.5 segundos entre sí. A su
+se habla de keyframes que no pueden tener más de 0,5 segundos entre sí. A su
 vez, tener keyframes a muy bajas frecuencias afecta la calidad de las
 estimaciones de velocidad y biases; estos últimos son offsets de medición
 inherentemente variables de los acelerómetros y giroscopios a los que es
@@ -1491,14 +1528,14 @@ muestra de la cámara (`[A]` y `[G]`).
 [^percetto-web]: Wrapper de Perfetto para C: <https://github.com/olvaffe/percetto>
 
 A tiempo `[C]` las imágenes llegan al host luego de haber sido transferidas por
-un cable USB 3.2 con una demora de unos 13.5 ms representada por la barra
+un cable USB 3.2 con una demora de unos 13,5 ms representada por la barra
 `SHOT_TO_RECEIVED`. En ese momento ocurre una pequeña copia de Monado hacia
 Basalt `RECEIVED_TO_PUSHED`\marginnote{Esta copia es necesaria por un detalle en la
 implementación del \mono{slam\_tracker} para Basalt. Si bien es solucionable,
 como se ve en el gráfico, no afecta significativamente al rendimiento del
 pipeline}, y luego de unos 12 ms representados por
 `PUSHED_TO_PROCESSED`, a tiempo `[F]`, la pose estimada para el tiempo `[A]`
-está computada. Es decir, tenemos una demora de unos 25.5 ms desde que la
+está computada. Es decir, tenemos una demora de unos 25,5 ms desde que la
 muestra es capturada hasta que el sistema de SLAM/VIO es capaz de estimar la
 pose correspondiente al momento de captura de la muestra. Cabe aclarar que estos
 tiempos son muy variables incluso en la misma corrida, al depender de la calidad
@@ -1511,7 +1548,7 @@ Monado una predicción de a dónde el runtime piensa que el dispositivo se va a
 encontrar 7 ms en el futuro, en `[B]`. Cabe aclarar que la solicitud debe
 ser respondida de forma inmediata y la barra `REQUEST_TO_PREDICTION` no implica
 ninguna espera hasta `[B]`, es solo una forma de visualizar los 7 ms.
-Notar que en ese punto, todavía faltan 25.5 ms para tener la predicción de
+Notar que en ese punto, todavía faltan 25,5 ms para tener la predicción de
 Basalt para `[A]`, más aún, una predicción dada por Basalt para el futuro
 `[B]` ni siquiera existirá, ya que el sistema solo estima poses para los tiempos
 de las muestras, es decir la próxima estimación correspondería al tiempo `[G]`.
@@ -1520,7 +1557,7 @@ petición a tiempo `[D]` para `[E]` debe ser respondida.
 
 En conclusión, tenemos un **desfasaje temporal** que hace que las poses
 estimadas siempre estén levemente en el pasado; en el tramo seleccionado fue de
-25.5ms (más los 7 ms de predicción), pero es variable durante la corrida.
+25,5ms (más los 7 ms de predicción), pero es variable durante la corrida.
 Además, las poses se estiman para **puntos discretos** de tiempo, mientras que
 el usuario puede pedir una predicción para cualquier punto arbitrario. Entonces,
 si queremos ser capaces de proveer al usuario una pose para el tiempo
@@ -1730,15 +1767,15 @@ pertenece al historial de espacios. En el ejemplo se muestra como iría
 actualizándose el vector promediado (en verde) al integrar las tres muestras (en
 azul) que ocurren entre $t=1$ y $t=2$. Además, se muestra como estos vectores
 promedios se utilizan para extrapolar linealmente para los tiempos requeridos
-por un usuario $t \in \{1,45; 1,75; 1.95\}$ (en anaranjado). Por simplicidad, el
+por un usuario $t \in \{1,45; 1,75; 1,95\}$ (en anaranjado). Por simplicidad, el
 ejemplo asume que tanto las muestras de odometría de la IMU a tiempos $t \in
-\{1,3; 1,6; 1.9\}$ como las estimaciones `B` y `C` coinciden perfectamente con
+\{1,3; 1,6; 1,9\}$ como las estimaciones `B` y `C` coinciden perfectamente con
 la trayectoria real del dispositivo.
 
 <!-- TODO@end: estaríá bueno que ambas figuras aparezcan en la misma página -->
 
 \fig{fig:prediction-with-imu}{source/figures/prediction-with-imu.pdf}{Predicción con promediado de muestras IMU}{%
-Ejemplo de predicción para tiempos $t \in \{1,45; 1,75; 1.95\}$ utilizando la
+Ejemplo de predicción para tiempos $t \in \{1,45; 1,75; 1,95\}$ utilizando la
 idea de promediar muestras de la IMU posteriores a la pose más reciente del
 historial (\mono{B} en este caso, se considera que \mono{C} no pertenece al historial
 aún). Se asume que las poses estimadas por el sistema de SLAM y las muestras de
@@ -1751,7 +1788,7 @@ solo se utiliza el historial de poses, se muestra en la
 escenario.
 
 \fig{fig:prediction-without-imu}{source/figures/prediction-without-imu.pdf}{Predicción sin uso de muestras IMU}{%
-Ejemplo de predicción para tiempos $t \in \{1,45; 1,75; 1.95\}$ ignorando las
+Ejemplo de predicción para tiempos $t \in \{1,45; 1,75; 1,95\}$ ignorando las
 muestras de IMU y utilizando unicamente el historial de poses con \mono{A} y \mono{B} como
 últimas muestras (esto es antes de que llegue \mono{C}). De vuelta, asumimos que las
 estimaciones y no contienen error por simplicidad.
@@ -1888,7 +1925,7 @@ de que $w$ suele ser pequeño y por ende contiene orientaciones que no cambian
 significativamente. Esto nos permite utilizar el resultado expuesto en
 [@gramkowAveragingRotations2001] que muestra que, para rotaciones de menos de 40
 grados, calcular la media usual (y posteriormente normalizarla) es una muy buena
-aproximación con un error de menos del 1%.
+aproximación con un error de menos del $1\%$.
 
 Tenemos entonces que el filtro queda definido por la siguiente ecuación.
 <!-- $$ -->
@@ -1906,7 +1943,7 @@ $\R^7$ gracias a la aproximación de los cuaterniones mencionada anteriormente.
 
 Este filtro codifica en un único valor los datos históricos e integra nuevos
 datos con una intensidad dada por un _factor de suavizado_ $\alpha \in [0, 1]$
-configurable por el usuario (0.1 por defecto). En el caso de tener un único
+configurable por el usuario (0,1 por defecto). En el caso de tener un único
 escalar $x_k$ que filtrar, el suavizado exponencial queda definido de esta
 forma:
 <!-- $$ -->
@@ -1947,12 +1984,12 @@ escalar de los quaternions -->
 Hay que cambiar el template y revisar todo de vuelta, no hay otra.
 El template base es muy malo. -->
 
-El filtro 1€ [@casiezFilterSimpleSpeedbased2012] se basa en el [Suavizado
-exponencial](#sec:exponential-smoothing), pero utiliza un factor $\alpha$
-dinámico que se adapta automáticamente con base a la tasa de cambio de la señal.
-Reusamos también la idea de interpolar esféricamente para la orientación
-presentada en el filtro anterior. El filtro queda definido para la posición
-$p_k$ de la siguiente manera:
+El filtro 1€ [@casiezFilterSimpleSpeedbased2012] se basa en el
+\hyperref[suavizado-exponencial]{suavizado exponencial}, pero utiliza un factor
+$\alpha$ dinámico que se adapta automáticamente con base a la tasa de cambio de
+la señal. Reusamos también la idea de interpolar esféricamente para la
+orientación presentada en el filtro anterior. El filtro queda definido para la
+posición $p_k$ de la siguiente manera:
 <!-- $$ -->
 \begin{align}
 \hat{p}_0 &= p_0 \\
@@ -1980,8 +2017,7 @@ f_C &= f_{C_{min}} + \beta | \hat{\dot{p}}_k |
 
 [^fc-lowpass]: Algunos lectores reconocerán que el término “frecuencia de corte”
 proviene de los filtros _low-pass_ y efectivamente, notarán que el filtro 1€ es
-de este tipo con la particularidad de tener una frecuencia de corte que
-dinámica.
+de este tipo con la particularidad de tener una frecuencia de corte dinámica.
 
 [^fc-perception]: Frecuencias de corte bajas reducen el ruido de las poses a
 costa de aumentar la latencia. La forma en la que $f_c$ es definida resulta en
@@ -2109,7 +2145,7 @@ GNU/Linux.
 [^realsense-sdk]: <https://github.com/IntelRealSense/librealsense>
 [^wmr]: <https://www.microsoft.com/en-us/mixed-reality/windows-mixed-reality>
 
-### Manejo y características de las muestras de datos
+### Características de los datos
 
 Lo primero que se necesita para poder utilizar estos dispositivos para SLAM es
 conseguir el acceso a los datos que estos generan; o sea los flujos de imágenes
@@ -2132,10 +2168,9 @@ de imágenes de cámaras y muestras de IMU. Es en la definición de _adecuado_ e
 donde se esconden varios detalles importantes. Intentaremos clarificar los
 requierimientos para tener poses usables para SLAM a continuación:
 
-<!-- TODO: referenciar sección de calibración de IMU si la hago -->
-<!-- TODO: referenciar sección de calibración de cámara si la hago -->
+<!-- TODO@end: referenciar sección de calibración de IMU si la hago -->
+<!-- TODO@end: referenciar sección de calibración de cámara si la hago -->
 <!-- TODO@def: uso calibración -->
-<!-- TODO@def: uso "intrínseca" y "extrínseca" -->
 
 #### Calibración de parámetros intrínsecos
 
@@ -2373,370 +2408,5 @@ coordenadas a las poses que el sistema le devuelve a Monado.
 Estamos ahora en condiciones de entender las contribuciones realizadas en este trabajo
 sobre los controladores de dispositivos RealSense y WMR.
 
-| Caraceterística/Controlador      | RealSense                                                                                                                                                 | WMR                                                                                                      |
-|----------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------|
-| Calibración de Cámaras           | Modelo de cámara rt4 precalibrado, los parámetros son cero, no hay distorsión. Cámaras con mucho solapamiento.                                            | Cámara fisheye, con modelo rt8 (extraño). No soportado en ningún sistema. Cámaras con poco solapamiento. |
-| Calibración de IMU               | Precalibrados. Parámetros son cero. Soportado por cualquier sistema. Soportado por cualquier sistema.                                                     | No precalibrado. Solo soportado por Basalt. Aunque la calibración es sencilla de realizar en Monado.     |
-| Sincronización temporal interna  | Sí, aunque requiere parche en el kernel.                                                                                                                  | Sí.                                                                                                      |
-| Sincronización temporal con host | Automática por SDK.                                                                                                                                       | Manual con suavizado exponencial. Resta hacer cálculo de latencia.                                       |
-| Muestras de IMU                  | Muestras no unificadas. Se utiliza omisión de sensor más lento. Resta interpolar. D455: accel. 60-250hz y giro. 200-400hz.                                | Muestras unificadas. 1000hz en paquetes de 4. Se promedian y se usan 250hz.                              |
-| Muestras de Cámara               | Múltiples resoluciones y frecuencias para elegir. Obturador global.                                                                                       | Cámaras monocromáticas 640x480 a 30fps. Obturador global.                                                |
-| Exposición y ganancia            | Manual. Alternativa automática con el SDK aunque no es ideal para aplicaciones  de SLAM por que aumenta exposure rápido. Los sensores son de más calidad. | Manual. Resta implementar curvas estudiadas. Sensores baratos. Ingeniería inversa.                       |
-| Interfaz con hardware            | RealSense SDK. Manejo automático de colas. rs_frame.                                                                                                      | Libusb. Manejo manual de memoria. Protocolo desconocido.                                                 |
-
-
-## Controladores en Monado
-
-En Monado, la interacción con la gran variedad de dispositivos que el runtime
-soporta es realizada mediante _drivers_ o _controladores_. Estos, como se puede
-ver en la \figref{fig:slam-tracker-dataflow}, le permiten a Monado interactuar con
-sistemas XR físicos mediante abstracciones derivadas de los requisitos de
-OpenXR. Un sistema XR en este contexto hace referencia a un conjunto de
-dispositivos XR. Un dispositivo XR, en forma intuitiva, es algún tipo de hardware
-que permite la entrada y/o salida de información para intercambio con aplicaciones de XR. Un caso
-paradigmático de un sistema XR podría considerarse el conjunto de casco y un par
-de mandos provistos por un fabricante.
-
-El concepto que se termina implementando en Monado es un poco más general, ya
-que además de sistemas físicos, soporta sistemas simulados que proveen distintas
-funcionalidades. Entre estas se incluyen la capacidad de conectar dispositivos de forma remota,
-emulación de dispositivos con teclado y ratón[^qwerty-mr] o mediante otros dispositivos como
-placas Arduino[^arduino]. En este trabajo se
-diferenció el concepto de _fuente de datos_ del de _dispositivo_ ya que es en
-definitiva esto en lo que estaremos interesados para SLAM, obtener fuentes de
-datos de IMU y cámaras.
-
-[^qwerty-mr]: <https://gitlab.freedesktop.org/monado/monado/-/merge_requests/714>
-[^arduino]: <https://www.arduino.cc/>
-
-\fig{fig:devices-ody-d455}{source/figures/devices-ody-d455.jpg}{Dispositivos XR utilizados}{%
-Dispositivos XR utilizados en este trabajo. A izquierda un casco Samsung
-Odyssey+ y a derecha una cámara Intel RealSense D455.
-}
-
-<!-- TODO@def: no defino que es SDK, o bindings -->
-
-Se utilizaron los dos dispositivos que se muestran en la
-\figref{fig:devices-ody-d455} como principales fuentes de datos para SLAM. A la derecha
-de la imagen tenemos una cámara de profundidad _Intel RealSense D455_[^d455]
-mientras que a izquierda tenemos un casco _Samsung Odyssey+_. La línea de
-cámaras y módulos RealSense de Intel se enfoca en aplicaciones de robótica y
-visión por computadora, presentan distintos modelos con múltiples sensores
-especializados (en nuestro caso nos limitaremos a utilizar su IMU y cámaras
-estéreo). Estos vienen precalibrados, y además se tiene un SDK[^realsense-sdk]
-de código abierto en C/C++ (con _bindings_ para otros lenguajes) que facilita la
-obtención y manipulación de datos. En contraste con esto, el casco de Samsung es
-un casco ligado a la plataforma privativa _Windows Mixed Reality (WMR)_[^wmr]
-que solo es soporta en sistemas operativos Windows[^windows]. WMR incluye algoritmos
-propietarios de tracking por SLAM desarrollados por Microsoft.
-
-[^windows]: <https://www.microsoft.com/en-us/windows/>
-<!-- TODO@def: uso el termino seis grados de libertad -->
-<!-- TODO@def: uso upstream -->
-
-
-
-
-
-Mientras que la cámara D455 funcionó como un dispositivo sumamente versátil para
-el prototipado y experimentación con sistemas de SLAM, el Odyssey+ presenta
-serios desafíos que requirieron trabajo con la comunidad y métodos de ingeniería inversa
-para poder obtener acceso a las fuentes de datos necesarias para el tracking por
-SLAM. Cabe aclarar, que anterior a este trabajo, y según mi mejor entendimiento,
-no existía forma de utilizar este tipo de cascos con tracking con seis grados de libertad
-para correr aplicaciones OpenXR sobre sistemas operativos basados en GNU/Linux
-\marginnote{%\
-A pesar de que aún queda mucho por hacer para que el tracking
-presentado llegue a niveles de calidad comparables a la versión
-privativa de WMR, la contribución presentada deja asentada en upstream una
-infraestructura sobre la que extender y mejorar el ecosistema de VR para
-GNU/Linux.
-} \marginnote{%\
-Cuando hablamos de GNU/Linux nos referimos a distribuciones
-enfocadas a computadoras personales como Ubuntu o Manjaro.
-Técnicamente, los dispositivos autónomos Oculus Quest de Meta (y otros), corren
-sobre sistemas operativos basados en Android, que a su vez está basado en
-GNU/Linux.
-}.
-
-[^d455]: <https://www.intelrealsense.com/depth-camera-d455/>
-[^odysseyplus]: <https://www.samsung.com/us/support/computing/hmd/hmd-odyssey/hmd-odyssey-plus-mixed-reality/>
-[^realsense-sdk]: <https://github.com/IntelRealSense/librealsense>
-[^wmr]: <https://www.microsoft.com/en-us/mixed-reality/windows-mixed-reality>
-
-### Manejo y características de las muestras de datos
-
-Lo primero que se necesita para poder utilizar estos dispositivos para SLAM es
-conseguir el acceso a los datos que estos generan; o sea los flujos de imágenes
-y muestras de IMU. La forma y protocolos necesarios para comunicarse con estos
-dispositivos se realiza de maneras específicas para cada uno y como veremos en
-las secciones dedicadas, este es uno de los trabajos fundamentales de un
-controlador. Además, un controlador tiene que ser capaz, no solo de obtener esta
-información sino que también de redirigirla a los módulos adecuados de Monado.
-En la implementación de estas ideas surgen naturalmente los conceptos de
-_fuentes (sources)_ y _sumideros (sinks)_ de datos. En el runtime, estos
-conceptos existían de exclusivamente para el tratado de imágenes, y fueron extendidos
-para también soportar el flujo de muestras de IMU. Los dispositivos entonces funcionan como
-fuentes de datos, que instancian un `TrackerSlam` el cual les provee sumideros a
-los que redirigir las muestras de sus sensores.
-
-A la hora de implementar un controlador para una familia de dispositivos
-enfocado a SLAM, hay una serie de cuestiones a tener en cuenta. Desde el punto
-de vista de sistemas de SLAM/VIO, lo único que nos interesa es un flujo adecuado
-de imágenes de cámaras y muestras de IMU. Es en la definición de _adecuado_ en
-donde se esconden varios detalles importantes. Intentaremos clarificar los
-requierimientos para tener poses usables para SLAM a continuación:
-
-<!-- TODO: referenciar sección de calibración de IMU si la hago -->
-<!-- TODO: referenciar sección de calibración de cámara si la hago -->
-<!-- TODO@def: uso calibración -->
-<!-- TODO@def: uso "intrínseca" y "extrínseca" -->
-
-#### Calibración de parámetros intrínsecos
-
-En primer lugar, es necesario acceder a la información de calibración de los
-sensores en cuestión, para poder comunicársela de alguna forma a los sistemas de
-SLAM. Esto incluye la calibración para los cuatro sensores usuales: giroscopio,
-acelerómetro y el par de cámaras estéreo. La información de calibración describe
-valores que toman los parámetros de un modelo de calibración especificado. Es
-usual que, para evitarle el proceso de calibración al usuario de los sensores,
-estos provean valores de fábrica. La precisión provista por estos ha probado ser
-de suficiente calidad para los sistemas de SLAM integrados en este trabajo, pero
-es necesario aclarar que los valores reales irán cambiando con el tiempo y el
-desgaste, haciendo que la recalibración sea un punto importante en el uso de
-estos dispositivos. Monado provee algunas herramientas básicas de calibración
-para unos pocos modelos de cámara, pero será necesario profundizar en este
-aspecto como trabajo a futuro.
-
-Habiendo dicho esto, vale aclarar que existen sistemas como OpenVINS
-[@genevaOpenVINSResearchPlatform2020] que son capaces de realizar el proceso de
-calibración de forma _online_ durante corridas normales. Esto es una
-característica realmente importante que ninguno de los tres sistemas
-integrados provee. Todos ellos asumen parámetros de calibración fijos y estos
-deben ser provistos previos a la ejecución.
-
-
-
-Como intentamos evitarle la calibración manual al usuario, querremos ser capaces
-de utilizar la calibración provista de fábrica. Para esto es vital que los
-sistemas de SLAM soporten los mismos modelos de calibración para los que el
-fabricante provee valores\marginnote{%\
-Mientras que en la práctica es conveniente recalibrar con modelos soportados,
-podría resultar razonable estudiar expresiones analíticas que "traduzcan",
-en alguna forma significativa, parámetros de un modelo a otro.
-}. De lo contrario se necesitarán correcciones que
-usualmente terminan siendo mucho más costosas que si los sistemas soportaran los
-modelos nativamente. Ejemplos de esto son la _desdistorsión_[^opencv-undistort]
-y _rectificación_[^opencv-stereorectify] de imágenes sobre la cual no nos
-explayaremos aquí, pero basta con entender que es una transformación costosa
-aplicada sobre todos los píxeles de las imágenes para “normalizarla”. Esta
-normalización facilita el uso de las imágenes cuando los sistemas no implementan
-los modelos de calibración en los que el fabricante comparte los parámetros del
-dispositivo.
-
-[^opencv-stereorectify]: Ver `stereoRectify` en
-<https://docs.opencv.org/3.4/d9/d0c/group__calib3d.html>
-
-[^opencv-undistort]: Ver `initUndistortRectifyMap` en
-<https://docs.opencv.org/3.4/da/d54/group__imgproc__transform.html>
-
-
-#### Calibración de parámetros extrínsecos
-
-El conjunto de sensores a utilizar: par de cámaras estéreo y una IMU con
-acelerómetro y giroscopio deben estar sujetos a un cuerpo rígido. Es decir, las
-transformaciones en $SE3$ que describen como alterar la pose de un sensor a otro
-se mantienen constantes sin importar la transformación del dispositivo.
-Los valores que describen estas transformaciones es a lo que denominamos como
-_parámetros extrínsecos_ de la calibración en contraste con los íntrinsecos. Los
-tres sistemas integrados requieren estos valores antes de comenzar la corrida.
-
-#### Sincronización temporal
-
-Otro problema escencial que debe solucionarse es el de la
-sincronización de timestamps internas. Cualquier dispositivo que quiera
-utilizarse para SLAM, debería tener las muestras de todos sus sensores
-sincronizadas por hardware. Es decir, con timestamps que reflejen lo más
-precisamente posible los tiempos internos en los que las muestras se tomaron.
-
-Siguiendo con esta línea de problemas de marcas de tiempo, necesitamos un
-mecanismo de sincronización de timestamps con el host que traiga los relojes
-del dispositivo y los del host, el cual está corriendo Monado, al mismo _dominio
-temporal_. Es decir, que una timestamp en uno, represente el mismo momento de
-tiempo en el otro. Como las aplicaciones OpenXR utilizan el tiempo del host al
-solicitar predicciones de poses, siempre intentaremos trabajar en ese dominio.
-Veremos que esta sincronización no es trivial y es una fuente de errores
-común.
-
-#### Muestras de IMU unificadas
-
-Entrando a problemas que afectan a sensores particulares, todos los sistemas de
-SLAM estudiados esperan muestras de IMU unificadas que combinen en una única
-timestamp los valores del acelerómetro y los del giroscopio. En el caso de tener
-sensores con frecuencias diferentes o timestamps que no coinciden (pero siempre
-sincronizadas), será necesario realizar algun tipo de transformacion sobre las
-muestras para unifcarlas.
-
-#### Obturador
-
-
-
-
-
-Por el lado de los sensores de la cámara, será importante que el obturador o
-_shutter_\marginnote{%\
-El término obturador proviene de los sensores ópticos tradicionales.
-Un obturador era una pieza mecánica en movimiento que controlaba el tiempo
-durante el cual la película fotográfica era expuesta a la luz de la escena.
-Actualmente el proceso de control de exposición se realiza con interruptores
-en los sensores ópticos.
-} de las cámaras sea un _global shutter_, es
-decir que todos los píxeles sean capturados en el mismo instante. Por el
-contrario, las cámaras que se utilizan habitualmente en dispositivos de consumo
-como teléfonos inteligentes, presentan un _rolling shutter_ en dónde los píxeles
-son capturados en un "barrido", fila por fila. Esto genera
-distorsiones\marginnote{%\
-Esta distorsión es homónima al tipo de cámara y se
-denomina el efecto de rolling shutter.
-} significativas en presencia de
-movimientos suficientemente rápidos como se ve en la
-\figref{fig:rolling-shutter}. Estas distorsiones afectan negativamente la
-capacidad de los algoritmos de SLAM para reconocer y trackear features de forma
-estable.
-
-\figw{fig:rolling-shutter}{source/figures/rolling-shutter.jpg}{Efecto rolling shutter}{%
-Ejemplo de la distorsión que se genera en cámaras con rolling shutter que
-capturan la imagen barriendo por filas de píxeles. Esto genera distorsiones en
-los objetos rígidos que son particularmente notables en presencia de movimientos
-de alta velocidad como los de la hélice. Esto no sucede con cámaras con global
-shutter que capturan todos los píxeles en el mismo momento.\\
-\\
-\tiny Recorte de fotografía por Soren Ragsdale CC BY 2.0 \url{https://creativecommons.org/licenses/by/2.0/}
-}{0.5\linewidth}
-
-#### Exposición y ganancia
-
-
-
-Otro aspecto muy importante a la hora de presentar muestras de imágenes a
-sistemas de SLAM es el de utilizar valores adecuados de _exposición
-(exposure)_ y _ganancia (gain)_. La exposición o exposure es la cantidad de
-tiempo que el obturador de la cámara habilita la entrada de luz a los sensores
-ópticos por cada cuadro. Por otro lado, la ganancia controla el nivel de
-amplificación (usualmente digital) que ocurrirá sobre la señal original. El
-control de estos parámetros (y el de la iluminación del entorno) es vital para
-asegurar imágenes que posean un brillo adecuado. Imágenes muy oscuras pierden
-detalles, y por ende la posibilidad de generar features. De la misma manera
-imagenes _sobreexpuestas_ (con demasiada iluminación en el entorno y valores de
-exposición y ganancia altos) presentan el mismo problema al saturar los
-receptores ópticos, causando que porciones significativas de la imagen se
-transforman en manchas blancas. Estos problemas pueden verse en la
-\figref{fig:under-over-exposure}. Además de este problema, los valores de
-exposición y ganancia afectan el _ruido_ y el _motion blur_ (la difuminación que
-se genera por movimientos rápidos en la imagen\marginnote{%\
-El motion blur ocurre cuando los movimientos que se realizan modifican
-sustancialmente la imagen a la que los sensores ópticos están expuestos mientras
-el obturador sigue abierto.
-}) como
-se muestra en la \figref{fig:expgain-grids}.
-
-\fig{fig:under-over-exposure}{source/figures/under-over-exposure.pdf}{Poca y sobre-exposición}{
-Arriba: imagen con valores de exposición y ganancia adecuados a las condiciones
-de iluminación de la toma. Izquierda: imagen oscura. Derecha: imagen sobre
-expuesta. Los histogramas muestran la cantidad de píxeles que toman los valores
-del eje X de 0 a 255. En las imágenes de abajo hay pérdida de información hacia
-ambos extremos del histograma.
-}
-
-\fig{fig:expgain-grids}{source/figures/expgain-grids.pdf}{Ruido y motion blur}{%
-Efectos de la exposición y ganancia sobre el ruido y motion blur de la imagen.
-El ejemplo fue tomados con la cámara D455 con distintas configuracions de
-exposición y ganancia. A izquierda se observan múltiples capturas de la misma
-región de 256 píxeles cuadrados que tiene un objeto en movimiento. A derecha
-tenemos una porción más pequeña de 32 píxeles cuadrados provenientes de las
-mismas imágenes. Se puede observar en ambas grillas que aumentar ambos valores
-también incrementa el brillo de la imagen. Por su parte en la figura derecha
-podemos ver que aumentar la ganancia incrementa el ruido, mientras que en la
-figura izquierda se observa que valores altos de exposición incrementan el
-motion blur del objeto en movimiento.
-}
-
-Un último problema a considerar que se presenta por el parámetro de exposición,
-es el llamado _parpadeo_ o _flicker_. Este ocurre en entornos iluminados por
-lámparas artificiales. Estas presentan parpadeos a altas frecuencias que no son
-visibles a simple vista pero que, si esas frecuencias no están alineadas con las
-de la exposición de las cámaras, producen el parpadeo. Este es un cambio
-intermitente en el brillo de las imágenes capturadas y es un punto extra a tener
-en cuenta sobre las muestras.
-
-<!-- TODO@def: uso el concepto de "upstream" -->
-
-Para evitar este abanico de problemas, se emplean algoritmos de _ajuste
-automático_ de exposición y ganancia. Estos intentan balancear los valores de
-estos parámetros en tiempo real; usualmente con técnicas de análisis de
-histogramas. Hay que ser cuidadoso de que los sistemas empleados soporten tales
-cambios en la naturaleza de los datos introducidos. En este trabajo se evaluaron
-algunas posibilidades para emplear algoritmos de este tipo pero ninguna se
-desarrolló lo suficiente como para realizar una contribución a upstream.
-Implementar ideas como las propuestas por @zhangActiveExposureControl2017 es una
-tarea pendiente como trabajo a futuro. Por ahora, los controladores recaen en
-ajustes manuales en los cuales se usa la heurística de que si la imagen se ve
-razonablemente bien a los ojos del usuario, entonces esta es probablemente
-adecuada para el sistema de SLAM.
-
-#### Comunicación con el dispositivo
-
-La interfaz de comunicación con el hardware será diferente en cada controlador, pero
-será usual tener que tratar con hilos consumidores y callbacks asíncronos. En estos
-habrá colas de datos que deberemos evitar sean saturadas. Para el caso particular del
-manejo de imágenes, al ser estos recursos de gran tamaño, Monado utiliza mecanismos de
-_reference counting_ mediante su estructura `xrt_frame` para la gestión de memoria.
-Además, como se mencionó anteriormente, `slam_tracker` utiliza la estructura de datos
-`cv::Mat` de OpenCV como contenedora de imágenes la cual también provee conteo de
-referencias. Finalmente, las interfaces con hardware mediante librerías específicas
-puede traer un contenedor extra de conteo de referencias. Esto puede dar lugar a muchos
-problemas con el manejo de la memoria y especial cuidado debe tenerse a la hora de
-adquirir y liberar estos recursos.
-
-#### Configuraciones de captura
-
-Los sensores suelen venir con distintos modos de captura de muestras. Algunos
-habilitan mayores frecuencias a costa de menor precisión, o mayor precisión a
-costa de un mayor consumo energético, o soluciones de compromiso similares. La
-capacidad de acceso a la configuración de estos sensores dependerá
-principalmente de lo que los fabricantes del dispositivo decidan exponer al
-programador. En caso de existir más de una forma de captura, será necesario
-poder seleccionar en el controlador la configuración deseada.
-
-#### Sistemas de coordenadas
-
-Finalmente, el último punto que traeremos a atención, es la convivencia de
-múltiples sistemas de coordenadas que deben unificarse: el de la IMU, el de la
-implementación de SLAM y el de Monado.
-
-Por un lado, será necesario en algunos casos alinear las muestras de la IMU al
-sistema de coordenadas de la implementación de SLAM antes de transferirlas. De
-lo contrario, se pueden presentar situaciones como una implementación que
-considera que está moviéndose hacia adelante por las muestras ópticas, mientras
-que las muestras de la IMU le indican que está yendo hacia la derecha; esto
-causa inconsistencias que suelen terminar en divergencias de los algoritmos de
-optimización. Además, es usual que también se necesite aplicar un cambio de
-coordenadas a las poses que el sistema le devuelve a Monado.
-
----
-
-Estamos ahora en condiciones de entender las contribuciones realizadas en este trabajo
-sobre los controladores de dispositivos RealSense y WMR.
-
-| Caraceterística/Controlador      | RealSense                                                                                                                                                 | WMR                                                                                                      |
-|----------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------|
-| Calibración de Cámaras           | Modelo de cámara rt4 precalibrado, los parámetros son cero, no hay distorsión. Cámaras con mucho solapamiento.                                            | Cámara fisheye, con modelo rt8 (extraño). No soportado en ningún sistema. Cámaras con poco solapamiento. |
-| Calibración de IMU               | Precalibrados. Parámetros son cero. Soportado por cualquier sistema. Soportado por cualquier sistema.                                                     | No precalibrado. Solo soportado por Basalt. Aunque la calibración es sencilla de realizar en Monado.     |
-| Sincronización temporal interna  | Sí, aunque requiere parche en el kernel.                                                                                                                  | Sí.                                                                                                      |
-| Sincronización temporal con host | Automática por SDK.                                                                                                                                       | Manual con suavizado exponencial. Resta hacer cálculo de latencia.                                       |
-| Muestras de IMU                  | Muestras no unificadas. Se utiliza omisión de sensor más lento. Resta interpolar. D455: accel. 60-250hz y giro. 200-400hz.                                | Muestras unificadas. 1000hz en paquetes de 4. Se promedian y se usan 250hz.                              |
-| Muestras de Cámara               | Múltiples resoluciones y frecuencias para elegir. Obturador global.                                                                                       | Cámaras monocromáticas 640x480 a 30fps. Obturador global.                                                |
-| Exposición y ganancia            | Manual. Alternativa automática con el SDK aunque no es ideal para aplicaciones  de SLAM por que aumenta exposure rápido. Los sensores son de más calidad. | Manual. Resta implementar curvas estudiadas. Sensores baratos. Ingeniería inversa.                       |
-| Interfaz con hardware            | RealSense SDK. Manejo automático de colas. rs_frame.                                                                                                      | Libusb. Manejo manual de memoria. Protocolo desconocido.                                                 |
 
 

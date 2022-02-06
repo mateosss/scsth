@@ -77,7 +77,7 @@
 % Spanish languages need extra options in order to work with this template
 % \PassOptionsToPackage{spanish,es-lcroman}{babel}
 % \PassOptionsToPackage{american}{babel} % change this to your language(s), main language last
-\usepackage[spanish, es-lcroman]{babel}
+\usepackage[spanish, es-lcroman, es-tabla]{babel}
 
 \usepackage{csquotes}
 \PassOptionsToPackage{%
@@ -95,7 +95,8 @@
 }{biblatex}
     \usepackage{biblatex}
 
-\PassOptionsToPackage{fleqn}{amsmath}       % math environments and more by the AMS
+% mateosss: Original template likes equations to the left. I don't.
+% \PassOptionsToPackage{fleqn}{amsmath}       % math environments and more by the AMS
   \usepackage{amsmath}
 \usepackage{amssymb}
 

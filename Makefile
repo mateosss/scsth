@@ -52,10 +52,12 @@ tex: md
 	pandoc \
 	--output="$(OUTPUTDIR)/thesis.tex" \
 	--template="$(STYLEDIR)/template.tex" \
+	--include-in-header="$(EXTERNALDIR)/01mf02/pandocfilters/header.tex" \
 	--include-in-header="$(STYLEDIR)/preamble.new.tex" \
 	--listings \
 	--top-level-division=part \
 	--metadata=link-citations:true \
+	--filter=external/01mf02/pandocfilters/all.py \
 	--bibliography="$(BIBFILE)" \
 	--biblatex \
 	--citeproc \

@@ -83,3 +83,5 @@ recalibración
 OpenVINS
 reference
 counting
+iterador
+secc

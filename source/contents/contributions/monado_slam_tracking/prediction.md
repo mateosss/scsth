@@ -95,14 +95,14 @@ muestra de la cámara (`[A]` y `[G]`).
 [^percetto-web]: Wrapper de Perfetto para C: <https://github.com/olvaffe/percetto>
 
 A tiempo `[C]` las imágenes llegan al host luego de haber sido transferidas por
-un cable USB 3.2 con una demora de unos 13.5 ms representada por la barra
+un cable USB 3.2 con una demora de unos 13,5 ms representada por la barra
 `SHOT_TO_RECEIVED`. En ese momento ocurre una pequeña copia de Monado hacia
 Basalt `RECEIVED_TO_PUSHED`\marginnote{Esta copia es necesaria por un detalle en la
 implementación del \mono{slam\_tracker} para Basalt. Si bien es solucionable,
 como se ve en el gráfico, no afecta significativamente al rendimiento del
 pipeline}, y luego de unos 12 ms representados por
 `PUSHED_TO_PROCESSED`, a tiempo `[F]`, la pose estimada para el tiempo `[A]`
-está computada. Es decir, tenemos una demora de unos 25.5 ms desde que la
+está computada. Es decir, tenemos una demora de unos 25,5 ms desde que la
 muestra es capturada hasta que el sistema de SLAM/VIO es capaz de estimar la
 pose correspondiente al momento de captura de la muestra. Cabe aclarar que estos
 tiempos son muy variables incluso en la misma corrida, al depender de la calidad
@@ -115,7 +115,7 @@ Monado una predicción de a dónde el runtime piensa que el dispositivo se va a
 encontrar 7 ms en el futuro, en `[B]`. Cabe aclarar que la solicitud debe
 ser respondida de forma inmediata y la barra `REQUEST_TO_PREDICTION` no implica
 ninguna espera hasta `[B]`, es solo una forma de visualizar los 7 ms.
-Notar que en ese punto, todavía faltan 25.5 ms para tener la predicción de
+Notar que en ese punto, todavía faltan 25,5 ms para tener la predicción de
 Basalt para `[A]`, más aún, una predicción dada por Basalt para el futuro
 `[B]` ni siquiera existirá, ya que el sistema solo estima poses para los tiempos
 de las muestras, es decir la próxima estimación correspondería al tiempo `[G]`.
@@ -124,7 +124,7 @@ petición a tiempo `[D]` para `[E]` debe ser respondida.
 
 En conclusión, tenemos un **desfasaje temporal** que hace que las poses
 estimadas siempre estén levemente en el pasado; en el tramo seleccionado fue de
-25.5ms (más los 7 ms de predicción), pero es variable durante la corrida.
+25,5ms (más los 7 ms de predicción), pero es variable durante la corrida.
 Además, las poses se estiman para **puntos discretos** de tiempo, mientras que
 el usuario puede pedir una predicción para cualquier punto arbitrario. Entonces,
 si queremos ser capaces de proveer al usuario una pose para el tiempo
@@ -334,15 +334,15 @@ pertenece al historial de espacios. En el ejemplo se muestra como iría
 actualizándose el vector promediado (en verde) al integrar las tres muestras (en
 azul) que ocurren entre $t=1$ y $t=2$. Además, se muestra como estos vectores
 promedios se utilizan para extrapolar linealmente para los tiempos requeridos
-por un usuario $t \in \{1,45; 1,75; 1.95\}$ (en anaranjado). Por simplicidad, el
+por un usuario $t \in \{1,45; 1,75; 1,95\}$ (en anaranjado). Por simplicidad, el
 ejemplo asume que tanto las muestras de odometría de la IMU a tiempos $t \in
-\{1,3; 1,6; 1.9\}$ como las estimaciones `B` y `C` coinciden perfectamente con
+\{1,3; 1,6; 1,9\}$ como las estimaciones `B` y `C` coinciden perfectamente con
 la trayectoria real del dispositivo.
 
 <!-- TODO@end: estaríá bueno que ambas figuras aparezcan en la misma página -->
 
 \fig{fig:prediction-with-imu}{source/figures/prediction-with-imu.pdf}{Predicción con promediado de muestras IMU}{%
-Ejemplo de predicción para tiempos $t \in \{1,45; 1,75; 1.95\}$ utilizando la
+Ejemplo de predicción para tiempos $t \in \{1,45; 1,75; 1,95\}$ utilizando la
 idea de promediar muestras de la IMU posteriores a la pose más reciente del
 historial (\mono{B} en este caso, se considera que \mono{C} no pertenece al historial
 aún). Se asume que las poses estimadas por el sistema de SLAM y las muestras de
@@ -355,7 +355,7 @@ solo se utiliza el historial de poses, se muestra en la
 escenario.
 
 \fig{fig:prediction-without-imu}{source/figures/prediction-without-imu.pdf}{Predicción sin uso de muestras IMU}{%
-Ejemplo de predicción para tiempos $t \in \{1,45; 1,75; 1.95\}$ ignorando las
+Ejemplo de predicción para tiempos $t \in \{1,45; 1,75; 1,95\}$ ignorando las
 muestras de IMU y utilizando unicamente el historial de poses con \mono{A} y \mono{B} como
 últimas muestras (esto es antes de que llegue \mono{C}). De vuelta, asumimos que las
 estimaciones y no contienen error por simplicidad.

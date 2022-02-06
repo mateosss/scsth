@@ -114,7 +114,7 @@ de que $w$ suele ser pequeño y por ende contiene orientaciones que no cambian
 significativamente. Esto nos permite utilizar el resultado expuesto en
 [@gramkowAveragingRotations2001] que muestra que, para rotaciones de menos de 40
 grados, calcular la media usual (y posteriormente normalizarla) es una muy buena
-aproximación con un error de menos del 1%.
+aproximación con un error de menos del $1\%$.
 
 Tenemos entonces que el filtro queda definido por la siguiente ecuación.
 <!-- $$ -->
@@ -132,7 +132,7 @@ $\R^7$ gracias a la aproximación de los cuaterniones mencionada anteriormente.
 
 Este filtro codifica en un único valor los datos históricos e integra nuevos
 datos con una intensidad dada por un _factor de suavizado_ $\alpha \in [0, 1]$
-configurable por el usuario (0.1 por defecto). En el caso de tener un único
+configurable por el usuario (0,1 por defecto). En el caso de tener un único
 escalar $x_k$ que filtrar, el suavizado exponencial queda definido de esta
 forma:
 <!-- $$ -->
@@ -173,12 +173,12 @@ escalar de los quaternions -->
 Hay que cambiar el template y revisar todo de vuelta, no hay otra.
 El template base es muy malo. -->
 
-El filtro 1€ [@casiezFilterSimpleSpeedbased2012] se basa en el [Suavizado
-exponencial](#sec:exponential-smoothing), pero utiliza un factor $\alpha$
-dinámico que se adapta automáticamente con base a la tasa de cambio de la señal.
-Reusamos también la idea de interpolar esféricamente para la orientación
-presentada en el filtro anterior. El filtro queda definido para la posición
-$p_k$ de la siguiente manera:
+El filtro 1€ [@casiezFilterSimpleSpeedbased2012] se basa en el
+\hyperref[suavizado-exponencial]{suavizado exponencial}, pero utiliza un factor
+$\alpha$ dinámico que se adapta automáticamente con base a la tasa de cambio de
+la señal. Reusamos también la idea de interpolar esféricamente para la
+orientación presentada en el filtro anterior. El filtro queda definido para la
+posición $p_k$ de la siguiente manera:
 <!-- $$ -->
 \begin{align}
 \hat{p}_0 &= p_0 \\
@@ -206,8 +206,7 @@ f_C &= f_{C_{min}} + \beta | \hat{\dot{p}}_k |
 
 [^fc-lowpass]: Algunos lectores reconocerán que el término “frecuencia de corte”
 proviene de los filtros _low-pass_ y efectivamente, notarán que el filtro 1€ es
-de este tipo con la particularidad de tener una frecuencia de corte que
-dinámica.
+de este tipo con la particularidad de tener una frecuencia de corte dinámica.
 
 [^fc-perception]: Frecuencias de corte bajas reducen el ruido de las poses a
 costa de aumentar la latencia. La forma en la que $f_c$ es definida resulta en

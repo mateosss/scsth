@@ -52,7 +52,7 @@ integración incurre, es que las mediciones de las IMU son altamente ruidosas, y
 acumularlas durante tiempos prolongados acumula también cantidades
 significativas de error. Este factor nos limita el tiempo que puede transcurrir
 entre dos keyframes; como ejemplo en @mur-artalVisualInertialMonocularSLAM2017
-se habla de keyframes que no pueden tener más de 0.5 segundos entre sí. A su
+se habla de keyframes que no pueden tener más de 0,5 segundos entre sí. A su
 vez, tener keyframes a muy bajas frecuencias afecta la calidad de las
 estimaciones de velocidad y biases; estos últimos son offsets de medición
 inherentemente variables de los acelerómetros y giroscopios a los que es
