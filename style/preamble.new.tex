@@ -5,6 +5,8 @@
 \creflabelformat{equation}{#2\textup{#1}#3}
 \crefname{subsection}{sección}{secciones}
 \Crefname{subsection}{Sección}{Secciones}
+\crefname{listing}{fragmento}{fragmentos}
+\Crefname{listing}{Fragmento}{Fragmentos}
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\passthrough}[1]{#1}
@@ -45,3 +47,6 @@
 \newcommand\marginnote[1]{\stepcounter{footnote}\themparcnt \marginpar{\themparcnt #1}}
 
 \newcommand{\HRule}{\rule{.9\linewidth}{.6pt}} % New command to make the lines in the
+
+\renewcommand{\lstlistingname}{Fragmento}
+\renewcommand{\lstlistlistingname}{Lista de \lstlistingname s}

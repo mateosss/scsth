@@ -37,7 +37,7 @@ un archivo _header_ C++, en el cual se declara la clase `slam_tracker` que será
 utilizada por Monado como punto de comunicación con sistemas de SLAM arbitrarios
 y se utilizan `cv::Mat` como contenedor de imágenes. Luego de varias iteraciones
 la clase `slam_tracker` tiene una interfaz que, quitando detalles de tipos de
-C++, se puede resumir en algo como esto:
+C++, se puede resumir en algo como lo que se muestra en el \Cref{lst:slam-tracker-def}.
 
 <!-- TODO: linkear la clase slam_tracker en gitlab? -->
 
@@ -105,7 +105,7 @@ actualmente en uso. Algunas consideraciones de los puntos marcados en el código
    específica si el sistema la implementa. El ejemplo para el que esto fue
    utilizado fue la automatización del envío de datos de calibración sin pasar
    por el archivo `config_file`. Se reserva una `feature_id` para tal característica en
-   la nueva versión de `slam_tracker.hpp` de Monado y del fork particular, se
+   la nueva versión de `slam_tracker` de Monado y del fork particular, se
    implementa tal característica en este último, y en Monado tenemos cuidado de
    solo utilizarla si el sistema la reporta como disponible. De esta forma nos
    evitamos tener que actualizar la versión del header de otros forks en los

@@ -172,10 +172,6 @@ Exp(\Delta t \ \hat\omega) & \Delta t \ v \\
 \end{align}
 <!-- $$ -->
 
-
-<!-- TODO@style: linkear lst:slam-tracker-def dice "Apartado" en vez de "Fragmento",
-cuando lo intenté arreglar no pude y renegué mucho -->
-
 Monado provee varias herramientas que facilitan tareas que suelen ser
 recurrentes en diversos sistemas de tracking. La tarea de estimar espacios
 futuros basándose en uno dado con sus velocidades es una de estas
@@ -206,9 +202,9 @@ pose para cualquier punto arbitrario en el tiempo que solicite, basándonos en
 las estimaciones del sistema de SLAM que asumimos son precisas. Sin embargo, un
 leve problema que surge es que no existe ningún requerimiento para los sistemas
 sobre la estimación de velocidades, ya que no todos estiman esta variable. La
-interfaz `slam_tracker.hpp` solo garantizan la estimación de la posición y
+interfaz `slam_tracker` solo garantizan la estimación de la posición y
 orientación del dispositivo como puede verse en su definición en el
-[](#lst:slam-tracker-def). Lo que haremos para solventar esto es computar las
+\Cref{lst:slam-tracker-def}. Lo que haremos para solventar esto es computar las
 velocidades con base a los pares de poses adyacentes que tengamos en el
 historial. Estas poses tienen su timestamp correspondiente, entonces es sencillo
 computar la diferencia entre las mismas respecto a la unidad de tiempo, dando
@@ -276,10 +272,7 @@ código que se presenta a continuación. Cabe aclarar que la función
 (el historial de relaciones) y `predict_from_space` (la función de predicción en
 base a un espacio).
 
-<!-- TODO@end: chequear que este algoritmo no se corte en dos páginas -->
-<!-- TODO@fix: Add caption -->
-
-```c++
+``` {#lst:predict-pose .cpp caption="Predicción de poses en Monado" emph="timestamp"}
 struct xrt_space_relation predict_pose(timestamp t) {
    if (relation_history.is_empty()) return {0};
 
