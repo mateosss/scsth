@@ -24,6 +24,286 @@ utilizados de referencia a lo largo del escrito.}
 
 ## Fundamentos
 
+### Transformaciones
+
+Usualmente necesitaremos referirnos y manipular transformaciones
+tridimensionales entre distintos sistemas de referencias. Estos sistemas surgen
+de las entidades que forman parte de nuestro proceso de optimización en SLAM.
+Algunos ejemplos de transformaciones en los que podríamos estar interesados son
+las que describen que transformación es necesaria realizar sobre la cámara
+izquierda para llegar a la cámara derecha de nuestro dispositivo, o la
+transformación que le ocurrió al agente localizado entre el instante anterior y
+el actual.
+
+<!-- TODO@high@fig: Figura de transformación de sistemas referenciales -->
+
+
+
+El tipo de transformación en el que estamos interesados son los _movimientos de
+cuerpo rígido_\marginnote{%\
+No profundizaremos en la definición formal de este concepto pero, intuitivamente,
+son transformaciones que preservan la norma y el producto cruz para cualquier
+par de vectores. Esto implica que también preservan volumen.
+}. Estos pueden describirse
+mediante _traslaciones_ y _rotaciones_.  Además, también nos gustaría poder
+expresar la _ubicación_ y _orientación_ de las entidades en nuestro sistema.
+Estas dos características conforman la _pose_ en el espacio de tal entidad. A
+continuación, desarrollaremos algunos conceptos que nos ayudarán a describir la
+idea de transformación más formalmente, mientras que consideraremos a una pose
+como una transformación aplicada sobre un origen.
+
+<!-- TODO@high: aclarar que ademas de transformaciones, estas cosas mueven puntos de un marco referencial al otro -->
+
+Comenzaremos construyendo sobre algunas ideas básicas del álgebra lineal.
+
+Definition
+: Una transformación lineal $L$ entre dos espacios vectoriales $V, W$ es una
+función $L : V \rightarrow W$ tal que:
+\begin{itemize}
+  \item $L(x + y) = L(x) + L(y) \quad \forall x, y \in V$
+  \item $L(ax) = aL(x) \quad \forall a \in \R$
+\end{itemize}
+
+Remark (Matriz de una transformación)
+: Si $V$ tiene base canónica $e_1, ..., e_n$ con $e_i \in \R^m$ tenemos que la matriz $A =
+[L(e_1), ..., L(e_n)] \in \R^{m \times n}$ cumple $Ax = L(x) \quad \forall x \in V$
+
+Remark (Matrices cuadradas)
+: El conjunto de matrices en $\R^{n\times n}$, con las operaciones de adición y
+multiplicación matricial usuales, forman un anillo[^ring] sobre el cuerpo de
+los reales. En particular, es un conjunto cerrado bajo estas operaciones.
+
+[^ring]: <https://en.wikipedia.org/wiki/Ring_(mathematics)#Definition>
+
+Remark rmk:sqnormofsum
+: Sean $x, y \in \R^n$, tenemos que $\| x + y \| ^ 2 = \|x\|^2 + \|y\|^2 + 2 x^T y$.
+
+Proof
+: Desarrollemos:
+\begin{align}
+\| x + y \| ^ 2 &= (a_1 + b_1)^2 + \dots + (a_k + b_k)^2 \\
+&= (a_1^2 + b_1^2 + 2 a_1 b_1) + ... + (a_k^2 + b_k^2 + 2 a_k b_k) \\
+&= \| x \| ^2 + \| y \|^2 + 2 \langle x, y \rangle \\
+&= \| x \| ^2 + \| y \|^2 + 2 x^T y
+\end{align}
+
+#### Representación de rotaciones
+
+Para las rotaciones, y orientaciones, existen múltiples representaciones
+válidas, cada una con sus ventajas y desventajas. Veremos algunas que han sido
+utilizadas en este trabajo.
+
+##### Ángulos Euler
+
+La representación por ángulos Euler utiliza un vector $[x, y, z]^T \in \R^3$ en donde
+cada componente representa el ángulo de rotación que aplicar alrededor de tres
+ejes seleccionados por convención. Es decir, el vector describe tres rotaciones
+que aplicar. Esta representación, tiene la principal ventaja de resultar
+intuitiva cuando solo se necesita describir una rotación, pero se vuelve
+dificil en otros contextos.
+
+
+
+Uno de sus problemas es que existen docenas de convenciones válidas que varían
+en: la elección de los tres ejes, orden de los mismos, aplicación global o local
+en cada uno. Aunque en la práctica solo se utiliza un puñado de ellas, se puede
+volver fácilmente un punto de confusión\marginnote{%\
+En la práctica, la manipulación de rotaciones y sistemas de coordenadas son
+fuentes usuales de muchos dolores de cabeza. Usualmente producto del uso
+no documentado de distintas convenciones.
+}. El otro
+problema fundamental es el llamado _gimbal lock_[^gimbal-lock] en donde la
+combinación de ciertas rotaciones puede causar la pérdida de un grado de
+libertad y describir nuevas rotaciones arbitrarias se hace imposible en ese
+punto. Más problemas de los ángulos Euler se mencionan en
+@shoemakeAnimatingRotationQuaternion1985, secc 2.4.
+
+En general, evitaremos esta representación.
+
+[^gimbal-lock]: <https://en.wikipedia.org/wiki/Gimbal_lock>
+
+##### Ángulo axial
+
+Toda rotación puede representarse con un ángulo $\omega$ y un eje axial,
+representado por un vector unitario $a \in \R^3$, sobre el cual rotar $\omega$ radianes.
+La representación de ángulo axial de esta rotación queda definida por el vector
+$v = \omega a$. Tenemos entonces que $a = \frac{v}{\| v \|}$ y $\omega = \|
+v\|$.
+
+Esta representación surge naturalmente del uso de giroscopios. Estos módulos,
+internamente se componen de tres sensores capaces de reportar cada uno la
+velocidad angular sobre un eje y se los ubica sobre tres ejes ortogonales. De
+esta forma, la velocidad que reportan queda determinada por la cantidad de
+rotación que ocurrió en cada eje durante el instante de la muestra capturada. Si
+se ven los valores de los tres sensores como componentes de un vector
+tridimensional, este coincide con la representación angular axial $v$ de
+la rotación capturada.
+
+Esta representación se utilizará para el almacenamiento de valores de velocidad
+angular provistos por muestras de giroscopio, ya que no es necesaria ningún tipo
+de transformación. Además, veremos más abajo que esta forma de describir
+rotaciones surge naturalmente en el estudio de otras representaciones.
+
+<!-- TODO@ref: citar algo que verifique eso -->
+<!-- TODO: Mencionar torque? -->
+
+##### Cuaterniones unitarios
+
+Los cuaterniones están definidos sobre un álgebra $\H$. Son una construcción que
+extiende a $\R$ con tres números imaginarios $i$, $j$ y $k$ que satisfacen las
+siguientes propiedades:
+\begin{align}
+i^2 = j^2 = k^2 = -1 \label{eq:quat-imaginary-props-start} \\
+i = jk, \quad -i = kj \\
+k = ij, \quad -k = ji \\
+j = ki, \quad -j = ik \label{eq:quat-imaginary-props-end}
+\end{align}
+
+Un cuaternión $q \in \H$ tiene la forma
+\begin{align}
+q = q_w + q_x i + q_y j + q_z k \quad \text{con }\  q_w, q_x, q_y, q_z \in \R
+\end{align}
+
+El producto y la adición se extienden de $\R$ naturalmente incluyendo las
+propiedades de las partes imaginarias listadas en
+\Crefrange{eq:quat-imaginary-props-start}{eq:quat-imaginary-props-end}
+
+Nos interesarán tres operadores de los cuaterniones:
+
+\bigbreak
+
+- Conjugado: $q^* = q_w - (q_x i + q_y j + q_z k)$
+
+- Norma: $\| q \| = \sqrt{q_w ^2 + q_x^2 + q_y^2 + q_z^2} = \sqrt{qq^*}$
+
+- Inverso: $q^{-1} = \frac{q^*}{\|q\|^2}$
+
+\bigbreak
+
+Representaremos rotaciones y orientaciones con **cuaterniones unitarios**, es decir
+cuaterniones $q$ tal que $\| q \| = 1$. Más aún cualquier cuaternión $q'$ puede
+hacerse unitario dividiéndolo por su norma, o sea $q = q' / \|q'\|$ tiene
+norma 1.
+
+Una rotación representada en **ángulos axiales** por el vector unitario $a = [x, y,
+z]^T$ y ángulo $\omega$ se representa con el siguiente cuaternión unitario $q$:
+\begin{align}
+q = cos\frac{\omega}{2} + x\ sin\frac{\omega}{2}\ i + y\ sin\frac{\omega}{2}\ j + z\ sin\frac{\omega}{2}\ k
+\end{align}
+Más aún, todo cuaternión unitario puede expresarse de esa forma.
+
+Para **rotar un vector** $v = [x, y, z]^T \in \R^3$ con una rotación representada por
+el cuaternión $q$ basta con definir el cuaternión $p = 0 + xi + yj + zk$ y
+computar $p'$ de la siguiente manera:
+\begin{align}
+p' = qpq^{-1} = 0 + p'_x i + p'_y j + p'_z k
+\end{align}
+
+El cuaternión resultante $p'$ tendrá parte real nula y el vector $v' = [p'_x,
+p'_y, p'_z]^T \in \R^3$ es el vector $v$ rotado por $q$.
+
+La **composición de rotaciones** queda bien definida por la multiplicación de
+cuaterniones. Es decir, dados los cuaterniones $q$ y $p$, el cuaternión $pq$
+describe la rotación que se produce al aplicar primero $q$ y luego $p$.
+
+La **rotación identidad** o neutra, una rotación que "no rota", coincide con $1
+\in \R$, es decir no tiene parte imaginaria, es $1 + 0i + 0j + 0k$.
+
+El **inverso multiplicativo** de un cuaternión $q^{-1}$ al
+componerlo con $q$, como es de esperarse, produce la identidad, o sea:
+\begin{align}
+q^{-1}q = 1
+\end{align}
+
+Muchas veces necesitaremos computar el **delta de rotación** que lleva de una
+orientación $p$ a otra $q$. Esto es similar a lo que obtenemos cuando restamos
+vectores, así que sobrecargaremos el operador de resta de cuaterniones según el
+contexto de la siguiente manera:
+\begin{align}
+q - p = p^{-1} q
+\end{align}
+
+<!-- TODO@high$def: menciono $lerp$ -->
+
+Será también útil poder interpolar entre dos orientaciones $p$ y $q$ con un
+factor $t \in [0, 1]$ para conseguir orientaciones intermedias de $p$ a $q$. La
+interpolación lineal $lerp$ genera cuaterniones no unitarios, y por esto
+utilizaremos en su lugar la operación de **interpolación esférica** $slerp$
+presentada en @shoemakeAnimatingRotationQuaternion1985 y definida de la siguiente
+manera:
+\begin{align}
+slerp(p, q, t) = p(p^{-1}q)^t
+\end{align}
+
+[^slerp-derivation]: La derivación de la fórmula de interpolación esférica para
+cuaterniones se puede encontrar en @shoemakeAnimatingRotationQuaternion1985
+
+##### Matrices de rotación
+
+<!-- TODO@high: aclarar que todo esto tambien funciona en R^2 para cuando hablamos de optical flow -->
+
+Las rotaciones pueden representarse también como una matriz $R \in \R^{3x3}$ con
+ciertas restricciones.
+
+Definition
+: Sean $v, w \in \R^3$, decimos que $v$ y $w$ son ortonormales si $\norm{v} =
+\norm{w} = 1$ y sus columnas son ortogonales, es decir $\dotprod{v}{w} = 0$
+
+Sean $R^{(1)}, R^{(2)}, R^{(3)} \in \R^3$ las columnas de $R$.
+
+Definition
+: $R$ se dice ortogonal u ortonormal si sus columnas son ortonormales de a pares, es decir,
+$\dotprod{R^{(i)}}{R^{(j)}} = 0$ y $\norm{R^{(i)}} = 1$ para $i \neq j; \; i, j \in \{1, 2, 3\}$.
+
+
+
+
+
+Las matrices ortonormales pueden tener determinante $\pm 1$. Llamaremos **matrices de
+rotación** solo a las $R$ tal que $det(R) = +1$
+\marginnote{%\
+El hecho de que el determinante sea $\pm 1$, intuitivamente, quiere decir que la
+transformación lineal de $R$ no escala los vectores en $\R^3$,
+o sea preserva volúmenes.
+} \marginnote{%\
+Las transformaciones representadas por $R$ con $det(R) = -1$ suelen llamarse
+rotaciones impropias o rotorreflexiones ya que además de rotar, permiten la reflexión
+de vectores en $\R^3$.
+}. El
+conjunto  estas matrices se denomina $SO(3)$ (veremos en la sección siguiente
+el por qué). Estas matrices presentan propiedades agradables para ser manipuladas como rotaciones
+en el álgebra matricial usual.
+
+\bigbreak
+
+- $R$ es la transformación lineal que rota vectores $v \in \R^3$, es decir $Rv$
+  es el vector $v$ rotado por la rotación representada en $R$.
+
+- La composición de rotaciones $R, S \in SO(3)$ queda representada con la
+  multiplicación de matrices usual $RS$.
+
+- La inversa de $R$ es $R^{-1} = R^T$.
+
+\bigbreak
+
+Proof
+: Tenemos por la ortonormalidad de las columnas de $R$ y definición de $R^T$ que
+\begin{align}
+  R^T R &= \begin{bmatrix}
+  \dotprod{R^{(1)}}{R^{(1)}} & \dotprod{R^{(1)}}{R^{(2)}} & \dotprod{R^{(1)}}{R^{(3)}} \\
+  \dotprod{R^{(2)}}{R^{(1)}} & \dotprod{R^{(2)}}{R^{(2)}} & \dotprod{R^{(2)}}{R^{(3)}} \\
+  \dotprod{R^{(3)}}{R^{(1)}} & \dotprod{R^{(3)}}{R^{(2)}} & \dotprod{R^{(3)}}{R^{(3)}} \\
+  \end{bmatrix} = I_{3 \times 3}
+\end{align}
+
+\bigbreak
+
+Más aún, el avance tecnológico en las unidades vectoriales, tanto en CPU como
+GPU, hace que la manipulación de matrices sea usualmente igual o más rápida que
+la de cuaterniones.
+
+
+
 <!-- TODO@ref:
 Books used:
 nocedalNumericalOptimization2006a: solucion mas de calculo, con tema de funciones convexas
@@ -126,19 +406,6 @@ $A$ es $A^{\dagger} = (A^T A)^{-1} A^T$
 
 Notar que $(A^T A)^{-1}$ existe por [](#thm:aligraminv). Finalmente, la
 siguiente observación:
-
-Remark rmk:sqnormofsum
-: Sean $a, b \in \R^k$ para algún $k \in \N$, tenemos que $\| a + b \| ^ 2 =
-\|a\|^2 + \|b\|^2 + 2 a^T b$.
-
-Proof
-: Desarrollemos:
-\begin{align}
-\| a + b \| ^ 2 &= (a_1 + b_1)^2 + \dots + (a_k + b_k)^2 \\
-&= (a_1^2 + b_1^2 + 2 a_1 b_1) + ... + (a_k^2 + b_k^2 + 2 a_k b_k) \\
-&= \| a \| ^2 + \| b \|^2 + 2 \langle a, b \rangle \\
-&= \| a \| ^2 + \| b \|^2 + 2 a^T b
-\end{align}
 
 Con estas herramientas, estamos en posición de presentar la solución directa al
 problema de los cuadrados mínimos lineales.
@@ -323,69 +590,6 @@ Gauss-Newton más sofisticadas como Levenberg-Marquardt o el método dogleg.
 <!-- TODO@ref: el tema de las citas con capítulos se ve bastante feo en el estilo ACM -->
 
 <!-- TODO: Acá se habla de weighted least squares: https://www.vectornav.com/resources/inertial-navigation-primer/math-fundamentals/math-leastsquares -->
-
-### Transformaciones
-
-0. Linear transforms and operators (skew symetric, cross product)
-1. Rotation representations: euler, axis/angle, quaternion, 3x3 intro
-2. Groups
-3. Exponential coordinates
-  1. Infinitesimal approximation
-  2. Mention Lie group/algebra (dont dive)
-  3. Exponential Map / Logarithm (and mention of rodrigues formula)
-  4. Same for SE(3): twist, exp, log, hat, vee
-  5. Pro: unconstrained optimization!!!!!!!
-
-
-
-Usualmente necesitaremos referirnos a transformaciones tridimensionales y ser
-capaces de manipularlas. El tipo de transformación en el que estamos interesados
-son los _movimientos de cuerpo rígido_. Estos pueden describirse mediante
-_traslaciones_ y _rotaciones_. A continuación, desarrollaremos algunos conceptos
-que nos ayudaran a describir estas ideas más formalmente.
-
-#### Operadores útiles
-
-Definición: Producto punto
-Observación: producto punto es x^t x (mover lo que está en least squares acá referenciarlo allá)
-Definición: Producto cruz
-Definición: Hat operator
-
-#### Transformaciones lineales
-
-Definición: Transformación lineal
-
-#### Transformaciones lineales y operadores
-
-#### Representraciones de rotaciones
-hat operator aca?
-
-#### Grupos
-
-#### Coordenadas exponenciales
-
-Groups:
-
-- General Linear Group: GL(n) = {invertible mats, @} = {A / det(A) != 0}
-- Special Linear Group: SL(n) = {A in GL(n) / det(A) = 1}
-- Orthogonal Group: O(n) = R orthogonal in M(n) = { R in M(n)/ RtR=I} (=> det(R) = +-1)
-- Special Orthogonal Group: SO(n) = {R in O(n) / det(R) = +1} (rotation matrices)
-- Affine Group: A(n) = L:Rn->Rn / L(x) = Ax + b con A in GL(n), b in Rn
-- Euclidean Group: E(n) = L:Rn->Rn / L(x) = Rx + T con R in O(n), T in Rn
-- Special Euclidean Group: SE(n) = {L(x) = Rx + T in E(n) / R in SO(n)}
-
-GL(n) in M(n)
-SL(n) in GL(n)
-SO(n) in SL(n)
-SO(n) in O(n)
-A(n) in GL(n + 1)
-E(n) in A(n)
-SE(n) in E(n) with R(n) in SO(n)
-
-
-- citar https://ethaneade.com/lie_groups.pdf (o https://ethaneade.com/lie.pdf)
-- citar multiple view geometry zisserman
-- citar state estimation barfoot
 
 
 
@@ -1187,7 +1391,7 @@ un archivo _header_ C++, en el cual se declara la clase `slam_tracker` que será
 utilizada por Monado como punto de comunicación con sistemas de SLAM arbitrarios
 y se utilizan `cv::Mat` como contenedor de imágenes. Luego de varias iteraciones
 la clase `slam_tracker` tiene una interfaz que, quitando detalles de tipos de
-C++, se puede resumir en algo como esto:
+C++, se puede resumir en algo como lo que se muestra en el \Cref{lst:slam-tracker-def}.
 
 <!-- TODO: linkear la clase slam_tracker en gitlab? -->
 
@@ -1255,7 +1459,7 @@ actualmente en uso. Algunas consideraciones de los puntos marcados en el código
    específica si el sistema la implementa. El ejemplo para el que esto fue
    utilizado fue la automatización del envío de datos de calibración sin pasar
    por el archivo `config_file`. Se reserva una `feature_id` para tal característica en
-   la nueva versión de `slam_tracker.hpp` de Monado y del fork particular, se
+   la nueva versión de `slam_tracker` de Monado y del fork particular, se
    implementa tal característica en este último, y en Monado tenemos cuidado de
    solo utilizarla si el sistema la reporta como disponible. De esta forma nos
    evitamos tener que actualizar la versión del header de otros forks en los
@@ -1605,10 +1809,6 @@ Exp(\Delta t \ \hat\omega) & \Delta t \ v \\
 \end{align}
 <!-- $$ -->
 
-
-<!-- TODO@style: linkear lst:slam-tracker-def dice "Apartado" en vez de "Fragmento",
-cuando lo intenté arreglar no pude y renegué mucho -->
-
 Monado provee varias herramientas que facilitan tareas que suelen ser
 recurrentes en diversos sistemas de tracking. La tarea de estimar espacios
 futuros basándose en uno dado con sus velocidades es una de estas
@@ -1639,9 +1839,9 @@ pose para cualquier punto arbitrario en el tiempo que solicite, basándonos en
 las estimaciones del sistema de SLAM que asumimos son precisas. Sin embargo, un
 leve problema que surge es que no existe ningún requerimiento para los sistemas
 sobre la estimación de velocidades, ya que no todos estiman esta variable. La
-interfaz `slam_tracker.hpp` solo garantizan la estimación de la posición y
+interfaz `slam_tracker` solo garantizan la estimación de la posición y
 orientación del dispositivo como puede verse en su definición en el
-[](#lst:slam-tracker-def). Lo que haremos para solventar esto es computar las
+\Cref{lst:slam-tracker-def}. Lo que haremos para solventar esto es computar las
 velocidades con base a los pares de poses adyacentes que tengamos en el
 historial. Estas poses tienen su timestamp correspondiente, entonces es sencillo
 computar la diferencia entre las mismas respecto a la unidad de tiempo, dando
@@ -1709,10 +1909,7 @@ código que se presenta a continuación. Cabe aclarar que la función
 (el historial de relaciones) y `predict_from_space` (la función de predicción en
 base a un espacio).
 
-<!-- TODO@end: chequear que este algoritmo no se corte en dos páginas -->
-<!-- TODO@fix: Add caption -->
-
-```c++
+``` {#lst:predict-pose .cpp caption="Predicción de poses en Monado" emph="timestamp"}
 struct xrt_space_relation predict_pose(timestamp t) {
    if (relation_history.is_empty()) return {0};
 
@@ -1916,8 +2113,6 @@ computar la pose de salida en esa timestamp, se toma el promedio de las poses de
 los últimos $w < m$ segundos (por defecto 66 ms). El parámetro $w$ es
 configurable por el usuario.
 
-<!-- TODO@def: uso cuaterniones -->
-
 Cabe aclarar, que si bien la forma de calcular el promedio para las posiciones
 $p_i$ debería resultar clara, promediar las orientaciones $q_i$ expresadas
 mediante cuaterniones no es trivial. En este caso, nos aprovecharemos del hecho
@@ -1928,13 +2123,11 @@ grados, calcular la media usual (y posteriormente normalizarla) es una muy buena
 aproximación con un error de menos del $1\%$.
 
 Tenemos entonces que el filtro queda definido por la siguiente ecuación.
-<!-- $$ -->
 \begin{align}
 \hat{X}_k &= \frac{1}{|W|} \sum_{i \in W}{X_i}
 \quad \text{con} \\
 W &= \{ i : t_k - w \leq t_i \leq t_k \} \quad \text{(ventana del filtro)}
 \end{align}
-<!-- $$ -->
 
 Notar que podemos definir el concepto de sumatoria componente a componente en
 $\R^7$ gracias a la aproximación de los cuaterniones mencionada anteriormente.
@@ -1946,34 +2139,28 @@ datos con una intensidad dada por un _factor de suavizado_ $\alpha \in [0, 1]$
 configurable por el usuario (0,1 por defecto). En el caso de tener un único
 escalar $x_k$ que filtrar, el suavizado exponencial queda definido de esta
 forma:
-<!-- $$ -->
 \begin{align}
 \hat{x}_0 &= x_0 \\
 \hat{x}_k &= \alpha x_k + (1 - \alpha) \hat{x}_{k-1} \label{eq:exp-smoothing-scalar}
 \end{align}
-<!-- $$ -->
 
 Reformulemos la [Ecuación](#eq:exp-smoothing-scalar) de la siguiente manera:
-<!-- $$ -->
 \begin{align}
 \hat{x}_k &= \alpha x_k + (1 - \alpha) \hat{x}_{k-1} \\
 &= \alpha x_k + \hat{x}_{k-1} - \alpha \hat{x}_{k-1} \\
 &= \hat{x}_{k-1} + \alpha (x_k - \hat{x}_{k-1})
 \end{align}
-<!-- $$ -->
 
 Esto nos deja ver el paso de actualización del filtro como una interpolación
 (lineal) de $\hat{x}_{k-1}$ hacia $x_k$ con paso $\alpha$. Utilizaremos esta
 idea para interpolar esféricamente la orientación de $\hat{X}_k$. Tenemos
 entonces que el paso de actualización para este filtro queda definido como:
-<!-- $$ -->
 \begin{align}
 \hat{X}_k &= (\hat{p}_k, \hat{q}_k) \\
 \hat{p}_k &= lerp(\hat{p}_{k-1}, p_k, \alpha) = \hat{p}_{k-1} + \alpha (p_k - \hat{p}_{k-1}) \\
 \hat{q}_k &= slerp(\hat{q}_{k-1}, q_k, \alpha) = \hat{q}_{k-1}
 (\hat{q}_{k-1}^{-1} q_k)^\alpha
 \end{align}
-<!-- $$ -->
 
 <!-- TODO@def: uso lerp y slerp de pecho ahí, uso inversa, composición y exponenciación
 escalar de los quaternions -->
@@ -1990,30 +2177,24 @@ $\alpha$ dinámico que se adapta automáticamente con base a la tasa de cambio d
 la señal. Reusamos también la idea de interpolar esféricamente para la
 orientación presentada en el filtro anterior. El filtro queda definido para la
 posición $p_k$ de la siguiente manera:
-<!-- $$ -->
 \begin{align}
 \hat{p}_0 &= p_0 \\
 \hat{p}_k &= lerp(\hat{p}_{k-1}, p_k, \alpha)
 \end{align}
-<!-- $$ -->
 
 Con $\alpha$ que se adapta con la velocidad de la señal:
-<!-- $$ -->
 \begin{align}
 \alpha &= \frac{1}{1 + \frac{\tau}{\Delta t_k}} \\
 \Delta t_k &= t_k - t_{k-1} \\
 \tau &= \frac{1}{2 \pi f_C}
 \end{align}
-<!-- $$ -->
 
 A continuación, $f_C$ es la llamada _frecuencia de corte_[^fc-lowpass] y posee
 un mínimo ajustable por el usuario $f_{C_{min}}$ y un parámetro de intensidad de
 actualización $\beta$ también configurable[^fc-perception].
-<!-- $$ -->
 \begin{align}
 f_C &= f_{C_{min}} + \beta | \hat{\dot{p}}_k |
 \end{align}
-<!-- $$ -->
 
 [^fc-lowpass]: Algunos lectores reconocerán que el término “frecuencia de corte”
 proviene de los filtros _low-pass_ y efectivamente, notarán que el filtro 1€ es
@@ -2028,23 +2209,21 @@ $f_c$ para a su vez disminuir el ruido.
 La velocidad de la señal es a su vez ajustada con otro filtro de suavizado
 exponencial con factor de suavizado fijo $f_{C_d}$, también configurable por el
 usuario.
-<!-- $$ -->
 \begin{align}
 \hat{\dot{p}}_0 &= 0 \\
 \hat{\dot{p}}_k &= lerp(\hat{\dot{p}}_{k-1}, \dot{p}_k, f_{C_d})
 \end{align}
-<!-- $$ -->
 
 Con velocidades instantáneas.
-<!-- $$ -->
 \begin{align}
 \dot{p}_0 &= 0 \\
 \dot{p}_k &= \frac{p_k - \hat{p}_{k-1}}{\Delta t_k}
 \end{align}
-<!-- $$ -->
 
 La versión del filtro utilizada para la orientación $q_k$ es análoga a la
 definición anterior con algunas aclaraciones:
+
+<!-- TODO@high: revisar estas aclaraciones luego de haber escrito transforms.md -->
 
 - En lugar de $lerp$ se utiliza $slerp$.
 - Sobrecargamos el operador de resta de cuaterniones de la siguiente forma: $q_a
@@ -2069,13 +2248,13 @@ trabajo y que constituyen una contribución importante al runtime.
 ## Controladores en Monado
 
 En Monado, la interacción con la gran variedad de dispositivos que el runtime
-soporta es realizada mediante _drivers_ o _controladores_. Estos, como se puede
-ver en la \figref{fig:slam-tracker-dataflow}, le permiten a Monado interactuar con
+soporta es realizada mediante _drivers_ o _controladores_. Estos, como se mostró
+en la \figref{fig:slam-tracker-dataflow}, le permiten a Monado interactuar con
 sistemas XR físicos mediante abstracciones derivadas de los requisitos de
 OpenXR. Un sistema XR en este contexto hace referencia a un conjunto de
 dispositivos XR. Un dispositivo XR, en forma intuitiva, es algún tipo de hardware
 que permite la entrada y/o salida de información para intercambio con aplicaciones de XR. Un caso
-paradigmático de un sistema XR podría considerarse el conjunto de casco y un par
+paradigmático de un sistema XR podría considerarse al conjunto de casco y un par
 de mandos provistos por un fabricante.
 
 El concepto que se termina implementando en Monado es un poco más general, ya
@@ -2103,12 +2282,12 @@ de la imagen tenemos una cámara de profundidad _Intel RealSense D455_[^d455]
 mientras que a izquierda tenemos un casco _Samsung Odyssey+_. La línea de
 cámaras y módulos RealSense de Intel se enfoca en aplicaciones de robótica y
 visión por computadora, presentan distintos modelos con múltiples sensores
-especializados (en nuestro caso nos limitaremos a utilizar su IMU y cámaras
-estéreo). Estos vienen precalibrados, y además se tiene un SDK[^realsense-sdk]
-de código abierto en C/C++ (con _bindings_ para otros lenguajes) que facilita la
+especializados; en nuestro caso nos limitaremos a utilizar su IMU y cámaras
+estéreo. Estos vienen precalibrados, y además se tiene un SDK[^realsense-sdk]
+de código abierto en C/C++, con _bindings_ para otros lenguajes, que facilita la
 obtención y manipulación de datos. En contraste con esto, el casco de Samsung es
 un casco ligado a la plataforma privativa _Windows Mixed Reality (WMR)_[^wmr]
-que solo es soporta en sistemas operativos Windows[^windows]. WMR incluye algoritmos
+que solo es soportada en sistemas operativos Windows[^windows]. WMR incluye algoritmos
 propietarios de tracking por SLAM desarrollados por Microsoft.
 
 [^windows]: <https://www.microsoft.com/en-us/windows/>
@@ -2124,7 +2303,7 @@ el prototipado y experimentación con sistemas de SLAM, el Odyssey+ presenta
 serios desafíos que requirieron trabajo con la comunidad y métodos de ingeniería inversa
 para poder obtener acceso a las fuentes de datos necesarias para el tracking por
 SLAM. Cabe aclarar, que anterior a este trabajo, y según mi mejor entendimiento,
-no existía forma de utilizar este tipo de cascos con tracking con seis grados de libertad
+no existía forma de utilizar este tipo de cascos con tracking basado en SLAM/VIO
 para correr aplicaciones OpenXR sobre sistemas operativos basados en GNU/Linux
 \marginnote{%\
 A pesar de que aún queda mucho por hacer para que el tracking
@@ -2148,7 +2327,7 @@ GNU/Linux.
 ### Características de los datos
 
 Lo primero que se necesita para poder utilizar estos dispositivos para SLAM es
-conseguir el acceso a los datos que estos generan; o sea los flujos de imágenes
+conseguir el acceso a los datos que generan; o sea los flujos de imágenes
 y muestras de IMU. La forma y protocolos necesarios para comunicarse con estos
 dispositivos se realiza de maneras específicas para cada uno y como veremos en
 las secciones dedicadas, este es uno de los trabajos fundamentales de un
@@ -2156,7 +2335,7 @@ controlador. Además, un controlador tiene que ser capaz, no solo de obtener est
 información sino que también de redirigirla a los módulos adecuados de Monado.
 En la implementación de estas ideas surgen naturalmente los conceptos de
 _fuentes (sources)_ y _sumideros (sinks)_ de datos. En el runtime, estos
-conceptos existían de exclusivamente para el tratado de imágenes, y fueron extendidos
+conceptos existían exclusivamente para el tratado de imágenes, y fueron extendidos
 para también soportar el flujo de muestras de IMU. Los dispositivos entonces funcionan como
 fuentes de datos, que instancian un `TrackerSlam` el cual les provee sumideros a
 los que redirigir las muestras de sus sensores.
@@ -2166,7 +2345,8 @@ enfocado a SLAM, hay una serie de cuestiones a tener en cuenta. Desde el punto
 de vista de sistemas de SLAM/VIO, lo único que nos interesa es un flujo adecuado
 de imágenes de cámaras y muestras de IMU. Es en la definición de _adecuado_ en
 donde se esconden varios detalles importantes. Intentaremos clarificar los
-requierimientos para tener poses usables para SLAM a continuación:
+las características que deben considerarse en las muestras para que los sistemas
+de SLAM puedan utilizarlas apropiadamente:
 
 <!-- TODO@end: referenciar sección de calibración de IMU si la hago -->
 <!-- TODO@end: referenciar sección de calibración de cámara si la hago -->
@@ -2178,9 +2358,9 @@ En primer lugar, es necesario acceder a la información de calibración de los
 sensores en cuestión, para poder comunicársela de alguna forma a los sistemas de
 SLAM. Esto incluye la calibración para los cuatro sensores usuales: giroscopio,
 acelerómetro y el par de cámaras estéreo. La información de calibración describe
-valores que toman los parámetros de un modelo de calibración especificado. Es
+valores que toman los parámetros _intrínsecos_ (propios del sensor) de un modelo de calibración especificado. Es
 usual que, para evitarle el proceso de calibración al usuario de los sensores,
-estos provean valores de fábrica. La precisión provista por estos ha probado ser
+estos provean valores de fábrica. La precisión de tales valores ha probado ser
 de suficiente calidad para los sistemas de SLAM integrados en este trabajo, pero
 es necesario aclarar que los valores reales irán cambiando con el tiempo y el
 desgaste, haciendo que la recalibración sea un punto importante en el uso de
@@ -2192,15 +2372,15 @@ Habiendo dicho esto, vale aclarar que existen sistemas como OpenVINS
 [@genevaOpenVINSResearchPlatform2020] que son capaces de realizar el proceso de
 calibración de forma _online_ durante corridas normales. Esto es una
 característica realmente importante que ninguno de los tres sistemas
-integrados provee. Todos ellos asumen parámetros de calibración fijos y estos
+integrados provee. Todos ellos asumen parámetros de calibración fijos que
 deben ser provistos previos a la ejecución.
 
 
 
 Como intentamos evitarle la calibración manual al usuario, querremos ser capaces
-de utilizar la calibración provista de fábrica. Para esto es vital que los
+de utilizar los valores de fábrica. Para esto es vital que los
 sistemas de SLAM soporten los mismos modelos de calibración para los que el
-fabricante provee valores\marginnote{%\
+fabricante especificó los valores\marginnote{%\
 Mientras que en la práctica es conveniente recalibrar con modelos soportados,
 podría resultar razonable estudiar expresiones analíticas que "traduzcan",
 en alguna forma significativa, parámetros de un modelo a otro.
@@ -2209,8 +2389,8 @@ usualmente terminan siendo mucho más costosas que si los sistemas soportaran lo
 modelos nativamente. Ejemplos de esto son la _desdistorsión_[^opencv-undistort]
 y _rectificación_[^opencv-stereorectify] de imágenes sobre la cual no nos
 explayaremos aquí, pero basta con entender que es una transformación costosa
-aplicada sobre todos los píxeles de las imágenes para “normalizarla”. Esta
-normalización facilita el uso de las imágenes cuando los sistemas no implementan
+aplicada sobre todos los píxeles de las imágenes para “normalizarlas”. Esta
+normalización facilita su uso cuando los sistemas no implementan
 los modelos de calibración en los que el fabricante comparte los parámetros del
 dispositivo.
 
@@ -2223,11 +2403,11 @@ dispositivo.
 
 #### Calibración de parámetros extrínsecos
 
-El conjunto de sensores a utilizar: par de cámaras estéreo y una IMU con
-acelerómetro y giroscopio deben estar sujetos a un cuerpo rígido. Es decir, las
+El conjunto de sensores a utilizar: un par de cámaras estéreo y una IMU con
+acelerómetro y giroscopio, deben estar sujetos a un cuerpo rígido. Es decir, las
 transformaciones en $SE3$ que describen como alterar la pose de un sensor a otro
-se mantienen constantes sin importar la transformación del dispositivo.
-Los valores que describen estas transformaciones es a lo que denominamos como
+se mantienen constantes sin importar los movimientos del dispositivo en conjunto.
+Los valores que describen estas transformaciones relativas son lo que se denominan
 _parámetros extrínsecos_ de la calibración en contraste con los íntrinsecos. Los
 tres sistemas integrados requieren estos valores antes de comenzar la corrida.
 
@@ -2268,8 +2448,8 @@ _shutter_\marginnote{%\
 El término obturador proviene de los sensores ópticos tradicionales.
 Un obturador era una pieza mecánica en movimiento que controlaba el tiempo
 durante el cual la película fotográfica era expuesta a la luz de la escena.
-Actualmente el proceso de control de exposición se realiza con interruptores
-en los sensores ópticos.
+Actualmente el proceso de control de exposición se realiza con interrupciones
+digitales.
 } de las cámaras sea un _global shutter_, es
 decir que todos los píxeles sean capturados en el mismo instante. Por el
 contrario, las cámaras que se utilizan habitualmente en dispositivos de consumo
@@ -2303,22 +2483,22 @@ sistemas de SLAM es el de utilizar valores adecuados de _exposición
 (exposure)_ y _ganancia (gain)_. La exposición o exposure es la cantidad de
 tiempo que el obturador de la cámara habilita la entrada de luz a los sensores
 ópticos por cada cuadro. Por otro lado, la ganancia controla el nivel de
-amplificación (usualmente digital) que ocurrirá sobre la señal original. El
-control de estos parámetros (y el de la iluminación del entorno) es vital para
+amplificación, usualmente digital, que ocurrirá sobre la señal original. El
+control de estos parámetros, y el de la iluminación del entorno, es vital para
 asegurar imágenes que posean un brillo adecuado. Imágenes muy oscuras pierden
-detalles, y por ende la posibilidad de generar features. De la misma manera
-imagenes _sobreexpuestas_ (con demasiada iluminación en el entorno y valores de
-exposición y ganancia altos) presentan el mismo problema al saturar los
+detalles, y por ende la posibilidad de generar features. Imágenes
+_sobreexpuestas_ que tienen demasiada iluminación en el entorno y valores de
+exposición y ganancia altos, presentan el mismo problema al saturar los
 receptores ópticos, causando que porciones significativas de la imagen se
-transforman en manchas blancas. Estos problemas pueden verse en la
-\figref{fig:under-over-exposure}. Además de este problema, los valores de
-exposición y ganancia afectan el _ruido_ y el _motion blur_ (la difuminación que
+transformen en manchas blancas. Estos problemas pueden verse en la
+\figref{fig:under-over-exposure}. Además, los valores de
+exposición y ganancia afectan el _ruido_ y el _motion blur_, esto es la difuminación que
 se genera por movimientos rápidos en la imagen\marginnote{%\
 El motion blur ocurre cuando los movimientos que se realizan modifican
 sustancialmente la imagen a la que los sensores ópticos están expuestos mientras
 el obturador sigue abierto.
-}) como
-se muestra en la \figref{fig:expgain-grids}.
+};
+ejemplos esto se muestran en la \figref{fig:expgain-grids}.
 
 \fig{fig:under-over-exposure}{source/figures/under-over-exposure.pdf}{Poca y sobre-exposición}{
 Arriba: imagen con valores de exposición y ganancia adecuados a las condiciones
@@ -2343,11 +2523,12 @@ motion blur del objeto en movimiento.
 
 Un último problema a considerar que se presenta por el parámetro de exposición,
 es el llamado _parpadeo_ o _flicker_. Este ocurre en entornos iluminados por
-lámparas artificiales. Estas presentan parpadeos a altas frecuencias que no son
-visibles a simple vista pero que, si esas frecuencias no están alineadas con las
-de la exposición de las cámaras, producen el parpadeo. Este es un cambio
-intermitente en el brillo de las imágenes capturadas y es un punto extra a tener
-en cuenta sobre las muestras.
+lámparas artificiales. Estas presentan oscilaciones de intensidad a altas frecuencias que no son
+visibles a simple vista, pero que si esas frecuencias no están alineadas con las
+de la exposición de las cámaras, producen una secuencia de imágenes con niveles
+de brillo intermitentes. Este punto debe tenerse en cuenta, ya que no todos los
+sistemas son capaces de trackear features de forma eficiente cuando estas
+cambian las intensidades de sus píxeles.
 
 <!-- TODO@def: uso el concepto de "upstream" -->
 
@@ -2368,7 +2549,7 @@ adecuada para el sistema de SLAM.
 
 La interfaz de comunicación con el hardware será diferente en cada controlador, pero
 será usual tener que tratar con hilos consumidores y callbacks asíncronos. En estos
-habrá colas de datos que deberemos evitar sean saturadas. Para el caso particular del
+habrá colas de datos que deberemos evitar saturar con procesamientos bloqueantes. Para el caso particular del
 manejo de imágenes, al ser estos recursos de gran tamaño, Monado utiliza mecanismos de
 _reference counting_ mediante su estructura `xrt_frame` para la gestión de memoria.
 Además, como se mencionó anteriormente, `slam_tracker` utiliza la estructura de datos
@@ -2382,7 +2563,7 @@ adquirir y liberar estos recursos.
 
 Los sensores suelen venir con distintos modos de captura de muestras. Algunos
 habilitan mayores frecuencias a costa de menor precisión, o mayor precisión a
-costa de un mayor consumo energético, o soluciones de compromiso similares. La
+costa de un mayor consumo energético, y otras soluciones de compromiso similares. La
 capacidad de acceso a la configuración de estos sensores dependerá
 principalmente de lo que los fabricantes del dispositivo decidan exponer al
 programador. En caso de existir más de una forma de captura, será necesario
@@ -2403,10 +2584,55 @@ causa inconsistencias que suelen terminar en divergencias de los algoritmos de
 optimización. Además, es usual que también se necesite aplicar un cambio de
 coordenadas a las poses que el sistema le devuelve a Monado.
 
----
+### Controlador RealSense
 
-Estamos ahora en condiciones de entender las contribuciones realizadas en este trabajo
-sobre los controladores de dispositivos RealSense y WMR.
+Estamos ahora en condiciones de entender las contribuciones a controladores
+realizadas en este trabajo. Comencemos por las del controlador para dispositivos
+RealSense.
+
+<!-- TODO@def: "host", lo uso acá y en otros lados -->
+<!-- TODO@def: DIY -->
+
+Para soportar la cámara D455, se extendió significativamente en Monado el
+controlador de dispositivos RealSense. Hasta el momento, la única cámara de esta
+línea soportada por Monado era la T265[^t265]. Esta cámara es curiosa, ya que
+presenta un algoritmo de SLAM privativo que corre dentro del dispositivo sin
+necesidad de interactuar con el host. Este controlador se encargaba únicamente
+de inicializar el módulo interno de SLAM de la cámara y obtener las poses
+computadas por la misma para uso en las aplicaciones OpenXR. Uno de sus usuarios
+clave era el casco libre del proyecto North Star [^north-star] que las
+utilizaba, en iteraciones anteriores, como principal forma de tracking. En la
+web del proyecto pueden encontrarse imágenes [^north-star-img1]
+[^north-star-img2] que muestran estos cascos con la cámara T265 sujeta en su
+parte superior.
+
+\fig{fig:northstar-t265}{source/figures/northstar-t265.jpg}{T265 y proyecto North Star}{%
+El casco AR libre del proyecto North Star con una cámara T265 sujeta en la parte superior.
+}
+
+https://www.collabora.com/assets/images/blog/ProjectNorthStar.jpg
+[^t265]: <https://www.intelrealsense.com/tracking-camera-t265/>
+
+[^north-star]: El proyecto North Star de UltraLeap (prev. LeapMotion) es un
+casco AR "DIY" que puede fabricarse con piezas impresas en 3D y la compra de
+algunos componentes. <https://developer.leapmotion.com/northstar>
+
+[^north-star-img1]:
+[^north-star-img2]:
+
+Al no haber ningún tipo de manejo de las imágenes o muestras de IMU provistas
+por la cámara, se tuvo que implementar la gestión de estos sensores. Es ahora
+posible utilizar cualquier cámara de la línea RealSense que posea un par de
+cámaras estéreo y una IMU. Como trabajo futuro, sería interesante comparar el
+tracking interno de una T265 con los distintos sistemas externos integrados en
+este trabajo.
+
+### Windows Mixed Reality
+
+
+
+
+
 
 
 
