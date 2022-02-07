@@ -1,13 +1,13 @@
 ## Controladores en Monado
 
 En Monado, la interacción con la gran variedad de dispositivos que el runtime
-soporta es realizada mediante _drivers_ o _controladores_. Estos, como se puede
-ver en la \figref{fig:slam-tracker-dataflow}, le permiten a Monado interactuar con
+soporta es realizada mediante _drivers_ o _controladores_. Estos, como se mostró
+en la \figref{fig:slam-tracker-dataflow}, le permiten a Monado interactuar con
 sistemas XR físicos mediante abstracciones derivadas de los requisitos de
 OpenXR. Un sistema XR en este contexto hace referencia a un conjunto de
 dispositivos XR. Un dispositivo XR, en forma intuitiva, es algún tipo de hardware
 que permite la entrada y/o salida de información para intercambio con aplicaciones de XR. Un caso
-paradigmático de un sistema XR podría considerarse el conjunto de casco y un par
+paradigmático de un sistema XR podría considerarse al conjunto de casco y un par
 de mandos provistos por un fabricante.
 
 El concepto que se termina implementando en Monado es un poco más general, ya
@@ -35,12 +35,12 @@ de la imagen tenemos una cámara de profundidad _Intel RealSense D455_[^d455]
 mientras que a izquierda tenemos un casco _Samsung Odyssey+_. La línea de
 cámaras y módulos RealSense de Intel se enfoca en aplicaciones de robótica y
 visión por computadora, presentan distintos modelos con múltiples sensores
-especializados (en nuestro caso nos limitaremos a utilizar su IMU y cámaras
-estéreo). Estos vienen precalibrados, y además se tiene un SDK[^realsense-sdk]
-de código abierto en C/C++ (con _bindings_ para otros lenguajes) que facilita la
+especializados; en nuestro caso nos limitaremos a utilizar su IMU y cámaras
+estéreo. Estos vienen precalibrados, y además se tiene un SDK[^realsense-sdk]
+de código abierto en C/C++, con _bindings_ para otros lenguajes, que facilita la
 obtención y manipulación de datos. En contraste con esto, el casco de Samsung es
 un casco ligado a la plataforma privativa _Windows Mixed Reality (WMR)_[^wmr]
-que solo es soporta en sistemas operativos Windows[^windows]. WMR incluye algoritmos
+que solo es soportada en sistemas operativos Windows[^windows]. WMR incluye algoritmos
 propietarios de tracking por SLAM desarrollados por Microsoft.
 
 [^windows]: <https://www.microsoft.com/en-us/windows/>
@@ -68,7 +68,7 @@ el prototipado y experimentación con sistemas de SLAM, el Odyssey+ presenta
 serios desafíos que requirieron trabajo con la comunidad y métodos de ingeniería inversa
 para poder obtener acceso a las fuentes de datos necesarias para el tracking por
 SLAM. Cabe aclarar, que anterior a este trabajo, y según mi mejor entendimiento,
-no existía forma de utilizar este tipo de cascos con tracking con seis grados de libertad
+no existía forma de utilizar este tipo de cascos con tracking basado en SLAM/VIO
 para correr aplicaciones OpenXR sobre sistemas operativos basados en GNU/Linux
 \marginnote{MN_WMR_NOVELTY} \marginnote{MN_QUEST_ANDROID}.
 
@@ -80,7 +80,7 @@ para correr aplicaciones OpenXR sobre sistemas operativos basados en GNU/Linux
 ### Características de los datos
 
 Lo primero que se necesita para poder utilizar estos dispositivos para SLAM es
-conseguir el acceso a los datos que estos generan; o sea los flujos de imágenes
+conseguir el acceso a los datos que generan; o sea los flujos de imágenes
 y muestras de IMU. La forma y protocolos necesarios para comunicarse con estos
 dispositivos se realiza de maneras específicas para cada uno y como veremos en
 las secciones dedicadas, este es uno de los trabajos fundamentales de un
@@ -88,7 +88,7 @@ controlador. Además, un controlador tiene que ser capaz, no solo de obtener est
 información sino que también de redirigirla a los módulos adecuados de Monado.
 En la implementación de estas ideas surgen naturalmente los conceptos de
 _fuentes (sources)_ y _sumideros (sinks)_ de datos. En el runtime, estos
-conceptos existían de exclusivamente para el tratado de imágenes, y fueron extendidos
+conceptos existían exclusivamente para el tratado de imágenes, y fueron extendidos
 para también soportar el flujo de muestras de IMU. Los dispositivos entonces funcionan como
 fuentes de datos, que instancian un `TrackerSlam` el cual les provee sumideros a
 los que redirigir las muestras de sus sensores.
@@ -98,7 +98,8 @@ enfocado a SLAM, hay una serie de cuestiones a tener en cuenta. Desde el punto
 de vista de sistemas de SLAM/VIO, lo único que nos interesa es un flujo adecuado
 de imágenes de cámaras y muestras de IMU. Es en la definición de _adecuado_ en
 donde se esconden varios detalles importantes. Intentaremos clarificar los
-requierimientos para tener poses usables para SLAM a continuación:
+las características que deben considerarse en las muestras para que los sistemas
+de SLAM puedan utilizarlas apropiadamente:
 
 <!-- TODO@end: referenciar sección de calibración de IMU si la hago -->
 <!-- TODO@end: referenciar sección de calibración de cámara si la hago -->
@@ -110,9 +111,9 @@ En primer lugar, es necesario acceder a la información de calibración de los
 sensores en cuestión, para poder comunicársela de alguna forma a los sistemas de
 SLAM. Esto incluye la calibración para los cuatro sensores usuales: giroscopio,
 acelerómetro y el par de cámaras estéreo. La información de calibración describe
-valores que toman los parámetros de un modelo de calibración especificado. Es
+valores que toman los parámetros _intrínsecos_ (propios del sensor) de un modelo de calibración especificado. Es
 usual que, para evitarle el proceso de calibración al usuario de los sensores,
-estos provean valores de fábrica. La precisión provista por estos ha probado ser
+estos provean valores de fábrica. La precisión de tales valores ha probado ser
 de suficiente calidad para los sistemas de SLAM integrados en este trabajo, pero
 es necesario aclarar que los valores reales irán cambiando con el tiempo y el
 desgaste, haciendo que la recalibración sea un punto importante en el uso de
@@ -124,7 +125,7 @@ Habiendo dicho esto, vale aclarar que existen sistemas como OpenVINS
 [@genevaOpenVINSResearchPlatform2020] que son capaces de realizar el proceso de
 calibración de forma _online_ durante corridas normales. Esto es una
 característica realmente importante que ninguno de los tres sistemas
-integrados provee. Todos ellos asumen parámetros de calibración fijos y estos
+integrados provee. Todos ellos asumen parámetros de calibración fijos que
 deben ser provistos previos a la ejecución.
 
 <!-- #define MN_MODEL_TRANSLATION %\
@@ -134,15 +135,15 @@ en alguna forma significativa, parámetros de un modelo a otro.
 -->
 
 Como intentamos evitarle la calibración manual al usuario, querremos ser capaces
-de utilizar la calibración provista de fábrica. Para esto es vital que los
+de utilizar los valores de fábrica. Para esto es vital que los
 sistemas de SLAM soporten los mismos modelos de calibración para los que el
-fabricante provee valores\marginnote{MN_MODEL_TRANSLATION}. De lo contrario se necesitarán correcciones que
+fabricante especificó los valores\marginnote{MN_MODEL_TRANSLATION}. De lo contrario se necesitarán correcciones que
 usualmente terminan siendo mucho más costosas que si los sistemas soportaran los
 modelos nativamente. Ejemplos de esto son la _desdistorsión_[^opencv-undistort]
 y _rectificación_[^opencv-stereorectify] de imágenes sobre la cual no nos
 explayaremos aquí, pero basta con entender que es una transformación costosa
-aplicada sobre todos los píxeles de las imágenes para “normalizarla”. Esta
-normalización facilita el uso de las imágenes cuando los sistemas no implementan
+aplicada sobre todos los píxeles de las imágenes para “normalizarlas”. Esta
+normalización facilita su uso cuando los sistemas no implementan
 los modelos de calibración en los que el fabricante comparte los parámetros del
 dispositivo.
 
@@ -155,11 +156,11 @@ dispositivo.
 
 #### Calibración de parámetros extrínsecos
 
-El conjunto de sensores a utilizar: par de cámaras estéreo y una IMU con
-acelerómetro y giroscopio deben estar sujetos a un cuerpo rígido. Es decir, las
+El conjunto de sensores a utilizar: un par de cámaras estéreo y una IMU con
+acelerómetro y giroscopio, deben estar sujetos a un cuerpo rígido. Es decir, las
 transformaciones en $SE3$ que describen como alterar la pose de un sensor a otro
-se mantienen constantes sin importar la transformación del dispositivo.
-Los valores que describen estas transformaciones es a lo que denominamos como
+se mantienen constantes sin importar los movimientos del dispositivo en conjunto.
+Los valores que describen estas transformaciones relativas son lo que se denominan
 _parámetros extrínsecos_ de la calibración en contraste con los íntrinsecos. Los
 tres sistemas integrados requieren estos valores antes de comenzar la corrida.
 
@@ -200,8 +201,8 @@ denomina el efecto de rolling shutter.
 El término obturador proviene de los sensores ópticos tradicionales.
 Un obturador era una pieza mecánica en movimiento que controlaba el tiempo
 durante el cual la película fotográfica era expuesta a la luz de la escena.
-Actualmente el proceso de control de exposición se realiza con interruptores
-en los sensores ópticos.
+Actualmente el proceso de control de exposición se realiza con interrupciones
+digitales.
 -->
 
 Por el lado de los sensores de la cámara, será importante que el obturador o
@@ -239,18 +240,18 @@ sistemas de SLAM es el de utilizar valores adecuados de _exposición
 (exposure)_ y _ganancia (gain)_. La exposición o exposure es la cantidad de
 tiempo que el obturador de la cámara habilita la entrada de luz a los sensores
 ópticos por cada cuadro. Por otro lado, la ganancia controla el nivel de
-amplificación (usualmente digital) que ocurrirá sobre la señal original. El
-control de estos parámetros (y el de la iluminación del entorno) es vital para
+amplificación, usualmente digital, que ocurrirá sobre la señal original. El
+control de estos parámetros, y el de la iluminación del entorno, es vital para
 asegurar imágenes que posean un brillo adecuado. Imágenes muy oscuras pierden
-detalles, y por ende la posibilidad de generar features. De la misma manera
-imagenes _sobreexpuestas_ (con demasiada iluminación en el entorno y valores de
-exposición y ganancia altos) presentan el mismo problema al saturar los
+detalles, y por ende la posibilidad de generar features. Imágenes
+_sobreexpuestas_ que tienen demasiada iluminación en el entorno y valores de
+exposición y ganancia altos, presentan el mismo problema al saturar los
 receptores ópticos, causando que porciones significativas de la imagen se
-transforman en manchas blancas. Estos problemas pueden verse en la
-\figref{fig:under-over-exposure}. Además de este problema, los valores de
-exposición y ganancia afectan el _ruido_ y el _motion blur_ (la difuminación que
-se genera por movimientos rápidos en la imagen\marginnote{MN_MOTION_BLUR}) como
-se muestra en la \figref{fig:expgain-grids}.
+transformen en manchas blancas. Estos problemas pueden verse en la
+\figref{fig:under-over-exposure}. Además, los valores de
+exposición y ganancia afectan el _ruido_ y el _motion blur_, esto es la difuminación que
+se genera por movimientos rápidos en la imagen\marginnote{MN_MOTION_BLUR};
+ejemplos esto se muestran en la \figref{fig:expgain-grids}.
 
 \fig{fig:under-over-exposure}{source/figures/under-over-exposure.pdf}{Poca y sobre-exposición}{
 Arriba: imagen con valores de exposición y ganancia adecuados a las condiciones
@@ -275,11 +276,12 @@ motion blur del objeto en movimiento.
 
 Un último problema a considerar que se presenta por el parámetro de exposición,
 es el llamado _parpadeo_ o _flicker_. Este ocurre en entornos iluminados por
-lámparas artificiales. Estas presentan parpadeos a altas frecuencias que no son
-visibles a simple vista pero que, si esas frecuencias no están alineadas con las
-de la exposición de las cámaras, producen el parpadeo. Este es un cambio
-intermitente en el brillo de las imágenes capturadas y es un punto extra a tener
-en cuenta sobre las muestras.
+lámparas artificiales. Estas presentan oscilaciones de intensidad a altas frecuencias que no son
+visibles a simple vista, pero que si esas frecuencias no están alineadas con las
+de la exposición de las cámaras, producen una secuencia de imágenes con niveles
+de brillo intermitentes. Este punto debe tenerse en cuenta, ya que no todos los
+sistemas son capaces de trackear features de forma eficiente cuando estas
+cambian las intensidades de sus píxeles.
 
 <!-- TODO@def: uso el concepto de "upstream" -->
 
@@ -300,7 +302,7 @@ adecuada para el sistema de SLAM.
 
 La interfaz de comunicación con el hardware será diferente en cada controlador, pero
 será usual tener que tratar con hilos consumidores y callbacks asíncronos. En estos
-habrá colas de datos que deberemos evitar sean saturadas. Para el caso particular del
+habrá colas de datos que deberemos evitar saturar con procesamientos bloqueantes. Para el caso particular del
 manejo de imágenes, al ser estos recursos de gran tamaño, Monado utiliza mecanismos de
 _reference counting_ mediante su estructura `xrt_frame` para la gestión de memoria.
 Además, como se mencionó anteriormente, `slam_tracker` utiliza la estructura de datos
@@ -314,7 +316,7 @@ adquirir y liberar estos recursos.
 
 Los sensores suelen venir con distintos modos de captura de muestras. Algunos
 habilitan mayores frecuencias a costa de menor precisión, o mayor precisión a
-costa de un mayor consumo energético, o soluciones de compromiso similares. La
+costa de un mayor consumo energético, y otras soluciones de compromiso similares. La
 capacidad de acceso a la configuración de estos sensores dependerá
 principalmente de lo que los fabricantes del dispositivo decidan exponer al
 programador. En caso de existir más de una forma de captura, será necesario
@@ -335,11 +337,63 @@ causa inconsistencias que suelen terminar en divergencias de los algoritmos de
 optimización. Además, es usual que también se necesite aplicar un cambio de
 coordenadas a las poses que el sistema le devuelve a Monado.
 
----
+### Controlador RealSense
 
-Estamos ahora en condiciones de entender las contribuciones realizadas en este trabajo
-sobre los controladores de dispositivos RealSense y WMR.
+Estamos ahora en condiciones de entender las contribuciones a controladores
+realizadas en este trabajo. Comencemos por las del controlador para dispositivos
+RealSense.
 
+<!-- TODO@def: "host", lo uso acá y en otros lados -->
+<!-- TODO@def: DIY -->
+
+Para soportar la cámara D455, se extendió significativamente en Monado el
+controlador de dispositivos RealSense. Hasta el momento, la única cámara de esta
+línea soportada por Monado era la T265[^t265]. Esta cámara es curiosa, ya que
+presenta un algoritmo de SLAM privativo que corre dentro del dispositivo sin
+necesidad de interactuar con el host. Este controlador se encargaba únicamente
+de inicializar el módulo interno de SLAM de la cámara y obtener las poses
+computadas por la misma para uso en las aplicaciones OpenXR. Uno de sus usuarios
+clave era el casco libre del proyecto North Star [^north-star] que las
+utilizaba, en iteraciones anteriores, como principal forma de tracking. En la
+web del proyecto pueden encontrarse imágenes [^north-star-img1]
+[^north-star-img2] que muestran estos cascos con la cámara T265 sujeta en su
+parte superior.
+
+\fig{fig:northstar-t265}{source/figures/northstar-t265.jpg}{T265 y proyecto North Star}{%
+El casco AR libre del proyecto North Star con una cámara T265 sujeta en la parte superior.
+}
+
+https://www.collabora.com/assets/images/blog/ProjectNorthStar.jpg
+[^t265]: <https://www.intelrealsense.com/tracking-camera-t265/>
+
+[^north-star]: El proyecto North Star de UltraLeap (prev. LeapMotion) es un
+casco AR "DIY" que puede fabricarse con piezas impresas en 3D y la compra de
+algunos componentes. <https://developer.leapmotion.com/northstar>
+
+[^north-star-img1]:
+[^north-star-img2]:
+
+Al no haber ningún tipo de manejo de las imágenes o muestras de IMU provistas
+por la cámara, se tuvo que implementar la gestión de estos sensores. Es ahora
+posible utilizar cualquier cámara de la línea RealSense que posea un par de
+cámaras estéreo y una IMU. Como trabajo futuro, sería interesante comparar el
+tracking interno de una T265 con los distintos sistemas externos integrados en
+este trabajo.
+
+### Windows Mixed Reality
+
+<!-- #if 0 -->
+| Caraceterística/Controlador      | RealSense                                                                                                                                                 | WMR                                                                                                      |
+|----------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------|
+| Calibración de Cámaras           | Modelo de cámara rt4 precalibrado, los parámetros son cero, no hay distorsión. Cámaras con mucho solapamiento.                                            | Cámara fisheye, con modelo rt8 (extraño). No soportado en ningún sistema. Cámaras con poco solapamiento. |
+| Calibración de IMU               | Precalibrados. Parámetros son cero. Soportado por cualquier sistema. Soportado por cualquier sistema.                                                     | No precalibrado. Solo soportado por Basalt. Aunque la calibración es sencilla de realizar en Monado.     |
+| Sincronización temporal interna  | Sí, aunque requiere parche en el kernel.                                                                                                                  | Sí.                                                                                                      |
+| Sincronización temporal con host | Automática por SDK.                                                                                                                                       | Manual con suavizado exponencial. Resta hacer cálculo de latencia.                                       |
+| Muestras de IMU                  | Muestras no unificadas. Se utiliza omisión de sensor más lento. Resta interpolar. D455: accel. 60-250hz y giro. 200-400hz.                                | Muestras unificadas. 1000hz en paquetes de 4. Se promedian y se usan 250hz.                              |
+| Muestras de Cámara               | Múltiples resoluciones y frecuencias para elegir. Obturador global.                                                                                       | Cámaras monocromáticas 640x480 a 30fps. Obturador global.                                                |
+| Exposición y ganancia            | Manual. Alternativa automática con el SDK aunque no es ideal para aplicaciones  de SLAM por que aumenta exposure rápido. Los sensores son de más calidad. | Manual. Resta implementar curvas estudiadas. Sensores baratos. Ingeniería inversa.                       |
+| Interfaz con hardware            | RealSense SDK. Manejo automático de colas. rs_frame.                                                                                                      | Libusb. Manejo manual de memoria. Protocolo desconocido.                                                 |
+<!-- #endif -->
 <!-- #if 0 -->
 
 
@@ -376,38 +430,5 @@ y finalmente presentar una tabla comparativa (o capaz eso hacerlo antes?)
 <!-- TODO: tabla para comparar estas características de los dispositivos? -->
 
 
-### RealSense
 
-<!-- TODO@def: "host", lo uso acá y en otros lados -->
-<!-- TODO@def: DIY -->
-
-Para soportar la cámara D455, se extendió significativamente en Monado el
-controlador de dispositivos RealSense. Hasta el momento, la única cámara de esta
-línea soportadas por Monado era la T265[^t265]. Esta cámara es curiosa ya que
-presenta un algoritmo de SLAM privativo que corre dentro del dispositivo sin
-interacción del host. Este controlador se encargaba únicamente de inicializar el
-módulo interno de SLAM de la cámara y obtener las poses computadas por la misma
-para uso en las aplicacions OpenXR. Uno de sus usuarios clave era el casco libre
-del proyecto North Star [^north-star] que la utiliza como principal forma de
-tracking; en la \figref{fig:northstar-t265}.jpg se puede ver uno de estos cascos
-con la cámara sujeta al mismo en la parte superior.
-
-\fig{fig:northstar-t265}{source/figures/northstar-t265.jpg}{T265 y proyecto North Star}{%
-El casco AR libre del proyecto North Star con una camara T265 sujeta en la parte superior.
-}
-
-
-[^t265]: <https://www.intelrealsense.com/tracking-camera-t265/>
-
-[^north-star]: El proyecto North Star de UltraLeap (prev. LeapMotion) es un
-casco AR "DIY" que puede fabricarse con piezas impresas en 3D y la compra de
-algunos componentes. <https://developer.leapmotion.com/northstar>
-
-Al no haber ningún tipo de manejo de las imágenes o muestras de IMU provistas
-por la cámara, se tuvo que implementar la gestión de estos sensores. Es ahora
-posible utilizar cualquier cámara de la línea RealSense que posea un par de
-cámaras estéreo y una IMU. Como trabajo futuro, sería interesante comparar el
-tracking interno de una T265 con los distintos sistemas externos integrados en
-este trabajo.
-
-### Windows Mixed Reality
+<!-- #endif -->
