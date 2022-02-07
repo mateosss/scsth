@@ -85,3 +85,8 @@ reference
 counting
 iterador
 secc
+instancian
+rolling
+shutter
+North
+Star

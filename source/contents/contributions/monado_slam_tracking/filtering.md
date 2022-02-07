@@ -105,8 +105,6 @@ computar la pose de salida en esa timestamp, se toma el promedio de las poses de
 los últimos $w < m$ segundos (por defecto 66 ms). El parámetro $w$ es
 configurable por el usuario.
 
-<!-- TODO@def: uso cuaterniones -->
-
 Cabe aclarar, que si bien la forma de calcular el promedio para las posiciones
 $p_i$ debería resultar clara, promediar las orientaciones $q_i$ expresadas
 mediante cuaterniones no es trivial. En este caso, nos aprovecharemos del hecho
@@ -117,13 +115,11 @@ grados, calcular la media usual (y posteriormente normalizarla) es una muy buena
 aproximación con un error de menos del $1\%$.
 
 Tenemos entonces que el filtro queda definido por la siguiente ecuación.
-<!-- $$ -->
 \begin{align}
 \hat{X}_k &= \frac{1}{|W|} \sum_{i \in W}{X_i}
 \quad \text{con} \\
 W &= \{ i : t_k - w \leq t_i \leq t_k \} \quad \text{(ventana del filtro)}
 \end{align}
-<!-- $$ -->
 
 Notar que podemos definir el concepto de sumatoria componente a componente en
 $\R^7$ gracias a la aproximación de los cuaterniones mencionada anteriormente.
@@ -135,34 +131,28 @@ datos con una intensidad dada por un _factor de suavizado_ $\alpha \in [0, 1]$
 configurable por el usuario (0,1 por defecto). En el caso de tener un único
 escalar $x_k$ que filtrar, el suavizado exponencial queda definido de esta
 forma:
-<!-- $$ -->
 \begin{align}
 \hat{x}_0 &= x_0 \\
 \hat{x}_k &= \alpha x_k + (1 - \alpha) \hat{x}_{k-1} \label{eq:exp-smoothing-scalar}
 \end{align}
-<!-- $$ -->
 
 Reformulemos la [Ecuación](#eq:exp-smoothing-scalar) de la siguiente manera:
-<!-- $$ -->
 \begin{align}
 \hat{x}_k &= \alpha x_k + (1 - \alpha) \hat{x}_{k-1} \\
 &= \alpha x_k + \hat{x}_{k-1} - \alpha \hat{x}_{k-1} \\
 &= \hat{x}_{k-1} + \alpha (x_k - \hat{x}_{k-1})
 \end{align}
-<!-- $$ -->
 
 Esto nos deja ver el paso de actualización del filtro como una interpolación
 (lineal) de $\hat{x}_{k-1}$ hacia $x_k$ con paso $\alpha$. Utilizaremos esta
 idea para interpolar esféricamente la orientación de $\hat{X}_k$. Tenemos
 entonces que el paso de actualización para este filtro queda definido como:
-<!-- $$ -->
 \begin{align}
 \hat{X}_k &= (\hat{p}_k, \hat{q}_k) \\
 \hat{p}_k &= lerp(\hat{p}_{k-1}, p_k, \alpha) = \hat{p}_{k-1} + \alpha (p_k - \hat{p}_{k-1}) \\
 \hat{q}_k &= slerp(\hat{q}_{k-1}, q_k, \alpha) = \hat{q}_{k-1}
 (\hat{q}_{k-1}^{-1} q_k)^\alpha
 \end{align}
-<!-- $$ -->
 
 <!-- TODO@def: uso lerp y slerp de pecho ahí, uso inversa, composición y exponenciación
 escalar de los quaternions -->
@@ -179,30 +169,24 @@ $\alpha$ dinámico que se adapta automáticamente con base a la tasa de cambio d
 la señal. Reusamos también la idea de interpolar esféricamente para la
 orientación presentada en el filtro anterior. El filtro queda definido para la
 posición $p_k$ de la siguiente manera:
-<!-- $$ -->
 \begin{align}
 \hat{p}_0 &= p_0 \\
 \hat{p}_k &= lerp(\hat{p}_{k-1}, p_k, \alpha)
 \end{align}
-<!-- $$ -->
 
 Con $\alpha$ que se adapta con la velocidad de la señal:
-<!-- $$ -->
 \begin{align}
 \alpha &= \frac{1}{1 + \frac{\tau}{\Delta t_k}} \\
 \Delta t_k &= t_k - t_{k-1} \\
 \tau &= \frac{1}{2 \pi f_C}
 \end{align}
-<!-- $$ -->
 
 A continuación, $f_C$ es la llamada _frecuencia de corte_[^fc-lowpass] y posee
 un mínimo ajustable por el usuario $f_{C_{min}}$ y un parámetro de intensidad de
 actualización $\beta$ también configurable[^fc-perception].
-<!-- $$ -->
 \begin{align}
 f_C &= f_{C_{min}} + \beta | \hat{\dot{p}}_k |
 \end{align}
-<!-- $$ -->
 
 [^fc-lowpass]: Algunos lectores reconocerán que el término “frecuencia de corte”
 proviene de los filtros _low-pass_ y efectivamente, notarán que el filtro 1€ es
@@ -217,20 +201,16 @@ $f_c$ para a su vez disminuir el ruido.
 La velocidad de la señal es a su vez ajustada con otro filtro de suavizado
 exponencial con factor de suavizado fijo $f_{C_d}$, también configurable por el
 usuario.
-<!-- $$ -->
 \begin{align}
 \hat{\dot{p}}_0 &= 0 \\
 \hat{\dot{p}}_k &= lerp(\hat{\dot{p}}_{k-1}, \dot{p}_k, f_{C_d})
 \end{align}
-<!-- $$ -->
 
 Con velocidades instantáneas.
-<!-- $$ -->
 \begin{align}
 \dot{p}_0 &= 0 \\
 \dot{p}_k &= \frac{p_k - \hat{p}_{k-1}}{\Delta t_k}
 \end{align}
-<!-- $$ -->
 
 La versión del filtro utilizada para la orientación $q_k$ es análoga a la
 definición anterior con algunas aclaraciones:

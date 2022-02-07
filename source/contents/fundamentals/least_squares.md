@@ -101,19 +101,6 @@ $A$ es $A^{\dagger} = (A^T A)^{-1} A^T$
 Notar que $(A^T A)^{-1}$ existe por [](#thm:aligraminv). Finalmente, la
 siguiente observación:
 
-Remark rmk:sqnormofsum
-: Sean $a, b \in \R^k$ para algún $k \in \N$, tenemos que $\| a + b \| ^ 2 =
-\|a\|^2 + \|b\|^2 + 2 a^T b$.
-
-Proof
-: Desarrollemos:
-\begin{align}
-\| a + b \| ^ 2 &= (a_1 + b_1)^2 + \dots + (a_k + b_k)^2 \\
-&= (a_1^2 + b_1^2 + 2 a_1 b_1) + ... + (a_k^2 + b_k^2 + 2 a_k b_k) \\
-&= \| a \| ^2 + \| b \|^2 + 2 \langle a, b \rangle \\
-&= \| a \| ^2 + \| b \|^2 + 2 a^T b
-\end{align}
-
 Con estas herramientas, estamos en posición de presentar la solución directa al
 problema de los cuadrados mínimos lineales.
 

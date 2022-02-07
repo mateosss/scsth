@@ -10,6 +10,7 @@ en varias ocasiones intentará brindar una traducción adecuada en español.
 <!-- TODO@nico: Tratar de no usar parentesis en el texto -->
 <!-- TODO@end: las listas of figures/framents/etc estan andando? -->
 
+<!-- TODO@high@end: los margin par se pueden salir de la página, revisar que ninguno haya quedado así!-->
 <!-- TODO@end: todo lo que diga TODO@end hay que chequearlo al terminar el trabajo -->
 <!-- TODO@endbig: rehacer todas las figuras manuscritas -->
 <!-- TODO@end: chequear que NINGÚN fragmento se corte en dos páginas a menos que sea super necesario -->
