@@ -1,7 +1,7 @@
 ### Transformaciones
 
-Usualmente necesitaremos referirnos y manipular transformaciones
-tridimensionales entre distintos sistemas de referencias. Estos sistemas surgen
+Usualmente necesitaremos manipular y referirnos a transformaciones
+tridimensionales entre distintos sistemas de referencias como se muestra en la \figref{fig:transforms}. Estos sistemas surgen
 de las entidades que forman parte de nuestro proceso de optimización en SLAM.
 Algunos ejemplos de transformaciones en los que podríamos estar interesados son
 las que describen que transformación es necesaria realizar sobre la cámara
@@ -9,56 +9,68 @@ izquierda para llegar a la cámara derecha de nuestro dispositivo, o la
 transformación que le ocurrió al agente localizado entre el instante anterior y
 el actual.
 
-<!-- TODO@high@fig: Figura de transformación de sistemas referenciales -->
+\fig{fig:transforms}{source/figures/transforms.pdf}{Transformaciones}{%
+Intuición de lo que representa una transformación $T$ que rota y traslada el
+sistema de referencia $A$ hacia $B$. En general estas transformaciones tendrán
+una inversa $T^{-1}$ que puede deshacer la acción original. Notar que un
+punto en el espacio $p \in \R^3$ tiene diferentes coordenadas dependiendo de que
+sistema se tome como referencia.
+}
 
 <!-- #define MN_RIGID_BODY_MOVEMENT %\
 No profundizaremos en la definición formal de este concepto pero, intuitivamente,
-son transformaciones que preservan la norma y el producto cruz para cualquier
-par de vectores. Esto implica que también preservan volumen.
+son transformaciones que al aplicarlas sobre un conjunto de puntos, preservan su volumen.
+Esto implica que preservan la norma y el producto cruz.
 -->
 
 El tipo de transformación en el que estamos interesados son los _movimientos de
 cuerpo rígido_\marginnote{MN_RIGID_BODY_MOVEMENT}. Estos pueden describirse
 mediante _traslaciones_ y _rotaciones_.  Además, también nos gustaría poder
 expresar la _ubicación_ y _orientación_ de las entidades en nuestro sistema.
-Estas dos características conforman la _pose_ en el espacio de tal entidad. A
-continuación, desarrollaremos algunos conceptos que nos ayudarán a describir la
-idea de transformación más formalmente, mientras que consideraremos a una pose
-como una transformación aplicada sobre un origen.
+Estas dos características conforman la _pose_ en el espacio de tal entidad.
+Es posible describir este concepto como una transformación aplicada sobre un
+sistema de referencia global fijo. Por ejemplo en la \figref{fig:transforms}
+si pensamos en $A$ como este origen global, tenemos entonces que $T$ está
+describiendo la pose de $B$ con respecto a $A$.
+A continuación, desarrollaremos algunas definiciones que nos ayudarán a describir la
+idea de transformación más formalmente, y utilizaremos este mismo concepto para
+identificar las poses de nuestras entidades.
 
-<!-- TODO@high: aclarar que ademas de transformaciones, estas cosas mueven puntos de un marco referencial al otro -->
+#### Preliminares del álgebra lineal {#sec:linearalg-prelim}
 
 Comenzaremos construyendo sobre algunas ideas básicas del álgebra lineal.
 
 Definition
 : Una transformación lineal $L$ entre dos espacios vectoriales $V, W$ es una
 función $L : V \rightarrow W$ tal que:
+\bigbreak
 \begin{itemize}
   \item $L(x + y) = L(x) + L(y) \quad \forall x, y \in V$
   \item $L(ax) = aL(x) \quad \forall a \in \R$
 \end{itemize}
 
-Remark (Matriz de una transformación)
+Property (Matriz de una transformación)
 : Si $V$ tiene base canónica $e_1, ..., e_n$ con $e_i \in \R^m$ tenemos que la matriz $A =
 [L(e_1), ..., L(e_n)] \in \R^{m \times n}$ cumple $Ax = L(x) \quad \forall x \in V$
 
-Remark (Matrices cuadradas)
+Property (Matrices cuadradas)
 : El conjunto de matrices en $\R^{n\times n}$, con las operaciones de adición y
 multiplicación matricial usuales, forman un anillo[^ring] sobre el cuerpo de
-los reales. En particular, es un conjunto cerrado bajo estas operaciones.
+los reales. En particular, es un conjunto que se encuentra cerrado bajo estas
+operaciones.
 
 [^ring]: <https://en.wikipedia.org/wiki/Ring_(mathematics)#Definition>
 
-Remark rmk:sqnormofsum
-: Sean $x, y \in \R^n$, tenemos que $\| x + y \| ^ 2 = \|x\|^2 + \|y\|^2 + 2 x^T y$.
+Property rmk:sqnormofsum
+: Sean $a, b \in \R^n$, tenemos que $\| a + b \| ^ 2 = \|a\|^2 + \|b\|^2 + 2 a^T b$.
 
 Proof
 : Desarrollemos:
 \begin{align}
-\| x + y \| ^ 2 &= (a_1 + b_1)^2 + \dots + (a_k + b_k)^2 \\
-&= (a_1^2 + b_1^2 + 2 a_1 b_1) + ... + (a_k^2 + b_k^2 + 2 a_k b_k) \\
-&= \| x \| ^2 + \| y \|^2 + 2 \langle x, y \rangle \\
-&= \| x \| ^2 + \| y \|^2 + 2 x^T y
+\| a + b \| ^ 2 &= (a_1 + b_1)^2 + \dots + (a_n + b_n)^2 \\
+&= (a_1^2 + b_1^2 + 2 a_1 b_1) + ... + (a_n^2 + b_n^2 + 2 a_n b_n) \\
+&= \| a \| ^2 + \| b \|^2 + 2 \langle a, b \rangle \\
+&= \| a \| ^2 + \| b \|^2 + 2 a^T b
 \end{align}
 
 #### Representación de rotaciones
@@ -72,9 +84,9 @@ utilizadas en este trabajo.
 La representación por ángulos Euler utiliza un vector $[x, y, z]^T \in \R^3$ en donde
 cada componente representa el ángulo de rotación que aplicar alrededor de tres
 ejes seleccionados por convención. Es decir, el vector describe tres rotaciones
-que aplicar. Esta representación, tiene la principal ventaja de resultar
+que aplicar. Esta representación tiene la principal ventaja de resultar
 intuitiva cuando solo se necesita describir una rotación, pero se vuelve
-dificil en otros contextos.
+inconveniente en otros contextos que necesitaremos.
 
 <!-- #define MN_ROTATION_MADNESS %\
 En la práctica, la manipulación de rotaciones y sistemas de coordenadas son
@@ -88,9 +100,9 @@ en cada uno. Aunque en la práctica solo se utiliza un puñado de ellas, se pued
 volver fácilmente un punto de confusión\marginnote{MN_ROTATION_MADNESS}. El otro
 problema fundamental es el llamado _gimbal lock_[^gimbal-lock] en donde la
 combinación de ciertas rotaciones puede causar la pérdida de un grado de
-libertad y describir nuevas rotaciones arbitrarias se hace imposible en ese
-punto. Más problemas de los ángulos Euler se mencionan en
-@shoemakeAnimatingRotationQuaternion1985, secc 2.4.
+libertad y describir nuevas rotaciones arbitrarias se hace imposible a partir de
+ese punto. Otros problemas de los ángulos Euler se detallan en
+@shoemakeAnimatingRotationQuaternion1985.
 
 En general, evitaremos esta representación.
 
@@ -115,7 +127,7 @@ la rotación capturada.
 
 Esta representación se utilizará para el almacenamiento de valores de velocidad
 angular provistos por muestras de giroscopio, ya que no es necesaria ningún tipo
-de transformación. Además, veremos más abajo que esta forma de describir
+de conversión. Además, veremos más abajo que esta forma de describir
 rotaciones surge naturalmente en el estudio de otras representaciones.
 
 <!-- TODO@ref: citar algo que verifique eso -->
@@ -212,16 +224,14 @@ slerp(p, q, t) = p(p^{-1}q)^t
 [^slerp-derivation]: La derivación de la fórmula de interpolación esférica para
 cuaterniones se puede encontrar en @shoemakeAnimatingRotationQuaternion1985
 
-##### Matrices de rotación
-
-<!-- TODO@high: aclarar que todo esto tambien funciona en R^2 para cuando hablamos de optical flow -->
+##### Matrices de rotación {#sec:rotation-matrices}
 
 Las rotaciones pueden representarse también como una matriz $R \in \R^{3x3}$ con
 ciertas restricciones.
 
 Definition
 : Sean $v, w \in \R^3$, decimos que $v$ y $w$ son ortonormales si $\norm{v} =
-\norm{w} = 1$ y sus columnas son ortogonales, es decir $\dotprod{v}{w} = 0$
+\norm{w} = 1$ y son ortogonales, es decir $\dotprod{v}{w} = 0$
 
 Sean $R^{(1)}, R^{(2)}, R^{(3)} \in \R^3$ las columnas de $R$.
 
@@ -230,7 +240,7 @@ Definition
 $\dotprod{R^{(i)}}{R^{(j)}} = 0$ y $\norm{R^{(i)}} = 1$ para $i \neq j; \; i, j \in \{1, 2, 3\}$.
 
 <!-- #define MN_DETERMINANT_INTUITION %\
-El hecho de que el determinante sea $\pm 1$, intuitivamente, quiere decir que la
+El hecho de que el determinante sea $+1$, intuitivamente, quiere decir que la
 transformación lineal de $R$ no escala los vectores en $\R^3$,
 o sea preserva volúmenes.
 -->
@@ -244,9 +254,9 @@ de vectores en $\R^3$.
 Las matrices ortonormales pueden tener determinante $\pm 1$. Llamaremos **matrices de
 rotación** solo a las $R$ tal que $det(R) = +1$
 \marginnote{MN_DETERMINANT_INTUITION} \marginnote{MN_IMPROPER_ROTATION}. El
-conjunto  estas matrices se denomina $SO(3)$ (veremos en la sección siguiente
-el por qué). Estas matrices presentan propiedades agradables para ser manipuladas como rotaciones
-en el álgebra matricial usual.
+conjunto  estas matrices se denomina $SO(3)$ y veremos en la sección siguiente
+el por qué de este nombre. Estas matrices presentan propiedades agradables para ser manipuladas como rotaciones
+en el álgebra matricial usual:
 
 \bigbreak
 
@@ -256,25 +266,196 @@ en el álgebra matricial usual.
 - La composición de rotaciones $R, S \in SO(3)$ queda representada con la
   multiplicación de matrices usual $RS$.
 
-- La inversa de $R$ es $R^{-1} = R^T$.
+- La inversa de $R$ es $R^{-1} = R^T$, más aún esta propiedad define a las
+  matrices ortogonales.
 
 \bigbreak
 
 Proof
 : Tenemos por la ortonormalidad de las columnas de $R$ y definición de $R^T$ que
 \begin{align}
-  R^T R &= \begin{bmatrix}
+  & R^T R = I_{3 \times 3} \\
+  & \Leftrightarrow \begin{bmatrix}
   \dotprod{R^{(1)}}{R^{(1)}} & \dotprod{R^{(1)}}{R^{(2)}} & \dotprod{R^{(1)}}{R^{(3)}} \\
   \dotprod{R^{(2)}}{R^{(1)}} & \dotprod{R^{(2)}}{R^{(2)}} & \dotprod{R^{(2)}}{R^{(3)}} \\
   \dotprod{R^{(3)}}{R^{(1)}} & \dotprod{R^{(3)}}{R^{(2)}} & \dotprod{R^{(3)}}{R^{(3)}} \\
-  \end{bmatrix} = I_{3 \times 3}
+  \end{bmatrix} = \begin{bmatrix}
+    1 & 0 & 0 \\
+    0 & 1 & 0 \\
+    0 & 0 & 1 \\
+  \end{bmatrix} \\
+  & \Leftrightarrow \| R^{(i)} \| = 1 \text{ y } \dotprod{R^{(i)}}{R^{(j)}} = 0 \quad \forall i \neq j \in \{1,2,3\} \\
+  & \Leftrightarrow \text{R es ortogonal}
 \end{align}
 
 \bigbreak
 
-Más aún, el avance tecnológico en las unidades vectoriales, tanto en CPU como
-GPU, hace que la manipulación de matrices sea usualmente igual o más rápida que
-la de cuaterniones.
+#### Representación de transformaciones
+
+Tener rotaciones expresadas como matrices, o equivalentemente como
+transformaciones lineales, prueba ser muy útil en la práctica, ya que podemos
+recurrir al arsenal de funcionalidad preexistente para estas estructuras.
+A continuación, desarrollaremos una serie de definiciones que nos permitirán
+extender esta idea de utilizar matrices para cubrir el concepto de
+transformación en su totalidad, con traslaciones incluidas.
+
+##### Grupos
+
+Vimos en la \Cref{sec:linearalg-prelim} que $\Rnn$ forma un anillo con
+multiplicación y suma cerradas bajo $\R$. Además, mostramos que las matrices en
+$\Rnn$ corresponden a transformaciones lineales. Veremos ahora una serie de
+entidades que restringen a las transformaciones en $\Rnn$ con el objetivo de
+llegar a describir las transformaciones de cuerpo rígido sobre $\R^3$ que nos
+interesan.
+
+Definition
+: Un grupo es un conjunto $G$ con una operación binaria \newline
+$\circ : G \times G \rightarrow
+G$ tal que $\forall a, b, c \in G$:
+\bigbreak
+\begin{enumerate}
+  \item Es cerrada: $a \circ b \in G$
+  \item Es asociativa: $(a \circ b) \circ c = a \circ (b \circ c)$
+  \item Tiene neutro: $\exists!\ e \in G: e \circ a = a \circ e = a$
+  \item Tiene inverso: $\exists a^{-1} \in G: a \circ a^{-1} = a^{-1} \circ a = e$
+\end{enumerate}
+
+Es posible empezar a intuir que _tanto las rotaciones como las transformaciones_
+que describimos al principio del capítulo _coinciden con esta idea de grupo_.
+"Mezclar" transformaciones debería dar como resultado otra transformación
+(cerrada) y no debería importar el orden de mezcla (asociativa). Debería existir
+una transformación neutra que no haga nada, y una transformación inversa que
+deshagan la transformación original. Si además pudiésemos describir estas
+transformaciones con matrices, seríamos capaces de recurrir a todas las
+herramientas preexistentes. Veamos como hacer eso ahora.
+
+Definition
+: El conjunto de matrices invertibles en $\Rnn$ con la operación de
+multiplicación matricial forman un grupo denominado Grupo Lineal General
+$GL(n)$. Es decir:
+\begin{align}
+  GL(n) = \{ A \in \Rnn : det(A) \neq 0 \}
+\end{align}
+
+Definition
+: El subconjunto de matrices de GL(n) con determinante 1 se denomina el Grupo
+Linea Especial $SL(n)$. Es decir:
+\begin{align}
+  SL(n) = \{ A \in GL(n) : det(A) = 1 \}
+\end{align}
+
+Remark
+: $A \in SL(n) \Rightarrow A^{-1} \in SL(n)$ ya que $det(A^{-1}) = \frac{1}{det(A)}$.
+
+Definition
+: Un grupo $G$ tiene una representación matricial si existe un homomorfismo
+inyectivo $F:G \rightarrow GL(n)$. Es decir, una función inyectiva
+para la cual la multiplicación matricial preserva la estructura del operador
+$\circ$. En símbolos, $\forall a, b \in G$:
+\begin{align}
+  F(e) &= I_{n \times n} \\
+  F(a \circ b) &= F(a)F(b)
+\end{align}
+
+Definition
+: El subconjunto de matrices ortogonales de $GL(n)$ se denomina el Grupo Ortogonal
+$O(n)$. Es decir:
+\begin{align}
+O(n) = \{ R \in GL(n) : R^T R = I \}
+\end{align}
+
+Property
+: Una matriz ortogonal $R \in \Rnn$ preserva el producto interno.
+
+Proof
+: $\forall x, y \in \R^{n}$ tenemos:
+\begin{align}
+\dotprod{Rx}{Ry} = (Rx)^T Ry = x^T R^T R y = x^T y = \dotprod{x}{y}
+\end{align}
+
+Property
+: Una matriz ortogonal $R \in O(n)$ tiene $det(R) = \pm 1$
+
+Proof
+: \begin{align}
+& 1 = det(I) = det(R^T R) = det(R^T) det(R) = det(R)^2 \\
+& \Leftrightarrow det(R) = \pm 1
+\end{align}
+
+Definition
+: El subconjunto de matrices ortogonales de $O(n)$ con determinante $+1$ se
+denomina el Grupo Ortogonal Especial $SO(n)$. Es decir:
+\begin{align}
+  SO(n) = \{ R \in O(n) : det(R) = +1 \} = O(n) \cap SL(n)
+\end{align}
+
+Como vimos en la \Cref{sec:rotation-matrices}, este grupo es el que define a
+las **matrices de rotación**. Y se corresponde a la representación matricial que
+presentamos allí. Continuemos ahora con las transformaciones.
+
+##### Transformaciones como grupos
+
+Definition
+: Uns transformación lineal afín $L : \R^n \rightarrow \R^n$ es tal que existe $B
+\in GL(n)$ y $b \in \R^n$ que determinan $L(x) = Bx + b$.
+
+Definition
+: El grupo de tales transformaciones se denomina Grupo Afín de dimensión $n$
+$A(n)$.
+
+En general, una transformación afín $L(x) = Bx + b \in A(n)$ no es una transformación lineal a menos
+que $b = 0$. Introduciremos las llamadas _coordenadas homogéneas_ para expresar
+transformaciones afínes en $A(n)$ como transformaciones lineales en $GL(n + 1)$.
+Extenderemos $L$ de la siguiente manera:
+\begin{align}
+L': \R^{n+1} &\rightarrow \R^{n+1} \\
+L' \begin{pmatrix}\begin{bmatrix}x \\ 1\end{bmatrix}\end{pmatrix} &= \begin{bmatrix}
+B & b \\
+0 & 1
+\end{bmatrix}
+\begin{bmatrix}x \\ 1\end{bmatrix}
+= \begin{bmatrix} Bx + b \\ 1 \end{bmatrix}
+= \begin{bmatrix} L(x) \\ 1 \end{bmatrix}
+\end{align}
+
+Notar que hay un isomorfismo entre $L$ y $L'$ ya que $0$ y $1$ son constantes y
+por esto diremos que son la misma transformación. La matriz $\begin{bmatrix} B &
+b \\ 0 & 1 \end{bmatrix}$ se dice una matriz afín y pertenece a $GL(n + 1)$.
+Tenemos entonces que las matrices afines forman un subgrupo de $GL(n + 1)$
+
+Definition
+: Una transformación euclídea $L: \R^n \rightarrow \R^n$ se define con una
+matriz ortogonal $R \in O(n)$ y un vector $t \in \R^n$ como $L(x) = Rx + t$.
+
+Definition
+: El grupo de tales transformaciones se denomina Grupo Euclídeo $E(n)$ y es un
+subgrupo de $A(n)$. Es decir
+\begin{align}
+  E(n) = \begin{Bmatrix} \begin{bmatrix} R & t \\ 0 & 1 \end{bmatrix} \in
+  \R^{(n+1) \times (n+1)} : R \in O(n), t \in \R^n \end{Bmatrix}
+\end{align}
+
+Definition
+: El subconjunto de transformaciones euclídeas con $R \in SO(n)$ se denomina el
+Grupo Euclídeo Especial $SE(n)$, es decir:
+\begin{align}
+  E(n) = \begin{Bmatrix} \begin{bmatrix} R & t \\ 0 & 1 \end{bmatrix} \in
+  \R^{(n+1) \times (n+1)} : R \in SO(n), t \in \R^n  \end{Bmatrix}
+\end{align}
+
+Y es este el grupo que buscábamos ya que $SE(3)$ es capaz de representar las
+transformaciones de cuerpo rígido en $\R^3$ que necesitábamos. Tenemos entonces
+que representaremos rotaciones con matrices cuadradas $3x3$ $R \in SO(3)$ y
+representaremos transformaciones con matrices cuadradas $4x4$ $T \in SE(3)$.
+Estos grupos también funcionan con dos dimensiones en $\R^2$ de la misma manera
+para $SO(2)$ y $SE(2)$. Finalmente, se pueden visualizar los conjuntos definidos
+en esta sección en la \figref{fig:hasse-groups}.
+
+\fig{fig:hasse-groups}{source/figures/hasse-groups.pdf}{Árbol de grupos}{%
+Diagramas de Hasse de los grupos desarrollados con el orden parcial
+$\subset$ (\italic{``es subconjunto propio de''}).
+}
+
 
 <!-- #if 0 -->
 

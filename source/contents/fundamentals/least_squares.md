@@ -88,6 +88,7 @@ Proof
 : Como $A$ tiene columnas linealmente independientes, por
 [](#thm:li1inv2nots3) (3) tenemos que $x = 0 \Leftrightarrow Ax = 0$, nos basta
 con ver que $Ax = 0 \Leftrightarrow A^T A x = 0$.
+\bigbreak
 \begin{itemize}
   \item $\Rightarrow)$ Si $Ax = 0$ entonces $A^T A x = A^T (A x) = A^T 0 = 0$
   \item $\Leftarrow)$ Si $A^T A x = 0$ entonces $0 = x^T A^T A x = (x^T A^T) A x =
@@ -134,7 +135,7 @@ Más aún, esta solución es única ya que la igualdad en la última ecuación s
 da si $\|A(x-\hat{x})\|^2 = 0$, y como $A$ es no-singular, esto solo pasa
 cuando $x=\hat{x}$.
 
-[^normalequations]: La expresión $A^T A x = A^T b$ suele ser referida como
+[^normalequations]: La expresión $A^T A x = A^T b$ suele ser referida como las
 _ecuaciones normales_. La derivación de la solución de cuadrados mínimos
 presentada en este trabajo no es la única. De hecho, es común encarar el
 problema mediante cálculo diferencial. En ese contexto, las ecuaciones normales

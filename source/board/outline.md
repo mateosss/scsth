@@ -48,11 +48,11 @@ Notación:
     - [DRAFT] Definición del problema no-lineal
     - [DRAFT] Algoritmo de Gauss-Newton
     - [WONTDO] Algoritmo de Levenberg-Marquardt
-  - [WAIT] Cuaterniones
+  - [DRAFT] Cuaterniones
   - [TODO] Grupos de Lie para transformaciones 2D y 3D
-    - [TODO] Definición
+    - [DRAFT] Definición
     - [TODO] Operadores (Exp y Log, hat y vee) y Propiedades
-    - [TODO] SO(3), SE(3), SO(2), SE(2)
+    - [DRAFT] SO(3), SE(3), SO(2), SE(2)
   - [TOREAD] Grafo de factores
 - [TODO] Sistemas Estudiados
   - [TODO] Introducción: Panorama de sistemas (cuales, metricas, rendimiento,
