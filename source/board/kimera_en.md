@@ -116,7 +116,7 @@ this prediction is then passed as the initial value for the iterative LK
 tracker. For each one of the previous keypoints, the algorithm returns a new
 keypoint if it can find it and also an `error` flat of how accurate the new
 keypoint might be (Kimera is not using this `error`, they have a
-[TODO](https://github.com/MIT-SPARK/Kimera-VIO/blob/641576fd86bdecbd663b4db3cb068f49502f3a2c/src/frontend/Tracker.cpp#L132)
+[To Do](https://github.com/MIT-SPARK/Kimera-VIO/blob/641576fd86bdecbd663b4db3cb068f49502f3a2c/src/frontend/Tracker.cpp#L132)
 on that). Once the new keypoints are predicted, they are saved into the current
 `Frame` container for usage in the next frame. They are also displayed in the
 visualizer.

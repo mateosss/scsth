@@ -31,7 +31,7 @@ sobre la misma instancia del runtime. Además, se quita la necesidad de ejecutar
 ambos procesos sobre el mismo nodo de cómputo, lo cual facilita la posibilidad
 de tener realidad virtual renderizada en la nube.
 
-<!-- TODO@fig: Tiene que estar en español y agregar "Filtrado" arriba de "Prediction" -->
+<!-- TODO@high@fig: Tiene que estar en español y agregar "Filtrado" arriba de "Prediction" -->
 <!-- TODO@fig: Podría usar los nombres `TrackerSlam` y `slam_tracker` me
 parece por que los referencio bastante -->
 \fig{fig:monado-arch}{source/figures/monado-arch.pdf}{Arquitectura de Monado}{%
@@ -58,10 +58,10 @@ Move_, _PlayStation VR_, y tracking de manos en general. Es aquí entonces en
 donde se comienza la implementación del SLAM tracker presentado en este
 trabajo.
 
-<!-- TODO@nico: Lo que le digo "slam tracker implementation" nico pensó que
+<!-- TODO@high@nico: Lo que le digo "slam tracker implementation" nico pensó que
 debería ser una "interface", implementación/interfaz/adaptador son bastante
 ambiguos así que deberí revisar que los uso de forma consistente -->
-<!-- TODO@fig: Del TODO de arriba, viene que tengo que modificar fig:slam-tracker-dataflow -->
+<!-- TODO@high@fig: Del TODO de arriba, viene que tengo que modificar fig:slam-tracker-dataflow -->
 
 La implementación de un pipeline en Monado que permita la comunicación entre
 dispositivos, sistemas de SLAM y la aplicación OpenXR requirió desarrollar la
@@ -74,8 +74,8 @@ infraestructura y los distintos componentes que se necesitaron implementar y
 adaptar para obtener un pipeline de SLAM modular corriendo en Monado como se
 intenta mostrar en la \figref{fig:slam-tracker-dataflow}.
 
-<!-- TODO@fig: Agregar a esta figura referencia al filtrado de poses -->
-<!-- TODO@fig: Hacer versión final -->
+<!-- TODO@high@fig: Agregar a esta figura la caja del filtrado de poses -->
+<!-- TODO@high@fig: Hacer versión final -->
 
 \fig{fig:slam-tracker-dataflow}{source/figures/slam-tracker-dataflow.pdf}{Flujo de datos de la implementación}{%
 Diagrama esquemático de como ocurre el flujo de los datos desde que se generan
@@ -113,8 +113,8 @@ proveer dos funcionalidades fundamentales que escapan al alcance de los sistemas
 de SLAM/VIO y serán explicados a continuación: **predicción** y **filtrado** de
 poses.
 
-<!-- TODO: Hago las "Notas" así? hay una mejor manera? quizás a un
-costado de la página o con un recuadro tcolorbox como vi en un video -->
+<!-- TODO@high: Hago las "Notas" así? hay una mejor manera? quizás a un
+costado de la página o con un recuadro tcolorbox como vi en un video. EDIT: USE MARGINNOTE -->
 
 [^adapter-class-remark]: Es debatible si el añadido de estas funcionalidades
 haría que `TrackerSlam` deje de ser considerada una clase adaptadora, ya que

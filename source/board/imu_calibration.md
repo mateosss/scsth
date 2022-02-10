@@ -1,8 +1,9 @@
+<!-- TODO@high@section: finish this and put it in the thesis -->
+
 <!-- TODO@ref: Barfoot capitulo 6 habla de modelo de la IMU -->
 
-<!-- TODO: Que es propioceptivo? -->
-<!-- TODO: Que es odometría? -->
-<!-- TODO: decidir si pongo las citas al final del archivo md o lo dejo así abajo el párrafo en donde se uso -->
+<!-- TODO@def: Que es propioceptivo? -->
+<!-- TODO@def: Que es odometría? -->
 
 # IMUs
 

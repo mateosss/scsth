@@ -65,8 +65,6 @@ sistema, ya que para poder suavizar este ruido, los filtros tienden a reducir
 cambios abruptos en la trayectoria, incluso cuando estos sean realmente los
 movimientos que el usuario realizó físicamente.
 
-<!-- TODO@style: estaría bueno que los links aparecieran en monospace quizás? -->
-
 Presentaremos tres filtros, con el más sofisticado basado en
 @casiezFilterSimpleSpeedbased2012. Además, dicho trabajo cubre el resto de
 filtros presentados, muestra gráficas comparativas, y es también una buena
@@ -158,10 +156,6 @@ entonces que el paso de actualización para este filtro queda definido como:
 escalar de los quaternions -->
 
 ##### Filtro 1€
-
-<!-- TODO@fix: la referencia a la seccion de suavizado exponencial no funciona.
-Hay que cambiar el template y revisar todo de vuelta, no hay otra.
-El template base es muy malo. -->
 
 El filtro 1€ [@casiezFilterSimpleSpeedbased2012] se basa en el
 \hyperref[suavizado-exponencial]{suavizado exponencial}, pero utiliza un factor

@@ -36,7 +36,7 @@ dispositivos emulados por software[^qwerty-driver]. Los espacios que
 aplican a nuestro caso son aquellos que representaran dispositivos que posean
 sensores IMU y cámaras que puedan utilizarse en nuestros sistemas de SLAM/VIO.
 
-<!-- TODO@ref: Todos los MR importantes deberían estar listados y referenciados
+<!-- TODO@high@ref: Todos los MR importantes deberían estar listados y referenciados
 en alguna parte del trabajo -->
 
 [^qwerty-driver]: Una de las primeras contribuciones realizadas para
@@ -188,8 +188,6 @@ realizar el cómputo con $\Delta T$ como se definió en la
 [](#eq:predicted-space-delta). Simétricamente para extrapolar hacia el pasado
 lejano[^openxr-time-limits], o sea fuera del registro del historial, se utilizará el espacio más
 antiguo almacenado y $\Delta T^{-1}$.
-
-<!-- TODO@ref: la cita del autor "khronos group inc" se ve muy rara -->
 
 [^openxr-time-limits]: La especificación de OpenXR tiene una sección dedicada a
 las restricciones y condiciones a los que el runtime está sujeto respecto a

@@ -6,4 +6,4 @@
 {"rule":"MORFOLOGIK_RULE_ES","sentence":"^\\QMonado es un runtime (por ahora el único) de la especificación OpenXR de código abierto, licenciada bajo la Boost Software License 1.0 (BSL-1.0).\\E$"}
 {"rule":"MORFOLOGIK_RULE_ES","sentence":"^\\QSistemas de este tipo son empleados en productos como el Meta Quest, los cascos Windows Mixed Reality o incluso los SDK ARCore y ARKit presentes en dispositivos móviles.\\E$"}
 {"rule":"TOO_LONG_SENTENCE","sentence":"^\\QEste constante desfasaje temporal que hace que las poses estimadas siempre estén levemente en el pasado, en conjunto con el hecho de que las poses se estiman para puntos discretos de tiempo, hace que si queremos ser capaces de proveerle al usuario una pose para el tiempo que nos solicita, necesitemos implementar formas de interpolar y predecir la ubicación de un espacio.\\E$"}
-{"rule":"//TODO:https://github.com/valentjn/vscode-ltex/issues/210#issuecomment-1017587169//MORFOLOGIK_RULE_ES", "sentence":"(?:Dummy|Ina|Jimmy-)[0-9]+"}
+{"rule":"//TODO@low:https://github.com/valentjn/vscode-ltex/issues/210#issuecomment-1017587169//MORFOLOGIK_RULE_ES", "sentence":"(?:Dummy|Ina|Jimmy-)[0-9]+"}

@@ -21,7 +21,7 @@ help:
 	@echo ''
 	@echo 'get local templates with: pandoc -D latex/html/etc'
 	@echo 'or generic ones from: https://github.com/jgm/pandoc-templates'
-# TODO@style: here we have some talk about pandoc templates ^
+# TODO@low@style: here we have some talk about pandoc templates ^
 
 UNAME := $(shell uname)
 ifeq ($(UNAME), Linux)
@@ -39,11 +39,11 @@ md:
 		-I $(INPUTDIR)/ \
     $(INPUTDIR)/main.md > $(OUTPUTDIR)/thesis.md
 
-# TODO: Define HTML, PDF, TEX macros and use them in sourcecode for conditional
+# TODO@low: Define HTML, PDF, TEX macros and use them in sourcecode for conditional
 # stuff like: BEGIN_FORMULA(), which would pick $$ or \begin{align} based on
 # type of compilation
 
-# TODO: Generar buenas macros con gpp para el uso de imagenes, margins, etc
+# TODO@low: Generar buenas macros con gpp para el uso de imagenes, margins, etc
 # ver https://narkive.com/WEV34A29:3.378.60
 # Olvidarme del visor de vscode, a ese lo puedo usar sobre el archivo ya
 # procesado por gpp y chau
@@ -64,29 +64,6 @@ tex: md
 	--verbose \
 	"$(OUTPUTDIR)/thesis.md"
 	2> $(OUTPUTDIR)/logs/pandoc.tex.log
-
-# tex: md
-# 		pandoc \
-# 		--output "$(OUTPUTDIR)/thesis.tex" \
-# 		--template="$(STYLEDIR)/template.tex" \
-# 		--include-in-header="$(EXTERNALDIR)/01mf02/pandocfilters/header.tex" \
-# 		--include-in-header="$(STYLEDIR)/preamble.tex" \
-# 		--variable=fontsize:11pt \
-# 		--variable=papersize:a4paper \
-# 		--variable=documentclass:report \
-# 		--metadata=link-citations:true \
-# 		--pdf-engine=xelatex \
-# 		"$(OUTPUTDIR)/thesis.md" \
-# 		"$(INPUTDIR)/metadata.yml" \
-# 		--filter=external/mparker2/pandoc-shortcaption.py \
-# 		--filter=pandoc-xnos \
-# 		--filter=external/01mf02/pandocfilters/all.py \
-# 		--bibliography="$(BIBFILE)" \
-# 		--citeproc \
-# 		--csl="$(STYLEDIR)/ref_format.csl" \
-# 		--number-sections \
-# 		--verbose \
-# 		2> $(OUTPUTDIR)/logs/pandoc.tex.log
 
 LATEXCMD = xelatex -halt-on-error \
 	-output-directory=$(OUTPUTDIR)/latex $(OUTPUTDIR)/thesis.tex 2>&1 && \

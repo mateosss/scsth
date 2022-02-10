@@ -19,7 +19,7 @@ Notación:
 
 ## Índice
 
-- [TODO] Portada
+- [DONE] Portada
 - [TODO] Resumen (y abstract en inglés)
 - [AUTO] Índice
 - [AUTO] Lista de figuras
@@ -66,11 +66,11 @@ Notación:
       - [DRAFT] measure
       - [DOING] optimization
       - [DOING] marginalization
-    - [TODO] VIM
-      - [TODO] Global map optimization
-      - [TODO] Non-linear factor recovery
-      - [TODO] Non-linear factors for distribution approximation
-    - [ ] Modelo de Cámara Double Sphere
+    - [WONTDO] VIM
+      - [WONTDO] Global map optimization
+      - [WONTDO] Non-linear factor recovery
+      - [WONTDO] Non-linear factors for distribution approximation
+    - [WONTDO] Modelo de Cámara Double Sphere
   - [WONTDO] ORB-SLAM3
 - [TODO] Contribuciones (intro: explicar que es monado/openxr/khronos/collabora)
   - [DRAFT] Contexto
@@ -82,7 +82,7 @@ Notación:
     - [DRAFT] Clase adaptadora (t_tracker_slam: pose correction, debug utilities, euroc recorder, etc)
     - [DRAFT] Predicción (explicar los distintos niveles)
     - [DRAFT] Filtrado (explicar los distintos tipos, mencionar kalman?)
-  - [TODO] Controladores en Monado
+  - [DRAFT] Controladores en Monado
     - [TODO] Controlador para dispositivos RealSense (rs_source, D455 and others)
     - [TODO] Controlador para dispositivos WMR (wmr_source, Odyssey+ and others)
       - [TODO] Atenuación exponencial para sincronización temporal
@@ -99,11 +99,11 @@ Notación:
           jacobians, jacobi solver, OpenCV, newton solver) (habría que hacer avanzar el MR)
     - [WAIT] Offset para cámaras con bajo solapamiento en Basalt (para WMR) (MR no hecho
       todaví)
-    - [MAYBENOT] cJSON Wrapper
-  - [MAYBENOT] Contribuciones pendientes
-    - [MAYBENOT] Autoexposición
-    - [MAYBENOT] Interpolación de muestras de IMU
-    - [MAYBENOT] Cámaras OAK-D / Luxonis / Depth-aI
+    - [WONT] cJSON Wrapper
+  - [WONT] Contribuciones pendientes
+    - [WONT] Autoexposición
+    - [WONT] Interpolación de muestras de IMU
+    - [WONT] Cámaras OAK-D / Luxonis / Depth-aI
 - [TODO] Resultados
 - [TODO] Conclusion
-- [AUTO] Referencias
+- [AUTO] Bibliografía

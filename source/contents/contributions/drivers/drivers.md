@@ -383,6 +383,15 @@ este trabajo.
 ### Windows Mixed Reality
 
 <!-- #if 0 -->
+      - [TODO] Atenuación exponencial para sincronización temporal
+      - [TODO] Problemas específicos de calibración: camaras con poco solapamiento,
+            intrinsics para modelo raro radtan8 (referenciar a las contribuciones
+            explicadas abajo)
+      - [TODO] Trabajo con la comunidad, ingeniería inversa, thaytan camera
+            streams, exposure setting, analisis de exposure en sistema privativo,
+            analisis de parámetros extrínsicos, lectura de paquetes USB binarios
+<!-- #endif -->
+<!-- #if 0 -->
 | Caraceterística/Controlador      | RealSense                                                                                                                                                 | WMR                                                                                                      |
 |----------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------|
 | Calibración de Cámaras           | Modelo de cámara rt4 precalibrado, los parámetros son cero, no hay distorsión. Cámaras con mucho solapamiento.                                            | Cámara fisheye, con modelo rt8 (extraño). No soportado en ningún sistema. Cámaras con poco solapamiento. |

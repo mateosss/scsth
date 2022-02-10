@@ -1,21 +1,24 @@
-<!-- TODO@def: explicar bundle adjustment -->
-<!-- TODO@def: que es motion blur, (quizás usar nota al pie). EDIT: Very easy con pandoc footnote [^1] o inline_notes ^[nota] -->
-<!-- TODO@def: Estoy implicitamente hablando de un optimizador, cuando hablo de factor graphs? -->
-<!-- TODO@def: Explicar factores no-lineales, o almenos decir que no se explican -->
-<!-- TODO@def: Que son features? -->
-<!-- TODO@def: Que es loop closing? -->
-<!-- TODO@def: Que es OpenCV -->
-<!-- TODO@def: Que son grafos de poses, factor graphs, y factores -->
-<!-- TODO@def: VIO habla acerca de componentes: (patch tracking, landmark
+<!-- TODO@high: este archivo tiene muchos TODOs pero basicamente lo que le hace falta
+es una buena proofread y arreglar los errores que se detecten ahí -->
+
+<!-- TODO@high@def: explicar bundle adjustment -->
+<!-- TODO@high@def: que es motion blur -->
+<!-- TODO@high@def: Estoy implicitamente hablando de un optimizador, cuando hablo de factor graphs? -->
+<!-- TODO@high@def: Explicar factores no-lineales, o almenos decir que no se explican -->
+<!-- TODO@high@def: Que son features? -->
+<!-- TODO@high@def: Que es loop closing? -->
+<!-- TODO@high@def: Que es OpenCV -->
+<!-- TODO@high@def: Que son grafos de poses, factor graphs, y factores -->
+<!-- TODO@high@def: VIO habla acerca de componentes: (patch tracking, landmark
 representation, first-estimate Jacobians, marginalization
 scheme) que podría ser interesante discutir -->
 <!-- TODO: Mencionar que TUM lo desarrolla y las personas que lo mantienen -->
-<!-- TODO@def: Que es cuadrados minimos -->
-<!-- TODO@def: Que es gauss newton -->
-<!-- TODO@def: levenverg-marquard is also in use (see vio_lm_lambda_initial), I might need to explain it -->
-<!-- TODO@def: que son SE(2), SO(3) etc: ver https://ethaneade.com/ -->
-<!-- TODO@ref: Checkear que los 6 papers de basalt esten siendo citados -->
-<!-- TODO@ref: Los papers de orbslam y kimera deberían estar citados -->
+<!-- TODO@high@def: Que es cuadrados minimos -->
+<!-- TODO@high@def: levenverg-marquard is also in use (see vio_lm_lambda_initial), I might need to explain it -->
+<!-- TODO@high@def: que son SE(2), SO(3) etc: ver https://ethaneade.com/ -->
+<!-- TODO@high@ref: Checkear que los 6 papers de basalt esten siendo citados -->
+<!-- TODO@high@ref: Los papers de orbslam y kimera deberían estar citados -->
+<!-- TODO@high@def: que es el acrónimo VIO? -->
 
 # Implementación de Basalt
 
@@ -140,7 +143,7 @@ computación gráfica (e.g., _filtrado trilineal_, _LODs_, reducción de
 _patrones moiré_) pero en el caso de Basalt serán utilizados para darle robustez
 al algoritmo de seguimiento de features (_feature tracking_).
 
-[`frametoframeopticalflow`]: TODO
+[`frametoframeopticalflow`]: TODO@high
 
 \fig{fig:mipmap}{source/figures/mipmap.jpg}{Mipmaps}{%
 Representación piramidal (mipmaps) de un cuadro del conjunto de datos EuRoC.
@@ -196,7 +199,7 @@ optimización por cuadrados mínimos mediante el algoritmo iterativo de
 Gauss-Newton para encontrar $T$ utilizando un residual $r$ con:
 
 <!-- TODO@correct: Realmente es gauss newton lo que se hace? ver optical_flow_max_iterations -->
-<!-- TODO@correct: Not quite, es inverse-compositional method, que es un gauss newton
+<!-- TODO@high@correct: Not quite, es inverse-compositional method, que es un gauss newton
 sobre algo un poco distinto: https://homepages.inf.ed.ac.uk/rbf/CVonline/LOCAL_COPIES/AV0910/zhao.pdf
 por eso aparece el hessiano y cosas de esa pinta -->
 <!-- TODO: Mencionar ZNCC como norma no utilizada: https://martin-thoma.com/zero-mean-normalized-cross-correlation/ -->
@@ -238,8 +241,8 @@ procesa un cuadro es el de filtrado de keypoints, en el cual se desproyectan los
 keypoints a posiciones en la escena tri-dimensional y en caso de que el error
 epipolar supere cierto umbral, estos keypoints serán descartados.
 
-<!-- TODO@def: Que es la desproyección -->
-<!-- TODO@def: Qué es el error epipolar -->
+<!-- TODO@high@def: Que es la desproyección -->
+<!-- TODO@high@def: Qué es el error epipolar -->
 
 #### Bundle adjustment visual-inercial
 
@@ -251,7 +254,7 @@ epipolar supere cierto umbral, estos keypoints serán descartados.
 - [ ] "reprojection error"
  -->
 
-<!-- TODO@def: Qué es bundle adjustment -->
+<!-- TODO@high@def: Qué es bundle adjustment -->
 
 En un hilo separado al módulo de optical flow, corre el estimador de VIO
 encargado de realizar en bundle adjustment sobre los cuadros y muestras de la
@@ -277,9 +280,6 @@ tipo de corrección de orientación al calibrar las muestras del acelerómetro.
 Esto hace que la matriz de alineamiento para el acelerómetro tenga ceros en su
 triángulo superior (ver @schubertBasaltTUMVI2018 secc. IV.B y _discusión
 relacionada [^basalt-headers-issue8]_).
-
-<!-- TODO@style: Make footnotes clickeable -->
-<!-- TODO@style: También hacer que "discusion relacionada" se marque y sea clickeable quizas? -->
 
 [^basalt-headers-issue8]: <https://gitlab.com/VladyslavUsenko/basalt-headers/-/issues/8>
 

@@ -1,6 +1,6 @@
 ### Scractchpad
 
-<!-- TODO: Review if all items and their keywords were addressed in the writeup -->
+<!-- TODO@high: Review if all items and their keywords were addressed in the writeup -->
 
 - [ ] concept: nonlinear regression, gauss-newton algorithm
 - [ ] VIO:
@@ -146,7 +146,7 @@
     processFrame() {
       if (firstFrame) {
         // initialization of fields and
-        pyramid.generateMipMaps(frame); // TODO: Here is another entire frame copy!!!
+        pyramid.generateMipMaps(frame); // TODO@low@code: Here is another entire frame copy!!!
         addPoints();
         filterPoints();
       } else {
@@ -183,7 +183,7 @@
       KeypointId[] kpid = [ids of keypoints that appear in both camera observations];
       Vec2[] proj0 = [positions of kpid in cam0];
       Vec2[] proj1 = [positions of kpid in cam1];
-      Vec4[] p3d0 = cam0.unproject(proj0); // TODO: Why vec4?
+      Vec4[] p3d0 = cam0.unproject(proj0); // TODO@low@code: Why vec4?
       Vec4[] p3d1 = cam1.unproject(proj1);
       for (p0, p1 in [p3d0, p3d1]) {
         if (p0 or p1 unsuccessful projection) lm_to_remove.append(kpid[i]);
@@ -209,7 +209,7 @@
       for(level = 3 - 1; level >= && patch_valid; level--) {
         float scale = 2 ** level;
         out_aff2.b() /= scale;
-        // TODO: Heavy stuff, computes interpolated intensity and x-y gradients for each point in pattern51
+        // TODO@low@code: Heavy stuff, computes interpolated intensity and x-y gradients for each point in pattern51
         // then compute jacobian (with a weird operation to grad.row(i) and an offset to pattern coordinates)
         // then computes (H_inv * J)^T whatever that is, with H being something like the hessian? H = J^2
         // uses ldlt (cholesky) and solveInPlace() (which solver?) for calculating H_inv
@@ -468,14 +468,14 @@ private:
 
           if (T_0_1.translation().norm < vioconfig(0.05)) continue;
 
-          Vec4 p0_triangulated = triangulate(p0_3d, p1_3d, T_0_1); // TODO: JacobiSVD. I'm pretty sure this is DLT. TODO: learn and explain it. See pag91, algorithm4.1 of Multiple view geometry... book. Appendix 4 of that book is GOLD. in there there is an explanation of SVD in page 585
+          Vec4 p0_triangulated = triangulate(p0_3d, p1_3d, T_0_1); // TODO@high: JacobiSVD. I'm pretty sure this is DLT. TODO@high: learn and explain it. See pag91, algorithm4.1 of Multiple view geometry... book. Appendix 4 of that book is GOLD. in there there is an explanation of SVD in page 585
 
           if (p0_triangulated is good) { // Register landmark
             Landmark kpt_pos = {
               host_kf_id = tcidl,
               direction=StereographicParam::project(p0_triangulated),
               inv_dist=p0_triangulated[3]
-            }; // TODO: See more on Stereographic project
+            }; // TODO@high: See more on Stereographic project
             lmdb.addLandmark(lm_id, kpt_pos);
             num_points_added++;
             for (every obs in kp_obs) lmdb.addObservation(obs);
@@ -494,7 +494,7 @@ private:
       lost_landmarks = {kpids in lmdb that do not appear in curr_frame left nor right}
     }
 
-    optimize_and_marg(num_points_connected, lost_landmarks); // TODO
+    optimize_and_marg(num_points_connected, lost_landmarks); // TODO@high
 
     out_state_queue.push(frame_states[t]);
     out_vis_queue.push(built_data_for_visualizer_from_frame_states_t);
@@ -586,7 +586,7 @@ optimize() {
     }
 
     // Update points
-    for@parallel (rld in rld_vec) updatePoints(aom, rld, inc); // TODO
+    for@parallel (rld in rld_vec) updatePoints(aom, rld, inc); // TODO@high
   }
 }
 

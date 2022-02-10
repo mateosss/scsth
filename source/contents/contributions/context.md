@@ -95,7 +95,7 @@ Monado).
 <!-- TODO@def: Ya expliqué que es XR no es un acrónimo para "extended"? -->
 <!-- TODO@def: SDK, API -->
 
-<!-- TODO: Todavía no se como referenciar links en la tesis -->
+<!-- TODO@high@ref: Todavía no se como referenciar links en la tesis. edit: ahora sé, hacerlo -->
 
 [openxr-spec]: TODO
 [bsl-1.0]: TODO

@@ -44,7 +44,7 @@ finalmente, la precondición **7** es similar al punto 1 en donde se le permite 
 la implementación utilizar colas de un único consumidor que sean de mayor
 rendimiento comparado a otras colas concurrentes.
 
-<!-- TODO: Debería haber links a todos los repos en algún lado de la tesis -->
+<!-- TODO@high: Debería haber links a todos los repos en algún lado de la tesis -->
 
 La interfaz `slam_tracker` se implementó en los tres forks presentados en este
 trabajo; Kimera, ORB-SLAM3 y Basalt. La idea general de las implementaciones es
@@ -109,9 +109,6 @@ tanto fue necesario implementar una clase de visualización dedicada para el
 pie para explicar lo que es ese proceso.
 <!-- TODO@maybe: Tampoco hablo de las problematicas con las que hubo que
 lidiar respecto a shared libraries (https://www.akkadia.org/drepper/dsohowto.pdf) -->
-
-<!-- TODO@fig: Varias figuras están ocupando toda una página por si solas y
-dejando una banda de espacio en blanco. -->
 
 \fig{fig:trackers-ui}{source/figures/trackers-ui.pdf}{Visualizadores de SLAM trackers}{%
 Las distintas interfaces gráficas y formas de visualizar presentadas por cada

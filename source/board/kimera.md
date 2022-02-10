@@ -1,17 +1,9 @@
-<!-- TODO: Estandarizar o aclarar uso de la palabra agente/casco/robot/HMD/headset/dispositivo -->
-
-<!-- TODO:
-- Todos los conceptos en cursiva tienen que estar definidos en algún lado
-- De aparecer dos veces el mismo concepto en cursiva, descursivar las apariciones que no son la primera.
-- que esa acrónimo VIO?
--->
-
-<!-- TODO: Fill all references/cites to example.com domain -->
-<!-- TODO: Probably split how mention url references and citations -->
+<!-- TODO@low: Fill all references/cites to example.com domain -->
+<!-- TODO@low: Probably split how mention url references and citations -->
 
 # Kimera
 
-<!-- TODO: chequear que lo que digo de aprendizaje profundo es cierto  -->
+<!-- TODO@low: chequear que lo que digo de aprendizaje profundo es cierto  -->
 
 Kimera [@kimera-paper], es una solución de SLAM con una licencia permisiva
 (_BSD-2 [@bsd-2]_) desarrollada en C++ por el _SPARK Lab_ [@sparklab] del Massachusetts
@@ -59,8 +51,6 @@ siguiente manera:
            mono y stereo a dos y uno respectivamente.
 2. VIO backend: administra el _grafo de factores_.
    1. Actualización del grafo de factores
-
-<!-- TODO: Pongo los términos en inglés en cursiva? introduzco los términos en negrita? -->
 
 ## Frontend
 
