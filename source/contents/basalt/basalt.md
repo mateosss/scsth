@@ -337,9 +337,12 @@ muestra de aceleración lineal $\mathbf{a}_t$ y de velocidad angular
 $\mathbf{\omega}_t$. Definimos entonces de forma recursiva la pseudo-muestra
 $\Delta \mathbf{s}$ de la siguiente manera:
 
-<!-- TODO@def: entender este conjunto de ecuaciones requiere:
+<!-- TODO@high@def: entender este conjunto de ecuaciones requiere:
 - saber que R es 3x3. Y que es lo que significa multiplicar por R
-- qué es Exp
+- qué es exp
+EDIT: ya hice la seccion de transforms.md ahora por si las dudas deberia
+leer todo lo de basalt de vuelta para ver si tiene sentido igualmente antes
+de sacar el to-do.
  -->
 
 <!-- $$ -->
@@ -349,7 +352,7 @@ $\Delta \mathbf{s}$ de la siguiente manera:
 (\Delta \mathbf{R}_{t_i}, \Delta \mathbf{v}_{t_i}, \Delta
 \mathbf{p}_{t_i}) & := (\mathbf{I}, \mathbf{0}, \mathbf{0})
 \\
-\Delta \mathbf{R}_{t+1} & := \Delta \mathbf{R}_t Exp(\mathbf{\omega}_{t+1} \Delta t)
+\Delta \mathbf{R}_{t+1} & := \Delta \mathbf{R}_t exp(\mathbf{\omega}_{t+1} \Delta t)
 \\
 \Delta \mathbf{v}_{t+1} & := \Delta \mathbf{v}_t + \Delta{\mathbf{R}_t}
 \mathbf{a}_{t+1} \Delta t

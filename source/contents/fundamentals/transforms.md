@@ -130,9 +130,6 @@ angular provistos por muestras de giroscopio, ya que no es necesaria ningún tip
 de conversión. Además, veremos más abajo que esta forma de describir
 rotaciones surge naturalmente en el estudio de otras representaciones.
 
-<!-- TODO@ref: citar algo que verifique eso -->
-<!-- TODO: Mencionar torque? -->
-
 ##### Cuaterniones unitarios
 
 Los cuaterniones están definidos sobre un álgebra $\H$. Son una construcción que
@@ -209,7 +206,7 @@ contexto de la siguiente manera:
 q - p = p^{-1} q
 \end{align}
 
-<!-- TODO@high$def: menciono $lerp$ -->
+<!-- TODO@high@def: menciono $lerp$ -->
 
 Será también útil poder interpolar entre dos orientaciones $p$ y $q$ con un
 factor $t \in [0, 1]$ para conseguir orientaciones intermedias de $p$ a $q$. La
@@ -456,63 +453,293 @@ Diagramas de Hasse de los grupos desarrollados con el orden parcial
 $\subset$ (\italic{``es subconjunto propio de''}).
 }
 
+#### Representación de infinitesimales
 
-<!-- #if 0 -->
+Ahora nos gustaría entender como tratar cambios infinitesimales en las
+rotaciones de $SO(3)$ y las transformaciones de $SE(3)$. Esto será necesario a
+la hora de aplicar algoritmos de optimización que dependen de las derivadas de
+estas operaciones.
 
--------------
+##### Matrices antisimétricas
 
-1. Linear transforms and operators (skew symetric, cross product)
-2. Rotation representations: euler, axis/angle, quaternion, 3x3 intro
-3. Groups
-4. Exponential coordinates
-  1. Infinitesimal approximation
-  2. Mention Lie group/algebra (dont dive)
-  3. Exponential Map / Logarithm (and mention of rodrigues formula)
-  4. Same for SE(3): twist, exp, log, hat, vee
-  5. Pro: unconstrained optimization!!!!!!!
+Definition (Producto cruz)
+: Dados $v, w \in \R^3$ el producto cruz de $v$ y $w$ es un vector ortogonal a
+ambos tal que:
+\begin{align}
+v \times w = \begin{bmatrix}
+v_y w_z - v_z w_y \\
+v_z w_x - v_x w_z \\
+v_x w_y - v_y w_x
+\end{bmatrix} \in \R^3
+\end{align}
 
-<!-- TODO@high: aclarar que dependiendo del contexto vamos a interpretar rotaciones y orientaciones con la representacion adecuada -->
+Definition (Matriz antismétrica)
+: $R \in \RR3$ se dice antisimétrica si $R = -R^T$
 
-#### Operadores útiles
+Definition
+: Definimos el operador $\hat{\cdot} : \R^3 \rightarrow \RR3$ que devuelve la
+siguiente matriz antisimétrica:
+\begin{align}
+\hat{v} = \begin{bmatrix}
+0 & -v_z & v_y \\
+v_z & 0 & -v_x \\
+-v_y & v_x & 0
+\end{bmatrix} \in \RR3
+\end{align}
 
-Definición: Producto punto
-Observación: producto punto es x^t x (mover lo que está en least squares acá referenciarlo allá)
-Definición: Producto cruz
-Definición: Hat operator
+La construcción del operador $\hat{v}$ está diseñada para tener la siguiente
+propiedad:
 
-#### Transformaciones lineales
+Property
+: $\hat{v} w = v \times w$
 
-Definición: Transformación lineal
+Además, por la definición de matriz antisimétrica es sencillo ver que:
 
-#### Transformaciones lineales y operadores
+Property prop:skew-mat-vec
+: Toda matriz antisimétrica $R$ está unívocamente definida por un vector $v \in
+\R^3$ tal que $R = \hat{v}$
 
-#### Representraciones de rotaciones
-hat operator aca?
+Definition
+: El conjunto de todas las matrices antisimétricas en $\R^3$ se denomina Álgebra
+de Lie Ortogonal Especial $\so3$,
+es decir:
+\begin{align}
+\so3 = \{ \hat{v} \in \RR3 : v \in \R^3 \}
+\end{align}
 
-#### Grupos
+Veremos a continuación cual es su relación con $SO(3)$ y el por qué de su nombre.
 
-#### Coordenadas exponenciales
+##### Rotaciones infinitesimales
 
-Groups:
+Consideremos una familia de rotaciones $R(t) \in SO(3)$ con $t \in \R$ que describen
+una rotación continua aplicada sobre un punto $X(0) \in \R^3$ hacia otro $X(t)$,
+es decir:
+\begin{align}
+  R(0) = I \\
+  X(t) = R(t)X(0)
+\end{align}
 
-- General Linear Group: GL(n) = {invertible mats, @} = {A / det(A) != 0}
-- Special Linear Group: SL(n) = {A in GL(n) / det(A) = 1}
-- Orthogonal Group: O(n) = R orthogonal in M(n) = { R in M(n)/ RtR=I} (=> det(R) = +-1)
-- Special Orthogonal Group: SO(n) = {R in O(n) / det(R) = +1} (rotation matrices)
-- Affine Group: A(n) = L:Rn->Rn / L(x) = Ax + b con A in GL(n), b in Rn
-- Euclidean Group: E(n) = L:Rn->Rn / L(x) = Rx + T con R in O(n), T in Rn
-- Special Euclidean Group: SE(n) = {L(x) = Rx + T in E(n) / R in SO(n)}
+Notation
+: El parámetro $t$ lo consideraremos implícito en algunas ocasiones, o sea
+$R = R(t)$. Además, utilizaremos la notación $\dot{R} = \frac{dR}{dt}$.
 
-GL(n) in M(n)
-SL(n) in GL(n)
-SO(n) in SL(n)
-SO(n) in O(n)
-A(n) in GL(n + 1)
-E(n) in A(n)
-SE(n) in E(n) with R(n) in SO(n)
+Como $RR^T = I$ tenemos que
+\begin{align}
+& 0 = \frac{d}{dt}I = \frac{d}{dt}(RR^T) = \dot{R}R^T + R \dot{R^T} \\
+& \Rightarrow \dot{R}R^T = -R \dot{R^T}
+\end{align}
 
+O sea que $\dot{R}R^T \in \so3$. Por la \Cref{prop:skew-mat-vec} tenemos que
+existe un vector único $v(t) \in \R^3$ tal que
+\begin{align}
+\dot{R}(t) R(t)^T = \hat{v}(t) \Leftrightarrow \dot{R}(t) = \hat{v}(t) R(t)
+\end{align}
+Y como $R(0) = I$, entonces $\dot{R}(0) = \hat{v}(0)$. Por lo tanto, tenemos que
+la matriz antisimétrica $\hat{v}(0)$ nos da la aproximacíon de primer orden de una rotación:
+\begin{align}
+R(dt) = R(0) + (dR)(0) = I + \hat{v}(0)dt \label{eq:hatop-is-rotvel}
+\end{align}
 
-- citar https://ethaneade.com/lie_groups.pdf (o https://ethaneade.com/lie.pdf)
-- citar multiple view geometry zisserman
-- citar state estimation barfoot
-<!-- #endif -->
+Notar que si pensamos a $t$ en términos de tiempo, la \Cref{eq:hatop-is-rotvel}
+deja ver a $\hat{v}$ como una matriz que describe la velocidad de la rotación.
+
+<!-- #define MN_LIE_GROUP %\
+Un grupo de Lie es una ``variedad diferenciable'' en el cual la operación del grupo,
+y su inversa, también son diferenciables. Intuitivamente, esto significa que la
+aplicación de rotaciones o transformaciones es ``suave'' o continua y esto nos
+permite trabajar con el concepto de límite y derivadas.
+-->
+
+<!-- TODO@high: La ultima vez que vi este margin note se iba tanto de la pagina que no aparecia ni cortado, revisarlo -->
+<!-- #define MN_LIE_ALGEBRA %\
+Un grupo de Lie tiene un álgebra de Lie relacionada. Esta última es el
+``espacio tangente'' en la identidad $I$ del grupo (en particular, de la variedad).
+Intuitivamente, este puede pensarse como el espacio de todas las posibles
+velocidades alrededor de $I$.
+Esto es precisamente lo que desarrollamos al calcular $R(dt)$ en la \Cref{eq:hatop-is-rotvel}.
+-->
+
+Tenemos entonces que el efecto de una rotación infinitesimal en $SO(3)$ puede
+ser aproximado por matrices en $\so3$. Es necesario mencionar que $SO(3)$ es lo
+que se denomina un _grupo de Lie_ \marginnote{MN_LIE_GROUP} mientras que $\so3$
+es su correspondiente _álgebra de Lie_ \marginnote{MN_LIE_ALGEBRA}. No
+necesitaremos adentrarnos en estos conceptos, pero es común encontrarlos en la
+literatura y gran parte del desarrollo que estamos realizando está ligado a
+ellos.
+
+Luego de haber presentado estas ideas fundamentales, a partir de aquí
+procederemos a dar una _vista general_ de la definición de dos operadores, $exp$
+y $log$ que nos permiten pasar del grupo al álgebra de Lie y viceversa. Luego
+también veremos rapidamente como estos conceptos se traducen de forma muy
+similar para las transformaciones en $\R^3$. Al final del capítulo listaremos
+algunas referencias para el lector que quiera profundizar en los conceptos y las
+derivaciones.
+
+\bigbreak
+
+--------
+
+\bigbreak
+
+Vimos en el desarrollo anterior que existe un vector $\hat{v}(t) \in \so3$
+que actúa como un término de velocidad rotacional. Si asumimos velocidad
+constante, es decir $\hat{v}$ constante, nos interesaría saber cual es la
+rotación total luego de rotar desde $R(0) = I$ con esta velocidad
+durante un tiempo $t$. En otras palabras, queremos computar $R(t)$ dado
+$\hat{v}$. Teniendo en cuenta el desarrollo anterior basta con plantear el
+siguiente sistema de ecuaciones diferenciales:
+\begin{align} \begin{cases}
+\dot{R}(t) = \hat{v} R(t) \\
+R(0) = I
+\end{cases}
+\end{align}
+
+Es posible ver que este sistema tiene como solución la siguiente expresión.
+\begin{align}
+R(t) = exp(\hat{v}t) = \sum_{n=0}^{\infty}\frac{(\hat{v}t)^n}{n!} \label{eq:exp-def}
+\end{align}
+
+Notar que los exponentes de la \Cref{eq:exp-def} son respecto a la multiplicación matricial.
+
+Esta rotación se corresponde con, dado $w = v t \in \R^3$, la rotación de
+$\omega = \norm{w}$ radianes alrededor del eje dado por el vector unitario $a =
+w / \norm{w}$. Dicho de otro modo, _la representación ángulo-axial $w = \omega
+a$ puede ser convertida en la matriz de rotación $R$ equivalente mediante el
+operador $exp$ con $R = exp(\hat{w})$_. Más aún, $\so3$ contiene todos estos
+vectores ángulo-axiales.
+
+El operador $exp : \so3 \rightarrow SO(3)$ se denomina _mapa o aplicación exponencial_ y su inversa es el
+_mapa logarítimico_ $log : SO(3) \rightarrow \so3$. Este, dado una matriz de
+rotación $R \in SO(3)$ devuelve $\hat{w} \in \so3$ tal que $R = exp(\hat{w})$
+computando $w$ de la siguiente manera [@eadeDerivativeExponentialMap]:
+\begin{align}
+  \norm{w} = cos^{-1} \left( \frac{traza(R) - 1}{2} \right) \label{eq:log-def-start}\\
+  w = \frac{\norm{w}}{2sin(\norm{w})} \begin{bmatrix} R_{3,2} - R_{2,3} \\
+  R_{1,3} - R_{3,1} \\ R_{2,1} - R_{1,2} \end{bmatrix} \label{eq:log-def-end}
+\end{align}
+
+Notar que definimos $exp$ en la \Cref{eq:exp-def} como una suma infinita
+mientras que $log$ pudo definirse con una expresión cerrada en las
+\Crefrange{eq:log-def-start}{eq:log-def-end}. Existe la _fórmula de Rodrigues_
+que permite expresar también $exp$ de forma cerrada:
+\begin{align}
+exp(\hat{w}) = I + \frac{sin(\norm{w})}{\norm{w}} \hat{w} + \frac{1 - cos(\norm{w})}{\norm{w}^2} \hat{w}^2
+\end{align}
+
+##### Transformaciones infinitesimales
+
+Para las transformaciones en $SE(3)$ tenemos un desarrollo muy similar al de las
+rotaciones en $SO(3)$. Consideremos una familia de transformaciones $T(t) \in
+SE(3)$ compuestas por rotaciones $R(t) \in SO(3)$ y traslaciones $b(t) \in
+\R^3$ con $t \in \R$ que representan una transformación continua aplicada al punto $X(0)
+\in \R^3$ con $T(0) = I$. Es decir,
+\begin{align}
+X(t) &= T(t)X(0) \\
+T(t) &= \begin{bmatrix}
+R(t) & b(t) \\
+0 & 1
+\end{bmatrix}
+\end{align}
+
+Considerando que esta vez la inversa de $T$ es $T^{-1}$ y no su transpuesta como era el caso con las
+rotaciones. Podemos aplicar un desarrollo similar al de la sección anterior
+y llegar a que:
+\begin{align} \label{eq:translation-deriv}
+\dot{T}T^{-1} = \begin{bmatrix}
+\dot{R}R^T & \dot{b} - \dot{R} R^T b \\
+0 & 0
+\end{bmatrix} \in \RR4
+\end{align}
+
+De vuelta, $\dot{R}R^T$ corresponde a alguna matriz antisimétrica $\hat{v} \in
+\so3$. Definiendo un vector $y(t) = \dot{b}(t) - \hat{v}(t) b(t)$ podemos
+reescribir la \Cref{eq:translation-deriv} e introducir el concepto de _giro o twist_ $\hat{\xi}(t)$:
+\begin{align}
+\hat{\xi}(t) = \dot{T}(t)T^{-1}(t) = \begin{bmatrix}
+\hat{v}(t) & y(t) \\
+0 & 0
+\end{bmatrix}
+\end{align}
+
+La matriz de giro $\hat{\xi}$ pertenece al álgebra de Lie $\se3$ del grupo de Lie $SE(3)$ y
+puede ser parametrizada por las coordenadas de giro $\xi \in \R^6$. Para esto se utiliza un operador
+_hat_ $\cdot^{\wedge}$ y su inversa _vee_ $\cdot^{\vee}$ de la siguiente manera:
+\begin{align}
+\hat{\xi} &= {\begin{bmatrix}y \\ v\end{bmatrix}}^{\wedge} = \begin{bmatrix}\hat{v} &
+y \\ 0 & 0 \end{bmatrix} \in \RR4 \\
+{\begin{bmatrix}\hat{v} & y \\ 0 & 0 \end{bmatrix}}^{\vee} &= \begin{bmatrix}y \\
+v\end{bmatrix} = \xi \in \R^6
+\end{align}
+
+Es decir, podemos codificar el cambio infinitesimal de una transformación en un
+vector de giro $\xi$ de seis dimensiones en donde:
+\bigbreak
+
+- Los últimos tres componentes dados por $v$ son la representación **ángulo-axial**
+  de la velocidad rotacional.
+
+- Los primeros tres componentes dados por $y$ describen el cambio de traslación
+  teniendo en cuenta esta velocidad rotacional instantánea $\hat{v}$.
+
+\bigbreak
+
+Finalmente, tenemos el mapa exponencial y mapa logarítimico entre $SE(3)$ y
+$\se3$. Similar a $SO(3)$, cualquier transformación $T \in SE(3)$ va a poder ser
+representada por un vector de giro $\xi$ con $T = exp(\hat{\xi})$.
+
+Existen expresiones cerradas para ambos $exp : \se3 \rightarrow SE(3)$ y $log :
+SE(3) \rightarrow \se3$.
+
+Para $exp(\hat{\xi})$ con $\xi = [y, v]^T$ tenemos:
+\begin{align}
+exp(\hat{\xi}) = \begin{bmatrix}
+exp(\hat{v}) & Jy \\
+0 & 1
+\end{bmatrix}
+\end{align}
+
+Con $J$ el llamado _jacobiano izquierdo_ de $SO(3)$ que se puede computar con el ángulo
+$\omega$ de $v$, es decir con $\omega = \norm{v}$ de esta manera [@eadeDerivativeExponentialMap]:
+\begin{align}
+J = I + \frac{1-cos(\omega)}{\omega^2} \hat{v} + \frac{\omega -
+sin(\omega)}{\omega^3} \hat{v}^2.
+\end{align}
+
+Para $log(T)$ con $T = \begin{bmatrix}R & b \\ 0 & 1\end{bmatrix}\in SE(3)$ tenemos:
+\begin{align}
+log(T) = \begin{bmatrix}log(R)^{\vee} \\ J^{-1}b\end{bmatrix}^{\wedge}
+\end{align}
+
+Con el jacobiano inverso $J^{-1}$ dado por [@eadeDerivativeExponentialMap]:
+\begin{align}
+J^{-1} = I - \frac{1}{2} \hat{v} +
+\left( \frac{1}{\omega^2} - \frac{1 + cos(\omega)}{2 \omega sin(\omega)} \right) \hat{v}^2
+\end{align}
+
+##### Cierre y literatura recomendada
+
+<!-- #define MN_UNCONSTRAINED_OPTIMIZATION %\
+Representaciones de cuaterniones o matriciales requieren mantener los errores
+numéricos a raya mediante la constante renormalización de sus valores.
+Las representaciones dadas en las álgebras de Lie no tienen este problema.
+-->
+
+Tenemos ahora una mirada suficientemente formal como para ser capaces de
+utilizar y comprender las herramientas usualmente utilizadas en sistemas que
+modelan rotaciones y transformaciones en dos y tres dimensiones por computadora.
+Nos tomamos el trabajo de entender varias formalizaciones para las rotaciones ya
+que todas ellas aparecen de una u otra forma en el pipeline que se desarrolla en
+este trabajo. Las formalizaciones infinitesimales que hemos presentado en la
+última subsección, y sus representaciones en el álgebra de Lie, permiten además
+modelar los estados de las entidades que un algoritmo de SLAM necesita describir
+de una forma particularmente elegante. Esto es así porque permiten la aplicación
+de algoritmos de optimización, como los que veremos en el próximo capítulo, _sin
+restricciones_\marginnote{MN_UNCONSTRAINED_OPTIMIZATION}.
+
+Respecto a la última sección de infinitesimales, se pueden encontrar algunos de
+estos conceptos explorados en mayor profundidad en
+@barfootStateEstimationRobotics2017 cap. 7. Una excelente introducción a los
+grupos de Lie con una teoría reducida enfocada en aplicaciones de robótica es
+presentada en @solaMicroLieTheory2021. Finalmente, gran parte de las
+derivaciones de las expresiones que se vieron se encuentran detalladas en
+@eadeDerivativeExponentialMap.

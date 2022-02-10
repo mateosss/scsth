@@ -166,7 +166,7 @@ $T_2 = \Delta T \ T_1$ con
 \begin{align}
 \label{eq:predicted-space-delta}
 \Delta T = \begin{bmatrix}
-Exp(\Delta t \ \hat\omega) & \Delta t \ v \\
+exp(\Delta t \ \hat\omega) & \Delta t \ v \\
 0 & 1
 \end{bmatrix} \in \R^{4x4}
 \end{align}

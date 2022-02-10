@@ -59,12 +59,6 @@
 
 \usepackage{amsthm}
 
-\newtheorem{theorem}{Teorema}[chapter]
-\newtheorem{definition}{Definición}[chapter]
-\newtheorem{remark}{Observación}[chapter]
-\newtheorem{property}{Propiedad}[chapter]
-\newtheorem{notation}{Notación}[chapter]
-
 % center floats
 \makeatletter
 \g@addto@macro\@floatboxreset\centering
@@ -85,15 +79,25 @@
 \Crefname{subsection}{Sección}{Secciones}
 \crefname{listing}{fragmento}{fragmentos}
 \Crefname{listing}{Fragmento}{Fragmentos}
+
+% This needs to be after loading cleveref
+\newtheorem{theorem}{Teorema}[chapter]
+\newtheorem{definition}[theorem]{Definición}
+\newtheorem{remark}[theorem]{Observación}
+\newtheorem{property}[theorem]{Propiedad}
+\newtheorem{notation}[theorem]{Notación}
+
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\RR}[1]{\R^{#1 \times #1}}
 \newcommand{\so}[1]{\mathfrak{so(#1)}}
+\newcommand{\se}[1]{\mathfrak{se(#1)}}
 \newcommand{\Rnn}{\R^{n \times n}}
 \renewcommand{\H}{\mathbb{H}}
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\dotprod}[2]{\langle #1, #2 \rangle}
 \newcommand{\norm}[1]{\| #1 \|}
 \newcommand{\passthrough}[1]{#1}
+\renewcommand{\dot}[1] {\overset{\,_{\mbox{\Large .}}}{#1}}
 
 % If using pdflatex, spanish accents will not render. You'll need this. (also you won't be able to use fira code ligatures)
 % \lstset{%
@@ -652,8 +656,9 @@ de las derivadas de estas operaciones.
 \subsubsection{Matrices
 antisimétricas}\label{matrices-antisimuxe9tricas}}
 
-\begin{definition}[Producto cruz]Dados \(v, w \in R^3\) el producto cruz
-de \(v\) y \(w\) es un vector ortogonal a ambos tal que: \begin{align}
+\begin{definition}[Producto cruz]Dados \(v, w \in \R^3\) el producto
+cruz de \(v\) y \(w\) es un vector ortogonal a ambos tal que:
+\begin{align}
 v \times w = \begin{bmatrix}
 v_y w_z - v_z w_y \\
 v_z w_x - v_x w_z \\
@@ -664,7 +669,7 @@ v_x w_y - v_y w_x
 \begin{definition}[Matriz antismétrica]\(R \in \RR3\) se dice
 antisimétrica si \(R = -R^T\)\end{definition}
 
-\begin{defintion}Definimos el operador
+\begin{definition}Definimos el operador
 \(\hat{\cdot} : \R^3 \rightarrow \RR3\) que devuelve la siguiente matriz
 antisimétrica: \begin{align}
 \hat{v} = \begin{bmatrix}
@@ -672,92 +677,115 @@ antisimétrica: \begin{align}
 v_z & 0 & -v_x \\
 -v_y & v_x & 0
 \end{bmatrix} \in \RR3
-\end{align}\end{defintion}
+\end{align}\end{definition}
 
 La construcción del operador \(\hat{v}\) está diseñada para tener la
 siguiente propiedad:
 
 \begin{property}\(\hat{v} w = v \times w\)\end{property}
 
-Además por la definición de matriz antisimétrica es sencillo ver que:
+Además, por la definición de matriz antisimétrica es sencillo ver que:
 
 \begin{property}\label{prop:skew-mat-vec}Toda matriz antisimétrica \(R\)
 está unívocamente definida por un vector \(v \in \R^3\) tal que
 \(R = \hat{v}\)\end{property}
 
+\begin{definition}El conjunto de todas las matrices antisimétricas en
+\(\R^3\) se denomina Álgebra de Lie Ortogonal Especial \(\so3\), es
+decir: \begin{align}
+\so3 = \{ \hat{v} \in \RR3 : v \in \R^3 \}
+\end{align}\end{definition}
+
+Veremos a continuación cual es su relación con \(SO(3)\) y el por qué de
+su nombre.
+
 \hypertarget{rotaciones-infinitesimales}{%
 \subsubsection{Rotaciones
 infinitesimales}\label{rotaciones-infinitesimales}}
 
-Consideremos una familia de rotaciones \(R(t) \in SO(3),\ t \in \R\) que
-describen una familia de rotaciones que modifican de un punto \(X(0)\)
-hacia otro \(X(t)\) de forma continua, es decir: \begin{align}
+Consideremos una familia de rotaciones \(R(t) \in SO(3)\) con
+\(t \in \R\) que describen una rotación continua aplicada sobre un punto
+\(X(0) \in \R^3\) hacia otro \(X(t)\), es decir: \begin{align}
   R(0) = I \\
   X(t) = R(t)X(0)
 \end{align}
 
-Como \(R(t)R(t)^T = I\) tenemos que \begin{align}
-& 0 = \frac{dI}{dt} = \frac{d}{dt}(R(t)R(t)^T) = \frac{dR(t)}{dt} R(t)^T + R(t) \frac{dR(t)}{dt}^T
-& \Rightarrow \frac{dR(t)}{dt} R(t)^T = - R(t) \frac{dR(t)}{dt}^T
+\begin{notation}El parámetro \(t\) lo consideraremos implícito en
+algunas ocasiones, o sea \(R = R(t)\). Además, utilizaremos la notación
+\(\dot{R} = \frac{dR}{dt}\).\end{notation}
+
+Como \(RR^T = I\) tenemos que \begin{align}
+& 0 = \frac{d}{dt}I = \frac{d}{dt}(RR^T) = \dot{R}R^T + R \dot{R^T} \\
+& \Rightarrow \dot{R}R^T = -R \dot{R^T}
 \end{align}
 
-O sea que \(\frac{dR(t)}{dt} R(t)^T\) es una matriz antisimétrica. Por
-la \Cref{prop:skew-mat-vec} tenemos que existe un vector único
-\(v(t) \in R^3\) tal que \begin{align}
-\frac{dR(t)}{dt} R(t)^T = \hat{v}(t) \Leftrightarrow \frac{dR(t)}{dt} = \hat{v}(t) R(t)
-\end{align} Y como \(R(0) = I\), entonces
-\(\frac{dR(0)}{dt} = \hat{v}(0)\). Tenemos entonces que la matriz
-antisimétrica \(\hat{v}\) nos da la aproximacíon de primer orden de una
-rotación: \begin{align}
-R(dt) = R(0) + (dR)(0) = I + \hat{v}dt \label{eq:hatop-is-rotvel}
+O sea que \(\dot{R}R^T \in \so3\). Por la \Cref{prop:skew-mat-vec}
+tenemos que existe un vector único \(v(t) \in \R^3\) tal que
+\begin{align}
+\dot{R}(t) R(t)^T = \hat{v}(t) \Leftrightarrow \dot{R}(t) = \hat{v}(t) R(t)
+\end{align} Y como \(R(0) = I\), entonces \(\dot{R}(0) = \hat{v}(0)\).
+Por lo tanto, tenemos que la matriz antisimétrica \(\hat{v}(0)\) nos da
+la aproximacíon de primer orden de una rotación: \begin{align}
+R(dt) = R(0) + (dR)(0) = I + \hat{v}(0)dt \label{eq:hatop-is-rotvel}
 \end{align}
 
 Notar que si pensamos a \(t\) en términos de tiempo, la
 \Cref{eq:hatop-is-rotvel} deja ver a \(\hat{v}\) como una matriz que
 describe la velocidad de la rotación.
 
-\begin{definition}Definimos a \(\so3\) como el conjunto de matrices
-antisimétricas en \(\RR3\), es decir: \begin{align}
-\so3 = \{ \hat{v} : v \in \R^3 \}
-\end{align}\end{definition}
-
 Tenemos entonces que el efecto de una rotación infinitesimal en
 \(SO(3)\) puede ser aproximado por matrices en \(\so3\). Es necesario
-mencionar que \(SO(3)\) es lo que se donmina un \emph{grupo de Lie}
+mencionar que \(SO(3)\) es lo que se denomina un \emph{grupo de Lie}
 \marginnote{%\
-Un grupo de Lie es una "variedad diferenciable" en el cual la operación del grupo,
+Un grupo de Lie es una ``variedad diferenciable'' en el cual la operación del grupo,
 y su inversa, también son diferenciables. Intuitivamente, esto significa que la
-aplicación de rotaciones o transformaciones es "suave" o continua y esto nos
+aplicación de rotaciones o transformaciones es ``suave'' o continua y esto nos
 permite trabajar con el concepto de límite y derivadas.
 } mientras que \(\so3\) es su correspondiente \emph{álgebra de Lie}
 \marginnote{%\
-Un grupo de Lie tiene una álgebra de Lie relacionada. Esta última es el
-"espacio tangente" en la identidad del grupo (en particular, de la variedad).
+Un grupo de Lie tiene un álgebra de Lie relacionada. Esta última es el
+``espacio tangente'' en la identidad $I$ del grupo (en particular, de la variedad).
 Intuitivamente, este puede pensarse como el espacio de todas las posibles
-velocidades alrededor de la identidad.
-Esto es precisamente lo que desarrollamos al calcular $R(dt)$
+velocidades alrededor de $I$.
+Esto es precisamente lo que desarrollamos al calcular $R(dt)$ en la \Cref{eq:hatop-is-rotvel}.
 }. No necesitaremos adentrarnos en estos conceptos, pero es común
-encontrarlos en la literatura.
+encontrarlos en la literatura y gran parte del desarrollo que estamos
+realizando está ligado a ellos.
 
-Demostramos en el desarrollo anterior que existe un vector
+Luego de haber presentado estas ideas fundamentales, a partir de aquí
+procederemos a dar una \emph{vista general} de la definición de dos
+operadores, \(exp\) y \(log\) que nos permiten pasar del grupo al
+álgebra de Lie y viceversa. Luego también veremos rapidamente como estos
+conceptos se traducen de forma muy similar para las transformaciones en
+\(\R^3\). Al final del capítulo listaremos algunas referencias para el
+lector que quiera profundizar en los conceptos y las derivaciones.
+
+\bigbreak
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\bigbreak
+
+Vimos en el desarrollo anterior que existe un vector
 \(\hat{v}(t) \in \so3\) que actúa como un término de velocidad
 rotacional. Si asumimos velocidad constante, es decir \(\hat{v}\)
 constante, nos interesaría saber cual es la rotación total luego de
-rotar constantemente \(R(0) = I\) con esta velocidad durante un tiempo
-\(t\). En otras palabras, queremos computer \(R(t)\) dado \(\hat{v}\).
-Teniendo en cuenta el desarrollo anterior basta con plantear el
-siguiente sistema de ecuaciones diferenciales:
-\begin{align} \begin{cases}
-\frac{dR}{dt}(t) = \hat{v} R(t) \\
+rotar desde \(R(0) = I\) con esta velocidad durante un tiempo \(t\). En
+otras palabras, queremos computar \(R(t)\) dado \(\hat{v}\). Teniendo en
+cuenta el desarrollo anterior basta con plantear el siguiente sistema de
+ecuaciones diferenciales: \begin{align} \begin{cases}
+\dot{R}(t) = \hat{v} R(t) \\
 R(0) = I
 \end{cases}
 \end{align}
 
-Es posible ver que este sistema tiene como solución a la siguiente
-expresión. Notar que los exponentes son respecto a la multiplicación
-matricial. \begin{align}
-R(t) = exp(\hat{v}t) = \sum{n=0}{\infty}\frac{(\hat{v}t)^n}{n!}
+Es posible ver que este sistema tiene como solución la siguiente
+expresión. \begin{align}
+R(t) = exp(\hat{v}t) = \sum_{n=0}^{\infty}\frac{(\hat{v}t)^n}{n!} \label{eq:exp-def}
 \end{align}
+
+Notar que los exponentes de la \Cref{eq:exp-def} son respecto a la
+multiplicación matricial.
 
 Esta rotación se corresponde con, dado \(w = v t \in \R^3\), la rotación
 de \(\omega = \norm{w}\) radianes alrededor del eje dado por el vector
@@ -769,16 +797,20 @@ matriz de rotación \(R\) equivalente mediante el operador \(exp\) con
 
 El operador \(exp : \so3 \rightarrow SO(3)\) se denomina \emph{mapa o
 aplicación exponencial} y su inversa es el \emph{mapa logarítimico}
-\(log : SO(3) \rightarrow \so3\). Este, dado una matriz \(R\) computa
-\(w\) tal que \(R = \hat{w}\) de la siguiente manera: - Si
-\(R = I \Rightarrow w = 0\) - Sino: \begin{align}
-  \norm{w} = cos^{-1} \left( \frac{traza(R) - 1}{2} \right) \\
-  w = \frac{\norm{w}}{2sin(\norm{w})} \begin{bmatrix} R_{3,2} - R_{2,3} \\ R_{1,3} - R_{3,1} \\ R_{2,1} - R_{1,2} \end{bmatrix}
+\(log : SO(3) \rightarrow \so3\). Este, dado una matriz de rotación
+\(R \in SO(3)\) devuelve \(\hat{w} \in \so3\) tal que
+\(R = exp(\hat{w})\) computando \(w\) de la siguiente manera
+\autocite{eadeDerivativeExponentialMap}: \begin{align}
+  \norm{w} = cos^{-1} \left( \frac{traza(R) - 1}{2} \right) \label{eq:log-def-start}\\
+  w = \frac{\norm{w}}{2sin(\norm{w})} \begin{bmatrix} R_{3,2} - R_{2,3} \\
+  R_{1,3} - R_{3,1} \\ R_{2,1} - R_{1,2} \end{bmatrix} \label{eq:log-def-end}
 \end{align}
 
-Notar definimos \(exp\) como una suma infinita mientras que \(log\)
-puede definirse con una expresión cerrada. Existe la \emph{fórmula de
-Rodrigues} que permite expresar \(exp\) de forma cerrada: \begin{align}
+Notar que definimos \(exp\) en la \Cref{eq:exp-def} como una suma
+infinita mientras que \(log\) pudo definirse con una expresión cerrada
+en las \Crefrange{eq:log-def-start}{eq:log-def-end}. Existe la
+\emph{fórmula de Rodrigues} que permite expresar también \(exp\) de
+forma cerrada: \begin{align}
 exp(\hat{w}) = I + \frac{sin(\norm{w})}{\norm{w}} \hat{w} + \frac{1 - cos(\norm{w})}{\norm{w}^2} \hat{w}^2
 \end{align}
 
@@ -786,8 +818,131 @@ exp(\hat{w}) = I + \frac{sin(\norm{w})}{\norm{w}} \hat{w} + \frac{1 - cos(\norm{
 \subsubsection{Transformaciones
 infinitesimales}\label{transformaciones-infinitesimales}}
 
-Para las transformaciones tenemos un desarrollo muy similar al de las
-rotaciones.
+Para las transformaciones en \(SE(3)\) tenemos un desarrollo muy similar
+al de las rotaciones en \(SO(3)\). Consideremos una familia de
+transformaciones \(T(t) \in SE(3)\) compuestas por rotaciones
+\(R(t) \in SO(3)\) y traslaciones \(b(t) \in \R^3\) con \(t \in \R\) que
+representan una transformación continua aplicada al punto
+\(X(0) \in \R^3\) con \(T(0) = I\). Es decir, \begin{align}
+X(t) &= T(t)X(0) \\
+T(t) &= \begin{bmatrix}
+R(t) & b(t) \\
+0 & 1
+\end{bmatrix}
+\end{align}
+
+Considerando que esta vez la inversa de \(T\) es \(T^{-1}\) y no su
+transpuesta como era el caso con las rotaciones. Podemos aplicar un
+desarrollo similar al de la sección anterior y llegar a que:
+\begin{align} \label{eq:translation-deriv}
+\dot{T}T^{-1} = \begin{bmatrix}
+\dot{R}R^T & \dot{b} - \dot{R} R^T b \\
+0 & 0
+\end{bmatrix} \in \RR4
+\end{align}
+
+De vuelta, \(\dot{R}R^T\) corresponde a alguna matriz antisimétrica
+\(\hat{v} \in \so3\). Definiendo un vector
+\(y(t) = \dot{b}(t) - \hat{v}(t) b(t)\) podemos reescribir la
+\Cref{eq:translation-deriv} e introducir el concepto de \emph{giro o
+twist} \(\hat{\xi}(t)\): \begin{align}
+\hat{\xi}(t) = \dot{T}(t)T^{-1}(t) = \begin{bmatrix}
+\hat{v}(t) & y(t) \\
+0 & 0
+\end{bmatrix}
+\end{align}
+
+La matriz de giro \(\hat{\xi}\) pertenece al álgebra de Lie \(\se3\) del
+grupo de Lie \(SE(3)\) y puede ser parametrizada por las coordenadas de
+giro \(\xi \in \R^6\). Para esto se utiliza un operador \emph{hat}
+\(\cdot^{\wedge}\) y su inversa \emph{vee} \(\cdot^{\vee}\) de la
+siguiente manera: \begin{align}
+\hat{\xi} &= {\begin{bmatrix}y \\ v\end{bmatrix}}^{\wedge} = \begin{bmatrix}\hat{v} &
+y \\ 0 & 0 \end{bmatrix} \in \RR4 \\
+{\begin{bmatrix}\hat{v} & y \\ 0 & 0 \end{bmatrix}}^{\vee} &= \begin{bmatrix}y \\
+v\end{bmatrix} = \xi \in \R^6
+\end{align}
+
+Es decir, podemos codificar el cambio infinitesimal de una
+transformación en un vector de giro \(\xi\) de seis dimensiones en
+donde: \bigbreak
+
+\begin{itemize}
+\item
+  Los últimos tres componentes dados por \(v\) son la representación
+  \textbf{ángulo-axial} de la velocidad rotacional.
+\item
+  Los primeros tres componentes dados por \(y\) describen el cambio de
+  traslación teniendo en cuenta esta velocidad rotacional instantánea
+  \(\hat{v}\).
+\end{itemize}
+
+\bigbreak
+
+Finalmente, tenemos el mapa exponencial y mapa logarítimico entre
+\(SE(3)\) y \(\se3\). Similar a \(SO(3)\), cualquier transformación
+\(T \in SE(3)\) va a poder ser representada por un vector de giro
+\(\xi\) con \(T = exp(\hat{\xi})\).
+
+Existen expresiones cerradas para ambos \(exp : \se3 \rightarrow SE(3)\)
+y \(log : SE(3) \rightarrow \se3\).
+
+Para \(exp(\hat{\xi})\) con \(\xi = [y, v]^T\) tenemos: \begin{align}
+exp(\hat{\xi}) = \begin{bmatrix}
+exp(\hat{v}) & Jy \\
+0 & 1
+\end{bmatrix}
+\end{align}
+
+Con \(J\) el llamado \emph{jacobiano izquierdo} de \(SO(3)\) que se
+puede computar con el ángulo \(\omega\) de \(v\), es decir con
+\(\omega = \norm{v}\) de esta manera
+\autocite{eadeDerivativeExponentialMap}: \begin{align}
+J = I + \frac{1-cos(\omega)}{\omega^2} \hat{v} + \frac{\omega -
+sin(\omega)}{\omega^3} \hat{v}^2.
+\end{align}
+
+Para \(log(T)\) con
+\(T = \begin{bmatrix}R & b \\ 0 & 1\end{bmatrix}\in SE(3)\) tenemos:
+\begin{align}
+log(T) = \begin{bmatrix}log(R)^{\vee} \\ J^{-1}b\end{bmatrix}^{\wedge}
+\end{align}
+
+Con el jacobiano inverso \(J^{-1}\) dado por
+\autocite{eadeDerivativeExponentialMap}: \begin{align}
+J^{-1} = I - \frac{1}{2} \hat{v} +
+\left( \frac{1}{\omega^2} - \frac{1 + cos(\omega)}{2 \omega sin(\omega)} \right) \hat{v}^2
+\end{align}
+
+\hypertarget{cierre-y-literatura-recomendada}{%
+\subsubsection{Cierre y literatura
+recomendada}\label{cierre-y-literatura-recomendada}}
+
+Tenemos ahora una mirada suficientemente formal como para ser capaces de
+utilizar y comprender las herramientas usualmente utilizadas en sistemas
+que modelan rotaciones y transformaciones en dos y tres dimensiones por
+computadora. Nos tomamos el trabajo de entender varias formalizaciones
+para las rotaciones ya que todas ellas aparecen de una u otra forma en
+el pipeline que se desarrolla en este trabajo. Las formalizaciones
+infinitesimales que hemos presentado en la última subsección, y sus
+representaciones en el álgebra de Lie, permiten además modelar los
+estados de las entidades que un algoritmo de SLAM necesita describir de
+una forma particularmente elegante. Esto es así porque permiten la
+aplicación de algoritmos de optimización, como los que veremos en el
+próximo capítulo, \emph{sin restricciones}\marginnote{%\
+Representaciones de cuaterniones o matriciales requieren mantener los errores
+numéricos a raya mediante la constante renormalización de sus valores.
+Las representaciones dadas en las álgebras de Lie no tienen este problema.
+}.
+
+Respecto a la última sección de infinitesimales, se pueden encontrar
+algunos de estos conceptos explorados en mayor profundidad en
+\textcite{barfootStateEstimationRobotics2017} cap. 7. Una excelente
+introducción a los grupos de Lie con una teoría reducida enfocada en
+aplicaciones de robótica es presentada en
+\textcite{solaMicroLieTheory2021}. Finalmente, gran parte de las
+derivaciones de las expresiones que se vieron se encuentran detalladas
+en \textcite{eadeDerivativeExponentialMap}.
 
 \hypertarget{optimizaciuxf3n-por-cuadrados-muxednimos}{%
 \section{Optimización por cuadrados
@@ -848,7 +1003,8 @@ del vector residual \(Ax - b\). Introduciremos a continuación una serie
 de conceptos y teoremas necesarios para poder presentar una forma
 sucinta de minimizar esta norma.
 
-Aceptaremos el siguiente teorema sin demostración.
+Aceptaremos el siguiente teorema sin demostración (ver
+\textcite{shoresAppliedLinearAlgebra2007}, teoremas 2.7 y 3.7).
 
 \begin{theorem}\label{thm:li1inv2nots3}Son equivalentes:
 
@@ -1205,12 +1361,13 @@ proceso de estimarlo. Este puede ser denso, si se considera el flujo de
 todos los píxeles, o no (\emph{sparse}) si solo se computa el flujo de
 algunos keypoints como en el caso que veremos.
 
-El \href{TODO}{módulo} de optical flow corre en un thread individual y
-es por donde las muestras del par de cámaras estéreo ingresan al
-pipeline de Basalt. Inicialmente se genera una representación piramidal
-de las imágenes, o también llamada de \emph{mipmaps}, esta es una forma
-tradicional \autocite{williamsPyramidalParametrics1983} de almacenar una
-imagen en memoria junto a versiones reescaladas de la misma (Fig.
+El \href{TODO@high}{módulo} de optical flow corre en un thread
+individual y es por donde las muestras del par de cámaras estéreo
+ingresan al pipeline de Basalt. Inicialmente se genera una
+representación piramidal de las imágenes, o también llamada de
+\emph{mipmaps}, esta es una forma tradicional
+\autocite{williamsPyramidalParametrics1983} de almacenar una imagen en
+memoria junto a versiones reescaladas de la misma (Fig.
 \figref{fig:mipmap}). Los mipmaps tienen múltiples utilidades en
 computación gráfica (e.g., \emph{filtrado trilineal}, \emph{LODs},
 reducción de \emph{patrones moiré}) pero en el caso de Basalt serán
@@ -2724,8 +2881,9 @@ Con velocidades instantáneas. \begin{align}
 La versión del filtro utilizada para la orientación \(q_k\) es análoga a
 la definición anterior con algunas aclaraciones:
 
+\bigbreak
+
 \begin{itemize}
-\tightlist
 \item
   En lugar de \(lerp\) se utiliza \(slerp\).
 \item
@@ -2735,6 +2893,8 @@ la definición anterior con algunas aclaraciones:
   La norma de un cuaternión es equivalente a la norma euclídea en
   \(\R^4\), es decir \(|q| = \sqrt{q_x^2 + q_y^2 + q_z^2 + q_w^2}\).
 \end{itemize}
+
+\bigbreak
 
 \hypertarget{recapitulando}{%
 \section{Recapitulando}\label{recapitulando}}

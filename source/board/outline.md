@@ -49,9 +49,9 @@ Notación:
     - [DRAFT] Algoritmo de Gauss-Newton
     - [WONTDO] Algoritmo de Levenberg-Marquardt
   - [DRAFT] Cuaterniones
-  - [TODO] Grupos de Lie para transformaciones 2D y 3D
+  - [DRAFT] Grupos de Lie para transformaciones 2D y 3D
     - [DRAFT] Definición
-    - [TODO] Operadores (Exp y Log, hat y vee) y Propiedades
+    - [DRAFT] Operadores (Exp y Log, hat y vee) y Propiedades
     - [DRAFT] SO(3), SE(3), SO(2), SE(2)
   - [TOREAD] Grafo de factores
 - [TODO] Sistemas Estudiados

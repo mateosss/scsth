@@ -1,14 +1,5 @@
-<!-- TODO@ref:
-Books used:
-nocedalNumericalOptimization2006a: solucion mas de calculo, con tema de funciones convexas
-IntroductionAppliedLinear: lo que use mas que nada
-linear algebra done right?: aca ver si esta el teorema que uso sin demo si lo puedo sacar de ahí
--->
-
 <!-- TODO@def: outlier -->
 <!-- TODO@def: debería aclarar de alguna forma que los vectores son verticales -->
-
-<!-- TODO@def: definir una función afín cuando explique SE(2)/SE(3) estaría bueno -->
 
 ### Optimización por cuadrados mínimos
 
@@ -63,9 +54,8 @@ residual $Ax - b$. Introduciremos a continuación una serie de conceptos y
 teoremas necesarios para poder presentar una forma sucinta de minimizar esta
 norma.
 
-<!-- TODO@ref: citar linear algebra done right (va encontrar primero el teorema ahí) -->
-
-Aceptaremos el siguiente teorema sin demostración.
+Aceptaremos el siguiente teorema sin demostración (ver
+@shoresAppliedLinearAlgebra2007, teoremas 2.7 y 3.7).
 
 Theorem thm:li1inv2nots3
 : Son equivalentes:

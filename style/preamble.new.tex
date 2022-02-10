@@ -7,14 +7,25 @@
 \Crefname{subsection}{Sección}{Secciones}
 \crefname{listing}{fragmento}{fragmentos}
 \Crefname{listing}{Fragmento}{Fragmentos}
+
+% This needs to be after loading cleveref
+\newtheorem{theorem}{Teorema}[chapter]
+\newtheorem{definition}[theorem]{Definición}
+\newtheorem{remark}[theorem]{Observación}
+\newtheorem{property}[theorem]{Propiedad}
+\newtheorem{notation}[theorem]{Notación}
+
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\RR}[1]{\R^{#1 \times #1}}
+\newcommand{\so}[1]{\mathfrak{so(#1)}}
+\newcommand{\se}[1]{\mathfrak{se(#1)}}
 \newcommand{\Rnn}{\R^{n \times n}}
 \renewcommand{\H}{\mathbb{H}}
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\dotprod}[2]{\langle #1, #2 \rangle}
 \newcommand{\norm}[1]{\| #1 \|}
 \newcommand{\passthrough}[1]{#1}
+\renewcommand{\dot}[1] {\overset{\,_{\mbox{\Large .}}}{#1}}
 
 % If using pdflatex, spanish accents will not render. You'll need this. (also you won't be able to use fira code ligatures)
 % \lstset{%

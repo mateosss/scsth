@@ -209,8 +209,15 @@ Con velocidades instantáneas.
 La versión del filtro utilizada para la orientación $q_k$ es análoga a la
 definición anterior con algunas aclaraciones:
 
+<!-- TODO@high@def: uso lerp acá, lo definí en algún lado? -->
+\bigbreak
+
 - En lugar de $lerp$ se utiliza $slerp$.
-- Sobrecargamos el operador de resta de cuaterniones de la siguiente forma: $q_a
-  - q_b = q_b^{-1} q_a$.
+
+- Sobrecargamos el operador de resta de cuaterniones de la siguiente forma:
+  $q_a - q_b = q_b^{-1} q_a$.
+
 - La norma de un cuaternión es equivalente a la norma euclídea en $\R^4$, es
   decir $|q| = \sqrt{q_x^2 + q_y^2 + q_z^2 + q_w^2}$.
+
+\bigbreak

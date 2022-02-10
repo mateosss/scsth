@@ -17,7 +17,11 @@ utilizados de referencia a lo largo del escrito.}
 
 ## Introducción (TODO)
 
-
+<!-- TODO@high: Explicar de que va el trabajo (quizas algo como el blogpost?)
+Contexto/motivación (mencionar algo de las comunidades con las que trabajé,
+      mencionar que CV es muy trial and error, oversights pueden costar horas)
+y explicar que se ve en cada capitulo ("# Estructura de la Tesis").
+-->
 
 
 
@@ -156,9 +160,6 @@ angular provistos por muestras de giroscopio, ya que no es necesaria ningún tip
 de conversión. Además, veremos más abajo que esta forma de describir
 rotaciones surge naturalmente en el estudio de otras representaciones.
 
-<!-- TODO@ref: citar algo que verifique eso -->
-<!-- TODO: Mencionar torque? -->
-
 ##### Cuaterniones unitarios
 
 Los cuaterniones están definidos sobre un álgebra $\H$. Son una construcción que
@@ -235,7 +236,7 @@ contexto de la siguiente manera:
 q - p = p^{-1} q
 \end{align}
 
-<!-- TODO@high$def: menciono $lerp$ -->
+<!-- TODO@high@def: menciono $lerp$ -->
 
 Será también útil poder interpolar entre dos orientaciones $p$ y $q$ con un
 factor $t \in [0, 1]$ para conseguir orientaciones intermedias de $p$ a $q$. La
@@ -492,7 +493,7 @@ estas operaciones.
 ##### Matrices antisimétricas
 
 Definition (Producto cruz)
-: Dados $v, w \in R^3$ el producto cruz de $v$ y $w$ es un vector ortogonal a
+: Dados $v, w \in \R^3$ el producto cruz de $v$ y $w$ es un vector ortogonal a
 ambos tal que:
 \begin{align}
 v \times w = \begin{bmatrix}
@@ -505,7 +506,7 @@ v_x w_y - v_y w_x
 Definition (Matriz antismétrica)
 : $R \in \RR3$ se dice antisimétrica si $R = -R^T$
 
-Defintion
+Definition
 : Definimos el operador $\hat{\cdot} : \R^3 \rightarrow \RR3$ que devuelve la
 siguiente matriz antisimétrica:
 \begin{align}
@@ -522,88 +523,113 @@ propiedad:
 Property
 : $\hat{v} w = v \times w$
 
-Además por la definición de matriz antisimétrica es sencillo ver que:
+Además, por la definición de matriz antisimétrica es sencillo ver que:
 
 Property prop:skew-mat-vec
 : Toda matriz antisimétrica $R$ está unívocamente definida por un vector $v \in
 \R^3$ tal que $R = \hat{v}$
 
+Definition
+: El conjunto de todas las matrices antisimétricas en $\R^3$ se denomina Álgebra
+de Lie Ortogonal Especial $\so3$,
+es decir:
+\begin{align}
+\so3 = \{ \hat{v} \in \RR3 : v \in \R^3 \}
+\end{align}
+
+Veremos a continuación cual es su relación con $SO(3)$ y el por qué de su nombre.
+
 ##### Rotaciones infinitesimales
 
-Consideremos una familia de rotaciones $R(t) \in SO(3),\ t \in \R$ que describen
-una familia de rotaciones que modifican de un punto $X(0)$ hacia otro $X(t)$ de
-forma continua, es decir:
+Consideremos una familia de rotaciones $R(t) \in SO(3)$ con $t \in \R$ que describen
+una rotación continua aplicada sobre un punto $X(0) \in \R^3$ hacia otro $X(t)$,
+es decir:
 \begin{align}
   R(0) = I \\
   X(t) = R(t)X(0)
 \end{align}
 
-Como $R(t)R(t)^T = I$ tenemos que
+Notation
+: El parámetro $t$ lo consideraremos implícito en algunas ocasiones, o sea
+$R = R(t)$. Además, utilizaremos la notación $\dot{R} = \frac{dR}{dt}$.
+
+Como $RR^T = I$ tenemos que
 \begin{align}
-& 0 = \frac{dI}{dt} = \frac{d}{dt}(R(t)R(t)^T) = \frac{dR(t)}{dt} R(t)^T + R(t) \frac{dR(t)}{dt}^T
-& \Rightarrow \frac{dR(t)}{dt} R(t)^T = - R(t) \frac{dR(t)}{dt}^T
+& 0 = \frac{d}{dt}I = \frac{d}{dt}(RR^T) = \dot{R}R^T + R \dot{R^T} \\
+& \Rightarrow \dot{R}R^T = -R \dot{R^T}
 \end{align}
 
-O sea que $\frac{dR(t)}{dt} R(t)^T$ es una matriz antisimétrica. Por la
-\Cref{prop:skew-mat-vec} tenemos que existe un vector único $v(t) \in R^3$ tal que
+O sea que $\dot{R}R^T \in \so3$. Por la \Cref{prop:skew-mat-vec} tenemos que
+existe un vector único $v(t) \in \R^3$ tal que
 \begin{align}
-\frac{dR(t)}{dt} R(t)^T = \hat{v}(t) \Leftrightarrow \frac{dR(t)}{dt} = \hat{v}(t) R(t)
+\dot{R}(t) R(t)^T = \hat{v}(t) \Leftrightarrow \dot{R}(t) = \hat{v}(t) R(t)
 \end{align}
-Y como $R(0) = I$, entonces $\frac{dR(0)}{dt} = \hat{v}(0)$. Tenemos entonces que
-la matriz antisimétrica $\hat{v}$ nos da la aproximacíon de primer orden de una rotación:
+Y como $R(0) = I$, entonces $\dot{R}(0) = \hat{v}(0)$. Por lo tanto, tenemos que
+la matriz antisimétrica $\hat{v}(0)$ nos da la aproximacíon de primer orden de una rotación:
 \begin{align}
-R(dt) = R(0) + (dR)(0) = I + \hat{v}dt \label{eq:hatop-is-rotvel}
+R(dt) = R(0) + (dR)(0) = I + \hat{v}(0)dt \label{eq:hatop-is-rotvel}
 \end{align}
 
 Notar que si pensamos a $t$ en términos de tiempo, la \Cref{eq:hatop-is-rotvel}
 deja ver a $\hat{v}$ como una matriz que describe la velocidad de la rotación.
 
-Definition
-: Definimos a $\so3$ como el conjunto de matrices antisimétricas en $\RR3$, es decir:
-\begin{align}
-\so3 = \{ \hat{v} : v \in \R^3 \}
-\end{align}
 
 
-
+<!-- TODO@high: La ultima vez que vi este margin note se iba tanto de la pagina que no aparecia ni cortado, revisarlo -->
 
 
 Tenemos entonces que el efecto de una rotación infinitesimal en $SO(3)$ puede
 ser aproximado por matrices en $\so3$. Es necesario mencionar que $SO(3)$ es lo
-que se donmina un _grupo de Lie_ \marginnote{%\
-Un grupo de Lie es una "variedad diferenciable" en el cual la operación del grupo,
+que se denomina un _grupo de Lie_ \marginnote{%\
+Un grupo de Lie es una ``variedad diferenciable'' en el cual la operación del grupo,
 y su inversa, también son diferenciables. Intuitivamente, esto significa que la
-aplicación de rotaciones o transformaciones es "suave" o continua y esto nos
+aplicación de rotaciones o transformaciones es ``suave'' o continua y esto nos
 permite trabajar con el concepto de límite y derivadas.
 } mientras que $\so3$
 es su correspondiente _álgebra de Lie_ \marginnote{%\
-Un grupo de Lie tiene una álgebra de Lie relacionada. Esta última es el
-"espacio tangente" en la identidad del grupo (en particular, de la variedad).
+Un grupo de Lie tiene un álgebra de Lie relacionada. Esta última es el
+``espacio tangente'' en la identidad $I$ del grupo (en particular, de la variedad).
 Intuitivamente, este puede pensarse como el espacio de todas las posibles
-velocidades alrededor de la identidad.
-Esto es precisamente lo que desarrollamos al calcular $R(dt)$
+velocidades alrededor de $I$.
+Esto es precisamente lo que desarrollamos al calcular $R(dt)$ en la \Cref{eq:hatop-is-rotvel}.
 }. No
-necesitaremos adentrarnos en estos conceptos, pero es común encontrarlos
-en la literatura.
+necesitaremos adentrarnos en estos conceptos, pero es común encontrarlos en la
+literatura y gran parte del desarrollo que estamos realizando está ligado a
+ellos.
 
-Demostramos en el desarrollo anterior que existe un vector $\hat{v}(t) \in \so3$
+Luego de haber presentado estas ideas fundamentales, a partir de aquí
+procederemos a dar una _vista general_ de la definición de dos operadores, $exp$
+y $log$ que nos permiten pasar del grupo al álgebra de Lie y viceversa. Luego
+también veremos rapidamente como estos conceptos se traducen de forma muy
+similar para las transformaciones en $\R^3$. Al final del capítulo listaremos
+algunas referencias para el lector que quiera profundizar en los conceptos y las
+derivaciones.
+
+\bigbreak
+
+--------
+
+\bigbreak
+
+Vimos en el desarrollo anterior que existe un vector $\hat{v}(t) \in \so3$
 que actúa como un término de velocidad rotacional. Si asumimos velocidad
 constante, es decir $\hat{v}$ constante, nos interesaría saber cual es la
-rotación total luego de rotar constantemente $R(0) = I$ con esta velocidad
-durante un tiempo $t$. En otras palabras, queremos computer $R(t)$ dado
+rotación total luego de rotar desde $R(0) = I$ con esta velocidad
+durante un tiempo $t$. En otras palabras, queremos computar $R(t)$ dado
 $\hat{v}$. Teniendo en cuenta el desarrollo anterior basta con plantear el
 siguiente sistema de ecuaciones diferenciales:
 \begin{align} \begin{cases}
-\frac{dR}{dt}(t) = \hat{v} R(t) \\
+\dot{R}(t) = \hat{v} R(t) \\
 R(0) = I
 \end{cases}
 \end{align}
 
-Es posible ver que este sistema tiene como solución a la siguiente expresión.
-Notar que los exponentes son respecto a la multiplicación matricial.
+Es posible ver que este sistema tiene como solución la siguiente expresión.
 \begin{align}
-R(t) = exp(\hat{v}t) = \sum{n=0}{\infty}\frac{(\hat{v}t)^n}{n!}
+R(t) = exp(\hat{v}t) = \sum_{n=0}^{\infty}\frac{(\hat{v}t)^n}{n!} \label{eq:exp-def}
 \end{align}
+
+Notar que los exponentes de la \Cref{eq:exp-def} son respecto a la multiplicación matricial.
 
 Esta rotación se corresponde con, dado $w = v t \in \R^3$, la rotación de
 $\omega = \norm{w}$ radianes alrededor del eje dado por el vector unitario $a =
@@ -613,41 +639,143 @@ operador $exp$ con $R = exp(\hat{w})$_. Más aún, $\so3$ contiene todos estos
 vectores ángulo-axiales.
 
 El operador $exp : \so3 \rightarrow SO(3)$ se denomina _mapa o aplicación exponencial_ y su inversa es el
-_mapa logarítimico_ $log : SO(3) \rightarrow \so3$. Este, dado una matriz $R$
-computa $w$ tal que $R = \hat{w}$ de la siguiente manera:
-- Si $R = I \Rightarrow w = 0$
-- Sino:
+_mapa logarítimico_ $log : SO(3) \rightarrow \so3$. Este, dado una matriz de
+rotación $R \in SO(3)$ devuelve $\hat{w} \in \so3$ tal que $R = exp(\hat{w})$
+computando $w$ de la siguiente manera [@eadeDerivativeExponentialMap]:
 \begin{align}
-  \norm{w} = cos^{-1} \left( \frac{traza(R) - 1}{2} \right) \\
-  w = \frac{\norm{w}}{2sin(\norm{w})} \begin{bmatrix} R_{3,2} - R_{2,3} \\ R_{1,3} - R_{3,1} \\ R_{2,1} - R_{1,2} \end{bmatrix}
+  \norm{w} = cos^{-1} \left( \frac{traza(R) - 1}{2} \right) \label{eq:log-def-start}\\
+  w = \frac{\norm{w}}{2sin(\norm{w})} \begin{bmatrix} R_{3,2} - R_{2,3} \\
+  R_{1,3} - R_{3,1} \\ R_{2,1} - R_{1,2} \end{bmatrix} \label{eq:log-def-end}
 \end{align}
 
-Notar definimos $exp$ como una suma infinita mientras que $log$ puede definirse con una
-expresión cerrada. Existe la _fórmula de Rodrigues_ que permite expresar $exp$
-de forma cerrada:
+Notar que definimos $exp$ en la \Cref{eq:exp-def} como una suma infinita
+mientras que $log$ pudo definirse con una expresión cerrada en las
+\Crefrange{eq:log-def-start}{eq:log-def-end}. Existe la _fórmula de Rodrigues_
+que permite expresar también $exp$ de forma cerrada:
 \begin{align}
 exp(\hat{w}) = I + \frac{sin(\norm{w})}{\norm{w}} \hat{w} + \frac{1 - cos(\norm{w})}{\norm{w}^2} \hat{w}^2
 \end{align}
 
 ##### Transformaciones infinitesimales
 
-Para las transformaciones tenemos un desarrollo muy similar al de las rotaciones.
+Para las transformaciones en $SE(3)$ tenemos un desarrollo muy similar al de las
+rotaciones en $SO(3)$. Consideremos una familia de transformaciones $T(t) \in
+SE(3)$ compuestas por rotaciones $R(t) \in SO(3)$ y traslaciones $b(t) \in
+\R^3$ con $t \in \R$ que representan una transformación continua aplicada al punto $X(0)
+\in \R^3$ con $T(0) = I$. Es decir,
+\begin{align}
+X(t) &= T(t)X(0) \\
+T(t) &= \begin{bmatrix}
+R(t) & b(t) \\
+0 & 1
+\end{bmatrix}
+\end{align}
+
+Considerando que esta vez la inversa de $T$ es $T^{-1}$ y no su transpuesta como era el caso con las
+rotaciones. Podemos aplicar un desarrollo similar al de la sección anterior
+y llegar a que:
+\begin{align} \label{eq:translation-deriv}
+\dot{T}T^{-1} = \begin{bmatrix}
+\dot{R}R^T & \dot{b} - \dot{R} R^T b \\
+0 & 0
+\end{bmatrix} \in \RR4
+\end{align}
+
+De vuelta, $\dot{R}R^T$ corresponde a alguna matriz antisimétrica $\hat{v} \in
+\so3$. Definiendo un vector $y(t) = \dot{b}(t) - \hat{v}(t) b(t)$ podemos
+reescribir la \Cref{eq:translation-deriv} e introducir el concepto de _giro o twist_ $\hat{\xi}(t)$:
+\begin{align}
+\hat{\xi}(t) = \dot{T}(t)T^{-1}(t) = \begin{bmatrix}
+\hat{v}(t) & y(t) \\
+0 & 0
+\end{bmatrix}
+\end{align}
+
+La matriz de giro $\hat{\xi}$ pertenece al álgebra de Lie $\se3$ del grupo de Lie $SE(3)$ y
+puede ser parametrizada por las coordenadas de giro $\xi \in \R^6$. Para esto se utiliza un operador
+_hat_ $\cdot^{\wedge}$ y su inversa _vee_ $\cdot^{\vee}$ de la siguiente manera:
+\begin{align}
+\hat{\xi} &= {\begin{bmatrix}y \\ v\end{bmatrix}}^{\wedge} = \begin{bmatrix}\hat{v} &
+y \\ 0 & 0 \end{bmatrix} \in \RR4 \\
+{\begin{bmatrix}\hat{v} & y \\ 0 & 0 \end{bmatrix}}^{\vee} &= \begin{bmatrix}y \\
+v\end{bmatrix} = \xi \in \R^6
+\end{align}
+
+Es decir, podemos codificar el cambio infinitesimal de una transformación en un
+vector de giro $\xi$ de seis dimensiones en donde:
+\bigbreak
+
+- Los últimos tres componentes dados por $v$ son la representación **ángulo-axial**
+  de la velocidad rotacional.
+
+- Los primeros tres componentes dados por $y$ describen el cambio de traslación
+  teniendo en cuenta esta velocidad rotacional instantánea $\hat{v}$.
+
+\bigbreak
+
+Finalmente, tenemos el mapa exponencial y mapa logarítimico entre $SE(3)$ y
+$\se3$. Similar a $SO(3)$, cualquier transformación $T \in SE(3)$ va a poder ser
+representada por un vector de giro $\xi$ con $T = exp(\hat{\xi})$.
+
+Existen expresiones cerradas para ambos $exp : \se3 \rightarrow SE(3)$ y $log :
+SE(3) \rightarrow \se3$.
+
+Para $exp(\hat{\xi})$ con $\xi = [y, v]^T$ tenemos:
+\begin{align}
+exp(\hat{\xi}) = \begin{bmatrix}
+exp(\hat{v}) & Jy \\
+0 & 1
+\end{bmatrix}
+\end{align}
+
+Con $J$ el llamado _jacobiano izquierdo_ de $SO(3)$ que se puede computar con el ángulo
+$\omega$ de $v$, es decir con $\omega = \norm{v}$ de esta manera [@eadeDerivativeExponentialMap]:
+\begin{align}
+J = I + \frac{1-cos(\omega)}{\omega^2} \hat{v} + \frac{\omega -
+sin(\omega)}{\omega^3} \hat{v}^2.
+\end{align}
+
+Para $log(T)$ con $T = \begin{bmatrix}R & b \\ 0 & 1\end{bmatrix}\in SE(3)$ tenemos:
+\begin{align}
+log(T) = \begin{bmatrix}log(R)^{\vee} \\ J^{-1}b\end{bmatrix}^{\wedge}
+\end{align}
+
+Con el jacobiano inverso $J^{-1}$ dado por [@eadeDerivativeExponentialMap]:
+\begin{align}
+J^{-1} = I - \frac{1}{2} \hat{v} +
+\left( \frac{1}{\omega^2} - \frac{1 + cos(\omega)}{2 \omega sin(\omega)} \right) \hat{v}^2
+\end{align}
+
+##### Cierre y literatura recomendada
 
 
-<!-- TODO@high@ref: para derivar estas formulas y yada yada ver CITA1 CITA2 ... CITAN -->
 
+Tenemos ahora una mirada suficientemente formal como para ser capaces de
+utilizar y comprender las herramientas usualmente utilizadas en sistemas que
+modelan rotaciones y transformaciones en dos y tres dimensiones por computadora.
+Nos tomamos el trabajo de entender varias formalizaciones para las rotaciones ya
+que todas ellas aparecen de una u otra forma en el pipeline que se desarrolla en
+este trabajo. Las formalizaciones infinitesimales que hemos presentado en la
+última subsección, y sus representaciones en el álgebra de Lie, permiten además
+modelar los estados de las entidades que un algoritmo de SLAM necesita describir
+de una forma particularmente elegante. Esto es así porque permiten la aplicación
+de algoritmos de optimización, como los que veremos en el próximo capítulo, _sin
+restricciones_\marginnote{%\
+Representaciones de cuaterniones o matriciales requieren mantener los errores
+numéricos a raya mediante la constante renormalización de sus valores.
+Las representaciones dadas en las álgebras de Lie no tienen este problema.
+}.
 
-<!-- TODO@ref:
-Books used:
-nocedalNumericalOptimization2006a: solucion mas de calculo, con tema de funciones convexas
-IntroductionAppliedLinear: lo que use mas que nada
-linear algebra done right?: aca ver si esta el teorema que uso sin demo si lo puedo sacar de ahí
--->
+Respecto a la última sección de infinitesimales, se pueden encontrar algunos de
+estos conceptos explorados en mayor profundidad en
+@barfootStateEstimationRobotics2017 cap. 7. Una excelente introducción a los
+grupos de Lie con una teoría reducida enfocada en aplicaciones de robótica es
+presentada en @solaMicroLieTheory2021. Finalmente, gran parte de las
+derivaciones de las expresiones que se vieron se encuentran detalladas en
+@eadeDerivativeExponentialMap.
 
 <!-- TODO@def: outlier -->
 <!-- TODO@def: debería aclarar de alguna forma que los vectores son verticales -->
-
-<!-- TODO@def: definir una función afín cuando explique SE(2)/SE(3) estaría bueno -->
 
 ### Optimización por cuadrados mínimos
 
@@ -702,9 +830,8 @@ residual $Ax - b$. Introduciremos a continuación una serie de conceptos y
 teoremas necesarios para poder presentar una forma sucinta de minimizar esta
 norma.
 
-<!-- TODO@ref: citar linear algebra done right (va encontrar primero el teorema ahí) -->
-
-Aceptaremos el siguiente teorema sin demostración.
+Aceptaremos el siguiente teorema sin demostración (ver
+@shoresAppliedLinearAlgebra2007, teoremas 2.7 y 3.7).
 
 Theorem thm:li1inv2nots3
 : Son equivalentes:
@@ -921,9 +1048,7 @@ lineales. El desarrollo de esta sección está basada en
 puede encontrar derivaciones alternativas e información de alternativas a
 Gauss-Newton más sofisticadas como Levenberg-Marquardt o el método dogleg.
 
-<!-- TODO@ref: el tema de las citas con capítulos se ve bastante feo en el estilo ACM -->
-
-<!-- TODO: Acá se habla de weighted least squares: https://www.vectornav.com/resources/inertial-navigation-primer/math-fundamentals/math-leastsquares -->
+<!-- TODO@low: Acá se habla de weighted least squares: https://www.vectornav.com/resources/inertial-navigation-primer/math-fundamentals/math-leastsquares -->
 
 
 
@@ -933,24 +1058,27 @@ profundizaremos en uno de ellos: \italic{Basalt}. El estudio detallado de una
 implementación será particularmente esclarecedor al hilar sin generalizaciones
 multitud de métodos y algoritmos utilizados en contextos concretos y con
 objetivos bien definidos.}
-<!-- TODO@def: explicar bundle adjustment -->
-<!-- TODO@def: que es motion blur, (quizás usar nota al pie). EDIT: Very easy con pandoc footnote [^1] o inline_notes ^[nota] -->
-<!-- TODO@def: Estoy implicitamente hablando de un optimizador, cuando hablo de factor graphs? -->
-<!-- TODO@def: Explicar factores no-lineales, o almenos decir que no se explican -->
-<!-- TODO@def: Que son features? -->
-<!-- TODO@def: Que es loop closing? -->
-<!-- TODO@def: Que es OpenCV -->
-<!-- TODO@def: Que son grafos de poses, factor graphs, y factores -->
-<!-- TODO@def: VIO habla acerca de componentes: (patch tracking, landmark
+<!-- TODO@high: este archivo tiene muchos TODOs pero basicamente lo que le hace falta
+es una buena proofread y arreglar los errores que se detecten ahí -->
+
+<!-- TODO@high@def: explicar bundle adjustment -->
+<!-- TODO@high@def: que es motion blur -->
+<!-- TODO@high@def: Estoy implicitamente hablando de un optimizador, cuando hablo de factor graphs? -->
+<!-- TODO@high@def: Explicar factores no-lineales, o almenos decir que no se explican -->
+<!-- TODO@high@def: Que son features? -->
+<!-- TODO@high@def: Que es loop closing? -->
+<!-- TODO@high@def: Que es OpenCV -->
+<!-- TODO@high@def: Que son grafos de poses, factor graphs, y factores -->
+<!-- TODO@high@def: VIO habla acerca de componentes: (patch tracking, landmark
 representation, first-estimate Jacobians, marginalization
 scheme) que podría ser interesante discutir -->
 <!-- TODO: Mencionar que TUM lo desarrolla y las personas que lo mantienen -->
-<!-- TODO@def: Que es cuadrados minimos -->
-<!-- TODO@def: Que es gauss newton -->
-<!-- TODO@def: levenverg-marquard is also in use (see vio_lm_lambda_initial), I might need to explain it -->
-<!-- TODO@def: que son SE(2), SO(3) etc: ver https://ethaneade.com/ -->
-<!-- TODO@ref: Checkear que los 6 papers de basalt esten siendo citados -->
-<!-- TODO@ref: Los papers de orbslam y kimera deberían estar citados -->
+<!-- TODO@high@def: Que es cuadrados minimos -->
+<!-- TODO@high@def: levenverg-marquard is also in use (see vio_lm_lambda_initial), I might need to explain it -->
+<!-- TODO@high@def: que son SE(2), SO(3) etc: ver https://ethaneade.com/ -->
+<!-- TODO@high@ref: Checkear que los 6 papers de basalt esten siendo citados -->
+<!-- TODO@high@ref: Los papers de orbslam y kimera deberían estar citados -->
+<!-- TODO@high@def: que es el acrónimo VIO? -->
 
 # Implementación de Basalt
 
@@ -1075,7 +1203,7 @@ computación gráfica (e.g., _filtrado trilineal_, _LODs_, reducción de
 _patrones moiré_) pero en el caso de Basalt serán utilizados para darle robustez
 al algoritmo de seguimiento de features (_feature tracking_).
 
-[`frametoframeopticalflow`]: TODO
+[`frametoframeopticalflow`]: TODO@high
 
 \fig{fig:mipmap}{source/figures/mipmap.jpg}{Mipmaps}{%
 Representación piramidal (mipmaps) de un cuadro del conjunto de datos EuRoC.
@@ -1131,7 +1259,7 @@ optimización por cuadrados mínimos mediante el algoritmo iterativo de
 Gauss-Newton para encontrar $T$ utilizando un residual $r$ con:
 
 <!-- TODO@correct: Realmente es gauss newton lo que se hace? ver optical_flow_max_iterations -->
-<!-- TODO@correct: Not quite, es inverse-compositional method, que es un gauss newton
+<!-- TODO@high@correct: Not quite, es inverse-compositional method, que es un gauss newton
 sobre algo un poco distinto: https://homepages.inf.ed.ac.uk/rbf/CVonline/LOCAL_COPIES/AV0910/zhao.pdf
 por eso aparece el hessiano y cosas de esa pinta -->
 <!-- TODO: Mencionar ZNCC como norma no utilizada: https://martin-thoma.com/zero-mean-normalized-cross-correlation/ -->
@@ -1173,8 +1301,8 @@ procesa un cuadro es el de filtrado de keypoints, en el cual se desproyectan los
 keypoints a posiciones en la escena tri-dimensional y en caso de que el error
 epipolar supere cierto umbral, estos keypoints serán descartados.
 
-<!-- TODO@def: Que es la desproyección -->
-<!-- TODO@def: Qué es el error epipolar -->
+<!-- TODO@high@def: Que es la desproyección -->
+<!-- TODO@high@def: Qué es el error epipolar -->
 
 #### Bundle adjustment visual-inercial
 
@@ -1186,7 +1314,7 @@ epipolar supere cierto umbral, estos keypoints serán descartados.
 - [ ] "reprojection error"
  -->
 
-<!-- TODO@def: Qué es bundle adjustment -->
+<!-- TODO@high@def: Qué es bundle adjustment -->
 
 En un hilo separado al módulo de optical flow, corre el estimador de VIO
 encargado de realizar en bundle adjustment sobre los cuadros y muestras de la
@@ -1212,9 +1340,6 @@ tipo de corrección de orientación al calibrar las muestras del acelerómetro.
 Esto hace que la matriz de alineamiento para el acelerómetro tenga ceros en su
 triángulo superior (ver @schubertBasaltTUMVI2018 secc. IV.B y _discusión
 relacionada [^basalt-headers-issue8]_).
-
-<!-- TODO@style: Make footnotes clickeable -->
-<!-- TODO@style: También hacer que "discusion relacionada" se marque y sea clickeable quizas? -->
 
 [^basalt-headers-issue8]: <https://gitlab.com/VladyslavUsenko/basalt-headers/-/issues/8>
 
@@ -1275,6 +1400,9 @@ $\Delta \mathbf{s}$ de la siguiente manera:
 <!-- TODO@high@def: entender este conjunto de ecuaciones requiere:
 - saber que R es 3x3. Y que es lo que significa multiplicar por R
 - qué es exp
+EDIT: ya hice la seccion de transforms.md ahora por si las dudas deberia
+leer todo lo de basalt de vuelta para ver si tiene sentido igualmente antes
+de sacar el to-do.
  -->
 
 <!-- $$ -->
@@ -1588,7 +1716,7 @@ Monado).
 <!-- TODO@def: Ya expliqué que es XR no es un acrónimo para "extended"? -->
 <!-- TODO@def: SDK, API -->
 
-<!-- TODO: Todavía no se como referenciar links en la tesis -->
+<!-- TODO@high@ref: Todavía no se como referenciar links en la tesis. edit: ahora sé, hacerlo -->
 
 [openxr-spec]: TODO
 [bsl-1.0]: TODO
@@ -1628,7 +1756,7 @@ sobre la misma instancia del runtime. Además, se quita la necesidad de ejecutar
 ambos procesos sobre el mismo nodo de cómputo, lo cual facilita la posibilidad
 de tener realidad virtual renderizada en la nube.
 
-<!-- TODO@fig: Tiene que estar en español y agregar "Filtrado" arriba de "Prediction" -->
+<!-- TODO@high@fig: Tiene que estar en español y agregar "Filtrado" arriba de "Prediction" -->
 <!-- TODO@fig: Podría usar los nombres `TrackerSlam` y `slam_tracker` me
 parece por que los referencio bastante -->
 \fig{fig:monado-arch}{source/figures/monado-arch.pdf}{Arquitectura de Monado}{%
@@ -1655,10 +1783,10 @@ Move_, _PlayStation VR_, y tracking de manos en general. Es aquí entonces en
 donde se comienza la implementación del SLAM tracker presentado en este
 trabajo.
 
-<!-- TODO@nico: Lo que le digo "slam tracker implementation" nico pensó que
+<!-- TODO@high@nico: Lo que le digo "slam tracker implementation" nico pensó que
 debería ser una "interface", implementación/interfaz/adaptador son bastante
 ambiguos así que deberí revisar que los uso de forma consistente -->
-<!-- TODO@fig: Del TODO de arriba, viene que tengo que modificar fig:slam-tracker-dataflow -->
+<!-- TODO@high@fig: Del TODO de arriba, viene que tengo que modificar fig:slam-tracker-dataflow -->
 
 La implementación de un pipeline en Monado que permita la comunicación entre
 dispositivos, sistemas de SLAM y la aplicación OpenXR requirió desarrollar la
@@ -1671,8 +1799,8 @@ infraestructura y los distintos componentes que se necesitaron implementar y
 adaptar para obtener un pipeline de SLAM modular corriendo en Monado como se
 intenta mostrar en la \figref{fig:slam-tracker-dataflow}.
 
-<!-- TODO@fig: Agregar a esta figura referencia al filtrado de poses -->
-<!-- TODO@fig: Hacer versión final -->
+<!-- TODO@high@fig: Agregar a esta figura la caja del filtrado de poses -->
+<!-- TODO@high@fig: Hacer versión final -->
 
 \fig{fig:slam-tracker-dataflow}{source/figures/slam-tracker-dataflow.pdf}{Flujo de datos de la implementación}{%
 Diagrama esquemático de como ocurre el flujo de los datos desde que se generan
@@ -1687,7 +1815,7 @@ implementación.
 ### Interfaz externa
 
 <!-- ### Interfaz externa -->
-<!-- TODO@automation: It would be awesome to be able to use just h1 headings
+<!-- TODO@low@automation: It would be awesome to be able to use just h1 headings
 (H1) and then be the parent that appends # to all headings -->
 
 <!-- TODO: mencionar que ORB-SLAM3 está en un fork separado de monado por GPL -->
@@ -1864,7 +1992,7 @@ finalmente, la precondición **7** es similar al punto 1 en donde se le permite 
 la implementación utilizar colas de un único consumidor que sean de mayor
 rendimiento comparado a otras colas concurrentes.
 
-<!-- TODO: Debería haber links a todos los repos en algún lado de la tesis -->
+<!-- TODO@high: Debería haber links a todos los repos en algún lado de la tesis -->
 
 La interfaz `slam_tracker` se implementó en los tres forks presentados en este
 trabajo; Kimera, ORB-SLAM3 y Basalt. La idea general de las implementaciones es
@@ -1930,9 +2058,6 @@ pie para explicar lo que es ese proceso.
 <!-- TODO@maybe: Tampoco hablo de las problematicas con las que hubo que
 lidiar respecto a shared libraries (https://www.akkadia.org/drepper/dsohowto.pdf) -->
 
-<!-- TODO@fig: Varias figuras están ocupando toda una página por si solas y
-dejando una banda de espacio en blanco. -->
-
 \fig{fig:trackers-ui}{source/figures/trackers-ui.pdf}{Visualizadores de SLAM trackers}{%
 Las distintas interfaces gráficas y formas de visualizar presentadas por cada
 uno de los sistemas adaptados. Arriba a izquierda Kimera, ORB-SLAM3 a derecha;
@@ -1960,8 +2085,8 @@ proveer dos funcionalidades fundamentales que escapan al alcance de los sistemas
 de SLAM/VIO y serán explicados a continuación: **predicción** y **filtrado** de
 poses.
 
-<!-- TODO: Hago las "Notas" así? hay una mejor manera? quizás a un
-costado de la página o con un recuadro tcolorbox como vi en un video -->
+<!-- TODO@high: Hago las "Notas" así? hay una mejor manera? quizás a un
+costado de la página o con un recuadro tcolorbox como vi en un video. EDIT: USE MARGINNOTE -->
 
 [^adapter-class-remark]: Es debatible si el añadido de estas funcionalidades
 haría que `TrackerSlam` deje de ser considerada una clase adaptadora, ya que
@@ -2007,7 +2132,7 @@ dispositivos emulados por software[^qwerty-driver]. Los espacios que
 aplican a nuestro caso son aquellos que representaran dispositivos que posean
 sensores IMU y cámaras que puedan utilizarse en nuestros sistemas de SLAM/VIO.
 
-<!-- TODO@ref: Todos los MR importantes deberían estar listados y referenciados
+<!-- TODO@high@ref: Todos los MR importantes deberían estar listados y referenciados
 en alguna parte del trabajo -->
 
 [^qwerty-driver]: Una de las primeras contribuciones realizadas para
@@ -2159,8 +2284,6 @@ realizar el cómputo con $\Delta T$ como se definió en la
 [](#eq:predicted-space-delta). Simétricamente para extrapolar hacia el pasado
 lejano[^openxr-time-limits], o sea fuera del registro del historial, se utilizará el espacio más
 antiguo almacenado y $\Delta T^{-1}$.
-
-<!-- TODO@ref: la cita del autor "khronos group inc" se ve muy rara -->
 
 [^openxr-time-limits]: La especificación de OpenXR tiene una sección dedicada a
 las restricciones y condiciones a los que el runtime está sujeto respecto a
@@ -2407,8 +2530,6 @@ sistema, ya que para poder suavizar este ruido, los filtros tienden a reducir
 cambios abruptos en la trayectoria, incluso cuando estos sean realmente los
 movimientos que el usuario realizó físicamente.
 
-<!-- TODO@style: estaría bueno que los links aparecieran en monospace quizás? -->
-
 Presentaremos tres filtros, con el más sofisticado basado en
 @casiezFilterSimpleSpeedbased2012. Además, dicho trabajo cubre el resto de
 filtros presentados, muestra gráficas comparativas, y es también una buena
@@ -2501,10 +2622,6 @@ escalar de los quaternions -->
 
 ##### Filtro 1€
 
-<!-- TODO@fix: la referencia a la seccion de suavizado exponencial no funciona.
-Hay que cambiar el template y revisar todo de vuelta, no hay otra.
-El template base es muy malo. -->
-
 El filtro 1€ [@casiezFilterSimpleSpeedbased2012] se basa en el
 \hyperref[suavizado-exponencial]{suavizado exponencial}, pero utiliza un factor
 $\alpha$ dinámico que se adapta automáticamente con base a la tasa de cambio de
@@ -2557,13 +2674,18 @@ Con velocidades instantáneas.
 La versión del filtro utilizada para la orientación $q_k$ es análoga a la
 definición anterior con algunas aclaraciones:
 
-<!-- TODO@high: revisar estas aclaraciones luego de haber escrito transforms.md -->
+<!-- TODO@high@def: uso lerp acá, lo definí en algún lado? -->
+\bigbreak
 
 - En lugar de $lerp$ se utiliza $slerp$.
-- Sobrecargamos el operador de resta de cuaterniones de la siguiente forma: $q_a
-  - q_b = q_b^{-1} q_a$.
+
+- Sobrecargamos el operador de resta de cuaterniones de la siguiente forma:
+  $q_a - q_b = q_b^{-1} q_a$.
+
 - La norma de un cuaternión es equivalente a la norma euclídea en $\R^4$, es
   decir $|q| = \sqrt{q_x^2 + q_y^2 + q_z^2 + q_w^2}$.
+
+\bigbreak
 
 
 ### Recapitulando
