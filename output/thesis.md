@@ -1381,6 +1381,8 @@ pre-integrarlas es un proceso que intenta resumir las muestras entre los cuadros
 a una única pseudo-muestra que sucede en los mismos instantes de tiempo que los
 cuadros como se muestra en el ejemplo de \figref{fig:sample-frequencies}.
 
+<!-- TODO@high@fig: benja recomendó hacer el grafico más grande y la verdad que sí, capaz ponerlo hasta 0.3s -->
+
 \fig{fig:sample-frequencies}{source/figures/sample-frequencies.pdf}{%
 Ejemplo de frecuencias}{%
 Frecuencia de distintos eventos para un ejemplo con cámaras a 30fps y muestras
@@ -1610,13 +1612,17 @@ para uso futuro.
 <!-- TODO@question: question for basalt: why are they not using gtsam/g2o/ceres for the solvers? -->
 <!-- TODO@future: parallelization/vectorization of gauss newton seems very easy, levenberg marquardt not so much -->
 
+#### Optimización y Marginalización (TODO)
+
+<!-- TODO@high -->
+
 
 \cleardoublepage
-\ctparttext{En esta parte contextualizaremos los distintos sistemas estudiados y
-profundizaremos en uno de ellos: \italic{Basalt}. El estudio detallado de una
-implementación será particularmente esclarecedor al hilar sin generalizaciones
-multitud de métodos y algoritmos utilizados en contextos concretos y con
-objetivos bien definidos.}
+\ctparttext{Describiremos algunas de las contribuciones clave que fueron
+producto de este trabajo. En el proceso se obtendrá un mejor entendimiento de
+los problemas comunes de implementación por los que estos sistemas se ven
+afectados. Además, veremos las soluciones que se les ha dado a otras
+problemáticas que son propias de la localización en tiempo real aplicada a XR.}
 # Contribuciones
 
 ## Contexto
@@ -3040,7 +3046,7 @@ causa inconsistencias que suelen terminar en divergencias de los algoritmos de
 optimización. Además, es usual que también se necesite aplicar un cambio de
 coordenadas a las poses que el sistema le devuelve a Monado.
 
-### Controlador RealSense
+### RealSense (TODO)
 
 Estamos ahora en condiciones de entender las contribuciones a controladores
 realizadas en este trabajo. Comencemos por las del controlador para dispositivos
@@ -3083,12 +3089,29 @@ cámaras estéreo y una IMU. Como trabajo futuro, sería interesante comparar el
 tracking interno de una T265 con los distintos sistemas externos integrados en
 este trabajo.
 
-### Windows Mixed Reality
+### Windows Mixed Reality (TODO)
 
 
 
 
 
+
+
+\cleardoublepage
+<!-- TODO@high: ctparttext de la parte de conclusiones -->
+\ctparttext{Para cerrar este trabajo presentaremos algunos resultados que
+intentan describir el rendimiento y la precisión logrados en la implementación
+actual. Y concluiremos con una revisión del trabajo realizado y posibles
+líneas de trabajo a considerar para el futuro.}
+# Conclusiones
+
+## Resultados (TODO)
+
+TODO
+
+## Conclusiones y trabajo futuro (TODO)
+
+TODO
 
 
 

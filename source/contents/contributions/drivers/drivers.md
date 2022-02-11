@@ -337,7 +337,7 @@ causa inconsistencias que suelen terminar en divergencias de los algoritmos de
 optimización. Además, es usual que también se necesite aplicar un cambio de
 coordenadas a las poses que el sistema le devuelve a Monado.
 
-### Controlador RealSense
+### RealSense (TODO)
 
 Estamos ahora en condiciones de entender las contribuciones a controladores
 realizadas en este trabajo. Comencemos por las del controlador para dispositivos
@@ -380,7 +380,7 @@ cámaras estéreo y una IMU. Como trabajo futuro, sería interesante comparar el
 tracking interno de una T265 con los distintos sistemas externos integrados en
 este trabajo.
 
-### Windows Mixed Reality
+### Windows Mixed Reality (TODO)
 
 <!-- #if 0 -->
       - [TODO] Atenuación exponencial para sincronización temporal

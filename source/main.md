@@ -23,9 +23,17 @@ objetivos bien definidos.}
 <!-- #include contents/basalt/basalt.md -->
 
 \cleardoublepage
-\ctparttext{En esta parte contextualizaremos los distintos sistemas estudiados y
-profundizaremos en uno de ellos: \italic{Basalt}. El estudio detallado de una
-implementación será particularmente esclarecedor al hilar sin generalizaciones
-multitud de métodos y algoritmos utilizados en contextos concretos y con
-objetivos bien definidos.}
+\ctparttext{Describiremos algunas de las contribuciones clave que fueron
+producto de este trabajo. En el proceso se obtendrá un mejor entendimiento de
+los problemas comunes de implementación por los que estos sistemas se ven
+afectados. Además, veremos las soluciones que se les ha dado a otras
+problemáticas que son propias de la localización en tiempo real aplicada a XR.}
 <!-- #include contents/contributions/contributions.md -->
+
+\cleardoublepage
+\ctparttext{Para cerrar este trabajo presentaremos algunos resultados que
+intentan describir el rendimiento y la precisión logrados en la implementación
+actual. Y concluiremos con una revisión del trabajo realizado y posibles
+líneas de trabajo a considerar para el futuro.}
+<!-- #include contents/conclusions/conclusions.md -->
+
