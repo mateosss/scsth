@@ -1,7 +1,7 @@
 <!-- TODO@high: este archivo tiene muchos TODOs pero basicamente lo que le hace falta
 es una buena proofread y arreglar los errores que se detecten ahí -->
 
-<!-- TODO@high@def: explicar bundle adjustment -->
+<!-- TODO@high@def: explicar  (en el paper de s-ptam hay alta explicación de una o dos oraciones) -->
 <!-- TODO@high@def: que es motion blur -->
 <!-- TODO@high@def: Estoy implicitamente hablando de un optimizador, cuando hablo de factor graphs? -->
 <!-- TODO@high@def: Explicar factores no-lineales, o almenos decir que no se explican -->

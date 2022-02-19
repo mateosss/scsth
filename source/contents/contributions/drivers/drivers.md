@@ -130,7 +130,7 @@ deben ser provistos previos a la ejecución.
 
 <!-- #define MN_MODEL_TRANSLATION %\
 Mientras que en la práctica es conveniente recalibrar con modelos soportados,
-podría resultar razonable estudiar expresiones analíticas que "traduzcan",
+podría resultar razonable estudiar expresiones analíticas que ``traduzcan'',
 en alguna forma significativa, parámetros de un modelo a otro.
 -->
 

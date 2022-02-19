@@ -1,4 +1,4 @@
-## Contexto
+## Contexto {#sec:thesis-context}
 
 <!-- TODO@def: Qué es XR? -->
 
