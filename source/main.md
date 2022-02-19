@@ -31,9 +31,9 @@ problemáticas que son propias de la localización en tiempo real aplicada a XR.
 <!-- #include contents/contributions/contributions.md -->
 
 \cleardoublepage
-\ctparttext{Para cerrar este trabajo presentaremos algunos resultados que
+\ctparttext{Para cerrar presentaremos algunos resultados que
 intentan describir el rendimiento y la precisión logrados en la implementación
-actual. Y concluiremos con una revisión del trabajo realizado y posibles
+actual. Concluiremos con una revisión general de los temas tratados y posibles
 líneas de trabajo a considerar para el futuro.}
 <!-- #include contents/conclusions/conclusions.md -->
 

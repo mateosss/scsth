@@ -25,7 +25,7 @@ OpenXR, realidad virtual y aumentada entre otras. OpenXR por su parte, provee
 una API estandarizada con soporte para extensiones de fabricante que permiten
 añadir características peculiares de ser necesitadas por algún fabricante en
 particular. El estándar ha tenido un gran éxito al haber sido adoptado por una
-gran cantidad de fabricantes (Fig. \figref{fig:openxr-companies}) como reemplazo a sus
+gran cantidad de fabricantes [^openxr-companies] como reemplazo a sus
 antiguos SDK propietarios. De esta forma, los motores de juego y desarrolladores
 solo necesitan interactuar con una única API (Fig. \figref{fig:openxr}) que además les
 permite aprovechar cualquier característica peculiar ofrecida por alguna
@@ -38,9 +38,7 @@ provee una única API multiplataforma de alta performance entre las aplicaciones
 y todos los dispositivos compatibles
 }
 
-\fig{fig:openxr-companies}{source/figures/openxr-companies.png}{Compañías OpenXR}{%
-Compañías respaldando públicamente el estándar OpenXR
-}
+[^openxr-companies]: Compañías respaldando públicamente el estándar OpenXR: <https://www.khronos.org/assets/uploads/apis/2019-openxr-logo-field_1_15.jpg>
 
 OpenXR es exclusivamente la [especificación][openxr-spec] de una API y por lo
 tanto requiere una implementación, o _runtime_, sobre el que ser ejecutado. Las

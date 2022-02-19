@@ -380,29 +380,6 @@ cámaras estéreo y una IMU. Como trabajo futuro, sería interesante comparar el
 tracking interno de una T265 con los distintos sistemas externos integrados en
 este trabajo.
 
-### Windows Mixed Reality (TODO)
-
-<!-- #if 0 -->
-      - [TODO] Atenuación exponencial para sincronización temporal
-      - [TODO] Problemas específicos de calibración: camaras con poco solapamiento,
-            intrinsics para modelo raro radtan8 (referenciar a las contribuciones
-            explicadas abajo)
-      - [TODO] Trabajo con la comunidad, ingeniería inversa, thaytan camera
-            streams, exposure setting, analisis de exposure en sistema privativo,
-            analisis de parámetros extrínsicos, lectura de paquetes USB binarios
-<!-- #endif -->
-<!-- #if 0 -->
-| Caraceterística/Controlador      | RealSense                                                                                                                                                 | WMR                                                                                                      |
-|----------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------|
-| Calibración de Cámaras           | Modelo de cámara rt4 precalibrado, los parámetros son cero, no hay distorsión. Cámaras con mucho solapamiento.                                            | Cámara fisheye, con modelo rt8 (extraño). No soportado en ningún sistema. Cámaras con poco solapamiento. |
-| Calibración de IMU               | Precalibrados. Parámetros son cero. Soportado por cualquier sistema. Soportado por cualquier sistema.                                                     | No precalibrado. Solo soportado por Basalt. Aunque la calibración es sencilla de realizar en Monado.     |
-| Sincronización temporal interna  | Sí, aunque requiere parche en el kernel.                                                                                                                  | Sí.                                                                                                      |
-| Sincronización temporal con host | Automática por SDK.                                                                                                                                       | Manual con suavizado exponencial. Resta hacer cálculo de latencia.                                       |
-| Muestras de IMU                  | Muestras no unificadas. Se utiliza omisión de sensor más lento. Resta interpolar. D455: accel. 60-250hz y giro. 200-400hz.                                | Muestras unificadas. 1000hz en paquetes de 4. Se promedian y se usan 250hz.                              |
-| Muestras de Cámara               | Múltiples resoluciones y frecuencias para elegir. Obturador global.                                                                                       | Cámaras monocromáticas 640x480 a 30fps. Obturador global.                                                |
-| Exposición y ganancia            | Manual. Alternativa automática con el SDK aunque no es ideal para aplicaciones  de SLAM por que aumenta exposure rápido. Los sensores son de más calidad. | Manual. Resta implementar curvas estudiadas. Sensores baratos. Ingeniería inversa.                       |
-| Interfaz con hardware            | RealSense SDK. Manejo automático de colas. rs_frame.                                                                                                      | Libusb. Manejo manual de memoria. Protocolo desconocido.                                                 |
-<!-- #endif -->
 <!-- #if 0 -->
 
 
@@ -440,4 +417,28 @@ y finalmente presentar una tabla comparativa (o capaz eso hacerlo antes?)
 
 
 
+<!-- #endif -->
+
+### Windows Mixed Reality (TODO)
+
+<!-- #if 0 -->
+      - [TODO] Atenuación exponencial para sincronización temporal
+      - [TODO] Problemas específicos de calibración: camaras con poco solapamiento,
+            intrinsics para modelo raro radtan8 (referenciar a las contribuciones
+            explicadas abajo)
+      - [TODO] Trabajo con la comunidad, ingeniería inversa, thaytan camera
+            streams, exposure setting, analisis de exposure en sistema privativo,
+            analisis de parámetros extrínsicos, lectura de paquetes USB binarios
+<!-- #endif -->
+<!-- #if 0 -->
+| Caraceterística/Controlador      | RealSense                                                                                                                                                 | WMR                                                                                                      |
+|----------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------|
+| Calibración de Cámaras           | Modelo de cámara rt4 precalibrado, los parámetros son cero, no hay distorsión. Cámaras con mucho solapamiento.                                            | Cámara fisheye, con modelo rt8 (extraño). No soportado en ningún sistema. Cámaras con poco solapamiento. |
+| Calibración de IMU               | Precalibrados. Parámetros son cero. Soportado por cualquier sistema. Soportado por cualquier sistema.                                                     | No precalibrado. Solo soportado por Basalt. Aunque la calibración es sencilla de realizar en Monado.     |
+| Sincronización temporal interna  | Sí, aunque requiere parche en el kernel.                                                                                                                  | Sí.                                                                                                      |
+| Sincronización temporal con host | Automática por SDK.                                                                                                                                       | Manual con suavizado exponencial. Resta hacer cálculo de latencia.                                       |
+| Muestras de IMU                  | Muestras no unificadas. Se utiliza omisión de sensor más lento. Resta interpolar. D455: accel. 60-250hz y giro. 200-400hz.                                | Muestras unificadas. 1000hz en paquetes de 4. Se promedian y se usan 250hz.                              |
+| Muestras de Cámara               | Múltiples resoluciones y frecuencias para elegir. Obturador global.                                                                                       | Cámaras monocromáticas 640x480 a 30fps. Obturador global.                                                |
+| Exposición y ganancia            | Manual. Alternativa automática con el SDK aunque no es ideal para aplicaciones  de SLAM por que aumenta exposure rápido. Los sensores son de más calidad. | Manual. Resta implementar curvas estudiadas. Sensores baratos. Ingeniería inversa.                       |
+| Interfaz con hardware            | RealSense SDK. Manejo automático de colas. rs_frame.                                                                                                      | Libusb. Manejo manual de memoria. Protocolo desconocido.                                                 |
 <!-- #endif -->

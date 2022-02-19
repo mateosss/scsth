@@ -55,6 +55,16 @@
 % wanted to preserve the bibliography section style. Finding a csl file that did
 % that was hard so I went with the --biblatex flag.
 
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
 
 
 \usepackage{amsthm}
@@ -79,6 +89,8 @@
 \Crefname{subsection}{Sección}{Secciones}
 \crefname{listing}{fragmento}{fragmentos}
 \Crefname{listing}{Fragmento}{Fragmentos}
+\crefname{table}{tabla}{tablas}
+\Crefname{table}{Tabla}{Tablas}
 
 % This needs to be after loading cleveref
 \newtheorem{theorem}{Teorema}[chapter]
@@ -177,8 +189,228 @@ utilizados de referencia a lo largo del escrito.}
 \hypertarget{preliminares}{%
 \part{Preliminares}\label{preliminares}}
 
-\hypertarget{introducciuxf3n-todo}{%
-\chapter{Introducción (TODO)}\label{introducciuxf3n-todo}}
+\hypertarget{introducciuxf3n}{%
+\chapter{Introducción}\label{introducciuxf3n}}
+
+\hypertarget{localizaciuxf3n-en-xr}{%
+\section{Localización en XR}\label{localizaciuxf3n-en-xr}}
+
+Los sistemas de \emph{realidad virtual} y \emph{realidad aumentada}, o
+\emph{VR} y \emph{AR} respectivamente por sus siglas en inglés, intentan
+valerse de nuestras formas usuales de interactuar con el mundo que nos
+rodea, para así generar simulaciones con características muy
+particulares y difíciles de obtener de otra forma.
+
+En el caso de VR uno usualmente tiene cascos con pantallas o, en inglés,
+\emph{head mounted displays (HMD)}, y algún tipo de controles manejados
+con ambas manos. Estos permiten aplicaciones con un alto nivel de
+inmersión. La característica de poder adentrarse profundamente en la
+simulación son deseadas para fines que varían desde el entretenimiento,
+generalmente en forma de videojuegos, hasta el entrenamiento para
+situaciones críticas, como lo pueden ser operaciones médicas o la
+navegación de aeronaves. Por el lado de AR, se suele pensar en
+dispositivos que permiten agregar o ``aumentar'' lo que uno ve con
+información adicional. Estos pueden ser celulares con cámaras o incluso
+lentes con pantallas transparentes que superponen información 2D o
+modelos 3D sobre la escena real. Además existen otros términos como
+\emph{realidad mixta} (\emph{MR}) que intentan hacer referencia a los
+distintos matices en los que la realidad puede ser combinada con la
+simulación; es común utilizar el término \emph{XR} para englobar a este
+espectro de sistemas, a veces también referido como \emph{realidad
+extendida}. En general, todos ellos comparten problemas similares que
+son propios de la percepción humana y están relacionados con nuestra
+psicología y fisiología \marginnote{%\
+Al considerar sistemas de VR deben tenerse en cuenta, además de los desafíos
+de ingeniería, los problemas propios de comprender como nuestra percepción
+afecta lo que experimentamos. Lograr entender estos procesos cognitivos lo suficiente
+como para valernos de ellos a la hora de diseñar sistemas de XR es fundamental
+para obtener experiencias inmersivas. Esto puede pensarse como un trabajo de
+``ingeniería inversa'' sobre nuestra propia biología \autocite{lavalleVirtualReality}.
+}.
+
+Para producir experiencias de XR, es necesario coordinar un gran número
+de sistemas internos que se encuentran a lo largo del hardware y del
+software para XR. Uno de los problemas fundamentales y particularmente
+complicados en XR es el de la \emph{localización} o \emph{tracking};
+esta es la capacidad del sistema de identificar la posición y
+orientación del dispositivo XR, su \emph{pose}, en el entorno para poder
+reflejarla en la experiencia simulada. En este trabajo nos enfocaremos
+en el problema de localización. Para una lectura más comprensiva sobre
+el resto de los problemas a los que XR se enfrenta, y en particular VR,
+se recomienda el trabajo de \textcite{lavalleVirtualReality}.
+
+Hay muchas formas de encarar el problema de localización y en general
+todas requieren del uso inteligente de sensores físicos, ya sean
+mecánicos, inerciales, magnéticos, ópticos, o incluso acústicos
+\autocite{welchMotionTrackingNo2002}. Todos estos métodos de tracking
+comparten un problema en común: los sensores son imperfectos y sus
+mediciones son \emph{ruidosas}. Tomemos por ejemplo uno de los paquetes
+de sensores más comúnmente utilizados en esta área, una \emph{unidad de
+medición inercial} o \emph{IMU} por sus siglas en inglés. Estas integran
+\emph{giroscopios} para la medición de velocidad angular,
+\emph{acelerómetros} para la aceleración lineal, y algunas veces también
+incluyen \emph{magnetómetros}. En teoría, si sus mediciones fueran
+perfectas, una IMU debería proveer suficiente información para
+determinar la pose en el espacio de un dispositivo que la contenga. Pero
+incluso las IMU de mayor calidad acumulan tanto ruido que la integración
+de sus mediciones durante cortos períodos de tiempo devuelve poses que
+tienen un error de cientos de metros, ver
+\Cref{tbl:imu-accumulated-error}. Para contrarrestar la naturaleza
+imperfecta de sensores físicos como estos, los enfoques más exitosos de
+localización emplean una combinación de múltiples sensores junto a
+algoritmos de fusión ingeniosos capaces de integrar tipos de muestras
+tremendamente distintos en una estimación de la pose que es
+suficientemente buena.
+
+\begin{longtable}[]{@{}llllll@{}}
+\caption{\label{tbl:imu-accumulated-error} Error acumulado luego de
+cierto tiempo de integrar mediciones de IMU de distinta calidad. Vale
+aclarar que en dispositivos XR las IMU utilizadas son del tipo
+\emph{consumidor} por su menor costo. Datos de \autocite[secc
+3.3]{InertialNavigationPrimer}.}\tabularnewline
+\toprule
+\textbf{Categoría / Tiempo} & \textbf{1 s} & \textbf{10 s} & \textbf{60
+s} & \textbf{10 min} & \textbf{1 hr} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Categoría / Tiempo} & \textbf{1 s} & \textbf{10 s} & \textbf{60
+s} & \textbf{10 min} & \textbf{1 hr} \\
+\midrule
+\endhead
+Consumidor & 6 cm & 6.5 m & 400 m & 200 km & 39.000 km \\
+Industrial & 6 mm & 0.7 m & 40 m & 20 km & 3.900 km \\
+Táctico & 1 mm & 8 cm & 5 m & 2 km & 400 km \\
+Navegación & \textless1 mm & 1 mm & 50 cm & 100 m & 10 km \\
+\bottomrule
+\end{longtable}
+
+En años recientes, la llamada localización \emph{visual-inercial (VI)}
+ha cobrado gran popularidad en el ecosistema de XR. Al emplear cámaras,
+usualmente al menos dos, junto a una IMU dentro de un dispositivo XR
+(p.~ej. un HMD o un celular). La localización VI estima la pose del
+agente haciendo que el mismo dispositivo ``mire'' hacia su entorno para
+ganar entendimiento del mismo. Uno de los principales beneficios de este
+tipo de tracking es que tener todos los sensores empaquetados dentro del
+dispositivo resulta muy conveniente para el usuario, ya que no necesita
+colocar ni configurar ningún tipo de sensor externo en su entorno. Este
+tipo de localización para aplicaciones de XR se consideraba inviable
+hasta hace un poco más de una década, pero avances en la capacidad de
+cómputo y en las técnicas de fusión han hecho posible que este ya no sea
+el caso.
+
+Ya existen dispositivos XR que emplean localización visual-inercial de
+forma exitosa en productos comerciales como el \emph{Meta
+Quest}\footnote{\url{https://www.oculus.com/quest-2/}}, los cascos
+\emph{Windows Mixed Reality}\footnote{\url{https://www.microsoft.com/en-us/mixed-reality/windows-mixed-reality}}
+o incluso los SDK \emph{ARCore}\footnote{\url{https://developers.google.com/ar}}
+y \emph{ARKit}\footnote{\url{https://developer.apple.com/augmented-reality/arkit/}}
+utilizados en celulares inteligentes. No obstante, todas estas
+soluciones son propietarias, por lo tanto no hay manera de mejorarlos,
+reusarlos en nuevos proyectos o productos, o incluso aprender de su
+implementación a menos que se adquieran licencias especiales de sus
+fabricantes.
+
+\hypertarget{slam-y-vio-para-localizaciuxf3n-visual-inercial}{%
+\section{SLAM y VIO para localización
+visual-inercial}\label{slam-y-vio-para-localizaciuxf3n-visual-inercial}}
+
+Afortunadamente, el área académica en navegación visual-inercial ha
+experimentado un gran desarrollo en estas últimas décadas. No solo es un
+problema central en áreas como las de robótica, sino que además es
+atractiva por combinar una diversa cantidad de áreas como visión por
+computadora, fusión de sensores, optimización, estimación
+probabilística, entre otras. Esta ola de investigación ha dado lugar a
+una gran cantidad de implementaciones de software libre, con distintos
+grados de rendimiento, robustez, precisión, aplicaciones, facilidad de
+uso, entre otras propiedades de interés. Recursos como
+\url{http://openslam.org} y estudios como
+\autocite{servieresVisualVisualInertialSLAM2021a} o
+\autocite{taketomiVisualSLAMAlgorithms2017a} pueden listar docenas de
+sistemas disponibles para considerar. Más aún, cada año nuevos sistemas
+aparecen mientras otros dejan de ser mantenidos. Seguir los avances del
+área puede ser desafiante, pero esto es una consecuencia de su
+desarrollo tan activo.
+
+Específicamente, en este trabajo trataremos con sistemas de
+\emph{localización y mapeo simultáneo (SLAM)} mediante sensores
+visuales-inerciales (VI-SLAM). Como su nombre lo indica, SLAM intenta
+construir un mapa del entorno en el que el agente XR se encuentra y
+localizarlo en el mismo de forma simultánea; usualmente, sin contar con
+información a priori sobre su pose ni el entorno en el que se encuentra.
+Hay múltiples maneras de implementar SLAM y VI-SLAM, pero los sistemas
+en los que nos concentraremos en este trabajo usan mediciones de la IMU
+a altas frecuencias (p.~ej. 200 hz) que miden el \emph{``movimiento
+interno''} que el agente experimenta, también conocidas como mediciones
+\emph{propioceptivas}, junto a muestras más lentas (p.~ej. 20 hz) de
+cámaras, usualmente un par de ellas, que dan información acerca de como
+el entorno está cambiando alrededor del agente cuando este se mueve.
+Estas son llamadas mediciones \emph{exteroceptivas} y ayudan a corregir
+las mediciones ruidosas de la IMU.
+
+El mapa que se forma en VI-SLAM suele crearse a partir de \emph{puntos
+de interés} (\emph{landmarks}) en la escena que fueron triangulados y
+detectados durante múltiples muestras como \emph{esquinas} o
+\emph{features}\marginnote{%\
+La terminología para definir puntos de interés es un poco confusa. Intentaremos
+esclarecer en capítulos posteriores el significado de términos como keypoint,
+landmark, feature, corner, etc. que algunas veces pueden parecer
+intercambiables en la literatura de visión por computadora.
+} en las imágenes de las cámaras. En el mejor de los casos el mapa
+formado en SLAM y las actualizaciones que este sufre pueden durar la
+corrida entera o incluso ser guardados en almacenamiento persistente, y
+esto ayuda al dispositivo a entender cuando está viendo un lugar que ya
+vio anteriormente. Sin embargo, hay soluciones más sencillas que solo
+mantienen el mapa por una corta ventana de tiempo. A estos sistemas se
+los suele denominar de \emph{odometría visual-inercial (VIO)}, y suelen
+presentar mejor desempeño que soluciones completas de SLAM a costa de la
+precisión en la trayectoria estimada.
+
+\hypertarget{integraciuxf3n-en-monado}{%
+\section{Integración en Monado}\label{integraciuxf3n-en-monado}}
+
+\emph{Monado}\footnote{\url{https://monado.dev}} es una implementación
+de código libre del estándar abierto \emph{OpenXR}
+\autocite{thekhronosgroupinc.OpenXRSpecification} que intenta unificar
+la forma en la que las aplicaciones interactúan con el hardware XR. Si
+bien entenderemos mejor estos términos más adelante en la
+\Cref{sec:thesis-context}, basta con saber que OpenXR es una
+especificación desarrollada por el \emph{Khronos Group}\footnote{\url{https://www.khronos.org}},
+un consorcio abierto sin fines de lucro integrado por distintos
+participantes de la industria. Monado fue desarrollado y es mantenido
+por \emph{Collabora}\footnote{\url{https://www.collabora.com}}, una
+consultora especializada en proyectos de código abierto, la cual además
+participa activamente en la especificación de OpenXR desde sus inicios.
+Este trabajo fue realizado en el marco de una pasantía con Collabora.
+
+Monado, además de implementar la especificación de OpenXR, provee varias
+herramientas y funcionalidades para XR, además de controladores para
+dispositivos populares. El proyecto, antes de este trabajo, contaba con
+un puñado de métodos de tracking, pero la localización visual-inercial
+por SLAM o VIO era una característica faltante.
+
+Este trabajo, entonces, resultó en la integración de tres sistemas de
+SLAM/VIO de código libre con Monado. En particular, los sistemas
+integrados fueron Kimera-VIO
+\autocite{rosinolKimeraOpenSourceLibrary2020}, ORB-SLAM3
+\autocite{camposORBSLAM3AccurateOpenSource2021} y Basalt
+\autocite{usenkoBasaltVisualInertialMapping2020}. Además, se adaptaron
+controladores para poder utilizar dispositivos con este tipo de tracking
+en Monado, incluyendo cascos de la plataforma Windows Mixed Reality.
+Estos, según el mejor entendimiento del autor, son ahora los primeros
+cascos comerciales capaces de ser localizados por SLAM/VIO en una
+plataforma basada completamente en código libre.
+
+\hypertarget{estructura-de-la-tesis-todo}{%
+\section{Estructura de la Tesis
+(TODO)}\label{estructura-de-la-tesis-todo}}
+
+\begin{lstlisting}
+[TODO] En esta sección detallaría lo que se va a ver en cada capítulo.
+
+La planeo escribir después de terminar de acomodarlos. Ahora tengo
+algunos de muy pocas páginas (1 o 2) y eso no tiene mucho sentido.
+\end{lstlisting}
 
 \hypertarget{fundamentos}{%
 \chapter{Fundamentos}\label{fundamentos}}
@@ -1768,7 +2000,7 @@ todavía para añadir información a su posición, si no que simplemente se
 añaden las observaciones para uso futuro.
 
 \hypertarget{optimizaciuxf3n-y-marginalizaciuxf3n-todo}{%
-\subsection{Optimización y Marginalización
+\subsection{Optimización y marginalización
 (TODO)}\label{optimizaciuxf3n-y-marginalizaciuxf3n-todo}}
 
 \cleardoublepage
@@ -1781,8 +2013,8 @@ problemáticas que son propias de la localización en tiempo real aplicada a XR.
 \hypertarget{contribuciones}{%
 \part{Contribuciones}\label{contribuciones}}
 
-\hypertarget{contexto}{%
-\chapter{Contexto}\label{contexto}}
+\hypertarget{sec:thesis-context}{%
+\chapter{Contexto}\label{sec:thesis-context}}
 
 Por su naturaleza, el área de XR involucra una gran cantidad de partes
 interconectadas y de dispositivos muy diversos con configuraciones
@@ -1810,21 +2042,19 @@ OpenXR por su parte, provee una API estandarizada con soporte para
 extensiones de fabricante que permiten añadir características peculiares
 de ser necesitadas por algún fabricante en particular. El estándar ha
 tenido un gran éxito al haber sido adoptado por una gran cantidad de
-fabricantes (Fig. \figref{fig:openxr-companies}) como reemplazo a sus
-antiguos SDK propietarios. De esta forma, los motores de juego y
-desarrolladores solo necesitan interactuar con una única API (Fig.
-\figref{fig:openxr}) que además les permite aprovechar cualquier
-característica peculiar ofrecida por alguna extensión.
+fabricantes \footnote{Compañías respaldando públicamente el estándar
+  OpenXR:
+  \url{https://www.khronos.org/assets/uploads/apis/2019-openxr-logo-field_1_15.jpg}}
+como reemplazo a sus antiguos SDK propietarios. De esta forma, los
+motores de juego y desarrolladores solo necesitan interactuar con una
+única API (Fig. \figref{fig:openxr}) que además les permite aprovechar
+cualquier característica peculiar ofrecida por alguna extensión.
 
 \fig{fig:openxr}{source/figures/openxr.png}{OpenXR}{%
 \bold{Antes de OpenXR} (izquierda) aplicaciones y motores necesitaban código
 propietario separado para cada dispositivo en el mercado. \bold{OpenXR} (derecha)
 provee una única API multiplataforma de alta performance entre las aplicaciones
 y todos los dispositivos compatibles
-}
-
-\fig{fig:openxr-companies}{source/figures/openxr-companies.png}{Compañías OpenXR}{%
-Compañías respaldando públicamente el estándar OpenXR
 }
 
 OpenXR es exclusivamente la \href{TODO}{especificación} de una API y por
@@ -3048,7 +3278,7 @@ capaces de utilizar los valores de fábrica. Para esto es vital que los
 sistemas de SLAM soporten los mismos modelos de calibración para los que
 el fabricante especificó los valores\marginnote{%\
 Mientras que en la práctica es conveniente recalibrar con modelos soportados,
-podría resultar razonable estudiar expresiones analíticas que "traduzcan",
+podría resultar razonable estudiar expresiones analíticas que ``traduzcan'',
 en alguna forma significativa, parámetros de un modelo a otro.
 }. De lo contrario se necesitarán correcciones que usualmente terminan
 siendo mucho más costosas que si los sistemas soportaran los modelos
@@ -3305,11 +3535,20 @@ los distintos sistemas externos integrados en este trabajo.
 \section{Windows Mixed Reality
 (TODO)}\label{windows-mixed-reality-todo}}
 
-\cleardoublepage
+\hypertarget{otras-contribuciones}{%
+\chapter{Otras contribuciones}\label{otras-contribuciones}}
 
-\ctparttext{Para cerrar este trabajo presentaremos algunos resultados que
+\hypertarget{utilidades-euroc-todo}{%
+\section{Utilidades EuRoC (TODO)}\label{utilidades-euroc-todo}}
+
+\hypertarget{modelo-radial-tangencial-todo}{%
+\section{Modelo radial-tangencial
+(TODO)}\label{modelo-radial-tangencial-todo}}
+
+\cleardoublepage
+\ctparttext{Para cerrar presentaremos algunos resultados que
 intentan describir el rendimiento y la precisión logrados en la implementación
-actual. Y concluiremos con una revisión del trabajo realizado y posibles
+actual. Concluiremos con una revisión general de los temas tratados y posibles
 líneas de trabajo a considerar para el futuro.}
 
 \hypertarget{conclusiones}{%

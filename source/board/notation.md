@@ -7,6 +7,10 @@ La bibliografía de este trabajo está escrita mayormente en inglés, y es por e
 que muchas veces será más práctico utilizar el término en este idioma, aunque
 en varias ocasiones intentará brindar una traducción adecuada en español.
 
+<!-- TODO@high@benja@print: necesito dejar 2cm para el anillado, como esta ahora
+se va a comer algunas letras de las marginnotes. Debería ser capaz de tirar todo
+un poco para el lado donde no está el anillado -->
+
 <!-- TODO@nico: Tratar de no usar parentesis en el texto -->
 <!-- TODO@end: las listas of figures/framents/etc estan andando? -->
 

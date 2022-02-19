@@ -321,6 +321,8 @@ pre-integrarlas es un proceso que intenta resumir las muestras entre los cuadros
 a una única pseudo-muestra que sucede en los mismos instantes de tiempo que los
 cuadros como se muestra en el ejemplo de \figref{fig:sample-frequencies}.
 
+<!-- TODO@high@fig: benja recomendó hacer el grafico más grande y la verdad que sí, capaz ponerlo hasta 0.3s -->
+
 \fig{fig:sample-frequencies}{source/figures/sample-frequencies.pdf}{%
 Ejemplo de frecuencias}{%
 Frecuencia de distintos eventos para un ejemplo con cámaras a 30fps y muestras
@@ -549,3 +551,7 @@ para uso futuro.
 <!-- TODO@future: punto de mejora para basalt: usar dogleg minimization en vez de levenberg-marquardt. No se si vale la pena mencionarlo -->
 <!-- TODO@question: question for basalt: why are they not using gtsam/g2o/ceres for the solvers? -->
 <!-- TODO@future: parallelization/vectorization of gauss newton seems very easy, levenberg marquardt not so much -->
+
+#### Optimización y marginalización (TODO)
+
+<!-- TODO@high -->

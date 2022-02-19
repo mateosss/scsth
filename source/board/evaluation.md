@@ -20,3 +20,5 @@ post v1.0, orb-slam3 localization only mode, kimera (actualizarlo con
 march=native). Comparar rendimiento con análisis de los tiempos dados por
 perfetto. Comparar precisión con colmap. Datasets facil-medio-dificil para d455
 y odyssey.
+
+<!-- TODO: estaría bueno aclarar que tambien hay configuraciones que andan en monocular, mono-imu, stereo-only, etc -->
