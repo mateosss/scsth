@@ -80,6 +80,7 @@
 % reduce space between listing caption and actual listing, taken from:
 % https://stackoverflow.com/questions/2318598/how-to-reduce-the-seperation-from-other-text-using-latex-minted
 \setlength\partopsep{-\topsep}
+\usepackage{mdframed}
 \usepackage{placeins}
 \usepackage{algorithm}
 \floatname{algorithm}{Algoritmo}
@@ -405,12 +406,11 @@ plataforma basada completamente en código libre.
 \section{Estructura de la Tesis
 (TODO)}\label{estructura-de-la-tesis-todo}}
 
-\begin{lstlisting}
-[TODO] En esta sección detallaría lo que se va a ver en cada capítulo.
-
-La planeo escribir después de terminar de acomodarlos. Ahora tengo
-algunos de muy pocas páginas (1 o 2) y eso no tiene mucho sentido.
-\end{lstlisting}
+\begin{mdframed}[backgroundcolor=shadecolor]
+TODO: En esta sección detallaría lo que se va a ver en cada capítulo. La planeo
+escribir después de terminar de acomodarlos. Ahora tengo algunos de dos páginas
+mientras que hay otros de 30 y eso no tiene mucho sentido.
+\end{mdframed}
 
 \hypertarget{fundamentos}{%
 \chapter{Fundamentos}\label{fundamentos}}

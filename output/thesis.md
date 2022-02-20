@@ -209,12 +209,11 @@ libre.
 
 ### Estructura de la Tesis (TODO)
 
-```none
-[TODO] En esta sección detallaría lo que se va a ver en cada capítulo.
-
-La planeo escribir después de terminar de acomodarlos. Ahora tengo
-algunos de muy pocas páginas (1 o 2) y eso no tiene mucho sentido.
-```
+\begin{mdframed}[backgroundcolor=shadecolor]
+TODO: En esta sección detallaría lo que se va a ver en cada capítulo. La planeo
+escribir después de terminar de acomodarlos. Ahora tengo algunos de dos páginas
+mientras que hay otros de 30 y eso no tiene mucho sentido.
+\end{mdframed}
 
 <!--
 Contexto/motivación (mencionar algo de las comunidades con las que trabajé,
