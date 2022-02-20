@@ -21,7 +21,7 @@ Arreglar problemas de imagenes con copyright
 - [ ] NO: basalt double sphere REHACER
 - [ ] NO: basalt euroc mipmap REHACER
 - [ ] NO: openxr diagram, REHACER (https://www.khronos.org/legal/terms-of-use/)
-- [ ] NO: openxr companies, LINKEAR (https://www.khronos.org/legal/terms-of-use/)
+- [x] NO: openxr companies, LINKEAR (https://www.khronos.org/legal/terms-of-use/)
 -->
 
 <!-- TODO@style: there is this \ac acronym commands in the classictemplate thesis that I could've used -->

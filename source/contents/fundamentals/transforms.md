@@ -18,7 +18,7 @@ sistema se tome como referencia.
 }
 
 <!-- #define MN_RIGID_BODY_MOVEMENT %\
-No profundizaremos en la definición formal de este concepto pero, intuitivamente,
+No profundizaremos en la definición formal de este concepto, pero intuitivamente,
 son transformaciones que al aplicarlas sobre un conjunto de puntos, preservan su volumen.
 Esto implica que preservan la norma y el producto cruz.
 -->
@@ -189,7 +189,7 @@ La **composición de rotaciones** queda bien definida por la multiplicación de
 cuaterniones. Es decir, dados los cuaterniones $q$ y $p$, el cuaternión $pq$
 describe la rotación que se produce al aplicar primero $q$ y luego $p$.
 
-La **rotación identidad** o neutra, una rotación que "no rota", coincide con $1
+La **rotación identidad** o neutra, una rotación que “no rota”, coincide con $1
 \in \R$, es decir no tiene parte imaginaria, es $1 + 0i + 0j + 0k$.
 
 El **inverso multiplicativo** de un cuaternión $q^{-1}$ al
@@ -218,9 +218,6 @@ manera:
 slerp(p, q, t) = p(p^{-1}q)^t
 \end{align}
 
-[^slerp-derivation]: La derivación de la fórmula de interpolación esférica para
-cuaterniones se puede encontrar en @shoemakeAnimatingRotationQuaternion1985
-
 ##### Matrices de rotación {#sec:rotation-matrices}
 
 Las rotaciones pueden representarse también como una matriz $R \in \R^{3x3}$ con
@@ -244,14 +241,14 @@ o sea preserva volúmenes.
 
 <!-- #define MN_IMPROPER_ROTATION %\
 Las transformaciones representadas por $R$ con $det(R) = -1$ suelen llamarse
-rotaciones impropias o rotorreflexiones ya que además de rotar, permiten la reflexión
+rotaciones impropias o rotorreflexiones, ya que además de rotar, permiten la reflexión
 de vectores en $\R^3$.
 -->
 
 Las matrices ortonormales pueden tener determinante $\pm 1$. Llamaremos **matrices de
 rotación** solo a las $R$ tal que $det(R) = +1$
 \marginnote{MN_DETERMINANT_INTUITION} \marginnote{MN_IMPROPER_ROTATION}. El
-conjunto  estas matrices se denomina $SO(3)$ y veremos en la sección siguiente
+conjunto de estas matrices se denomina $SO(3)$ y veremos en la sección siguiente
 el por qué de este nombre. Estas matrices presentan propiedades agradables para ser manipuladas como rotaciones
 en el álgebra matricial usual:
 
@@ -319,7 +316,7 @@ G$ tal que $\forall a, b, c \in G$:
 
 Es posible empezar a intuir que _tanto las rotaciones como las transformaciones_
 que describimos al principio del capítulo _coinciden con esta idea de grupo_.
-"Mezclar" transformaciones debería dar como resultado otra transformación
+“Mezclar” transformaciones debería dar como resultado otra transformación
 (cerrada) y no debería importar el orden de mezcla (asociativa). Debería existir
 una transformación neutra que no haga nada, y una transformación inversa que
 deshagan la transformación original. Si además pudiésemos describir estas
@@ -336,7 +333,7 @@ $GL(n)$. Es decir:
 
 Definition
 : El subconjunto de matrices de GL(n) con determinante 1 se denomina el Grupo
-Linea Especial $SL(n)$. Es decir:
+Lineal Especial $SL(n)$. Es decir:
 \begin{align}
   SL(n) = \{ A \in GL(n) : det(A) = 1 \}
 \end{align}
@@ -393,7 +390,7 @@ presentamos allí. Continuemos ahora con las transformaciones.
 ##### Transformaciones como grupos
 
 Definition
-: Uns transformación lineal afín $L : \R^n \rightarrow \R^n$ es tal que existe $B
+: Una transformación lineal afín $L : \R^n \rightarrow \R^n$ es tal que existe $B
 \in GL(n)$ y $b \in \R^n$ que determinan $L(x) = Bx + b$.
 
 Definition
@@ -402,7 +399,7 @@ $A(n)$.
 
 En general, una transformación afín $L(x) = Bx + b \in A(n)$ no es una transformación lineal a menos
 que $b = 0$. Introduciremos las llamadas _coordenadas homogéneas_ para expresar
-transformaciones afínes en $A(n)$ como transformaciones lineales en $GL(n + 1)$.
+transformaciones afines en $A(n)$ como transformaciones lineales en $GL(n + 1)$.
 Extenderemos $L$ de la siguiente manera:
 \begin{align}
 L': \R^{n+1} &\rightarrow \R^{n+1} \\
@@ -415,7 +412,7 @@ B & b \\
 = \begin{bmatrix} L(x) \\ 1 \end{bmatrix}
 \end{align}
 
-Notar que hay un isomorfismo entre $L$ y $L'$ ya que $0$ y $1$ son constantes y
+Notar que hay un isomorfismo entre $L$ y $L'$, ya que $0$ y $1$ son constantes y
 por esto diremos que son la misma transformación. La matriz $\begin{bmatrix} B &
 b \\ 0 & 1 \end{bmatrix}$ se dice una matriz afín y pertenece a $GL(n + 1)$.
 Tenemos entonces que las matrices afines forman un subgrupo de $GL(n + 1)$
@@ -440,7 +437,7 @@ Grupo Euclídeo Especial $SE(n)$, es decir:
   \R^{(n+1) \times (n+1)} : R \in SO(n), t \in \R^n  \end{Bmatrix}
 \end{align}
 
-Y es este el grupo que buscábamos ya que $SE(3)$ es capaz de representar las
+Y es este el grupo que buscábamos, ya que $SE(3)$ es capaz de representar las
 transformaciones de cuerpo rígido en $\R^3$ que necesitábamos. Tenemos entonces
 que representaremos rotaciones con matrices cuadradas $3x3$ $R \in SO(3)$ y
 representaremos transformaciones con matrices cuadradas $4x4$ $T \in SE(3)$.
@@ -507,7 +504,7 @@ es decir:
 \so3 = \{ \hat{v} \in \RR3 : v \in \R^3 \}
 \end{align}
 
-Veremos a continuación cual es su relación con $SO(3)$ y el por qué de su nombre.
+Veremos a continuación cuál es su relación con $SO(3)$ y el por qué de su nombre.
 
 ##### Rotaciones infinitesimales
 
@@ -569,11 +566,11 @@ ellos.
 
 Luego de haber presentado estas ideas fundamentales, a partir de aquí
 procederemos a dar una _vista general_ de la definición de dos operadores, $exp$
-y $log$ que nos permiten pasar del grupo al álgebra de Lie y viceversa. Luego
-también veremos rapidamente como estos conceptos se traducen de forma muy
-similar para las transformaciones en $\R^3$. Al final del capítulo listaremos
-algunas referencias para el lector que quiera profundizar en los conceptos y las
-derivaciones.
+y $log$ que nos permiten pasar del grupo al álgebra de Lie y viceversa. Más
+adelante, también veremos rápidamente como estos conceptos se traducen de forma
+muy similar para las transformaciones en $\R^3$. Al final del capítulo
+listaremos algunas referencias para el lector que quiera profundizar en los
+conceptos y las derivaciones.
 
 \bigbreak
 
@@ -609,7 +606,7 @@ operador $exp$ con $R = exp(\hat{w})$_. Más aún, $\so3$ contiene todos estos
 vectores ángulo-axiales.
 
 El operador $exp : \so3 \rightarrow SO(3)$ se denomina _mapa o aplicación exponencial_ y su inversa es el
-_mapa logarítimico_ $log : SO(3) \rightarrow \so3$. Este, dado una matriz de
+_mapa logarítmico_ $log : SO(3) \rightarrow \so3$. Este, dado una matriz de
 rotación $R \in SO(3)$ devuelve $\hat{w} \in \so3$ tal que $R = exp(\hat{w})$
 computando $w$ de la siguiente manera [@eadeDerivativeExponentialMap]:
 \begin{align}
@@ -683,7 +680,7 @@ vector de giro $\xi$ de seis dimensiones en donde:
 
 \bigbreak
 
-Finalmente, tenemos el mapa exponencial y mapa logarítimico entre $SE(3)$ y
+Finalmente, tenemos el mapa exponencial y mapa logarítmico entre $SE(3)$ y
 $\se3$. Similar a $SO(3)$, cualquier transformación $T \in SE(3)$ va a poder ser
 representada por un vector de giro $\xi$ con $T = exp(\hat{\xi})$.
 
@@ -727,7 +724,7 @@ Las representaciones dadas en las álgebras de Lie no tienen este problema.
 Tenemos ahora una mirada suficientemente formal como para ser capaces de
 utilizar y comprender las herramientas usualmente utilizadas en sistemas que
 modelan rotaciones y transformaciones en dos y tres dimensiones por computadora.
-Nos tomamos el trabajo de entender varias formalizaciones para las rotaciones ya
+Nos tomamos el trabajo de entender varias formalizaciones para las rotaciones, ya
 que todas ellas aparecen de una u otra forma en el pipeline que se desarrolla en
 este trabajo. Las formalizaciones infinitesimales que hemos presentado en la
 última subsección, y sus representaciones en el álgebra de Lie, permiten además

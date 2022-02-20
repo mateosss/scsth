@@ -95,6 +95,23 @@ siguiente observación:
 Con estas herramientas, estamos en posición de presentar la solución directa al
 problema de los cuadrados mínimos lineales.
 
+<!-- #define MN_NORMAL_EQUATIONS %\
+La expresión $A^T A x = A^T b$ suele ser referida como las
+“ecuaciones normales”. La derivación de la solución de cuadrados mínimos
+presentada en este trabajo no es la única. De hecho, es común encarar el
+problema mediante cálculo diferencial. En ese contexto, las ecuaciones normales
+surgen naturalmente a la hora de optimizar $E(x)$ igualando su gradiente a $0$.
+Para una demostración mediante cálculo referirse a
+\textcite{nocedalNumericalOptimization2006}, cap. 10.
+-->
+
+<!-- #define MN_ORTHOGONALITY_PRINCIPLE %\
+La expresión $A^T (A\hat{x} - b) = 0$ es interesante,
+ya que muestra que las columnas de $A$ son ortogonales al residual óptimo
+$A\hat{x} - b$ al ser su producto interno $0$. Esto suele llamarse el “principio
+de ortogonalidad”.
+-->
+
 Theorem thm:linleastsquaresol
 : $\hat{x} = A^{\dagger} b$ es **la** solución del problema de los cuadrados mínimos
 lineales. Es decir $\forall x \in \R^n: E(\hat{x}) = \| A\hat{x} - b \| ^ 2
@@ -108,8 +125,9 @@ Proof
   &\Leftrightarrow A^T A \hat{x} = A^T b \\
   &\Leftrightarrow A^T (A \hat{x} - b) = 0 \label{eq:ataxmbis0}
 \end{align}
-Las últimas dos ecuaciones reciben nombres particulares [^normalequations]
-[^orthogonalityprinciple]. Veamos ahora para un $x \in \R^n$ cualquiera.
+Las últimas dos ecuaciones reciben nombres particulares
+\marginnote{MN_NORMAL_EQUATIONS} \marginnote{MN_ORTHOGONALITY_PRINCIPLE}.
+Veamos ahora para un $x \in \R^n$ cualquiera.
 \begin{align}
   \| Ax - b \|^2 &= \| (Ax - A\hat{x}) + (A\hat{x} - b) \|^2 \\
   \text{(\cref{rmk:sqnormofsum})}\quad
@@ -121,22 +139,9 @@ Las últimas dos ecuaciones reciben nombres particulares [^normalequations]
   &= \| A(x - \hat{x}) \|^2 +  \| A\hat{x} - b \|^2 \\
   &\therefore \|Ax-b\|^2 \geq \|A\hat{x}-b\|^2
 \end{align}
-Más aún, esta solución es única ya que la igualdad en la última ecuación solo se
+Más aún, esta solución es única, ya que la igualdad en la última ecuación solo se
 da si $\|A(x-\hat{x})\|^2 = 0$, y como $A$ es no-singular, esto solo pasa
 cuando $x=\hat{x}$.
-
-[^normalequations]: La expresión $A^T A x = A^T b$ suele ser referida como las
-_ecuaciones normales_. La derivación de la solución de cuadrados mínimos
-presentada en este trabajo no es la única. De hecho, es común encarar el
-problema mediante cálculo diferencial. En ese contexto, las ecuaciones normales
-surgen naturalmente a la hora de optimizar $E(x)$ igualando su gradiente a $0$.
-Para una demostración mediante cálculo referirse a
-@nocedalNumericalOptimization2006, cap. 10.
-
-[^orthogonalityprinciple]: La expresión $A^T (A\hat{x} - b) = 0$ es interesante,
-ya que muestra que las columnas de $A$ son ortogonales al residual óptimo
-$A\hat{x} - b$ al ser su producto interno $0$. Esto suele llamarse el _principio
-de ortogonalidad_.
 
 #### Cuadrados mínimos no lineales
 
@@ -194,8 +199,8 @@ solución del problema no-lineal. Es decir, como sabemos que $x^{(k+1)}$ minimiz
 a $f^{(k)}$, esperaríamos que sea una buena aproximación al mínimo de $f$
 sabiendo que comenzamos el algoritmo cerca de su mínimo.
 
-**Linealización**. Definimos $f^{(k)}(x)$ como la expansión de Taylor de $f(x)$
-centrada en $x^{(k)}$. Es decir:
+**Linealización**. Definimos $f^{(k)}(x)$ como la expansión de Taylor de primer
+orden de $f(x)$ centrada en $x^{(k)}$. Es decir:
 \begin{align}
 f^{(k)}(x) = f(x^{(k)}) + A(x^{(k)}) (x - x^{(k)})
 \end{align}
@@ -221,7 +226,7 @@ f^{(k)}(x) = A_k x - (A_k x^{(k)} - f(x^{(k)}))
 f(x) \| ^ 2$, lo aproximamos con el mínimo (y próximo iterando) $x^{(k+1 )}$ de
 $\| f^{(k)}(x) \| ^ 2$ pero como $f^{(k)}$ es afín, esto se reduce a buscar la
 solución del problema de cuadrados mínimos _lineales_. Sabemos por
-[Teorema](#thm:linleastsquaresol) la solución exacta para este caso en base a la
+[Teorema](#thm:linleastsquaresol) la solución exacta para este caso con base en la
 matriz pseudo-inversa $A_k^{\dagger} = (A_k^T A_k)^{-1} A_k^T$.
 \begin{align}
 \| f^{(k)}(x) \| ^ 2 = \| A_k x - (A_k x^{(k)} - f(x^{(k)})) \|^2
@@ -257,11 +262,11 @@ x^{(k)} - (A_k^T A_k)^{-1} A_k^T f(x^{(k)})
 
 \end{algorithm}
 
-<!-- TODO@def: uso el término bundle adjustment -->
+<!-- TODO@high@def: uso el término bundle adjustment -->
 
 Gauss-Newton y minimización lineal con la pseudo-inversa serán de gran utilidad
 para expresar numerosos tipos de problemas de optimización. Se utilizará para
-problemas como ajustar la posición de un punto de interés tri-dimensional que es
+problemas como ajustar la posición de un punto de interés tridimensional que es
 observado por múltiples cámaras, desproyectar puntos de cámaras con modelos de
 proyección que no tienen expresiones cerradas para su inversa, incluso veremos
 que la optimización central de los sistemas de SLAM/VIO, el bundle adjustment,

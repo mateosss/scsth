@@ -126,9 +126,9 @@ agente XR se encuentra y localizarlo en el mismo de forma simultánea;
 usualmente, sin contar con información a priori sobre su pose ni el entorno en
 el que se encuentra. Hay múltiples maneras de implementar SLAM y VI-SLAM, pero
 los sistemas en los que nos concentraremos en este trabajo usan mediciones de la
-IMU a altas frecuencias (p. ej. 200 hz) que miden el _“movimiento interno”_ que
+IMU a altas frecuencias (p. ej. 200 Hz) que miden el _“movimiento interno”_ que
 el agente experimenta, también conocidas como mediciones _propioceptivas_, junto
-a muestras más lentas (p. ej. 20 hz) de cámaras, usualmente un par de ellas, que
+a muestras más lentas (p. ej. 20 Hz) de cámaras, usualmente un par de ellas, que
 dan información acerca de como el entorno está cambiando alrededor del agente
 cuando este se mueve. Estas son llamadas mediciones _exteroceptivas_ y ayudan a
 corregir las mediciones ruidosas de la IMU.

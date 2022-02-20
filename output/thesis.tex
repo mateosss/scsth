@@ -80,7 +80,7 @@
 % reduce space between listing caption and actual listing, taken from:
 % https://stackoverflow.com/questions/2318598/how-to-reduce-the-seperation-from-other-text-using-latex-minted
 \setlength\partopsep{-\topsep}
-\usepackage{mdframed}
+\usepackage{mdframed} % TODO: used in TODO notes, remove
 \usepackage{placeins}
 \usepackage{algorithm}
 \floatname{algorithm}{Algoritmo}
@@ -168,10 +168,10 @@
 %*******************************************************
 % \include{FrontBackmatter/DirtyTitlepage}
 \include{FrontBackmatter/Titlepage}
-% \include{FrontBackmatter/Titleback}
+\cleardoublepage\include{FrontBackmatter/Titleback}
 % \cleardoublepage\include{FrontBackmatter/Dedication}
 %\cleardoublepage\include{FrontBackmatter/Foreword}
-\cleardoublepage\include{FrontBackmatter/Abstract}
+\include{FrontBackmatter/Abstract}
 % \cleardoublepage\include{FrontBackmatter/Publications}
 % \cleardoublepage\include{FrontBackmatter/Acknowledgments}
 \cleardoublepage\include{FrontBackmatter/Contents}
@@ -341,9 +341,9 @@ localizarlo en el mismo de forma simultánea; usualmente, sin contar con
 información a priori sobre su pose ni el entorno en el que se encuentra.
 Hay múltiples maneras de implementar SLAM y VI-SLAM, pero los sistemas
 en los que nos concentraremos en este trabajo usan mediciones de la IMU
-a altas frecuencias (p.~ej. 200 hz) que miden el \emph{``movimiento
+a altas frecuencias (p.~ej. 200 Hz) que miden el \emph{``movimiento
 interno''} que el agente experimenta, también conocidas como mediciones
-\emph{propioceptivas}, junto a muestras más lentas (p.~ej. 20 hz) de
+\emph{propioceptivas}, junto a muestras más lentas (p.~ej. 20 Hz) de
 cámaras, usualmente un par de ellas, que dan información acerca de como
 el entorno está cambiando alrededor del agente cuando este se mueve.
 Estas son llamadas mediciones \emph{exteroceptivas} y ayudan a corregir
@@ -438,7 +438,7 @@ sistema se tome como referencia.
 
 El tipo de transformación en el que estamos interesados son los
 \emph{movimientos de cuerpo rígido}\marginnote{%\
-No profundizaremos en la definición formal de este concepto pero, intuitivamente,
+No profundizaremos en la definición formal de este concepto, pero intuitivamente,
 son transformaciones que al aplicarlas sobre un conjunto de puntos, preservan su volumen.
 Esto implica que preservan la norma y el producto cruz.
 }. Estos pueden describirse mediante \emph{traslaciones} y
@@ -670,9 +670,9 @@ transformación lineal de $R$ no escala los vectores en $\R^3$,
 o sea preserva volúmenes.
 } \marginnote{%\
 Las transformaciones representadas por $R$ con $det(R) = -1$ suelen llamarse
-rotaciones impropias o rotorreflexiones ya que además de rotar, permiten la reflexión
+rotaciones impropias o rotorreflexiones, ya que además de rotar, permiten la reflexión
 de vectores en $\R^3$.
-}. El conjunto estas matrices se denomina \(SO(3)\) y veremos en la
+}. El conjunto de estas matrices se denomina \(SO(3)\) y veremos en la
 sección siguiente el por qué de este nombre. Estas matrices presentan
 propiedades agradables para ser manipuladas como rotaciones en el
 álgebra matricial usual:
@@ -764,7 +764,7 @@ Lineal General \(GL(n)\). Es decir: \begin{align}
 \end{align}\end{definition}
 
 \begin{definition}El subconjunto de matrices de GL(n) con determinante 1
-se denomina el Grupo Linea Especial \(SL(n)\). Es decir: \begin{align}
+se denomina el Grupo Lineal Especial \(SL(n)\). Es decir: \begin{align}
   SL(n) = \{ A \in GL(n) : det(A) = 1 \}
 \end{align}\end{definition}
 
@@ -815,7 +815,7 @@ transformaciones.
 \subsubsection{Transformaciones como
 grupos}\label{transformaciones-como-grupos}}
 
-\begin{definition}Uns transformación lineal afín
+\begin{definition}Una transformación lineal afín
 \(L : \R^n \rightarrow \R^n\) es tal que existe \(B \in GL(n)\) y
 \(b \in \R^n\) que determinan \(L(x) = Bx + b\).\end{definition}
 
@@ -824,7 +824,7 @@ Afín de dimensión \(n\) \(A(n)\).\end{definition}
 
 En general, una transformación afín \(L(x) = Bx + b \in A(n)\) no es una
 transformación lineal a menos que \(b = 0\). Introduciremos las llamadas
-\emph{coordenadas homogéneas} para expresar transformaciones afínes en
+\emph{coordenadas homogéneas} para expresar transformaciones afines en
 \(A(n)\) como transformaciones lineales en \(GL(n + 1)\). Extenderemos
 \(L\) de la siguiente manera: \begin{align}
 L': \R^{n+1} &\rightarrow \R^{n+1} \\
@@ -837,7 +837,7 @@ B & b \\
 = \begin{bmatrix} L(x) \\ 1 \end{bmatrix}
 \end{align}
 
-Notar que hay un isomorfismo entre \(L\) y \(L'\) ya que \(0\) y \(1\)
+Notar que hay un isomorfismo entre \(L\) y \(L'\), ya que \(0\) y \(1\)
 son constantes y por esto diremos que son la misma transformación. La
 matriz \(\begin{bmatrix} B & b \\ 0 & 1 \end{bmatrix}\) se dice una
 matriz afín y pertenece a \(GL(n + 1)\). Tenemos entonces que las
@@ -861,7 +861,7 @@ decir: \begin{align}
   \R^{(n+1) \times (n+1)} : R \in SO(n), t \in \R^n  \end{Bmatrix}
 \end{align}\end{definition}
 
-Y es este el grupo que buscábamos ya que \(SE(3)\) es capaz de
+Y es este el grupo que buscábamos, ya que \(SE(3)\) es capaz de
 representar las transformaciones de cuerpo rígido en \(\R^3\) que
 necesitábamos. Tenemos entonces que representaremos rotaciones con
 matrices cuadradas \(3x3\) \(R \in SO(3)\) y representaremos
@@ -928,7 +928,7 @@ decir: \begin{align}
 \so3 = \{ \hat{v} \in \RR3 : v \in \R^3 \}
 \end{align}\end{definition}
 
-Veremos a continuación cual es su relación con \(SO(3)\) y el por qué de
+Veremos a continuación cuál es su relación con \(SO(3)\) y el por qué de
 su nombre.
 
 \hypertarget{rotaciones-infinitesimales}{%
@@ -987,10 +987,11 @@ realizando está ligado a ellos.
 Luego de haber presentado estas ideas fundamentales, a partir de aquí
 procederemos a dar una \emph{vista general} de la definición de dos
 operadores, \(exp\) y \(log\) que nos permiten pasar del grupo al
-álgebra de Lie y viceversa. Luego también veremos rapidamente como estos
-conceptos se traducen de forma muy similar para las transformaciones en
-\(\R^3\). Al final del capítulo listaremos algunas referencias para el
-lector que quiera profundizar en los conceptos y las derivaciones.
+álgebra de Lie y viceversa. Más adelante, también veremos rápidamente
+como estos conceptos se traducen de forma muy similar para las
+transformaciones en \(\R^3\). Al final del capítulo listaremos algunas
+referencias para el lector que quiera profundizar en los conceptos y las
+derivaciones.
 
 \bigbreak
 
@@ -1028,7 +1029,7 @@ matriz de rotación \(R\) equivalente mediante el operador \(exp\) con
 ángulo-axiales.
 
 El operador \(exp : \so3 \rightarrow SO(3)\) se denomina \emph{mapa o
-aplicación exponencial} y su inversa es el \emph{mapa logarítimico}
+aplicación exponencial} y su inversa es el \emph{mapa logarítmico}
 \(log : SO(3) \rightarrow \so3\). Este, dado una matriz de rotación
 \(R \in SO(3)\) devuelve \(\hat{w} \in \so3\) tal que
 \(R = exp(\hat{w})\) computando \(w\) de la siguiente manera
@@ -1111,7 +1112,7 @@ donde: \bigbreak
 
 \bigbreak
 
-Finalmente, tenemos el mapa exponencial y mapa logarítimico entre
+Finalmente, tenemos el mapa exponencial y mapa logarítmico entre
 \(SE(3)\) y \(\se3\). Similar a \(SO(3)\), cualquier transformación
 \(T \in SE(3)\) va a poder ser representada por un vector de giro
 \(\xi\) con \(T = exp(\hat{\xi})\).
@@ -1154,7 +1155,7 @@ Tenemos ahora una mirada suficientemente formal como para ser capaces de
 utilizar y comprender las herramientas usualmente utilizadas en sistemas
 que modelan rotaciones y transformaciones en dos y tres dimensiones por
 computadora. Nos tomamos el trabajo de entender varias formalizaciones
-para las rotaciones ya que todas ellas aparecen de una u otra forma en
+para las rotaciones, ya que todas ellas aparecen de una u otra forma en
 el pipeline que se desarrolla en este trabajo. Las formalizaciones
 infinitesimales que hemos presentado en la última subsección, y sus
 representaciones en el álgebra de Lie, permiten además modelar los
@@ -1291,19 +1292,20 @@ Es decir
   &\Leftrightarrow A^T A \hat{x} = A^T b \\
   &\Leftrightarrow A^T (A \hat{x} - b) = 0 \label{eq:ataxmbis0}
 \end{align} Las últimas dos ecuaciones reciben nombres particulares
-\footnote{La expresión \(A^T A x = A^T b\) suele ser referida como las
-  \emph{ecuaciones normales}. La derivación de la solución de cuadrados
-  mínimos presentada en este trabajo no es la única. De hecho, es común
-  encarar el problema mediante cálculo diferencial. En ese contexto, las
-  ecuaciones normales surgen naturalmente a la hora de optimizar
-  \(E(x)\) igualando su gradiente a \(0\). Para una demostración
-  mediante cálculo referirse a
-  \textcite{nocedalNumericalOptimization2006}, cap. 10.} \footnote{La
-  expresión \(A^T (A\hat{x} - b) = 0\) es interesante, ya que muestra
-  que las columnas de \(A\) son ortogonales al residual óptimo
-  \(A\hat{x} - b\) al ser su producto interno \(0\). Esto suele llamarse
-  el \emph{principio de ortogonalidad}.}. Veamos ahora para un
-\(x \in \R^n\) cualquiera. \begin{align}
+\marginnote{%\
+La expresión $A^T A x = A^T b$ suele ser referida como las
+“ecuaciones normales”. La derivación de la solución de cuadrados mínimos
+presentada en este trabajo no es la única. De hecho, es común encarar el
+problema mediante cálculo diferencial. En ese contexto, las ecuaciones normales
+surgen naturalmente a la hora de optimizar $E(x)$ igualando su gradiente a $0$.
+Para una demostración mediante cálculo referirse a
+\textcite{nocedalNumericalOptimization2006}, cap. 10.
+} \marginnote{%\
+La expresión $A^T (A\hat{x} - b) = 0$ es interesante,
+ya que muestra que las columnas de $A$ son ortogonales al residual óptimo
+$A\hat{x} - b$ al ser su producto interno $0$. Esto suele llamarse el “principio
+de ortogonalidad”.
+}. Veamos ahora para un \(x \in \R^n\) cualquiera. \begin{align}
   \| Ax - b \|^2 &= \| (Ax - A\hat{x}) + (A\hat{x} - b) \|^2 \\
   \text{(\cref{rmk:sqnormofsum})}\quad
   &= \| A(x - \hat{x}) \|^2 +  \| A\hat{x} - b \|^2 + 2 (A(x - \hat{x}))^T
@@ -1313,7 +1315,7 @@ Es decir
   \text{(\cref{eq:ataxmbis0})}\quad
   &= \| A(x - \hat{x}) \|^2 +  \| A\hat{x} - b \|^2 \\
   &\therefore \|Ax-b\|^2 \geq \|A\hat{x}-b\|^2
-\end{align} Más aún, esta solución es única ya que la igualdad en la
+\end{align} Más aún, esta solución es única, ya que la igualdad en la
 última ecuación solo se da si \(\|A(x-\hat{x})\|^2 = 0\), y como \(A\)
 es no-singular, esto solo pasa cuando \(x=\hat{x}\).\end{proof}
 
@@ -1380,7 +1382,8 @@ aproximación al mínimo de \(f\) sabiendo que comenzamos el algoritmo
 cerca de su mínimo.
 
 \textbf{Linealización}. Definimos \(f^{(k)}(x)\) como la expansión de
-Taylor de \(f(x)\) centrada en \(x^{(k)}\). Es decir: \begin{align}
+Taylor de primer orden de \(f(x)\) centrada en \(x^{(k)}\). Es decir:
+\begin{align}
 f^{(k)}(x) = f(x^{(k)}) + A(x^{(k)}) (x - x^{(k)})
 \end{align}
 
@@ -1406,8 +1409,8 @@ mínimo de \(\| f(x) \| ^ 2\), lo aproximamos con el mínimo (y próximo
 iterando) \(x^{(k+1 )}\) de \(\| f^{(k)}(x) \| ^ 2\) pero como
 \(f^{(k)}\) es afín, esto se reduce a buscar la solución del problema de
 cuadrados mínimos \emph{lineales}. Sabemos por
-\Cref{thm:linleastsquaresol} la solución exacta para este caso en base a
-la matriz pseudo-inversa \(A_k^{\dagger} = (A_k^T A_k)^{-1} A_k^T\).
+\Cref{thm:linleastsquaresol} la solución exacta para este caso con base
+en la matriz pseudo-inversa \(A_k^{\dagger} = (A_k^T A_k)^{-1} A_k^T\).
 \begin{align}
 \| f^{(k)}(x) \| ^ 2 = \| A_k x - (A_k x^{(k)} - f(x^{(k)})) \|^2
 \end{align}
@@ -1445,7 +1448,7 @@ x^{(k)} - (A_k^T A_k)^{-1} A_k^T f(x^{(k)})
 Gauss-Newton y minimización lineal con la pseudo-inversa serán de gran
 utilidad para expresar numerosos tipos de problemas de optimización. Se
 utilizará para problemas como ajustar la posición de un punto de interés
-tri-dimensional que es observado por múltiples cámaras, desproyectar
+tridimensional que es observado por múltiples cámaras, desproyectar
 puntos de cámaras con modelos de proyección que no tienen expresiones
 cerradas para su inversa, incluso veremos que la optimización central de
 los sistemas de SLAM/VIO, el bundle adjustment, son usualmente
@@ -1472,8 +1475,8 @@ objetivos bien definidos.}
 preliminares}\label{problemuxe1ticas-preliminares}}
 
 Un problema central en este tipo de sistemas es el de poder generar un
-mapa y una trayectoria que sea \emph{globalmente consistente}. Con esto
-nos referimos a que nuevas mediciones tengan en cuenta todas las
+mapa y una trayectoria que sean \emph{globalmente consistentes}. Con
+esto nos referimos a que nuevas mediciones tengan en cuenta todas las
 mediciones anteriores en el sistema. Una forma ingenua de encarar este
 problema sería realizando \emph{bundle adjustment} sobre todas las
 imágenes capturadas a lo largo de una corrida, integrando de alguna
@@ -1487,13 +1490,13 @@ complejidad del problema. Para realizar \emph{odometría visual-inercial
 (VIO)}, es común que se ejecute la función de optimización sobre una
 \emph{ventana local} de cuadros y muestras recientemente capturadas,
 ignorando muestras históricas y acumulando error en las estimaciones a
-lo largo del tiempo. Además, este enfoque tiene la problemática añadida
+lo largo del tiempo. Además, esta mirada tiene la problemática añadida
 de que una porción significativa de los fotogramas capturados tienen
 posiciones similares que no añaden información al estimador, o incluso
 que algunos fotogramas puedan ser de baja calidad por contener
 \emph{motion blur} u otro tipo de anomalías. Por otro lado, soluciones
-que intenta realizar \emph{mapeo visual-inercial} realizan el bundle
-adjustment sin utilizar todas las imágenes capturadas, si no que se
+que intentan hacer \emph{mapeo visual-inercial} realizan el bundle
+adjustment sin utilizar todas las imágenes capturadas, sino que se
 limitan a la utilización de algunos fotogramas clave, o \emph{keyframes}
 elegidos mediante criterios que priorizan cuadros nítidos y con
 distancias (\emph{baselines}) prudenciales entre ellos.
@@ -1583,7 +1586,7 @@ imágenes raw provenientes de las cámaras, sino que son los
 son más que la ubicación y rotación en dos dimensiones sobre el plano de
 la imagen de las \emph{features} detectadas. Las features a su vez son
 la representación de los puntos de interés o \emph{landmarks} de la
-escena tri-dimensional proyectados sobre las imágenes. El proceso de
+escena tridimensional proyectados sobre las imágenes. El proceso de
 detectar features, computar su transformación entre distintos cuadros, y
 producir los keypoints de entrada para el módulo de VIO, está a cargo
 del módulo de \emph{optical flow} (o \emph{flujo óptico}). Cabe aclarar
@@ -1697,7 +1700,7 @@ mismo instante de tiempo como la imagen objetivo.
 Finalmente, el último de los pasos que ocurre cuando el módulo de
 optical flow procesa un cuadro es el de filtrado de keypoints, en el
 cual se desproyectan los keypoints a posiciones en la escena
-tri-dimensional y en caso de que el error epipolar supere cierto umbral,
+tridimensional y en caso de que el error epipolar supere cierto umbral,
 estos keypoints serán descartados.
 
 \hypertarget{bundle-adjustment-visual-inercial}{%

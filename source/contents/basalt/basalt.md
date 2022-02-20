@@ -1,7 +1,7 @@
 <!-- TODO@high: este archivo tiene muchos TODOs pero basicamente lo que le hace falta
 es una buena proofread y arreglar los errores que se detecten ahí -->
 
-<!-- TODO@high@def: explicar  (en el paper de s-ptam hay alta explicación de una o dos oraciones) -->
+<!-- TODO@high@def: explicar bundle adjustment (en el paper de s-ptam hay alta explicación de una o dos oraciones) -->
 <!-- TODO@high@def: que es motion blur -->
 <!-- TODO@high@def: Estoy implicitamente hablando de un optimizador, cuando hablo de factor graphs? -->
 <!-- TODO@high@def: Explicar factores no-lineales, o almenos decir que no se explican -->
@@ -124,7 +124,7 @@ de las cámaras, sino que son los _keypoints_ resultantes de ellas. Recordemos
 que los keypoints no son más que la ubicación y rotación en dos dimensiones
 sobre el plano de la imagen de las _features_ detectadas. Las features a su vez
 son la representación de los puntos de interés o _landmarks_ de la escena
-tri-dimensional proyectados sobre las imágenes. El proceso de detectar features,
+tridimensional proyectados sobre las imágenes. El proceso de detectar features,
 computar su transformación entre distintos cuadros, y producir los keypoints de
 entrada para el módulo de VIO, está a cargo del módulo de _optical flow_ (o
 _flujo óptico_). Cabe aclarar que optical flow es el nombre que recibe tanto el
@@ -238,7 +238,7 @@ instante de tiempo como la imagen objetivo.
 
 Finalmente, el último de los pasos que ocurre cuando el módulo de optical flow
 procesa un cuadro es el de filtrado de keypoints, en el cual se desproyectan los
-keypoints a posiciones en la escena tri-dimensional y en caso de que el error
+keypoints a posiciones en la escena tridimensional y en caso de que el error
 epipolar supere cierto umbral, estos keypoints serán descartados.
 
 <!-- TODO@high@def: Que es la desproyección -->

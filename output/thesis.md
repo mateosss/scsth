@@ -146,9 +146,9 @@ agente XR se encuentra y localizarlo en el mismo de forma simultánea;
 usualmente, sin contar con información a priori sobre su pose ni el entorno en
 el que se encuentra. Hay múltiples maneras de implementar SLAM y VI-SLAM, pero
 los sistemas en los que nos concentraremos en este trabajo usan mediciones de la
-IMU a altas frecuencias (p. ej. 200 hz) que miden el _“movimiento interno”_ que
+IMU a altas frecuencias (p. ej. 200 Hz) que miden el _“movimiento interno”_ que
 el agente experimenta, también conocidas como mediciones _propioceptivas_, junto
-a muestras más lentas (p. ej. 20 hz) de cámaras, usualmente un par de ellas, que
+a muestras más lentas (p. ej. 20 Hz) de cámaras, usualmente un par de ellas, que
 dan información acerca de como el entorno está cambiando alrededor del agente
 cuando este se mueve. Estas son llamadas mediciones _exteroceptivas_ y ayudan a
 corregir las mediciones ruidosas de la IMU.
@@ -247,7 +247,7 @@ sistema se tome como referencia.
 
 El tipo de transformación en el que estamos interesados son los _movimientos de
 cuerpo rígido_\marginnote{%\
-No profundizaremos en la definición formal de este concepto pero, intuitivamente,
+No profundizaremos en la definición formal de este concepto, pero intuitivamente,
 son transformaciones que al aplicarlas sobre un conjunto de puntos, preservan su volumen.
 Esto implica que preservan la norma y el producto cruz.
 }. Estos pueden describirse
@@ -415,7 +415,7 @@ La **composición de rotaciones** queda bien definida por la multiplicación de
 cuaterniones. Es decir, dados los cuaterniones $q$ y $p$, el cuaternión $pq$
 describe la rotación que se produce al aplicar primero $q$ y luego $p$.
 
-La **rotación identidad** o neutra, una rotación que "no rota", coincide con $1
+La **rotación identidad** o neutra, una rotación que “no rota”, coincide con $1
 \in \R$, es decir no tiene parte imaginaria, es $1 + 0i + 0j + 0k$.
 
 El **inverso multiplicativo** de un cuaternión $q^{-1}$ al
@@ -444,9 +444,6 @@ manera:
 slerp(p, q, t) = p(p^{-1}q)^t
 \end{align}
 
-[^slerp-derivation]: La derivación de la fórmula de interpolación esférica para
-cuaterniones se puede encontrar en @shoemakeAnimatingRotationQuaternion1985
-
 ##### Matrices de rotación {#sec:rotation-matrices}
 
 Las rotaciones pueden representarse también como una matriz $R \in \R^{3x3}$ con
@@ -474,10 +471,10 @@ transformación lineal de $R$ no escala los vectores en $\R^3$,
 o sea preserva volúmenes.
 } \marginnote{%\
 Las transformaciones representadas por $R$ con $det(R) = -1$ suelen llamarse
-rotaciones impropias o rotorreflexiones ya que además de rotar, permiten la reflexión
+rotaciones impropias o rotorreflexiones, ya que además de rotar, permiten la reflexión
 de vectores en $\R^3$.
 }. El
-conjunto  estas matrices se denomina $SO(3)$ y veremos en la sección siguiente
+conjunto de estas matrices se denomina $SO(3)$ y veremos en la sección siguiente
 el por qué de este nombre. Estas matrices presentan propiedades agradables para ser manipuladas como rotaciones
 en el álgebra matricial usual:
 
@@ -545,7 +542,7 @@ G$ tal que $\forall a, b, c \in G$:
 
 Es posible empezar a intuir que _tanto las rotaciones como las transformaciones_
 que describimos al principio del capítulo _coinciden con esta idea de grupo_.
-"Mezclar" transformaciones debería dar como resultado otra transformación
+“Mezclar” transformaciones debería dar como resultado otra transformación
 (cerrada) y no debería importar el orden de mezcla (asociativa). Debería existir
 una transformación neutra que no haga nada, y una transformación inversa que
 deshagan la transformación original. Si además pudiésemos describir estas
@@ -562,7 +559,7 @@ $GL(n)$. Es decir:
 
 Definition
 : El subconjunto de matrices de GL(n) con determinante 1 se denomina el Grupo
-Linea Especial $SL(n)$. Es decir:
+Lineal Especial $SL(n)$. Es decir:
 \begin{align}
   SL(n) = \{ A \in GL(n) : det(A) = 1 \}
 \end{align}
@@ -619,7 +616,7 @@ presentamos allí. Continuemos ahora con las transformaciones.
 ##### Transformaciones como grupos
 
 Definition
-: Uns transformación lineal afín $L : \R^n \rightarrow \R^n$ es tal que existe $B
+: Una transformación lineal afín $L : \R^n \rightarrow \R^n$ es tal que existe $B
 \in GL(n)$ y $b \in \R^n$ que determinan $L(x) = Bx + b$.
 
 Definition
@@ -628,7 +625,7 @@ $A(n)$.
 
 En general, una transformación afín $L(x) = Bx + b \in A(n)$ no es una transformación lineal a menos
 que $b = 0$. Introduciremos las llamadas _coordenadas homogéneas_ para expresar
-transformaciones afínes en $A(n)$ como transformaciones lineales en $GL(n + 1)$.
+transformaciones afines en $A(n)$ como transformaciones lineales en $GL(n + 1)$.
 Extenderemos $L$ de la siguiente manera:
 \begin{align}
 L': \R^{n+1} &\rightarrow \R^{n+1} \\
@@ -641,7 +638,7 @@ B & b \\
 = \begin{bmatrix} L(x) \\ 1 \end{bmatrix}
 \end{align}
 
-Notar que hay un isomorfismo entre $L$ y $L'$ ya que $0$ y $1$ son constantes y
+Notar que hay un isomorfismo entre $L$ y $L'$, ya que $0$ y $1$ son constantes y
 por esto diremos que son la misma transformación. La matriz $\begin{bmatrix} B &
 b \\ 0 & 1 \end{bmatrix}$ se dice una matriz afín y pertenece a $GL(n + 1)$.
 Tenemos entonces que las matrices afines forman un subgrupo de $GL(n + 1)$
@@ -666,7 +663,7 @@ Grupo Euclídeo Especial $SE(n)$, es decir:
   \R^{(n+1) \times (n+1)} : R \in SO(n), t \in \R^n  \end{Bmatrix}
 \end{align}
 
-Y es este el grupo que buscábamos ya que $SE(3)$ es capaz de representar las
+Y es este el grupo que buscábamos, ya que $SE(3)$ es capaz de representar las
 transformaciones de cuerpo rígido en $\R^3$ que necesitábamos. Tenemos entonces
 que representaremos rotaciones con matrices cuadradas $3x3$ $R \in SO(3)$ y
 representaremos transformaciones con matrices cuadradas $4x4$ $T \in SE(3)$.
@@ -733,7 +730,7 @@ es decir:
 \so3 = \{ \hat{v} \in \RR3 : v \in \R^3 \}
 \end{align}
 
-Veremos a continuación cual es su relación con $SO(3)$ y el por qué de su nombre.
+Veremos a continuación cuál es su relación con $SO(3)$ y el por qué de su nombre.
 
 ##### Rotaciones infinitesimales
 
@@ -795,11 +792,11 @@ ellos.
 
 Luego de haber presentado estas ideas fundamentales, a partir de aquí
 procederemos a dar una _vista general_ de la definición de dos operadores, $exp$
-y $log$ que nos permiten pasar del grupo al álgebra de Lie y viceversa. Luego
-también veremos rapidamente como estos conceptos se traducen de forma muy
-similar para las transformaciones en $\R^3$. Al final del capítulo listaremos
-algunas referencias para el lector que quiera profundizar en los conceptos y las
-derivaciones.
+y $log$ que nos permiten pasar del grupo al álgebra de Lie y viceversa. Más
+adelante, también veremos rápidamente como estos conceptos se traducen de forma
+muy similar para las transformaciones en $\R^3$. Al final del capítulo
+listaremos algunas referencias para el lector que quiera profundizar en los
+conceptos y las derivaciones.
 
 \bigbreak
 
@@ -835,7 +832,7 @@ operador $exp$ con $R = exp(\hat{w})$_. Más aún, $\so3$ contiene todos estos
 vectores ángulo-axiales.
 
 El operador $exp : \so3 \rightarrow SO(3)$ se denomina _mapa o aplicación exponencial_ y su inversa es el
-_mapa logarítimico_ $log : SO(3) \rightarrow \so3$. Este, dado una matriz de
+_mapa logarítmico_ $log : SO(3) \rightarrow \so3$. Este, dado una matriz de
 rotación $R \in SO(3)$ devuelve $\hat{w} \in \so3$ tal que $R = exp(\hat{w})$
 computando $w$ de la siguiente manera [@eadeDerivativeExponentialMap]:
 \begin{align}
@@ -909,7 +906,7 @@ vector de giro $\xi$ de seis dimensiones en donde:
 
 \bigbreak
 
-Finalmente, tenemos el mapa exponencial y mapa logarítimico entre $SE(3)$ y
+Finalmente, tenemos el mapa exponencial y mapa logarítmico entre $SE(3)$ y
 $\se3$. Similar a $SO(3)$, cualquier transformación $T \in SE(3)$ va a poder ser
 representada por un vector de giro $\xi$ con $T = exp(\hat{\xi})$.
 
@@ -949,7 +946,7 @@ J^{-1} = I - \frac{1}{2} \hat{v} +
 Tenemos ahora una mirada suficientemente formal como para ser capaces de
 utilizar y comprender las herramientas usualmente utilizadas en sistemas que
 modelan rotaciones y transformaciones en dos y tres dimensiones por computadora.
-Nos tomamos el trabajo de entender varias formalizaciones para las rotaciones ya
+Nos tomamos el trabajo de entender varias formalizaciones para las rotaciones, ya
 que todas ellas aparecen de una u otra forma en el pipeline que se desarrolla en
 este trabajo. Las formalizaciones infinitesimales que hemos presentado en la
 última subsección, y sus representaciones en el álgebra de Lie, permiten además
@@ -1067,6 +1064,10 @@ siguiente observación:
 Con estas herramientas, estamos en posición de presentar la solución directa al
 problema de los cuadrados mínimos lineales.
 
+
+
+
+
 Theorem thm:linleastsquaresol
 : $\hat{x} = A^{\dagger} b$ es **la** solución del problema de los cuadrados mínimos
 lineales. Es decir $\forall x \in \R^n: E(\hat{x}) = \| A\hat{x} - b \| ^ 2
@@ -1080,8 +1081,22 @@ Proof
   &\Leftrightarrow A^T A \hat{x} = A^T b \\
   &\Leftrightarrow A^T (A \hat{x} - b) = 0 \label{eq:ataxmbis0}
 \end{align}
-Las últimas dos ecuaciones reciben nombres particulares [^normalequations]
-[^orthogonalityprinciple]. Veamos ahora para un $x \in \R^n$ cualquiera.
+Las últimas dos ecuaciones reciben nombres particulares
+\marginnote{%\
+La expresión $A^T A x = A^T b$ suele ser referida como las
+“ecuaciones normales”. La derivación de la solución de cuadrados mínimos
+presentada en este trabajo no es la única. De hecho, es común encarar el
+problema mediante cálculo diferencial. En ese contexto, las ecuaciones normales
+surgen naturalmente a la hora de optimizar $E(x)$ igualando su gradiente a $0$.
+Para una demostración mediante cálculo referirse a
+\textcite{nocedalNumericalOptimization2006}, cap. 10.
+} \marginnote{%\
+La expresión $A^T (A\hat{x} - b) = 0$ es interesante,
+ya que muestra que las columnas de $A$ son ortogonales al residual óptimo
+$A\hat{x} - b$ al ser su producto interno $0$. Esto suele llamarse el “principio
+de ortogonalidad”.
+}.
+Veamos ahora para un $x \in \R^n$ cualquiera.
 \begin{align}
   \| Ax - b \|^2 &= \| (Ax - A\hat{x}) + (A\hat{x} - b) \|^2 \\
   \text{(\cref{rmk:sqnormofsum})}\quad
@@ -1093,22 +1108,9 @@ Las últimas dos ecuaciones reciben nombres particulares [^normalequations]
   &= \| A(x - \hat{x}) \|^2 +  \| A\hat{x} - b \|^2 \\
   &\therefore \|Ax-b\|^2 \geq \|A\hat{x}-b\|^2
 \end{align}
-Más aún, esta solución es única ya que la igualdad en la última ecuación solo se
+Más aún, esta solución es única, ya que la igualdad en la última ecuación solo se
 da si $\|A(x-\hat{x})\|^2 = 0$, y como $A$ es no-singular, esto solo pasa
 cuando $x=\hat{x}$.
-
-[^normalequations]: La expresión $A^T A x = A^T b$ suele ser referida como las
-_ecuaciones normales_. La derivación de la solución de cuadrados mínimos
-presentada en este trabajo no es la única. De hecho, es común encarar el
-problema mediante cálculo diferencial. En ese contexto, las ecuaciones normales
-surgen naturalmente a la hora de optimizar $E(x)$ igualando su gradiente a $0$.
-Para una demostración mediante cálculo referirse a
-@nocedalNumericalOptimization2006, cap. 10.
-
-[^orthogonalityprinciple]: La expresión $A^T (A\hat{x} - b) = 0$ es interesante,
-ya que muestra que las columnas de $A$ son ortogonales al residual óptimo
-$A\hat{x} - b$ al ser su producto interno $0$. Esto suele llamarse el _principio
-de ortogonalidad_.
 
 #### Cuadrados mínimos no lineales
 
@@ -1166,8 +1168,8 @@ solución del problema no-lineal. Es decir, como sabemos que $x^{(k+1)}$ minimiz
 a $f^{(k)}$, esperaríamos que sea una buena aproximación al mínimo de $f$
 sabiendo que comenzamos el algoritmo cerca de su mínimo.
 
-**Linealización**. Definimos $f^{(k)}(x)$ como la expansión de Taylor de $f(x)$
-centrada en $x^{(k)}$. Es decir:
+**Linealización**. Definimos $f^{(k)}(x)$ como la expansión de Taylor de primer
+orden de $f(x)$ centrada en $x^{(k)}$. Es decir:
 \begin{align}
 f^{(k)}(x) = f(x^{(k)}) + A(x^{(k)}) (x - x^{(k)})
 \end{align}
@@ -1193,7 +1195,7 @@ f^{(k)}(x) = A_k x - (A_k x^{(k)} - f(x^{(k)}))
 f(x) \| ^ 2$, lo aproximamos con el mínimo (y próximo iterando) $x^{(k+1 )}$ de
 $\| f^{(k)}(x) \| ^ 2$ pero como $f^{(k)}$ es afín, esto se reduce a buscar la
 solución del problema de cuadrados mínimos _lineales_. Sabemos por
-[Teorema](#thm:linleastsquaresol) la solución exacta para este caso en base a la
+[Teorema](#thm:linleastsquaresol) la solución exacta para este caso con base en la
 matriz pseudo-inversa $A_k^{\dagger} = (A_k^T A_k)^{-1} A_k^T$.
 \begin{align}
 \| f^{(k)}(x) \| ^ 2 = \| A_k x - (A_k x^{(k)} - f(x^{(k)})) \|^2
@@ -1229,11 +1231,11 @@ x^{(k)} - (A_k^T A_k)^{-1} A_k^T f(x^{(k)})
 
 \end{algorithm}
 
-<!-- TODO@def: uso el término bundle adjustment -->
+<!-- TODO@high@def: uso el término bundle adjustment -->
 
 Gauss-Newton y minimización lineal con la pseudo-inversa serán de gran utilidad
 para expresar numerosos tipos de problemas de optimización. Se utilizará para
-problemas como ajustar la posición de un punto de interés tri-dimensional que es
+problemas como ajustar la posición de un punto de interés tridimensional que es
 observado por múltiples cámaras, desproyectar puntos de cámaras con modelos de
 proyección que no tienen expresiones cerradas para su inversa, incluso veremos
 que la optimización central de los sistemas de SLAM/VIO, el bundle adjustment,
@@ -1257,7 +1259,7 @@ objetivos bien definidos.}
 <!-- TODO@high: este archivo tiene muchos TODOs pero basicamente lo que le hace falta
 es una buena proofread y arreglar los errores que se detecten ahí -->
 
-<!-- TODO@high@def: explicar  (en el paper de s-ptam hay alta explicación de una o dos oraciones) -->
+<!-- TODO@high@def: explicar bundle adjustment (en el paper de s-ptam hay alta explicación de una o dos oraciones) -->
 <!-- TODO@high@def: que es motion blur -->
 <!-- TODO@high@def: Estoy implicitamente hablando de un optimizador, cuando hablo de factor graphs? -->
 <!-- TODO@high@def: Explicar factores no-lineales, o almenos decir que no se explican -->
@@ -1281,7 +1283,7 @@ scheme) que podría ser interesante discutir -->
 ## Problemáticas preliminares
 
 Un problema central en este tipo de sistemas es el de poder generar un mapa y
-una trayectoria que sea _globalmente consistente_. Con esto nos referimos a que
+una trayectoria que sean _globalmente consistentes_. Con esto nos referimos a que
 nuevas mediciones tengan en cuenta todas las mediciones anteriores en el
 sistema. Una forma ingenua de encarar este problema sería realizando _bundle
 adjustment_ sobre todas las imágenes capturadas a lo largo de una corrida,
@@ -1294,13 +1296,13 @@ Por esta razón, es usual recurrir a distintas formas de reducir la complejidad
 del problema. Para realizar _odometría visual-inercial (VIO)_, es común que
 se ejecute la función de optimización sobre una _ventana local_ de cuadros y
 muestras recientemente capturadas, ignorando muestras históricas y acumulando
-error en las estimaciones a lo largo del tiempo. Además, este enfoque tiene la
+error en las estimaciones a lo largo del tiempo. Además, esta mirada tiene la
 problemática añadida de que una porción significativa de los fotogramas
 capturados tienen posiciones similares que no añaden información al estimador, o
 incluso que algunos fotogramas puedan ser de baja calidad por contener _motion
-blur_ u otro tipo de anomalías. Por otro lado, soluciones que intenta realizar
+blur_ u otro tipo de anomalías. Por otro lado, soluciones que intentan hacer
 _mapeo visual-inercial_ realizan el bundle adjustment sin utilizar todas las
-imágenes capturadas, si no que se limitan a la utilización de algunos fotogramas
+imágenes capturadas, sino que se limitan a la utilización de algunos fotogramas
 clave, o _keyframes_ elegidos mediante criterios que priorizan cuadros nítidos y
 con distancias (_baselines_) prudenciales entre ellos.
 
@@ -1380,7 +1382,7 @@ de las cámaras, sino que son los _keypoints_ resultantes de ellas. Recordemos
 que los keypoints no son más que la ubicación y rotación en dos dimensiones
 sobre el plano de la imagen de las _features_ detectadas. Las features a su vez
 son la representación de los puntos de interés o _landmarks_ de la escena
-tri-dimensional proyectados sobre las imágenes. El proceso de detectar features,
+tridimensional proyectados sobre las imágenes. El proceso de detectar features,
 computar su transformación entre distintos cuadros, y producir los keypoints de
 entrada para el módulo de VIO, está a cargo del módulo de _optical flow_ (o
 _flujo óptico_). Cabe aclarar que optical flow es el nombre que recibe tanto el
@@ -1494,7 +1496,7 @@ instante de tiempo como la imagen objetivo.
 
 Finalmente, el último de los pasos que ocurre cuando el módulo de optical flow
 procesa un cuadro es el de filtrado de keypoints, en el cual se desproyectan los
-keypoints a posiciones en la escena tri-dimensional y en caso de que el error
+keypoints a posiciones en la escena tridimensional y en caso de que el error
 epipolar supere cierto umbral, estos keypoints serán descartados.
 
 <!-- TODO@high@def: Que es la desproyección -->
