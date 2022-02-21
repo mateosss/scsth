@@ -31,7 +31,7 @@ integrado era razonable.
 Monado está desarrollado principalmente en el lenguaje C, pero gran parte de su
 código de tracking está implementado en C++ al igual que todos los sistemas de
 SLAM contemplados. Adicionalmente tanto Monado como estos sistemas suelen hacer
-un uso extensivo de la librería _OpenCV_, y en particular su clase contenedora
+un uso extensivo de la biblioteca _OpenCV_, y en particular su clase contenedora
 de imágenes y matrices `cv::Mat`. Es por esto que se terminó optando por el uso de
 un archivo _header_ C++, en el cual se declara la clase `slam_tracker` que será
 utilizada por Monado como punto de comunicación con sistemas de SLAM arbitrarios

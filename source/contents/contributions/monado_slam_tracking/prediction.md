@@ -91,7 +91,7 @@ muestra de la cámara (`[A]` y `[G]`).
 
 \FloatBarrier
 
-[^perfetto-web]: Librería de perfilación Perfetto: <https://perfetto.dev>
+[^perfetto-web]: Biblioteca de perfilación Perfetto: <https://perfetto.dev>
 [^percetto-web]: Wrapper de Perfetto para C: <https://github.com/olvaffe/percetto>
 
 A tiempo `[C]` las imágenes llegan al host luego de haber sido transferidas por

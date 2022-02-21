@@ -1,6 +1,6 @@
 ### Scractchpad
 
-<!-- TODO@high: Review if all items and their keywords were addressed in the writeup -->
+<!-- TODO: Review if all items and their keywords were addressed in the writeup -->
 
 - [ ] concept: nonlinear regression, gauss-newton algorithm
 - [ ] VIO:
@@ -468,14 +468,14 @@ private:
 
           if (T_0_1.translation().norm < vioconfig(0.05)) continue;
 
-          Vec4 p0_triangulated = triangulate(p0_3d, p1_3d, T_0_1); // TODO@high: JacobiSVD. I'm pretty sure this is DLT. TODO@high: learn and explain it. See pag91, algorithm4.1 of Multiple view geometry... book. Appendix 4 of that book is GOLD. in there there is an explanation of SVD in page 585
+          Vec4 p0_triangulated = triangulate(p0_3d, p1_3d, T_0_1); // TODO: JacobiSVD. I'm pretty sure this is DLT. TODO: learn and explain it. See pag91, algorithm4.1 of Multiple view geometry... book. Appendix 4 of that book is GOLD. in there there is an explanation of SVD in page 585
 
           if (p0_triangulated is good) { // Register landmark
             Landmark kpt_pos = {
               host_kf_id = tcidl,
               direction=StereographicParam::project(p0_triangulated),
               inv_dist=p0_triangulated[3]
-            }; // TODO@high: See more on Stereographic project
+            }; // TODO: See more on Stereographic project
             lmdb.addLandmark(lm_id, kpt_pos);
             num_points_added++;
             for (every obs in kp_obs) lmdb.addObservation(obs);

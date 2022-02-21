@@ -1,6 +1,10 @@
 ## Tracking por SLAM para Monado
 
-En esta sección explicaremos los distintos módulos y funcionalidad implementada
+<!-- #include contents/contributions/context.md -->
+
+### Monado
+
+En este capítulo explicaremos los distintos módulos y funcionalidad implementada
 en Monado para permitirle proveer tracking mediante SLAM/VIO a distintos
 controladores de dispositivos y de esta forma, a las aplicaciones OpenXR que
 utilizan estos dispositivos como medios de interacción y corren sobre Monado.

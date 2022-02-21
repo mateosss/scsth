@@ -209,6 +209,8 @@ libre.
 
 ### Estructura de la Tesis (TODO)
 
+CREO QUE ESTO SI LO PODRIA HACER ANTES DE ENVIARLO
+
 \begin{mdframed}[backgroundcolor=shadecolor]
 TODO: En esta sección detallaría lo que se va a ver en cada capítulo. La planeo
 escribir después de terminar de acomodarlos. Ahora tengo algunos de dos páginas
@@ -1231,20 +1233,20 @@ x^{(k)} - (A_k^T A_k)^{-1} A_k^T f(x^{(k)})
 
 \end{algorithm}
 
-<!-- TODO@high@def: uso el término bundle adjustment -->
-
 Gauss-Newton y minimización lineal con la pseudo-inversa serán de gran utilidad
 para expresar numerosos tipos de problemas de optimización. Se utilizará para
 problemas como ajustar la posición de un punto de interés tridimensional que es
-observado por múltiples cámaras, desproyectar puntos de cámaras con modelos de
-proyección que no tienen expresiones cerradas para su inversa, incluso veremos
-que la optimización central de los sistemas de SLAM/VIO, el bundle adjustment,
-son usualmente expresados y resueltos como una minimización de cuadrados no
+observado por múltiples cámaras; desproyectar puntos 2D de cámaras hacia puntos
+3D en la escena cuando los modelos de proyección no tienen expresiones cerradas
+para su inversa; incluso veremos que la optimización central de los sistemas de
+SLAM/VIO que combina todas las mediciones necesarias para generar las
+estimaciones de poses, usualmente llamada _bundle adjustment_\label{def:bundle-adjustment}, suele expresarse
+y resolverse como una minimización de cuadrados no
 lineales. El desarrollo de esta sección está basada en
 @nocedalNumericalOptimization2006, cap. 1, 2 y 10 y
 @boydIntroductionAppliedLinear2018, cap. 11, 12, 15 y 18; en esos trabajos se
-puede encontrar derivaciones alternativas e información de alternativas a
-Gauss-Newton más sofisticadas como Levenberg-Marquardt o el método dogleg.
+puede encontrar derivaciones alternativas e información de otras técnicas más
+sofisticadas que Gauss-Newton como Levenberg-Marquardt o el método dogleg.
 
 <!-- TODO@low: Acá se habla de weighted least squares: https://www.vectornav.com/resources/inertial-navigation-primer/math-fundamentals/math-leastsquares -->
 
@@ -1259,35 +1261,66 @@ objetivos bien definidos.}
 <!-- TODO@high: este archivo tiene muchos TODOs pero basicamente lo que le hace falta
 es una buena proofread y arreglar los errores que se detecten ahí -->
 
-<!-- TODO@high@def: explicar bundle adjustment (en el paper de s-ptam hay alta explicación de una o dos oraciones) -->
-<!-- TODO@high@def: que es motion blur -->
-<!-- TODO@high@def: Estoy implicitamente hablando de un optimizador, cuando hablo de factor graphs? -->
-<!-- TODO@high@def: Explicar factores no-lineales, o almenos decir que no se explican -->
-<!-- TODO@high@def: Que son features? -->
-<!-- TODO@high@def: Que es loop closing? -->
-<!-- TODO@high@def: Que es OpenCV -->
-<!-- TODO@high@def: Que son grafos de poses, factor graphs, y factores -->
-<!-- TODO@high@def: VIO habla acerca de componentes: (patch tracking, landmark
+<!-- TODO@def: VIO habla acerca de componentes: (patch tracking, landmark
 representation, first-estimate Jacobians, marginalization
 scheme) que podría ser interesante discutir -->
 <!-- TODO: Mencionar que TUM lo desarrolla y las personas que lo mantienen -->
-<!-- TODO@high@def: Que es cuadrados minimos -->
-<!-- TODO@high@def: levenverg-marquard is also in use (see vio_lm_lambda_initial), I might need to explain it -->
-<!-- TODO@high@def: que son SE(2), SO(3) etc: ver https://ethaneade.com/ -->
 <!-- TODO@high@ref: Checkear que los 6 papers de basalt esten siendo citados -->
 <!-- TODO@high@ref: Los papers de orbslam y kimera deberían estar citados -->
-<!-- TODO@high@def: que es el acrónimo VIO? -->
 
-# Implementación de Basalt
+# Implementación de un sistema
 
-## Problemáticas preliminares
+## Basalt
+
+### Preliminares
+
+#### Otros sistemas integrados (TODO)
+
+\begin{mdframed}[backgroundcolor=shadecolor]
+TODO: En esta sección me gustaría hablar un poco de dos sistemas que no voy
+detallar mucho en el resto del trabajo: Kimera-VIO y ORB-SLAM3.\\
+\newline
+En el trabajo integré tres sistemas.
+\begin{enumerate}
+\item Kimera-VIO: Este parecía muy bueno, es del MIT, con licencia permisiva MIT
+   pero resulto ser bastante malo. Intentaba hacer mucho y había mucho
+   ``overengineering'' y técnicas lentas en general.
+\item ORB-SLAM3: De la universidad de Zaragoza, es \emph{la} referencia del mejor
+   sistema de SLAM de código libre. Y sí, resultó andar bastante bien salvo por
+   unos detalles. El problema es que tiene licencia GPL3
+\item Basalt: Este me lo topé medio de casualidad, es del TUM, y tiene licencia
+   permisiva (BSD3). El problema es que solo puede hacer VIO en realtime y no
+   SLAM completo. Para usar bien el mapa usa necesita una pasada offline. A pesar de eso,
+   anda \emph{muy} bien en comparación a los otros: es rapidísimo, super estable y
+   tiene un código bastante bien escrito (cosa que es dificil encontrar en
+   software de investigación). Por esto decidí meterle mucha pila a entender el
+   código de este. Si bien también leí Kimera bastante a fondo y algo de
+   ORB-SLAM3; creo que fue muy provechoso leer Basalt, y todo lo que sigue de
+   esta segunda parte del trabajo está dedicada a la implementación de Basalt.
+\end{enumerate}
+
+Así que lo que sigue ya directamente habla de Basalt.
+\end{mdframed}
+
+#### Problemáticas
+
+
 
 Un problema central en este tipo de sistemas es el de poder generar un mapa y
 una trayectoria que sean _globalmente consistentes_. Con esto nos referimos a que
 nuevas mediciones tengan en cuenta todas las mediciones anteriores en el
-sistema. Una forma ingenua de encarar este problema sería realizando _bundle
-adjustment_ sobre todas las imágenes capturadas a lo largo de una corrida,
-integrando de alguna forma todas las mediciones provenientes de la IMU.
+sistema. Una forma ingenua de encarar esto, sería realizando _bundle adjustment_\marginnote{%\
+Introdujimos el término bundle adjustment (BA) en la \Cref{def:bundle-adjustment}
+en el contexto de cuadrados mínimos. Este se refiere al refinamiento simultáneo de un conjunto de
+poses de cámara, o vistas, y puntos 3D en el mapa que han sido observados por
+estas vistas. Así, se intenta reducir el llamado “error de reproyección” del
+conjunto actualizando tanto las poses de las cámaras como la posición de los
+puntos observados. Este error hace referencia a la distancia entre las
+posiciones de los puntos y donde las vistas esperan que estos
+se encuentren \autocite{hartleyMultipleViewGeometry2004}.
+}
+sobre todas las imágenes capturadas a lo largo de una corrida,
+integrando además las mediciones provenientes de la IMU.
 Desafortunadamente, este método excede rápidamente cualquier capacidad de
 cómputo de la que dispongamos, y aún más teniendo en cuenta que nuestro objetivo
 es localizar en tiempo real al dispositivo de XR.
@@ -1297,8 +1330,8 @@ del problema. Para realizar _odometría visual-inercial (VIO)_, es común que
 se ejecute la función de optimización sobre una _ventana local_ de cuadros y
 muestras recientemente capturadas, ignorando muestras históricas y acumulando
 error en las estimaciones a lo largo del tiempo. Además, esta mirada tiene la
-problemática añadida de que una porción significativa de los fotogramas
-capturados tienen posiciones similares que no añaden información al estimador, o
+desventaja adicional de que una porción significativa de los fotogramas
+capturados podrían tener posiciones similares que no añadirían demasiada información al estimador, o
 incluso que algunos fotogramas puedan ser de baja calidad por contener _motion
 blur_ u otro tipo de anomalías. Por otro lado, soluciones que intentan hacer
 _mapeo visual-inercial_ realizan el bundle adjustment sin utilizar todas las
@@ -1306,80 +1339,107 @@ imágenes capturadas, sino que se limitan a la utilización de algunos fotograma
 clave, o _keyframes_ elegidos mediante criterios que priorizan cuadros nítidos y
 con distancias (_baselines_) prudenciales entre ellos.
 
-Como las muestras de IMU vienen a altas frecuencias, es común que estas se pre
-integren de forma tal de combinar muestras simultáneas entre dos keyframes en
+Como las muestras de IMU vienen a mayor frecuencia que las de la cámara, es
+común que estas se _preintegren_ de forma tal de combinar muestras simultáneas entre dos keyframes en
 una única entrada del optimizador. Sin embargo, un problema en el que esta
 integración incurre, es que las mediciones de las IMU son altamente ruidosas, y
 acumularlas durante tiempos prolongados acumula también cantidades
 significativas de error. Este factor nos limita el tiempo que puede transcurrir
 entre dos keyframes; como ejemplo en @mur-artalVisualInertialMonocularSLAM2017
-se habla de keyframes que no pueden tener más de 0,5 segundos entre sí. A su
-vez, tener keyframes a muy bajas frecuencias afecta la calidad de las
-estimaciones de velocidad y biases; estos últimos son offsets de medición
+se habla de keyframes que no pueden tener más de medio segundo entre sí. Además,
+tener keyframes a muy bajas frecuencias afecta la calidad de las
+estimaciones de velocidad y _biases_; estos últimos son offsets de medición
 inherentemente variables de los acelerómetros y giroscopios a los que es
-necesario estimar para compensar por ellos en la medición final.
+necesario reestimar de forma constante para compensar por ellos en la medición final.
 
-## Propuesta
+#### Propuesta de Basalt
 
-La novedad de Basalt es que formula el mapeo visual-inercial como un problema de
-bundle adjustment con mediciones visuales e inerciales a altas frecuencias.
-Utiliza un _grafo de factores_ similarmente a otros sistemas, también llamado
+<!-- TODO@high@end: vi que esta Margin note parece salirse tambien -->
+
+
+<!-- XXX: USO FACTOR NO LINEAL SIN EXPLICARLO!! -->
+La novedad de Basalt [@usenkoBasaltVisualInertialMapping2020] es que formula el mapeo visual-inercial como un problema de
+bundle adjustment y utiliza, de una forma específica, todas mediciones visuales e inerciales a altas frecuencias.
+Usa un _grafo de factores_\marginnote{%\
+Los grafos de factores son una muy buena forma de representar problemas con
+muchas variables aleatorias interdependientes y muestras que las relacionan (factores).
+En general, el uso de estos grafos trae beneficios
+computacionales interesantes y son de gran importancia para el área de SLAM.
+Sin embargo, no nos adentraremos demasiado en el tema en este trabajo y dirigimos
+al lector interesado a \textcite{dellaertFactorGraphsRobot2017}.
+} [^gtsam-whatarefactorgraphs] de forma similar a otros sistemas, también llamado
 _grafo de poses_ en este contexto por contener poses a estimar como nodos. En
 lugar de utilizar todos los fotogramas se propone realizar la optimización en
 dos capas. La capa de VIO, emplea un sistema de odometría visual-inercial, que
 ya de por sí supera a otros sistemas del mismo tipo, proveyendo estimaciones de
 movimiento a la misma frecuencia que el sensor de la cámara provee imágenes.
-Luego, se seleccionan keyframes y se introducen _factores no-lineales_
-entre estos que estiman la diferencia de posición relativa entre estos.
+Luego, se seleccionan keyframes y se agregan _factores no-lineales_
+entre estos que estiman la diferencia de posición relativa.
 Estos dos factores, keyframes y poses relativas, se utilizan en la capa de
 bundle-adjustment global.
 
-La capa de VIO, utiliza features que son rápidas y buenas para tracking
-(_optical flow_), mientras que en la capa de mapeo se usan features adecuadas
-para _loop closing_ que son indiferentes a las condiciones de luz o al punto de
-vista de la cámara. De esta forma tenemos un sistema que es capaz de utilizar
+[^gtsam-whatarefactorgraphs]: Artículo introductorio a los grafos de factores: <https://gtsam.org/2020/06/01/factor-graphs.html>
+
+
+
+
+
+La capa de VIO, detecta _features_\marginnote{%\
+Las features son puntos de interés relevados en una imagen.
+Son estos los puntos que triangularemos en el bundle adjustment.
+} que son rápidas y buenas para seguir durante
+varios cuadros (esto es el _optical flow_ que veremos en la sección
+[](#optical-flow)), mientras que en la capa de mapeo se usan features adecuadas
+que son indiferentes a las condiciones de luz o al punto de
+vista de la cámara\marginnote{%\
+Esto es fundamental para entender cuando el dispositivo está visitando un lugar
+por el que ya pasó. Esto se denomina “loop closing”.
+}. De esta forma tenemos un sistema que es capaz de utilizar
 las mediciones a alta frecuencias de los sensores y al mismo tiempo tiene la
-capacidad de detectar a frecuencias más bajas cuando se está en ubicaciones ya
+capacidad de detectar cuando se está en ubicaciones ya
 visitadas, obteniendo así un mapa que es globalmente consistente. Además, el
 problema de optimización se reduce, ya que a diferencia de otros sistemas, no es
-necesario estimar velocidades ni biases.
+necesario estimar velocidades ni biases (de la IMU).
 
-## Implementación
+### Implementación
 
-A continuación se describe la arquitectura e implementación de Basalt de una
-manera más detallada. Esta sección surge directamente de la lectura del código
-fuente del sistema e intenta proveer detalles más bien pragmáticos que se
-encuentran en el mismo, pero que pueden quedar escondidos en publicaciones de
-más alto nivel. A su vez, se toman ciertas licencias literarias que deberían
+A continuación describiremos la arquitectura e implementación de Basalt de una
+manera más detallada. Estas secciones surgen directamente de la lectura del código
+fuente del sistema e intentan proveer detalles más bien pragmáticos que se
+encuentran en el mismo, pero que pueden quedar escondidos en las publicaciones de
+más alto nivel que presentan estos sistemas. A su vez, se toman ciertas licencias literarias que deberían
 ayudar al entendimiento y que no son posibles a la hora de escribir código.
 
-### Odometría visual-inercial
-
-Cómo vimos en la introducción, el funcionamiento de Basalt se divide en dos
+Cómo vimos anteriormente, el funcionamiento de Basalt se divide en dos
 etapas. La primera etapa de odometría visual-inercial (VIO), en el cual se
 emplea un sistema de VIO que supera a sistemas equivalentes de vanguardia
 mientras que la segunda etapa de mapeo visual-inercial (VIM), toma keyframes
-producidos por la capa de VIO y ejecuta un algoritmo de _bundle adjustment_ para
-obtener un mapa global consistente. Algo que no se mencionó en la introducción
-es que estas dos capas son completamente independientes. En una corrida usual de
-un dataset, lo que se realiza es la ejecución pura y exclusiva del sistema VIO y
+producidos por la capa de VIO y ejecuta un algoritmo de bundle adjustment para
+obtener un mapa global consistente. Estas dos capas son completamente
+independientes. En una corrida usual, se ejecuta inicialmente el sistema de VIO y
 es este el que decide y almacena persistentemente qué cuadros y con qué
 información el sistema de VIM, de ejecutarse, debería utilizar al realizar el
-proceso de _bundle adjustment_.
+proceso de bundle adjustment.
 
-Esta sección explora los componentes fundamentales de la capa de VIO: _optical
-flow_, _bundle adjustment visual-inercial_ y finalmente el proceso de
-_optimización y de marginalización parcial_.
+Esto significa que, por defecto, no contamos con la capacidad de utilizar el VIM
+en tiempo real para XR, solo el VIO. Por ende solo este fue integrado con
+Monado. Se plantea como trabajo a futuro la paralelización del VIM en un hilo separado para poder correrlo
+en tiempo real[^basalt-issue69]. Exploraremos entonces, en esta parte del
+trabajo, los componentes fundamentales de la capa de VIO: _optical flow_,
+_bundle adjustment visual-inercial_ y finalmente el proceso de _optimización y
+de marginalización parcial_.
 
-#### Optical flow
+[^basalt-issue69]: Discusión sobre como adaptar Basalt para poder correr el VIM
+en tiempo real: <https://gitlab.com/VladyslavUsenko/basalt/-/issues/69>
+
+#### Optical flow {#optical-flow}
 
 <!-- TODO@fig: algún gráfico que represente lo que le entra al módulo y lo que
 sale, lo mismo para todo el pipeline de VIO, y lo mismo para todo Basalt -->
 
 El módulo de VIO toma dos tipos de entrada, una de ellas son las muestras raw de
 la IMU; y la otra, contra intuitivamente, no son las imágenes raw provenientes
-de las cámaras, sino que son los _keypoints_ resultantes de ellas. Recordemos
-que los keypoints no son más que la ubicación y rotación en dos dimensiones
+de las cámaras, sino que son los _keypoints_ resultantes de ellas. Estos son la posición en dos dimensiones
 sobre el plano de la imagen de las _features_ detectadas. Las features a su vez
 son la representación de los puntos de interés o _landmarks_ de la escena
 tridimensional proyectados sobre las imágenes. El proceso de detectar features,
@@ -1389,50 +1449,58 @@ _flujo óptico_). Cabe aclarar que optical flow es el nombre que recibe tanto el
 campo vectorial que representa el movimiento aparente de puntos entre dos
 imágenes, como el proceso de estimarlo. Este puede ser denso, si se considera el
 flujo de todos los píxeles, o no (_sparse_) si solo se computa el flujo de
-algunos keypoints como en el caso que veremos.
+algunos keypoints como es el caso que veremos.
 
-El [módulo][`frametoframeopticalflow`] de optical flow corre en un thread
-individual y es por donde las muestras del par de cámaras estéreo ingresan al
+El módulo de optical flow corre en un hilo
+separado y es por donde las muestras del par de cámaras estéreo ingresan al
 pipeline de Basalt. Inicialmente se genera una representación piramidal de las
 imágenes, o también llamada de _mipmaps_, esta es una forma tradicional
 [@williamsPyramidalParametrics1983] de almacenar una imagen en memoria junto a versiones
-reescaladas de la misma (Fig. \figref{fig:mipmap}). Los mipmaps tienen múltiples utilidades en
-computación gráfica (e.g., _filtrado trilineal_, _LODs_, reducción de
+reescaladas de la misma como se ve en la \figref{fig:mipmap}. Los mipmaps tienen múltiples utilidades en
+computación gráfica (p. ej. _filtrado trilineal_, _LODs_, reducción de
 _patrones moiré_) pero en el caso de Basalt serán utilizados para darle robustez
-al algoritmo de seguimiento de features (_feature tracking_).
+al algoritmo de seguimiento de features o _feature tracking_.
 
-[`frametoframeopticalflow`]: TODO@high
-
-\fig{fig:mipmap}{source/figures/mipmap.jpg}{Mipmaps}{%
-Representación piramidal (mipmaps) de un cuadro del conjunto de datos EuRoC.
+\fig{fig:mipmap}{source/figures/mipmap.png}{Mipmaps}{%
+Representación piramidal (mipmaps) de un cuadro del conjunto de datos estándar
+EuRoC \autocite{burriEuRoCMicroAerial2016}.
 }
+
+
 
 Posteriormente se realiza la detección de features nuevas sobre las imágenes
 utilizando el algoritmo _FAST_ [@rostenFasterBetterMachine2010a] para detección
-de esquinas implementado sobre OpenCV. Aquí es notable
+de esquinas implementado sobre _OpenCV_\marginnote{%\
+OpenCV es una de las bibliotecas de visión por computadora más populares y
+utilizadas en este tipo de sistemas. Combina múltiples algoritmos y presenta
+una licencia permisiva Apache 2 (prev. BSD-3).
+}. Resulta importante
 aclarar que Basalt es uno de los sistemas que menos depende de OpenCV, ya que
-tiende a re implementar muchas de las técnicas y algoritmia de forma
+tiende a reimplementar muchas de las técnicas y algoritmia de forma
 especializada y, como veremos en otros módulos, otras tareas razonablemente
 complejas como la optimización de grafos de poses se implementan también dentro
-del proyecto y sin recurrir a librerías externas. Esta es una de las varias
-razones por las que este sistema logra tan buen rendimiento, ya que las
-librerías externas suelen tener campos y comprobaciones dedicadas al caso
-general del problema que intenta solucionar, mientras que Basalt puede
-prescindir de todas las que no apliquen al problema de VIO. Siguiendo con la
+del proyecto y sin recurrir a bibliotecas externas. Esta es una de las varias
+razones por las que el sistema logra tan buen rendimiento, ya que
+estas bibliotecas suelen necesitar de campos y comprobaciones generales
+del problema que intenta solucionar, mientras que Basalt puede
+prescindir de todas las que no apliquen a VIO. Aunque, también es cierto que estas
+reimplementaciones añaden complejidad al sistema.
+
+Siguiendo con la
 detección de features, una heurística particular de Basalt es la división del
-cuadro completo en celdas de tamaño configurable (por defecto 50 por 50 píxeles)
-en donde se detectan las nuevas features, por celda solo se conserva la feature
-de mejor calidad o con mejor _respuesta (response)_ (aunque la cantidad a
-conservar es también configurable), y siempre que la celda tenga alguna feature
-localizada de frames anteriores, no se intenta detectar nuevas. Esto contrasta
+cuadro completo en celdas de, por defecto, 50 por 50 píxeles en donde se
+detectan los nuevos puntos de interés. Por celda solo se conserva la feature
+de mejor calidad o con mejor _respuesta (response)_, aunque se puede configurar
+para detectar más de una. Siempre que la celda tenga alguna
+localizada de cuadros anteriores, no se intenta detectar nuevas. Esto contrasta
 con sistemas como Kimera-VIO que corren la detección FAST sobre el cuadro entero
 y evitan la redetección mediante el uso de _máscaras_ que le instruyen al
 algoritmo a obviar esas secciones. Desafortunadamente la construcción de tales
 máscaras suele ser costosa y la heurística de Basalt, a pesar de desperdiciar
 espacio por no permitir la detección de nuevas características entre celdas, es
-más eficiente ya que en situaciones comunes se logran detectar una cantidad
-razonable de features sin problemas. Esta detección de features nuevas se
-realiza unicamente sobre la primera cámara (usualmente la izquierda), mientras
+más eficiente, ya que en situaciones comunes se logran detectar una cantidad
+razonable de features sin problemas. Esta detección se
+realiza únicamente sobre la primera cámara, usualmente la izquierda, mientras
 que en la otra cámara se reutiliza el método de seguimiento de keypoints que se
 describe a continuación.
 
@@ -1441,23 +1509,30 @@ describe a continuación.
 En cada instante de tiempo que entran un nuevo par de imágenes se tiene acceso a
 toda la información recolectada del instante anterior, en particular a sus
 keypoints. Una suposición razonable es que las imágenes correspondientes a este
-nuevo instante van a compartir mucho de los keypoints con las imágenes
-anteriores y en posiciones similares. En base a esa suposición Basalt logra
+nuevo instante van a compartir muchos de los keypoints con las imágenes
+anteriores y en posiciones similares. Con esa suposición Basalt logra
 ahorrarse tener que volver a detectar features de la imagen con FAST y en cambio
 el problema se transforma en, dado una imagen anterior (inicial), sus keypoints
 y una imagen nueva (objetivo), estimar donde ocurren esos mismos keypoints en la
 imagen nueva. Para esto, por cada keypoint anterior, se genera un parche
-$\Omega$ alrededor de su ubicación de, por defecto, 52 coordenadas de píxeles
-(i.e., un círculo rasterizado en un bloque de 8 por 8 píxeles). Considerando
+$\Omega$ alrededor de su ubicación de, por defecto, 52 puntos como se ve en el
+ejemplo de la \figref{fig:patches}.
+
+\fig{fig:patches}{source/figures/patches.png}{Parches}{%
+Ejemplos de los parches de 52 puntos considerados para computar el optical flow
+de distintos keypoints de una imagen.
+}
+
+Considerando
 entonces que este parche debería estar en la imagen nueva en coordenadas
-cercanas a las del keypoint anterior, queremos encontrar la transformación $T
+cercanas a las del keypoint anterior, queremos encontrar la transformación $\mathbf{T}
 \in SE(2)$ que le ocurrió al parche, y por ende al nuevo keypoint que se
 encontraría en el centro de este nuevo parche. Basalt emplea entonces
 optimización por cuadrados mínimos mediante el algoritmo iterativo de
-Gauss-Newton para encontrar $T$ utilizando un residual $r$ con:
+Gauss-Newton para encontrar $\mathbf{T}$ utilizando un residual $r$ con:
 
 <!-- TODO@correct: Realmente es gauss newton lo que se hace? ver optical_flow_max_iterations -->
-<!-- TODO@high@correct: Not quite, es inverse-compositional method, que es un gauss newton
+<!-- TODO@correct: Not quite, es inverse-compositional method, que es un gauss newton
 sobre algo un poco distinto: https://homepages.inf.ed.ac.uk/rbf/CVonline/LOCAL_COPIES/AV0910/zhao.pdf
 por eso aparece el hessiano y cosas de esa pinta -->
 <!-- TODO: Mencionar ZNCC como norma no utilizada: https://martin-thoma.com/zero-mean-normalized-cross-correlation/ -->
@@ -1469,11 +1544,11 @@ r_i =
   \ \ \ \ \forall \mathbf{x}_i \in \Omega
 $$
 
-con $I_t(\mathbf{x})$ la intensidad de la imagen anterior en el pixel ubicado en
-las coordenadas $\mathbf{x}$ (análogamente $I_{t + 1}(\mathbf{x})$ para la
-imagen objetivo); y $\overline{I_{t}}$ siendo la intensidad media del parche
-$\Omega$ en la imagen inicial (análogamente $\overline{I_{t + 1}}$ para la
-imagen objetivo y el parche transformado $\mathbf{T}\Omega$). Notar que al
+Y aquí siendo $I_t(\mathbf{x})$ la intensidad de la imagen anterior en el pixel ubicado en
+las coordenadas $\mathbf{x}$, análogamente $I_{t + 1}(\mathbf{x})$ para la
+imagen objetivo; y siendo $\overline{I_{t}}$ la intensidad media del parche
+$\Omega$ en la imagen inicial, análogamente $\overline{I_{t + 1}}$ para la
+imagen objetivo y el parche transformado $\mathbf{T}\Omega$. Notar que al
 normalizar las intensidades obtenemos un valor que es invariante incluso ante
 cambios de iluminación.
 
@@ -1482,25 +1557,21 @@ de @lucasIterativeImageRegistration1981 para tracking de features (_KLT_). El
 uso adicional de mipmaps sobre KLT fue originalmente expuesto en
 @bouguetPyramidalImplementationLucas1999.
 
-<!-- TODO@def: "asegurar que la estimacion fue exitosa" == outlier filtering.
-Quizás hablar un poco de eso -->
-
-Para asegurar que la estimación fue exitosa, se invierte el problema y se
-intenta trackear desde la imagen nueva hacia la inicial y, si el resultados está
-muy alejado de la posición inicial, el nuevo keypoint se considera inválido y se
-descarta. Otro detalle a aclarar es que, recordando que la detección de features
-con FAST solo ocurre en las imágenes de una de las cámaras, es posible ahora
-entender que las features en la segunda cámara son "detectadas" con este método,
-es decir, simplemente se considera la imagen de la segunda cámara en el mismo
-instante de tiempo como la imagen objetivo.
+Para asegurar que la estimación fue exitosa se invierte el problema y se intenta
+trackear desde la imagen nueva hacia la inicial y, si el resultado está muy
+alejado de la posición inicial, el nuevo keypoint se considera inválido
+(un _outlier_) y se lo descarta. Otro detalle a aclarar es que, recordando que la
+detección costosa de features con FAST solo ocurría en las imágenes de una de
+las cámaras, es posible ahora entender que las features en la segunda cámara
+pueden ser “detectadas” con este método menos costoso. Es decir, simplemente se
+computa el optical flow desde la imagen de la cámara izquierda a la de la cámara
+derecha en el mismo instante de tiempo.
 
 Finalmente, el último de los pasos que ocurre cuando el módulo de optical flow
-procesa un cuadro es el de filtrado de keypoints, en el cual se desproyectan los
+procesa un cuadro, es el de filtrado de keypoints, en el cual se desproyectan los
 keypoints a posiciones en la escena tridimensional y en caso de que el error
-epipolar supere cierto umbral, estos keypoints serán descartados.
-
-<!-- TODO@high@def: Que es la desproyección -->
-<!-- TODO@high@def: Qué es el error epipolar -->
+de reproyección supere cierto umbral, estos keypoints serán descartados por
+considerarse outliers.
 
 #### Bundle adjustment visual-inercial
 
@@ -1511,8 +1582,6 @@ epipolar supere cierto umbral, estos keypoints serán descartados.
 - [ ] "representation of unit vectors in 3D" stereographic projection
 - [ ] "reprojection error"
  -->
-
-<!-- TODO@high@def: Qué es bundle adjustment -->
 
 En un hilo separado al módulo de optical flow, corre el estimador de VIO
 encargado de realizar en bundle adjustment sobre los cuadros y muestras de la
@@ -1645,6 +1714,8 @@ ligado: la toma de cuadros clave, o _keyframes_.
 
 ##### Base de datos de landmarks
 
+
+
 Recordemos que el módulo de optical flow encuentra keypoints en cada cuadro,
 esto es, una landmark o punto de interés en la escena 3D proyectada sobre el
 plano de la imagen 2D. Más aún este módulo era capaz de hacer el seguimiento de
@@ -1654,8 +1725,10 @@ posiciones de estas landmarks considerando las observaciones tomadas.
 Consideremos además la naturaleza altamente ruidosa de estas observaciones, con
 landmarks que aparecen y desaparecen de la visión de los cuadros por múltiples
 razones como: ser ocluidas por objetos de escena, ser distorsionadas por el
-ángulo del observador, artefactos intrínsecos de los sensores ópticos como el
-motion blur o el ruido introducido por la ganancia del amplificador de señal
+ángulo del observador, distorsiones inherentes de los sensores ópticos\marginnote{%\
+Detallaremos en la \Cref{sec:data-characteristics} este tipo de distorsiones.
+} como el
+motion blur, la sobre exposición, o el ruido introducido por la ganancia del amplificador de señal
 digital, o simplemente porque dejan de estar en el campo de visión de las
 cámaras. Por estas razones entonces, será fundamental la correcta gestión de la
 información de las landmarks y sus observaciones. En Basalt, la clase que se
@@ -1812,7 +1885,39 @@ para uso futuro.
 
 #### Optimización y marginalización (TODO)
 
-<!-- TODO@high -->
+<!-- TODO@high: escribir -->
+
+\begin{mdframed}[backgroundcolor=shadecolor]
+TODO: Esta última parte es un poco
+compleja y me ha estado costando terminar de cerrar como explicarla. Basicamente
+lo que se hace es plantear la función de error a optimizar $E(x)$ que combina un
+montón de términos de error. Y se le quiere aplicar gauss newton. El problema es
+que al ser todo tan complejo, el cálculo de los jacobianos se hace muy rebuscado
+y se arma un callstack de funciones muy profundo que lo único que hace es
+computar valores parciales de estos jacobianos.\\
+\\
+Por otro lado la idea de
+“marginalización“ es importante por que habla de uno de los términos que aparece
+en $E(x)$ y que es un poco la novedad que trae Basalt, ellos logran eliminar
+(marginalizar) los efectos de muchas mediciones en unas pocas distribuciones
+aproximadas.\\
+\\
+Para sumar a la complejidad de esta sección, está, un poco escondido en la
+implementación, el concepto de “grafo de factores“ para armar antes de la
+optimización. No lo he profundizado lo suficiente como para explicarlo pero a
+grandes rasgos, es un grafo en donde se tienen nodos que son variables
+aleatorias mientras que los lados son las mediciones que uno toma. Por ejemplo
+un nodo puede ser la variable que representa la posición de una landmark,
+mientras que un lado puede ser el vector distancia que el agente triangulo con
+sus cámaras hacia esa landmark.\\
+La idea de estos grafos es hacer una estimación
+“máxima a posteriori“ (MAP) con todo lo que tienen adentro. MAP es un concepto
+muy parecido al de estimación de máxima verosimilitud. Básicamente lo que se
+tiene es que minimizar la función de error $E(x)$ lo que está haciendo es
+acomodando los resultados de las variables de interés para que sean los de mayor
+probabilidad (“de mayor verosimilitud“) dados las mediciones tomadas (los
+factores del grafo).
+\end{mdframed}
 
 
 \cleardoublepage
@@ -1823,9 +1928,9 @@ afectados. Además, veremos las soluciones que se les ha dado a otras
 problemáticas que son propias de la localización en tiempo real aplicada a XR.}
 # Contribuciones
 
-## Contexto {#sec:thesis-context}
+## Tracking por SLAM para Monado
 
-<!-- TODO@def: Qué es XR? -->
+### Contexto {#sec:thesis-context}
 
 Por su naturaleza, el área de XR involucra una gran cantidad de partes
 interconectadas y de dispositivos muy diversos con configuraciones difíciles de
@@ -1914,8 +2019,6 @@ principalmente en Monado, pero también en los sistemas a integrar o en sus
 _forks_ (clones específicos de las implementaciones de SLAM/VIO para uso en
 Monado).
 
-<!-- TODO@def: Ya expliqué qué es el acrónimo VR? -->
-<!-- TODO@def: Ya expliqué que es XR no es un acrónimo para "extended"? -->
 <!-- TODO@def: SDK, API -->
 
 <!-- TODO@high@ref: Todavía no se como referenciar links en la tesis. edit: ahora sé, hacerlo -->
@@ -1925,9 +2028,10 @@ Monado).
 
 <!-- TODO@def: Ya explqué que es tracker, tracking? uso esos terminos o me voy a localizar/rastrear/seguir/ubicar/posicionar -->
 
-## Tracking por SLAM para Monado
 
-En esta sección explicaremos los distintos módulos y funcionalidad implementada
+### Monado
+
+En este capítulo explicaremos los distintos módulos y funcionalidad implementada
 en Monado para permitirle proveer tracking mediante SLAM/VIO a distintos
 controladores de dispositivos y de esta forma, a las aplicaciones OpenXR que
 utilizan estos dispositivos como medios de interacción y corren sobre Monado.
@@ -2049,7 +2153,7 @@ integrado era razonable.
 Monado está desarrollado principalmente en el lenguaje C, pero gran parte de su
 código de tracking está implementado en C++ al igual que todos los sistemas de
 SLAM contemplados. Adicionalmente tanto Monado como estos sistemas suelen hacer
-un uso extensivo de la librería _OpenCV_, y en particular su clase contenedora
+un uso extensivo de la biblioteca _OpenCV_, y en particular su clase contenedora
 de imágenes y matrices `cv::Mat`. Es por esto que se terminó optando por el uso de
 un archivo _header_ C++, en el cual se declara la clase `slam_tracker` que será
 utilizada por Monado como punto de comunicación con sistemas de SLAM arbitrarios
@@ -2389,7 +2493,7 @@ muestra de la cámara (`[A]` y `[G]`).
 
 \FloatBarrier
 
-[^perfetto-web]: Librería de perfilación Perfetto: <https://perfetto.dev>
+[^perfetto-web]: Biblioteca de perfilación Perfetto: <https://perfetto.dev>
 [^percetto-web]: Wrapper de Perfetto para C: <https://github.com/olvaffe/percetto>
 
 A tiempo `[C]` las imágenes llegan al host luego de haber sido transferidas por
@@ -2982,7 +3086,7 @@ GNU/Linux.
 [^realsense-sdk]: <https://github.com/IntelRealSense/librealsense>
 [^wmr]: <https://www.microsoft.com/en-us/mixed-reality/windows-mixed-reality>
 
-### Características de los datos
+### Características de los datos {#sec:data-characteristics}
 
 Lo primero que se necesita para poder utilizar estos dispositivos para SLAM es
 conseguir el acceso a los datos que generan; o sea los flujos de imágenes
@@ -3212,7 +3316,7 @@ manejo de imágenes, al ser estos recursos de gran tamaño, Monado utiliza mecan
 _reference counting_ mediante su estructura `xrt_frame` para la gestión de memoria.
 Además, como se mencionó anteriormente, `slam_tracker` utiliza la estructura de datos
 `cv::Mat` de OpenCV como contenedora de imágenes la cual también provee conteo de
-referencias. Finalmente, las interfaces con hardware mediante librerías específicas
+referencias. Finalmente, las interfaces con hardware mediante bibliotecas específicas
 puede traer un contenedor extra de conteo de referencias. Esto puede dar lugar a muchos
 problemas con el manejo de la memoria y especial cuidado debe tenerse a la hora de
 adquirir y liberar estos recursos.

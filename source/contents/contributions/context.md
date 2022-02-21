@@ -1,6 +1,4 @@
-## Contexto {#sec:thesis-context}
-
-<!-- TODO@def: Qué es XR? -->
+### Contexto {#sec:thesis-context}
 
 Por su naturaleza, el área de XR involucra una gran cantidad de partes
 interconectadas y de dispositivos muy diversos con configuraciones difíciles de
@@ -89,8 +87,6 @@ principalmente en Monado, pero también en los sistemas a integrar o en sus
 _forks_ (clones específicos de las implementaciones de SLAM/VIO para uso en
 Monado).
 
-<!-- TODO@def: Ya expliqué qué es el acrónimo VR? -->
-<!-- TODO@def: Ya expliqué que es XR no es un acrónimo para "extended"? -->
 <!-- TODO@def: SDK, API -->
 
 <!-- TODO@high@ref: Todavía no se como referenciar links en la tesis. edit: ahora sé, hacerlo -->

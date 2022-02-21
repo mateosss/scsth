@@ -19,7 +19,7 @@ Arreglar problemas de imagenes con copyright
 - [x] NO: rolling-shuitter NUEVA
 - [ ] NO: northstar LINKEAR (https://docs.projectnorthstar.org/)
 - [ ] NO: basalt double sphere REHACER
-- [ ] NO: basalt euroc mipmap REHACER
+- [x] NO: basalt euroc mipmap REHACER
 - [ ] NO: openxr diagram, REHACER (https://www.khronos.org/legal/terms-of-use/)
 - [x] NO: openxr companies, LINKEAR (https://www.khronos.org/legal/terms-of-use/)
 -->

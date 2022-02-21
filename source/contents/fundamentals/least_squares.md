@@ -262,19 +262,19 @@ x^{(k)} - (A_k^T A_k)^{-1} A_k^T f(x^{(k)})
 
 \end{algorithm}
 
-<!-- TODO@high@def: uso el término bundle adjustment -->
-
 Gauss-Newton y minimización lineal con la pseudo-inversa serán de gran utilidad
 para expresar numerosos tipos de problemas de optimización. Se utilizará para
 problemas como ajustar la posición de un punto de interés tridimensional que es
-observado por múltiples cámaras, desproyectar puntos de cámaras con modelos de
-proyección que no tienen expresiones cerradas para su inversa, incluso veremos
-que la optimización central de los sistemas de SLAM/VIO, el bundle adjustment,
-son usualmente expresados y resueltos como una minimización de cuadrados no
+observado por múltiples cámaras; desproyectar puntos 2D de cámaras hacia puntos
+3D en la escena cuando los modelos de proyección no tienen expresiones cerradas
+para su inversa; incluso veremos que la optimización central de los sistemas de
+SLAM/VIO que combina todas las mediciones necesarias para generar las
+estimaciones de poses, usualmente llamada _bundle adjustment_\label{def:bundle-adjustment}, suele expresarse
+y resolverse como una minimización de cuadrados no
 lineales. El desarrollo de esta sección está basada en
 @nocedalNumericalOptimization2006, cap. 1, 2 y 10 y
 @boydIntroductionAppliedLinear2018, cap. 11, 12, 15 y 18; en esos trabajos se
-puede encontrar derivaciones alternativas e información de alternativas a
-Gauss-Newton más sofisticadas como Levenberg-Marquardt o el método dogleg.
+puede encontrar derivaciones alternativas e información de otras técnicas más
+sofisticadas que Gauss-Newton como Levenberg-Marquardt o el método dogleg.
 
 <!-- TODO@low: Acá se habla de weighted least squares: https://www.vectornav.com/resources/inertial-navigation-primer/math-fundamentals/math-leastsquares -->

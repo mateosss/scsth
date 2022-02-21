@@ -77,7 +77,7 @@ para correr aplicaciones OpenXR sobre sistemas operativos basados en GNU/Linux
 [^realsense-sdk]: <https://github.com/IntelRealSense/librealsense>
 [^wmr]: <https://www.microsoft.com/en-us/mixed-reality/windows-mixed-reality>
 
-### Características de los datos
+### Características de los datos {#sec:data-characteristics}
 
 Lo primero que se necesita para poder utilizar estos dispositivos para SLAM es
 conseguir el acceso a los datos que generan; o sea los flujos de imágenes
@@ -307,7 +307,7 @@ manejo de imágenes, al ser estos recursos de gran tamaño, Monado utiliza mecan
 _reference counting_ mediante su estructura `xrt_frame` para la gestión de memoria.
 Además, como se mencionó anteriormente, `slam_tracker` utiliza la estructura de datos
 `cv::Mat` de OpenCV como contenedora de imágenes la cual también provee conteo de
-referencias. Finalmente, las interfaces con hardware mediante librerías específicas
+referencias. Finalmente, las interfaces con hardware mediante bibliotecas específicas
 puede traer un contenedor extra de conteo de referencias. Esto puede dar lugar a muchos
 problemas con el manejo de la memoria y especial cuidado debe tenerse a la hora de
 adquirir y liberar estos recursos.
