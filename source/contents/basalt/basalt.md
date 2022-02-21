@@ -1,6 +1,3 @@
-<!-- TODO@high: este archivo tiene muchos TODOs pero basicamente lo que le hace falta
-es una buena proofread y arreglar los errores que se detecten ahí -->
-
 <!-- TODO@def: VIO habla acerca de componentes: (patch tracking, landmark
 representation, first-estimate Jacobians, marginalization
 scheme) que podría ser interesante discutir -->
@@ -324,16 +321,41 @@ considerarse outliers.
  -->
 
 En un hilo separado al módulo de optical flow, corre el estimador de VIO
-encargado de realizar en bundle adjustment sobre los cuadros y muestras de la
+encargado de realizar el bundle adjustment sobre los cuadros y muestras de la
 IMU recientes para estimar la pose. Este toma como entrada las muestras de la
 IMU junto a los keypoints 2D detectados para cada imagen, o sea la salida del
 módulo de optical flow. Este módulo es el que efectivamente realizará la
 integración y optimización con toda la información recibida y producirá como
 salida en una cola, la estimación de los estados del agente a localizar.
 
-##### Inicialización y pre-integración {#basalt-preintegration}
+##### Inicialización y preintegración {#basalt-preintegration}
 
-<!-- TODO@def: referencia a la sección "Calibración de IMU", escribirla, referenciarla -->
+<!-- TODO@high@def: referencia a la sección "Calibración de IMU", escribirla, referenciarla -->
+
+\begin{mdframed}[backgroundcolor=shadecolor]
+TODO: En el párrafo que sigue hablo de una sección “Calibración de IMU” que todavía no
+existe, tengo la mitad de esa sección escrita pero todavía estoy considerando si
+agregarla al trabajo o simplemente referenciarla de un libro.
+Cuando uno trabaja con sensores se tienen modelos matemáticos que describen las
+distorsiones que se suelen dar en el sensor. Calibrar un sensor significa
+encontrar los valores de los parámetros de este modelo para tu sensor particular.
+
+Se usa también cuadrados mínimos no lineales para calibrar un sensor. Uno toma varias
+mediciones y despues optimiza para encontrar los parámetros más adecuados.
+
+Esto aplica exactamente igual para las cámaras (aunque ahí hay muchos más
+modelos en uso). Y hay unos detalles muy copados de los que hablar por que
+el equipo de Basalt desarrolló sus propios modelos de cámaras que son muy
+rápidos por que están bien pensados para SLAM (la inversa de los modelos tienen expresión
+cerrada que no es usual en los modelos de cámara estándar). Además tengo un merge request abierto
+en donde contribuyo un nuevo modelo de cámara que se usa en unos cascos que les
+hicimos ingeniería inversa (los de Windows Mixed Reality) y que Basalt no
+soportaba anteriormente:
+\url{https://gitlab.com/VladyslavUsenko/basalt-headers/-/merge_requests/21}.
+
+Así que sí, me gustaría detallar más todo esto en el trabajo, pero el tiempo se
+está acabando.
+\end{mdframed}
 
 Para comenzar, el hilo de procesamiento de este módulo espera a que la primera
 muestra de la IMU arribe. Estas muestras son recibidas de forma raw y antes de
@@ -353,12 +375,13 @@ relacionada [^basalt-headers-issue8]_).
 Luego de recibir esta primer muestra de la IMU se comienza la ejecución del
 bucle principal, el cual espera indefinidamente por resultados encolados por el
 módulo de optical flow para realizar una iteración. El primer par de muestras de
-cámara junto a la primera muestra de la IMU posterior al par estéreo son
+cámaras junto a la primera muestra de la IMU posterior al par estéreo son
 utilizados para inicializar el estado del agente en el primer cuadro. Esto es ya
 que a cada cuadro se le asigna un estado que se compone de la posición,
 orientación, velocidad y biases del giroscopio y acelerómetro que se estimaron
 para tal cuadro. Notar que en Basalt, hablar de cuadros es equivalente a hablar
-de instantes de tiempo, ya que los únicos puntos en el tiempo considerados son
+de instantes de tiempo, ya que los únicos puntos en el tiempo para los cuales el
+sistema produce una pose estimada son
 las timestamps del par estéreo de imágenes recibidas.
 
 Para inicializar el primer estado se toman varias suposiciones. En particular,
@@ -368,27 +391,28 @@ reportado por la muestra del acelerómetro como el vector de gravedad y computar
 así la inclinación del agente. Notar que esta inclinación no es capaz de
 informar la orientación de forma completa al no poder contemplar uno de los ejes
 de rotación del cuerpo. Por esta razón es recomendable iniciar la corrida con el
-agente rotado con su eje $+\mathbf{Z}$ paralelo al vector gravedad, esto hará
+agente rotado con su eje vertical paralelo al vector gravedad, esto hará
 que Basalt compute la orientación identidad. Tal rotación suele corresponder con
 la posición de reposo pensada por el fabricante, o al menos este ha sido el caso
 en los dispositivos utilizados en este trabajo. Además, es conveniente
-posicionar el agente mirando hacia “adelante” (ajustar el _yaw_), como el
+posicionar el agente mirando hacia “adelante” ajustando el _yaw_ [^wikipedia-roll-pitch-yaw], como el
 usuario considere apropiado según su entorno.
+
+[^wikipedia-roll-pitch-yaw]: Los términos _roll_, _pitch_ y _yaw_ provenientes de
+la aeronáutica son muy utilizados para hablar de la orientación de un cuerpo:
+<https://en.wikipedia.org/wiki/Aircraft_principal_axes>
 
 <!-- TODO@correct: No supe explicar la inicialización de marg_data en este punto por que todavía no la había leído -->
 
-<!-- TODO@def: explicar pitch, roll, yaw -->
 <!-- TODO@maybe: explicar por qué no basta con el acelerómetro para definir la orientación completa con un grafico,
 hablar del producto cruz entre g y +Z, tilt vs orientación -->
 
-En instantes posteriores (i.e., al recibir nuevas imágenes), se realiza la
-llamada pre-integración de muestras consecutivas de la IMU. Considerando que
+En instantes posteriores, o sea al recibir nuevas imágenes, se realiza la
+llamada preintegración de muestras consecutivas de la IMU. Considerando que
 estas muestras arriban a mayores frecuencias que las de las cámaras,
-pre-integrarlas es un proceso que intenta resumir las muestras entre los cuadros
+preintegrarlas es un proceso que intenta resumir las muestras entre los cuadros
 a una única pseudo-muestra que sucede en los mismos instantes de tiempo que los
-cuadros como se muestra en el ejemplo de \figref{fig:sample-frequencies}.
-
-<!-- TODO@high@fig: benja recomendó hacer el grafico más grande y la verdad que sí, capaz ponerlo hasta 0.3s -->
+cuadros como se ve en el ejemplo de la \figref{fig:sample-frequencies}.
 
 \fig{fig:sample-frequencies}{source/figures/sample-frequencies.pdf}{%
 Ejemplo de frecuencias}{%
@@ -396,23 +420,15 @@ Frecuencia de distintos eventos para un ejemplo con cámaras a 30fps y muestras
 de la IMU a 240hz.
 }
 
-El proceso de pre-integración es el siguiente. Dado el cuadro previo $i$ con
+El proceso de preintegración es el siguiente. Dado el cuadro previo $i$ con
 timestamp $t_i$ y el cuadro posterior $j$ con timestamp $t_j$, se intenta
 computar una pseudo-muestra $\Delta \mathbf{s} = (\Delta \mathbf{R}, \Delta \mathbf{v},
-\Delta \mathbf{p})$ que representa cambios de orientación, velocidad y posición
+\Delta \mathbf{p}) \in SO(3) \times \R^3 \times \R^3$ que representa cambios de orientación, velocidad y posición
 respectivamente según las mediciones de la IMU que ocurrieron desde $t_i$ hasta
 $t_j$. Para cada timestamp $t$ de la IMU tal que $t_i < t \leq t_j$ tenemos la
 muestra de aceleración lineal $\mathbf{a}_t$ y de velocidad angular
-$\mathbf{\omega}_t$. Definimos entonces de forma recursiva la pseudo-muestra
+$\mathbf{\upomega}_t$. Definimos entonces de forma recursiva la pseudo-muestra
 $\Delta \mathbf{s}$ de la siguiente manera:
-
-<!-- TODO@high@def: entender este conjunto de ecuaciones requiere:
-- saber que R es 3x3. Y que es lo que significa multiplicar por R
-- qué es exp
-EDIT: ya hice la seccion de transforms.md ahora por si las dudas deberia
-leer todo lo de basalt de vuelta para ver si tiene sentido igualmente antes
-de sacar el to-do.
- -->
 
 <!-- $$ -->
 
@@ -421,7 +437,7 @@ de sacar el to-do.
 (\Delta \mathbf{R}_{t_i}, \Delta \mathbf{v}_{t_i}, \Delta
 \mathbf{p}_{t_i}) & := (\mathbf{I}, \mathbf{0}, \mathbf{0})
 \\
-\Delta \mathbf{R}_{t+1} & := \Delta \mathbf{R}_t exp(\mathbf{\omega}_{t+1} \Delta t)
+\Delta \mathbf{R}_{t+1} & := \Delta \mathbf{R}_t exp(\mathbf{\upomega}_{t+1} \Delta t)
 \\
 \Delta \mathbf{v}_{t+1} & := \Delta \mathbf{v}_t + \Delta{\mathbf{R}_t}
 \mathbf{a}_{t+1} \Delta t
@@ -436,20 +452,20 @@ de sacar el to-do.
 
 <!-- $$ -->
 
-Es destacable mencionar que este tipo de pre-integración es también utilizado
+Es destacable mencionar que este tipo de preintegración es también utilizado
 por los otros sistemas estudiados Kimera y ORB-SLAM3. La ventaja que presenta es
 que sus características son bien conocidas gracias al trabajo de
 @forsterOnManifoldPreintegrationRealTime2017 y las expresiones necesarias para
 el cómputo de residuales, como sus jacobianos, son cerradas y fueron derivadas
 de forma ejemplar en dicho trabajo.
 
-Entonces, con esta muestra pre-integrada junto a los datos del nuevo cuadro (sus
+Entonces, con esta muestra preintegrada junto a los datos del nuevo cuadro (sus
 keypoints), se procede a la etapa de `measure` del módulo de VIO. Aquí lo
 primero que se hace es predecir que el estado de este nuevo instante estará
 basado en el estado del instante anterior más la adición de las muestras
-pre-integradas de la IMU. El resto de la etapa de `measure` se basa en el manejo
+preintegradas de la IMU. El resto de la etapa de `measure` se basa en el manejo
 y actualización de la base de datos de los puntos de interés en 3D, o
-_landmarks_, y sus observaciones, junto a algo que, en Basalt, está fuertemente
+_landmarks_, y sus _observaciones_, junto a algo que, en Basalt, está fuertemente
 ligado: la toma de cuadros clave, o _keyframes_.
 
 ##### Base de datos de landmarks
@@ -461,14 +477,14 @@ Detallaremos en la \Cref{sec:data-characteristics} este tipo de distorsiones.
 Recordemos que el módulo de optical flow encuentra keypoints en cada cuadro,
 esto es, una landmark o punto de interés en la escena 3D proyectada sobre el
 plano de la imagen 2D. Más aún este módulo era capaz de hacer el seguimiento de
-keypoints similares mediante optical flow, es decir, de keypoints que observan a
+keypoints similares mediante optical flow, es decir, de keypoints que observan
 la misma landmark. Parte de nuestro objetivo entonces será triangular las
 posiciones de estas landmarks considerando las observaciones tomadas.
 Consideremos además la naturaleza altamente ruidosa de estas observaciones, con
 landmarks que aparecen y desaparecen de la visión de los cuadros por múltiples
-razones como: ser ocluidas por objetos de escena, ser distorsionadas por el
+razones como: ser ocluidas por objetos en el entorno, ser distorsionadas por el
 ángulo del observador, distorsiones inherentes de los sensores ópticos\marginnote{MN_CAMERA_DISTORTIONS} como el
-motion blur, la sobre exposición, o el ruido introducido por la ganancia del amplificador de señal
+motion blur, la sobreexposición, el ruido introducido por la ganancia del amplificador de señal
 digital, o simplemente porque dejan de estar en el campo de visión de las
 cámaras. Por estas razones entonces, será fundamental la correcta gestión de la
 información de las landmarks y sus observaciones. En Basalt, la clase que se
@@ -515,10 +531,10 @@ alojadas en el keyframe. Un `Keypoint` es reconocido en un cuadro particular, y
 solo tiene sentido como coordenadas en ese cuadro, es esto lo que representa el
 segundo `FrameId` de la definición de `observations`.
 
-Habiendo dicho esto, al recibir un nuevo cuadro `measure` simplemente recorre
+Habiendo dicho esto, al recibir un nuevo cuadro, `measure` simplemente recorre
 todas las observaciones o `Keypoint`s que este trae y se añaden a la base de
 datos las observaciones de landmarks ya existente en la misma. Observaciones de
-landmarks no registradas en la base de dato se guardan para poder determinar si
+landmarks no registradas en la base de datos se guardan para poder determinar si
 el módulo amerita la toma de un nuevo keyframe.
 
 ##### Keyframes
@@ -526,7 +542,7 @@ el módulo amerita la toma de un nuevo keyframe.
 En contraste con sistemas como Kimera y ORB-SLAM3 que tienen condiciones más
 intrincadas, en Basalt, la heurística para decidir si el cuadro actual será un
 keyframe es muy sencilla: si _más del 30% de las observaciones del cuadro actual
-corresponden a landmarks no registradas y han sucedido más de, por defecto, 5
+corresponden a landmarks no registradas y han pasado más de, por defecto, 5
 cuadros consecutivos que no fueron keyframes_, el cuadro actual será tomado como
 un keyframe. La toma de keyframes es lo que registra nuevas landmarks a la base
 de datos y realiza la estimación inicial de su posición.
@@ -540,19 +556,16 @@ posición tridimensional de la landmark al registrarla.
 Se tiene entonces que para cada observación desconectada $\mathbf{p}_h \in \R^2$
 producida por la cámara $h$ del keyframe se recorrerán todos los cuadros desde
 el último keyframe, buscando por una segunda observación $\mathbf{p}_t \in \R^2$
-de esta landmark producida en alguna cámara $t$. En caso de encontrarla se sigue
-considerando lo siguiente.
+de esta landmark producida en alguna cámara $t$. En caso de encontrarla se
+continúa de la siguiente manera:\newline
 
-<!-- LTeX: language=es-AR -->
-
-- La cámara $h$ dels keyframe tiene una pose estimada para la IMU en esa timestamp
+- La cámara $h$ del keyframe tiene una pose estimada para la IMU en esa timestamp
   que denominaremos $\mathbf{T}_{i_h} \in SE(3)$. Similarmente tendremos
   $\mathbf{T}_{i_t}$ para la cámara $t$.
 
 - A su vez como los parámetros de calibración son estáticos y conocidos,
-  conocemos la función de proyección $\pi_h$, sus parámetros intrínsecos
-  $\mathbf{i}_h$ y la pose relativa de la cámara $h$ respecto a la IMU. Llamaremos
-  a esta transformación fija $\mathbf{T}_{i_h c_h} \in SE(3)$. Similarmente con
+  tenemos la función de proyección $\pi_h$, sus parámetros intrínsecos
+  $\mathbf{i}_h$ y la pose relativa $\mathbf{T}_{i_h c_h} \in SE(3)$ de la cámara $h$ respecto a la IMU. Similarmente con
   $\pi_t$, $\mathbf{i}_t$ y $\mathbf{T}_{i_t c_t}$ para la cámara $t$.
 
 - Podemos ahora desproyectar $\mathbf{p}_h$ y $\mathbf{p}_t$ a sus respectivas
@@ -575,6 +588,19 @@ considerando lo siguiente.
   los tres primeros componentes corresponden al _bearing vector_, es decir, un
   vector unitario que determina la dirección desde la cámara hacia la landmark.
 
+\begin{mdframed}[backgroundcolor=shadecolor]
+TODO: En el último punto hablo de una sección “DLT con SVD” que no existe en el
+trabajo.
+Estoy todavía viendo si agregarla o simplemente referenciar el capítulo del libro
+de Multiple View Geometry de la bibliografía.
+
+DLT es direct linear transform y SVD es single value decomposition.
+Esto se usa para triangular puntos 3D dadas dos vistas 2D.
+Pero los detalles no necesité profundizarlos.
+\end{mdframed}
+
+<!-- TODO@high: ese último punto hablo de SVD, y DLT y referencio una sección que no existe. -->
+
 <!-- TODO@def: distancia inversa: ver paper referenciado en basalt [6]: Inverse depth parametrization
 for monocular SLAM -->
 <!-- TODO@def: Este último punto está raro por que no entendía bien de lo que
@@ -590,23 +616,25 @@ los dos cuadros, la baseline, sea lo suficientemente grande para considerar la
 triangulación exitosa, de lo contrario se busca un nuevo cuadro para comparar
 con el keyframe. Esta comprobación se reduce a revisar que la norma del vector
 de traslación contenido en $\mathbf{T}_{c_h c_t}$ sea de, por defecto, más
-de 5cm.
+de 5 cm.
 
 Como se ve en la definición de `Landmark`, la posición 3D de estos puntos de
 interés no se almacena exactamente de la misma forma que la triangulación los
 produce. En particular, no se almacena el bearing vector directamente, sino que
 se utiliza un punto 2D más compacto `direction` que lo codifica (para esto se
-utiliza una proyección estereográfica como se explica en la
+utiliza una _proyección estereográfica_ como se explica en la
 \figref{fig:stereographic-projection}) junto a `inverse_distance`, la distancia inversa
 a este punto producto de la triangulación, de esta forma la posición de la
 landmark queda ligada al keyframe que la aloja.
 
+<!-- TODO@high@fig: rehacer esta fig -->
+
 \fig{fig:stereographic-projection}{source/figures/stereographic-projection.png}{Proyección estereográfica}{%
 Interpretación geométrica de la proyección estereográfica utilizada para
 representar bearing vectors. Las coordenadas definidas por la propiedad \mono{Vector2
-direction} definen un punto en el plano $XY$ ($Z=0$) mostrado en azul. Para
+direction} en \mono{Landmark} definen un punto en el plano $XY$ ($Z=0$) mostrado en azul. Para
 obtener el vector unitario correspondiente, se traza una línea desde el punto
-$(0 0 -1)^T$ hacia \mono{direction} en el plano $XY$. El vector en el que esta línea
+$(0,\ 0,\ -1)^T$ hacia \mono{direction} en el plano $XY$. El vector en el que esta línea
 interseca a la esfera unitaria será el bearing vector codificado. Se muestran
 tres ejemplos en rojo, verde y amarillo, con lineas punteadas que representan
 las líneas trazadas y flechas representando los bearing vectors obtenidos.
@@ -632,7 +660,7 @@ TODO: Esta última parte es un poco
 compleja y me ha estado costando terminar de cerrar como explicarla. Basicamente
 lo que se hace es plantear la función de error a optimizar $E(x)$ que combina un
 montón de términos de error. Y se le quiere aplicar gauss newton. El problema es
-que al ser todo tan complejo, el cálculo de los jacobianos se hace muy rebuscado
+que al haber tantos términos que optimizar, el cálculo de los jacobianos se hace muy rebuscado
 y se arma un callstack de funciones muy profundo que lo único que hace es
 computar valores parciales de estos jacobianos.\\
 \\
@@ -646,15 +674,16 @@ Para sumar a la complejidad de esta sección, está, un poco escondido en la
 implementación, el concepto de “grafo de factores“ para armar antes de la
 optimización. No lo he profundizado lo suficiente como para explicarlo pero a
 grandes rasgos, es un grafo en donde se tienen nodos que son variables
-aleatorias mientras que los lados son las mediciones que uno toma. Por ejemplo
-un nodo puede ser la variable que representa la posición de una landmark,
-mientras que un lado puede ser el vector distancia que el agente triangulo con
-sus cámaras hacia esa landmark.\\
+aleatorias mientras que los lados son las mediciones que uno toma (los factores). Por ejemplo
+un nodo puede ser la variable que representa la posición de una landmark que
+quiero estimar,
+mientras que un factor puede ser el vector distancia que el agente trianguló con
+sus cámaras hacia esa landmark (también tiene ruido).\\
 La idea de estos grafos es hacer una estimación
 “máxima a posteriori“ (MAP) con todo lo que tienen adentro. MAP es un concepto
 muy parecido al de estimación de máxima verosimilitud. Básicamente lo que se
 tiene es que minimizar la función de error $E(x)$ lo que está haciendo es
 acomodando los resultados de las variables de interés para que sean los de mayor
-probabilidad (“de mayor verosimilitud“) dados las mediciones tomadas (los
+probabilidad (“de mayor verosimilitud“) dadas las restricciones impuestas por las mediciones tomadas (los
 factores del grafo).
 \end{mdframed}

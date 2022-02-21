@@ -7,3 +7,6 @@ noise/continuous time/discrete time
 
 <!-- @ref: barfoot en capitulo 6 tiene explicacion de modelo de camara -->
 <!-- @teo: There is also the second lecture from TUM that talks about camera models in its first half -->
+
+<!-- Esta sección afectaría más que nada a la parte de reconocimiento de landmarks
+en basalt.md, donde empiezo a hablar de la funcion de proyección pi y sus intrinsics -->
