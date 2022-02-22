@@ -339,6 +339,13 @@ coordenadas a las poses que el sistema le devuelve a Monado.
 
 ### RealSense (TODO)
 
+\begin{mdframed}[backgroundcolor=shadecolor]
+TODO: Esta sección con esta cámara, y la siguiente con el casco VR deberían
+simplemente terminar de concretar un poco los problemas que listé arriba con
+algunos matices particulares que hayan aparecido. Escribí un poco de RealSense
+pero no lo terminé.
+\end{mdframed}
+
 Estamos ahora en condiciones de entender las contribuciones a controladores
 realizadas en este trabajo. Comencemos por las del controlador para dispositivos
 RealSense.
@@ -363,15 +370,20 @@ parte superior.
 El casco AR libre del proyecto North Star con una cámara T265 sujeta en la parte superior.
 }
 
-https://www.collabora.com/assets/images/blog/ProjectNorthStar.jpg
-[^t265]: <https://www.intelrealsense.com/tracking-camera-t265/>
+\begin{mdframed}[backgroundcolor=shadecolor]
+TODO: Esa imagen seguro la saco por que no es CC-BY, pero probablemente linkeo a
+la URL.
+\end{mdframed}
+
+<!-- https://www.collabora.com/assets/images/blog/ProjectNorthStar.jpg
+[^t265]: <https://www.intelrealsense.com/tracking-camera-t265/> -->
 
 [^north-star]: El proyecto North Star de UltraLeap (prev. LeapMotion) es un
 casco AR "DIY" que puede fabricarse con piezas impresas en 3D y la compra de
 algunos componentes. <https://developer.leapmotion.com/northstar>
 
-[^north-star-img1]:
-[^north-star-img2]:
+<!-- [^north-star-img1]:
+[^north-star-img2]: -->
 
 Al no haber ningún tipo de manejo de las imágenes o muestras de IMU provistas
 por la cámara, se tuvo que implementar la gestión de estos sensores. Es ahora
@@ -420,6 +432,19 @@ y finalmente presentar una tabla comparativa (o capaz eso hacerlo antes?)
 <!-- #endif -->
 
 ### Windows Mixed Reality (TODO)
+
+\begin{mdframed}[backgroundcolor=shadecolor]
+TODO: Similar a lo que menciné en la sección de arriba. Lo interesante de esta
+sección creo yo es que participé un montón con la comunidad y le estuvimos
+haciendo ingeniería inversa a estos cascos privativos para ver que comandos USB
+mandarles y como leerlos para tener acceso a los streams de la cámara y de la
+IMU. Además, esto es eso que marco en el abstract, es el primer casco comercial
+que tiene tracking de este tipo andando en Linux con el stack full open source.
+Y aunque está genial eso, es cierto que no le llega ni a los talones todavía lo
+que tenemos comparado a la versión privativa de Microsoft. Pero bueno por lo
+menos se puede caminar y dar vuelta un poco para observar cosas sin problemas lo
+cual es mucho mejor que nada.
+\end{mdframed}
 
 <!-- #if 0 -->
       - [TODO] Atenuación exponencial para sincronización temporal

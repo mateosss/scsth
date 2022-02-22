@@ -4,7 +4,7 @@
 
 Las aplicaciones XR requieren poder localizar constantemente a los distintos
 dispositivos de entrada y salida soportados que son utilizados por el usuario.
-En la especificación de OpenXR las dos principales funciones que le permiten a
+En la especificación de OpenXR [@thekhronosgroupinc.OpenXRSpecification] las dos principales funciones que le permiten a
 la aplicación pedirle al runtime las poses de estos dispositivos son
 `xrLocateSpace` y `xrLocateViews`. La primera se utiliza para solicitar poses de
 dispositivos “comunes” (suelen ser distintos tipos de mandos) mientras que la
@@ -79,7 +79,7 @@ siguientes duraciones:
 
 En la \figref{fig:prediction-timeline} se puede apreciar una captura de pantalla
 de la interfaz de *Perfetto*[^perfetto-web] que, en conjunto con *Percetto*[^percetto-web],
-son herramientas de medición de tiempos preferidas para Monado.
+son las herramientas de medición de tiempos preferidas para Monado.
 Esta captura es sobre una corrida en tiempo real con Monado, Basalt y una cámara
 RealSense D455 con imágenes estéreo de resolución 640x480 a 30 cuadros por
 segundo. La figura muestra un tramo de unos 35 ms con la particularidad de que
@@ -124,7 +124,7 @@ petición a tiempo `[D]` para `[E]` debe ser respondida.
 
 En conclusión, tenemos un **desfasaje temporal** que hace que las poses
 estimadas siempre estén levemente en el pasado; en el tramo seleccionado fue de
-25,5ms (más los 7 ms de predicción), pero es variable durante la corrida.
+25,5 ms (más los 7 ms de predicción), pero es variable durante la corrida.
 Además, las poses se estiman para **puntos discretos** de tiempo, mientras que
 el usuario puede pedir una predicción para cualquier punto arbitrario. Entonces,
 si queremos ser capaces de proveer al usuario una pose para el tiempo
@@ -172,6 +172,13 @@ exp(\Delta t \ \hat\omega) & \Delta t \ v \\
 \end{align}
 <!-- $$ -->
 
+<!-- #define MN_OPENXR_TIME_LIMITS %\
+La especificación de OpenXR tiene una sección dedicada a
+las restricciones y condiciones a los que el runtime está sujeto respecto a
+solicitudes en el pasado y en el futuro por parte del usuario. Ver
+\autocite{thekhronosgroupinc.OpenXRSpecification}, secc. 2.14.
+-->
+
 Monado provee varias herramientas que facilitan tareas que suelen ser
 recurrentes en diversos sistemas de tracking. La tarea de estimar espacios
 futuros basándose en uno dado con sus velocidades es una de estas
@@ -180,19 +187,13 @@ que permite almacenar un “historial” de estos espacios en una cola circular 
 generar las interpolaciones y extrapolaciones, tanto a futuro como a pasado,
 necesarias para cualquier timestamp requerida por un usuario. Para las
 interpolaciones se utiliza una simple interpolación lineal^[En el caso de la
-orientación es una interpolación esférica lineal o _slerp_
-<https://en.wikipedia.org/wiki/Slerp#Quaternion_Slerp>] o _lerp_ de a trozos
+orientación es la interpolación esférica lineal $slerp$ que definimos en la \Cref{eq:slerp-def}] o _lerp_ de a trozos
 entre cada par de espacios del historial. Para extrapolar hacia el futuro, se
 usa la pose y velocidad almacenada en el espacio más reciente del historial para
 realizar el cómputo con $\Delta T$ como se definió en la
 [](#eq:predicted-space-delta). Simétricamente para extrapolar hacia el pasado
-lejano[^openxr-time-limits], o sea fuera del registro del historial, se utilizará el espacio más
+lejano\marginnote{MN_OPENXR_TIME_LIMITS}, o sea fuera del registro del historial, se utilizará el espacio más
 antiguo almacenado y $\Delta T^{-1}$.
-
-[^openxr-time-limits]: La especificación de OpenXR tiene una sección dedicada a
-las restricciones y condiciones a los que el runtime está sujeto respecto a
-solicitudes en el pasado y en el futuro por parte del usuario. Ver
-[@thekhronosgroupinc.OpenXRSpecification], secc. 2.14.
 
 Sería razonable, como primera aproximación a nuestro problema, utilizar este
 historial de espacios. Esto nos garantiza que podamos proveerle al usuario una
@@ -218,8 +219,6 @@ estimadas por el sistema de SLAM son perfectas por simplicidad.
 }
 
 \FloatBarrier
-
-<!-- TODO@def: Estoy caminando alrededor del tema de los cuaterniones muy fuerte. -->
 
 Esto es una buena primera solución al problema, y es la opción más básica que la
 clase adaptadora `TrackerSlam` le ofrece a los usuarios de Monado.
@@ -270,6 +269,7 @@ código que se presenta a continuación. Cabe aclarar que la función
 (el historial de relaciones) y `predict_from_space` (la función de predicción en
 base a un espacio).
 
+\clearpage
 ``` {#lst:predict-pose .cpp caption="Predicción de poses en Monado" emph="timestamp"}
 struct xrt_space_relation predict_pose(timestamp t) {
    if (relation_history.is_empty()) return {0};
@@ -330,8 +330,7 @@ ejemplo asume que tanto las muestras de odometría de la IMU a tiempos $t \in
 \{1,3; 1,6; 1,9\}$ como las estimaciones `B` y `C` coinciden perfectamente con
 la trayectoria real del dispositivo.
 
-<!-- TODO@end: estaríá bueno que ambas figuras aparezcan en la misma página -->
-
+<!-- TODO@high@fig: esta figura no creo que se lea bien cuando se imprima, como podría agrandarla? -->
 \fig{fig:prediction-with-imu}{source/figures/prediction-with-imu.pdf}{Predicción con promediado de muestras IMU}{%
 Ejemplo de predicción para tiempos $t \in \{1,45; 1,75; 1,95\}$ utilizando la
 idea de promediar muestras de la IMU posteriores a la pose más reciente del

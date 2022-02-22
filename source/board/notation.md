@@ -20,7 +20,7 @@ Arreglar problemas de imagenes con copyright
 - [ ] NO: northstar LINKEAR (https://docs.projectnorthstar.org/)
 - [ ] NO: basalt double sphere REHACER
 - [x] NO: basalt euroc mipmap REHACER
-- [ ] NO: openxr diagram, REHACER (https://www.khronos.org/legal/terms-of-use/)
+- [x] NO: openxr diagram, REHACER (https://www.khronos.org/legal/terms-of-use/)
 - [x] NO: openxr companies, LINKEAR (https://www.khronos.org/legal/terms-of-use/)
 -->
 
@@ -28,15 +28,9 @@ Arreglar problemas de imagenes con copyright
 
 <!-- TODO@high@style: preguntar si da mucho rechazo que sea tan colorido -->
 <!-- TODO@high@fig: revisar todos los gráficos manuscritos: sacar cuadriculados y que estén bien el idioma, capaz pasar largo a fira code? -->
-<!-- TODO@high: migrar las footnotes adecuadas a marginnote -->
-<!-- TODO@high: tengo capitulos de 1 pagina -->
 <!-- TODO@end: revisar que todas las ^T transpuestas estén escrita con T mayuscula -->
 <!-- TODO@high@end: Revisar \\ colgantes con la busqueda regex: "\\\\\n\\end" -->
 <!-- TODO@high@end: los margin par se pueden salir de la página, revisar que ninguno haya quedado así!-->
-<!-- TODO@high@end:
-Poner la leyenda creative commons completa, quizás en el dorso de la carátula?
-https://creativecommons.org/choose/non-web-popup?license_code=by&amp;jurisdiction=&amp;version=4.0&amp;lang=es
--->
 <!-- TODO@end: revisar que todos los \begin{align} no tengan una linea vacia arriba: es decir que no haya "\n\n\\begin" -->
 <!-- TODO@end: todo lo que diga TODO@end hay que chequearlo al terminar el trabajo -->
 <!-- TODO@endbig: rehacer todas las figuras manuscritas -->

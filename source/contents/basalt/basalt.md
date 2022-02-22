@@ -19,7 +19,7 @@ detallar mucho en el resto del trabajo: Kimera-VIO y ORB-SLAM3.\\
 \newline
 En el trabajo integré tres sistemas.
 \begin{enumerate}
-\item Kimera-VIO: Este parecía muy bueno, es del MIT, con licencia permisiva MIT
+\item Kimera-VIO: Este parecía muy bueno, es del MIT, con licencia permisiva BSD-2
    pero resulto ser bastante malo. Intentaba hacer mucho y había mucho
    ``overengineering'' y técnicas lentas en general.
 \item ORB-SLAM3: De la universidad de Zaragoza, es \emph{la} referencia del mejor
@@ -36,7 +36,14 @@ En el trabajo integré tres sistemas.
    esta segunda parte del trabajo está dedicada a la implementación de Basalt.
 \end{enumerate}
 
-Así que lo que sigue ya directamente habla de Basalt.
+También pondría como footnotes unos videos de como quedó la integración andando con cada uno:
+\begin{itemize}
+\item Basalt: \url{https://youtu.be/gxu3Ve8VCnI}
+\item ORB-SLAM3: \url{https://youtu.be/kJwWY973b10}
+\item Kimera-VIO: \url{https://youtu.be/ajuqQ7E1MFw}
+\end{itemize}
+
+En definitiva, lo que sigue habla puramente de Basalt:
 \end{mdframed}
 
 #### Problemáticas
@@ -206,7 +213,7 @@ EuRoC \autocite{burriEuRoCMicroAerial2016}.
 <!-- #define MN_OPENCV %\
 OpenCV es una de las bibliotecas de visión por computadora más populares y
 utilizadas en este tipo de sistemas. Combina múltiples algoritmos y presenta
-una licencia permisiva Apache 2 (prev. BSD-3).
+una licencia permisiva Apache 2 \autocite{ApacheLicenseVersion} (prev. BSD-3 \autocite{3ClauseBSDLicense}).
 -->
 
 Posteriormente se realiza la detección de features nuevas sobre las imágenes
@@ -488,9 +495,9 @@ motion blur, la sobreexposición, el ruido introducido por la ganancia del ampli
 digital, o simplemente porque dejan de estar en el campo de visión de las
 cámaras. Por estas razones entonces, será fundamental la correcta gestión de la
 información de las landmarks y sus observaciones. En Basalt, la clase que se
-encarga de esto es la `LandmarkDatabase` con la siguiente estructura.
+encarga de esto es la `LandmarkDatabase` con la estructura como se define en el \Cref{lst:basalt-defs}.
 
-```C++
+```{#lst:basalt-defs .cpp caption="Estructuras de Basalt"}
 class LandmarkDatabase {
   map<LandmarkId, Landmark> landmarks;
   map<FrameId, map<FrameId, Keypoint>> observations;

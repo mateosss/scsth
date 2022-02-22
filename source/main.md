@@ -36,4 +36,3 @@ intentan describir el rendimiento y la precisión logrados en la implementación
 actual. Concluiremos con una revisión general de los temas tratados y posibles
 líneas de trabajo a considerar para el futuro.}
 <!-- #include contents/conclusions/conclusions.md -->
-

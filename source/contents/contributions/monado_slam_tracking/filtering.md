@@ -175,22 +175,28 @@ Con $\alpha$ que se adapta con la velocidad de la señal:
 \tau &= \frac{1}{2 \pi f_C}
 \end{align}
 
-A continuación, $f_C$ es la llamada _frecuencia de corte_[^fc-lowpass] y posee
-un mínimo ajustable por el usuario $f_{C_{min}}$ y un parámetro de intensidad de
-actualización $\beta$ también configurable[^fc-perception].
-\begin{align}
-f_C &= f_{C_{min}} + \beta | \hat{\dot{p}}_k |
-\end{align}
 
-[^fc-lowpass]: Algunos lectores reconocerán que el término “frecuencia de corte”
-proviene de los filtros _low-pass_ y efectivamente, notarán que el filtro 1€ es
+<!-- TODO@high@end: estas marginnotes se cortan horrible -->
+<!-- #define MN_FC_LOWPASS %\
+Algunos lectores reconocerán que el término “frecuencia de corte”
+proviene de los filtros low-pass y efectivamente, notarán que el filtro 1€ es
 de este tipo con la particularidad de tener una frecuencia de corte dinámica.
+-->
 
-[^fc-perception]: Frecuencias de corte bajas reducen el ruido de las poses a
+<!-- #define MN_FC_PERCEPTION %\
+Frecuencias de corte bajas reducen el ruido de las poses a
 costa de aumentar la latencia. La forma en la que $f_c$ es definida resulta en
 valores altos (y por ende con baja latencia) cuando se presentan cambios
 significativos en las poses, mientras que para movimientos más suaves se reduce
 $f_c$ para a su vez disminuir el ruido.
+-->
+
+A continuación, $f_C$ es la llamada _frecuencia de corte_ \marginnote{MN_FC_LOWPASS} y posee
+un mínimo ajustable por el usuario $f_{C_{min}}$ y un parámetro de intensidad de
+actualización $\beta$ también configurable \marginnote{MN_FC_PERCEPTION}.
+\begin{align}
+f_C &= f_{C_{min}} + \beta | \hat{\dot{p}}_k |
+\end{align}
 
 La velocidad de la señal es a su vez ajustada con otro filtro de suavizado
 exponencial con factor de suavizado fijo $f_{C_d}$, también configurable por el

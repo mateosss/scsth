@@ -187,16 +187,38 @@ entendimiento del autor, son ahora los primeros cascos comerciales capaces de
 ser localizados por SLAM/VIO en una plataforma basada completamente en código
 libre.
 
-### Estructura de la Tesis (TODO)
+### Estructura de la tesis
 
-\begin{mdframed}[backgroundcolor=shadecolor]
-TODO: En esta sección detallaría lo que se va a ver en cada capítulo. La planeo
-escribir después de terminar de acomodarlos. Ahora tengo algunos de dos páginas
-mientras que hay otros de 30 y eso no tiene mucho sentido.
-\end{mdframed}
+En la primera parte de este trabajo veremos algunos conceptos fundamentales para
+entender el funcionamiento de los sistemas de SLAM y VIO. Veremos
+representaciones usuales de la pose de un cuerpo en el espacio y de las
+transformaciones que se le pueden aplicar al mismo. Esto incluye conceptos como
+_ángulos Euler_, _cuaterniones_ y algunas ideas básicas de _grupos de Lie_. En
+el capítulo siguiente desarrollaremos el método de _optimización no lineal_ de
+_Gauss Newton_. Este tipo de optimización es el núcleo computacional de los
+sistemas modernos, ya que es utilizada para realizar la fusión de muestras de
+sensores maximizando la verosimilitud de un estimador estadístico. Además, se
+utiliza este tipo de optimización para resolver varios otros subproblemas como
+lo son la calibración de sensores, la proyección y reproyección de puntos hacia
+las cámaras y viceversa, la creación y el mantenimiento del mapa del entorno,
+entre otros.
 
-<!--
-Contexto/motivación (mencionar algo de las comunidades con las que trabajé,
-mencionar que CV es muy trial and error, oversights pueden costar horas)
-mencionar ILLIXR, WMR community?
--->
+La siguiente parte del trabajo nos enfocaremos en una implementación particular
+de uno de estos sistemas: Basalt. Esto permitirá introducir y ver muchos de los
+conceptos y algoritmia que se utilizan de forma concreta y contextualizadas.
+Veremos cómo Basalt utiliza algoritmos de _optical flow_ para hacer el seguimiento
+de _features_, cómo decide cuáles cuadros serán _keyframes_, de qué forma
+utiliza y _preintegra_ las muestras de la IMU, la gestión de las _landmarks_ que
+realiza y finalmente cómo construye la función de _error_ a optimizar.
+
+En la tercera parte presentaremos los detalles de la integración con Monado.
+Veremos las decisiones tomadas a la hora de diseñar la interfaz fundamental de
+la integración con este tipo de sistemas. Hablaremos algunos problemas
+particulares que debieron resolverse para aplicarlos a XR. Además hablaremos de
+los controladores de dispositivos que se extendieron y los cuidados que hubo que
+tener para generar datos aceptables para SLAM.
+
+Para cerrar el trabajo, en la cuarta parte presentamos algunos resultados
+cualitativos del rendimiento y la precisión de los sistemas integrados.
+Finalmente cerramos con algunas conclusiones y líneas de trabajo a considerar
+para el futuro.

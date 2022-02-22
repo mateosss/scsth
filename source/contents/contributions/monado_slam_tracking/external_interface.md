@@ -7,18 +7,18 @@
 Desde un principio se entendió que se necesitaría utilizar sistemas ya
 desarrollados como punto de partida. Estos sistemas son complejos y suelen
 utilizar conceptos teóricos de significativa profundidad, por lo que su
-creación suele estar limitado a grupos de investigación expertos durante
-tiempos significativos de desarrollo. Los tres sistemas estudiados por ejemplo,
+creación suele estar limitado a grupos de investigación expertos que toman gran
+tiempo de desarrollo. Los tres sistemas estudiados por ejemplo,
 promedian las 25.000 líneas de código (o 25 _KLOC_) cada uno.
 
 Ahora bien, en muchos casos, haber intentado integrar el código del sistema
 directamente dentro de un componente de Monado no era una opción. Dejando de
 lado las dificultades técnicas, los problemas de compatibilidad de licencia
 fueron de particular interés. La gran mayoría de sistemas SLAM producidos en la
-academia son liberados bajo licencias abiertas “contagiosas” como _GPL_ que
+academia son liberados bajo licencias abiertas “virales” como _GPL_ [@GNUGeneralPublic] que
 obligan a desarrolladores que utilizan código del sistema a liberar y licenciar
-su código con la misma licencia. Esto contrasta con la licencia abierta y
-permisiva de Monado, la _BSL-1.0_, que no impone restricciones sobre como los
+su código de la misma manera. Esto contrasta con la licencia abierta y
+permisiva de Monado, la _BSL-1.0_ [@BoostSoftwareLicensea], que no impone restricciones sobre como los
 usuarios deben licenciar su código.
 
 Estas fueron algunas razones para intentar desacoplar el sistema a utilizar lo
@@ -26,21 +26,21 @@ más que se pueda de Monado. Además, considerando la naturaleza experimental de
 este trabajo, la posibilidad de que más de un sistema necesitase ser
 integrado era razonable.
 
-<!-- TODO@def: que es OpenCV -->
-
-Monado está desarrollado principalmente en el lenguaje C, pero gran parte de su
+Monado está desarrollado principalmente en C, pero gran parte de su
 código de tracking está implementado en C++ al igual que todos los sistemas de
 SLAM contemplados. Adicionalmente tanto Monado como estos sistemas suelen hacer
 un uso extensivo de la biblioteca _OpenCV_, y en particular su clase contenedora
 de imágenes y matrices `cv::Mat`. Es por esto que se terminó optando por el uso de
 un archivo _header_ C++, en el cual se declara la clase `slam_tracker` que será
 utilizada por Monado como punto de comunicación con sistemas de SLAM arbitrarios
-y se utilizan `cv::Mat` como contenedor de imágenes. Luego de varias iteraciones
+y se utilizan `cv::Mat` como contenedor de imágenes. Luego de varias iteraciones de diseño,
 la clase `slam_tracker` tiene una interfaz que, quitando detalles de tipos de
 C++, se puede resumir en algo como lo que se muestra en el \Cref{lst:slam-tracker-def}.
 
 <!-- TODO: linkear la clase slam_tracker en gitlab? -->
 
+<!-- TODO@high@end: hacer que esto esté sin cortes en su propia página o algo, lo mismo para todos los fragments -->
+\clearpage
 ``` {#lst:slam-tracker-def .cpp caption="Interfaz a implementar por sistemas de SLAM"}
 class slam_tracker {
 public:
@@ -81,9 +81,9 @@ Interacción entre Monado y sistemas SLAM mediante la interfaz en C++.
 
 La versión actual de esta clase es el
 resultado de varias iteraciones y generaliza adecuadamente los tres sistemas
-actualmente en uso. Algunas consideraciones de los puntos marcados en el código:
+en uso. Algunas consideraciones de los puntos marcados en el código:
 
-1. El parámetro `config_file` del constructor surge, ya que todos los sistemas
+1. El parámetro `config_file` del constructor es necesario, ya que todos los sistemas
    con los que se trató requieren proveer información de calibración y puesta a
    punto de parámetros previo a la corrida mediante un archivo de configuración.
    Además estos sistemas suelen tener etapas de creación e inicialización de
@@ -96,21 +96,22 @@ actualmente en uso. Algunas consideraciones de los puntos marcados en el código
    mientras que sondea si hay poses ya estimadas por el sistema y las obtiene
    mediante `try_dequeue_pose`.
 
-3. Algo natural del desarrollo de una interfaz de algo que no se conoce del todo
+3. Algo que surge del desarrollo de una interfaz a un tipo de sistemas que aún se desconocen,
    es que va a haber varios cambios en la misma durante su creación. Si además
    esta interfaz es compartida por múltiples sistemas y repositorios, mantener
-   todas las versiones sincronizadas se vuelve rápidamente insostenible. Una
+   todas las versiones sincronizadas se vuelve insostenible. Una
    forma de aliviar este problema fue la implementación de características
-   dinámicas. En ellas, Monado evalúa antes de utilizar alguna característica
-   específica si el sistema la implementa. El ejemplo para el que esto fue
-   utilizado fue la automatización del envío de datos de calibración sin pasar
-   por el archivo `config_file`. Se reserva una `feature_id` para tal característica en
-   la nueva versión de `slam_tracker` de Monado y del fork particular, se
-   implementa tal característica en este último, y en Monado tenemos cuidado de
-   solo utilizarla si el sistema la reporta como disponible. De esta forma nos
-   evitamos tener que actualizar la versión del header de otros forks en los
-   que, o la característica no tenga sentido, o simplemente no se desee
-   implementar de momento.
+   dinámicas. En ellas, Monado evalúa si el sistema implementa alguna
+   característica específica en tiempo de ejecución antes de utilizarla.
+   Uno de sus usos, fue la automatización del envío de datos de calibración sin pasar
+   por el archivo `config_file`. La forma de añadir nuevas características de
+   este tipo se debe reservar un entero `feature_id` que la identifique en una
+   nueva versión del header `slam_tracker` de Monado y del fork que la va a
+   implementar. En Monado tenemos cuidado de
+   solo utilizarla si el sistema la reporta como disponible en tiempo de
+   ejecución, ya que otros forks podrían no implementarla. De esta forma
+   permitimos la extensión de sistemas específicos sin tener que adaptar la
+   versión de la interfaz en todos ellos.
 
 4. El miembro `impl` es una forma de ligar la definición compacta de
    `slam_tracker` con una clase que implementa el estado y métodos privados
@@ -118,11 +119,20 @@ actualmente en uso. Algunas consideraciones de los puntos marcados en el código
    es usualmente conocido como _pointer to implementation_ (o _PIMPL_), a `impl`
    se lo denomina un _puntero opaco_ [@lakosLargeScaleSoftwareDesign1996].
 
+<!-- #define MN_ILLIXR_INTERFACE %\
+ILLIXR \autocite{HuzaifaDesai2020} es un proyecto de XR de código libre desarrollado
+por la Universidad de Illinois, que también formó recientemente el Consorcio ILLIXR
+para intentar mejorar el ecosistema de código libre para XR. Ha habido discusiones entre ILLIXR y Monado
+para plantear una interfaz a sistemas de SLAM que le sirva a ambos proyectos y que quizás en un
+futuro pueda transformarse en un estándar que los sistemas implementen por elección propia.
+Para esta nueva interfaz, se tomarán ideas basadas en la experiencia obtenida desarrollando el header \mono{slam_tracker}.
+-->
+
 Esta interfaz no es perfecta: no contempla magnetómetros, asume una
 configuración de a lo sumo dos cámaras, asume que el sistema utiliza OpenCV y es
-difícil de actualizar con cambios no contemplados por el concepto de
+difícil de extender con cambios no contemplados por el concepto de
 características dinámicas. A pesar de estos problemas, ha sido suficientemente
 buena para generalizar todos los sistemas propuestos y correrlos con una
-performance adecuada.
+performance adecuada \marginnote{MN_ILLIXR_INTERFACE}.
 
 \FloatBarrier

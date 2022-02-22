@@ -215,7 +215,7 @@ utilizaremos en su lugar la operación de **interpolación esférica** $slerp$
 presentada en @shoemakeAnimatingRotationQuaternion1985 y definida de la siguiente
 manera:
 \begin{align}
-slerp(p, q, t) = p(p^{-1}q)^t
+slerp(p, q, t) = p(p^{-1}q)^t \label{eq:slerp-def}
 \end{align}
 
 ##### Matrices de rotación {#sec:rotation-matrices}
@@ -540,6 +540,7 @@ R(dt) = R(0) + (dR)(0) = I + \hat{v}(0)dt \label{eq:hatop-is-rotvel}
 Notar que si pensamos a $t$ en términos de tiempo, la \Cref{eq:hatop-is-rotvel}
 deja ver a $\hat{v}$ como una matriz que describe la velocidad de la rotación.
 
+\clearpage
 <!-- #define MN_LIE_GROUP %\
 Un grupo de Lie es una ``variedad diferenciable'' en el cual la operación del grupo,
 y su inversa, también son diferenciables. Intuitivamente, esto significa que la
@@ -547,7 +548,7 @@ aplicación de rotaciones o transformaciones es ``suave'' o continua y esto nos
 permite trabajar con el concepto de límite y derivadas.
 -->
 
-<!-- TODO@high: La ultima vez que vi este margin note se iba tanto de la pagina que no aparecia ni cortado, revisarlo -->
+<!-- TODO@high@end: La ultima vez que vi este margin note se iba tanto de la pagina que no aparecia ni cortado, revisarlo -->
 <!-- #define MN_LIE_ALGEBRA %\
 Un grupo de Lie tiene un álgebra de Lie relacionada. Esta última es el
 ``espacio tangente'' en la identidad $I$ del grupo (en particular, de la variedad).

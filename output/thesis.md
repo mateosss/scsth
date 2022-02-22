@@ -15,9 +15,6 @@ de los conceptos de XR y SLAM, veremos los \italic{fundamentos} que serán
 utilizados de referencia a lo largo del escrito.}
 # Preliminares
 
-<!-- TODO@high: dejar bien en claro en el texto los momentos en donde uso los
-conceptos vistos en transforms y least_squres backreferenciandolos. -->
-
 ## Introducción
 
 ### Localización en XR
@@ -207,21 +204,41 @@ entendimiento del autor, son ahora los primeros cascos comerciales capaces de
 ser localizados por SLAM/VIO en una plataforma basada completamente en código
 libre.
 
-### Estructura de la Tesis (TODO)
+### Estructura de la tesis
 
-CREO QUE ESTO SI LO PODRIA HACER ANTES DE ENVIARLO
+En la primera parte de este trabajo veremos algunos conceptos fundamentales para
+entender el funcionamiento de los sistemas de SLAM y VIO. Veremos
+representaciones usuales de la pose de un cuerpo en el espacio y de las
+transformaciones que se le pueden aplicar al mismo. Esto incluye conceptos como
+_ángulos Euler_, _cuaterniones_ y algunas ideas básicas de _grupos de Lie_. En
+el capítulo siguiente desarrollaremos el método de _optimización no lineal_ de
+_Gauss Newton_. Este tipo de optimización es el núcleo computacional de los
+sistemas modernos, ya que es utilizada para realizar la fusión de muestras de
+sensores maximizando la verosimilitud de un estimador estadístico. Además, se
+utiliza este tipo de optimización para resolver varios otros subproblemas como
+lo son la calibración de sensores, la proyección y reproyección de puntos hacia
+las cámaras y viceversa, la creación y el mantenimiento del mapa del entorno,
+entre otros.
 
-\begin{mdframed}[backgroundcolor=shadecolor]
-TODO: En esta sección detallaría lo que se va a ver en cada capítulo. La planeo
-escribir después de terminar de acomodarlos. Ahora tengo algunos de dos páginas
-mientras que hay otros de 30 y eso no tiene mucho sentido.
-\end{mdframed}
+La siguiente parte del trabajo nos enfocaremos en una implementación particular
+de uno de estos sistemas: Basalt. Esto permitirá introducir y ver muchos de los
+conceptos y algoritmia que se utilizan de forma concreta y contextualizadas.
+Veremos cómo Basalt utiliza algoritmos de _optical flow_ para hacer el seguimiento
+de _features_, cómo decide cuáles cuadros serán _keyframes_, de qué forma
+utiliza y _preintegra_ las muestras de la IMU, la gestión de las _landmarks_ que
+realiza y finalmente cómo construye la función de _error_ a optimizar.
 
-<!--
-Contexto/motivación (mencionar algo de las comunidades con las que trabajé,
-mencionar que CV es muy trial and error, oversights pueden costar horas)
-mencionar ILLIXR, WMR community?
--->
+En la tercera parte presentaremos los detalles de la integración con Monado.
+Veremos las decisiones tomadas a la hora de diseñar la interfaz fundamental de
+la integración con este tipo de sistemas. Hablaremos algunos problemas
+particulares que debieron resolverse para aplicarlos a XR. Además hablaremos de
+los controladores de dispositivos que se extendieron y los cuidados que hubo que
+tener para generar datos aceptables para SLAM.
+
+Para cerrar el trabajo, en la cuarta parte presentamos algunos resultados
+cualitativos del rendimiento y la precisión de los sistemas integrados.
+Finalmente cerramos con algunas conclusiones y líneas de trabajo a considerar
+para el futuro.
 
 
 ## Fundamentos
@@ -443,7 +460,7 @@ utilizaremos en su lugar la operación de **interpolación esférica** $slerp$
 presentada en @shoemakeAnimatingRotationQuaternion1985 y definida de la siguiente
 manera:
 \begin{align}
-slerp(p, q, t) = p(p^{-1}q)^t
+slerp(p, q, t) = p(p^{-1}q)^t \label{eq:slerp-def}
 \end{align}
 
 ##### Matrices de rotación {#sec:rotation-matrices}
@@ -768,9 +785,10 @@ R(dt) = R(0) + (dR)(0) = I + \hat{v}(0)dt \label{eq:hatop-is-rotvel}
 Notar que si pensamos a $t$ en términos de tiempo, la \Cref{eq:hatop-is-rotvel}
 deja ver a $\hat{v}$ como una matriz que describe la velocidad de la rotación.
 
+\clearpage
 
 
-<!-- TODO@high: La ultima vez que vi este margin note se iba tanto de la pagina que no aparecia ni cortado, revisarlo -->
+<!-- TODO@high@end: La ultima vez que vi este margin note se iba tanto de la pagina que no aparecia ni cortado, revisarlo -->
 
 
 Tenemos entonces que el efecto de una rotación infinitesimal en $SO(3)$ puede
@@ -1279,7 +1297,7 @@ detallar mucho en el resto del trabajo: Kimera-VIO y ORB-SLAM3.\\
 \newline
 En el trabajo integré tres sistemas.
 \begin{enumerate}
-\item Kimera-VIO: Este parecía muy bueno, es del MIT, con licencia permisiva MIT
+\item Kimera-VIO: Este parecía muy bueno, es del MIT, con licencia permisiva BSD-2
    pero resulto ser bastante malo. Intentaba hacer mucho y había mucho
    ``overengineering'' y técnicas lentas en general.
 \item ORB-SLAM3: De la universidad de Zaragoza, es \emph{la} referencia del mejor
@@ -1296,7 +1314,14 @@ En el trabajo integré tres sistemas.
    esta segunda parte del trabajo está dedicada a la implementación de Basalt.
 \end{enumerate}
 
-Así que lo que sigue ya directamente habla de Basalt.
+También pondría como footnotes unos videos de como quedó la integración andando con cada uno:
+\begin{itemize}
+\item Basalt: \url{https://youtu.be/gxu3Ve8VCnI}
+\item ORB-SLAM3: \url{https://youtu.be/kJwWY973b10}
+\item Kimera-VIO: \url{https://youtu.be/ajuqQ7E1MFw}
+\end{itemize}
+
+En definitiva, lo que sigue habla puramente de Basalt:
 \end{mdframed}
 
 #### Problemáticas
@@ -1470,7 +1495,7 @@ utilizando el algoritmo _FAST_ [@rostenFasterBetterMachine2010a] para detección
 de esquinas implementado sobre _OpenCV_\marginnote{%\
 OpenCV es una de las bibliotecas de visión por computadora más populares y
 utilizadas en este tipo de sistemas. Combina múltiples algoritmos y presenta
-una licencia permisiva Apache 2 (prev. BSD-3).
+una licencia permisiva Apache 2 \autocite{ApacheLicenseVersion} (prev. BSD-3 \autocite{3ClauseBSDLicense}).
 }. Resulta importante
 aclarar que Basalt es uno de los sistemas que menos depende de OpenCV, ya que
 tiende a reimplementar muchas de las técnicas y algoritmia de forma
@@ -1748,9 +1773,9 @@ motion blur, la sobreexposición, el ruido introducido por la ganancia del ampli
 digital, o simplemente porque dejan de estar en el campo de visión de las
 cámaras. Por estas razones entonces, será fundamental la correcta gestión de la
 información de las landmarks y sus observaciones. En Basalt, la clase que se
-encarga de esto es la `LandmarkDatabase` con la siguiente estructura.
+encarga de esto es la `LandmarkDatabase` con la estructura como se define en el \Cref{lst:basalt-defs}.
 
-```C++
+```{#lst:basalt-defs .cpp caption="Estructuras de Basalt"}
 class LandmarkDatabase {
   map<LandmarkId, Landmark> landmarks;
   map<FrameId, map<FrameId, Keypoint>> observations;
@@ -1965,52 +1990,66 @@ Por su naturaleza, el área de XR involucra una gran cantidad de partes
 interconectadas y de dispositivos muy diversos con configuraciones difíciles de
 generalizar, y más aún de predecir. Por esta razón hasta hace muy poco tiempo no
 existían estándares razonables en el área lo cual agravaba la situación con un
-ecosistema altamente fragmentado en soluciones propietarias que causaban a los
-desarrolladores de aplicaciones finales grandes problemas. En el mejor de los
+ecosistema altamente fragmentado en soluciones propietarias que causaban grandes
+problemas a los desarrolladores de aplicaciones finales. En el mejor de los
 casos, la carga de soportar los distintos SDK propietarios recaía sobre
-frameworks y motores de juegos (p. ej. _Unreal Engine_, _Unity_, _Godot_) y esto
+frameworks como _WebXR_[^webxr] o motores de juegos (p. ej. _Unreal Engine_, _Unity_, _Godot_[^engines]) y esto
 forzaba a los desarrolladores a elegir alguna de estas soluciones para realizar
 su aplicación de XR. En caso de no querer hacerlo, se vería obligado a realizar
-un esfuerzo no trivial para portar su aplicación a cada uno de estos SDK,
+un esfuerzo significativo para portar su aplicación a cada uno de estos SDK,
 y eso sin considerar el manejo de características especiales que algunas
-plataformas exponen y otras no.
+plataformas exponen y otras no. Este escenario se puede ver en la
+\figref{fig:before-openxr}.
 
-Luego de unos años de sufrir esta fragmentación, en julio de 2019 se presenta la
-primera versión de _OpenXR_ de la mano del _Khronos Group_. El Khronos Group es
-un consorcio abierto y sin fines de lucro compuesto de 170 organizaciones que
-desarrolla estándares en distintas áreas de la industria como computación
-gráfica, (_OpenGL_, _Vulkan_), computación paralela (_OpenCL_, _SYCL_) y, con
-OpenXR, realidad virtual y aumentada entre otras. OpenXR por su parte, provee
-una API estandarizada con soporte para extensiones de fabricante que permiten
-añadir características peculiares de ser necesitadas por algún fabricante en
-particular. El estándar ha tenido un gran éxito al haber sido adoptado por una
-gran cantidad de fabricantes [^openxr-companies] como reemplazo a sus
-antiguos SDK propietarios. De esta forma, los motores de juego y desarrolladores
-solo necesitan interactuar con una única API (Fig. \figref{fig:openxr}) que además les
-permite aprovechar cualquier característica peculiar ofrecida por alguna
-extensión.
-
-\fig{fig:openxr}{source/figures/openxr.png}{OpenXR}{%
-\bold{Antes de OpenXR} (izquierda) aplicaciones y motores necesitaban código
-propietario separado para cada dispositivo en el mercado. \bold{OpenXR} (derecha)
-provee una única API multiplataforma de alta performance entre las aplicaciones
-y todos los dispositivos compatibles
+\fig{fig:before-openxr}{source/figures/before-openxr.pdf}{Antes de OpenXR}{%
+Antes de OpenXR las aplicaciones y motores necesitaban código
+propietario separado para cada SDK de los dispositivos que quisieran soportar.
 }
 
+[^webxr]: <https://www.w3.org/TR/webxr>
+[^engines]: <https://www.unrealengine.com>, <https://unity.com> y <https://godotengine.org>
+
+Luego de unos años de sufrir esta fragmentación, en julio de 2019 se presenta la
+primera versión de _OpenXR_ [@thekhronosgroupinc.OpenXRSpecification] de la mano del _Khronos Group_[^khronos]. Este es
+un consorcio abierto y sin fines de lucro compuesto de, a la fecha, 170 organizaciones que
+desarrolla estándares en distintas áreas de la industria como computación
+gráfica (_OpenGL_, _Vulkan_), computación paralela (_OpenCL_, _SYCL_) y, ahora con
+OpenXR, realidad virtual y aumentada entre otras. OpenXR provee
+una API estandarizada con soporte para extensiones que permiten
+añadir características peculiares de ser necesarias por algún fabricante en
+particular. El estándar ha tenido un gran éxito al haber sido adoptado por una
+gran cantidad de compañías [^openxr-companies] como reemplazo a sus
+antiguos SDK propietarios. De esta forma, los motores de juego y desarrolladores
+solo necesitan interactuar con una única API que además les
+permite aprovechar cualquier característica especial ofrecida por alguna
+extensión. Se puede ver la simplificación del esquema de integración con OpenXR
+en la \figref{fig:after-openxr}.
+
+[^khronos]: <https://www.khronos.org>
 [^openxr-companies]: Compañías respaldando públicamente el estándar OpenXR: <https://www.khronos.org/assets/uploads/apis/2019-openxr-logo-field_1_15.jpg>
 
-OpenXR es exclusivamente la [especificación][openxr-spec] de una API y por lo
-tanto requiere una implementación, o _runtime_, sobre el que ser ejecutado. Las
+\fig{fig:after-openxr}{source/figures/after-openxr.pdf}{OpenXR}{%
+OpenXR provee una única interfaz (API) multiplataforma de alta performance entre las aplicaciones
+y todos los dispositivos compatibles. Esto es una mejora en comparación a la
+situación presentada en la \figref{fig:before-openxr}.
+}
+
+OpenXR es exclusivamente la especificación [@thekhronosgroupinc.OpenXRSpecification] de una API y por lo
+tanto requiere una implementación, o _runtime_, sobre el que ejecutarse. Las
 implementaciones son provistas por los distintos fabricantes interesados en
-soportar el estándar, en la \figref{fig:openxr-companies} vemos algunas de las
+soportar el estándar, en la imagen referenciada en la nota al
+pie [^openxr-implementations] se pueden ver algunas de las
 implementaciones ya desarrolladas. En este trabajo nos enfocaremos en una de
-ellas, _Monado_. Monado es un runtime (por ahora el único) de la especificación
-OpenXR de código abierto, licenciada bajo la _Boost Software License 1.0
-([BSL-1.0])_. La plataforma principal sobre la que Monado corre y se desarrolla
+ellas, _Monado_. Monado es un runtime de la especificación
+OpenXR de código abierto, por ahora el único con esta característica, licenciado bajo la _Boost Software License 1.0_ [@BoostSoftwareLicensea].
+La plataforma principal sobre la que Monado corre y se desarrolla
 es GNU/Linux, pero es capaz de ser ejecutarse en otras como Android y Windows.
 Su desarrollo está soportado por _Collabora Ltd._, quien es parte del grupo de
 trabajo de OpenXR desde sus inicios. Las contribuciones a Monado listadas en
-esta sección fueron hechas durante una pasantía en Collabora.
+esta sección fueron realizadas durante una pasantía de seis meses en Collabora.
+
+[^openxr-implementations]: Algunas de las compañías que implementan un runtime de
+OpenXR: <https://www.khronos.org/assets/uploads/apis/OpenXR-After_3.png>.
 
 Además de proveer una implementación de OpenXR, Monado es altamente modular e
 implementa distintos componentes reutilizables para XR como un compositor
@@ -2018,7 +2057,7 @@ especializado para realidad virtual; controladores para una gran variedad de
 dispositivos, incluyendo hardware propietario y de consumo masivo sobre los que
 la comunidad ha realizado ingeniería inversa para poder utilizar; herramientas
 varias de calibración y configuración de hardware; así como también distintos
-sistemas de fusión de sensores para tracking; y recientemente incluso un módulo
+sistemas de fusión de sensores para tracking; recientemente incluso incorpora un módulo
 de localización de manos mediante visión por computadora y aprendizaje
 automático.
 
@@ -2050,13 +2089,6 @@ Monado).
 
 <!-- TODO@def: SDK, API -->
 
-<!-- TODO@high@ref: Todavía no se como referenciar links en la tesis. edit: ahora sé, hacerlo -->
-
-[openxr-spec]: TODO
-[bsl-1.0]: TODO
-
-<!-- TODO@def: Ya explqué que es tracker, tracking? uso esos terminos o me voy a localizar/rastrear/seguir/ubicar/posicionar -->
-
 
 ### Monado
 
@@ -2066,8 +2098,8 @@ controladores de dispositivos y de esta forma, a las aplicaciones OpenXR que
 utilizan estos dispositivos como medios de interacción y corren sobre Monado.
 Cabe aclarar que a partir de ahora usaremos de forma intercambiable los términos
 SLAM y VIO, ya que, a pesar de ser distintos, para los fines prácticos de la
-implementación son equivalentes: piezas de software que consumen imágenes y
-muestras de IMU y devuelven poses estimadas como resultado. Es por esto que
+implementación son equivalentes: _piezas de software que consumen imágenes y
+muestras de IMU y devuelven poses estimadas como resultado_. Es por esto que
 hablaremos de un localizador SLAM o _SLAM tracker_ que se ha implementado para
 referirnos a una única funcionalidad que soporta tanto sistemas externos de SLAM
 y como de VIO.
@@ -2075,10 +2107,10 @@ y como de VIO.
 Antes de comenzar, vale la pena entender la arquitectura general de Monado como
 se muestra en la \figref{fig:monado-arch}. Una aplicación que hace uso de OpenXR
 mediante Monado puede ser corrida en dos modalidades dependiendo de como se
-compiló el runtime. De la forma tradicional, se compila como una librería de
-manera **autónoma**, significando que cuando la aplicación intenta cargar
+compiló el runtime. De la forma tradicional, se compila como una biblioteca de
+manera **autónoma**, es decir que cuando la aplicación intenta cargar
 dinámicamente alguna implementación de OpenXR provista por el sistema, se enlaza
-la librería compartida (o _shared library_) de Monado, y al interactuar con cualquier
+la biblioteca compartida, o _shared library_, de Monado, y al interactuar con cualquier
 interfaz a OpenXR, se correría tal procedimiento en el mismo hilo que la
 aplicación consumidora. Esta modalidad puede tener ciertos beneficios para
 depuración de código, pero el modo más usual de compilar y correr Monado es
@@ -2091,16 +2123,13 @@ sobre la misma instancia del runtime. Además, se quita la necesidad de ejecutar
 ambos procesos sobre el mismo nodo de cómputo, lo cual facilita la posibilidad
 de tener realidad virtual renderizada en la nube.
 
-<!-- TODO@high@fig: Tiene que estar en español y agregar "Filtrado" arriba de "Prediction" -->
-<!-- TODO@fig: Podría usar los nombres `TrackerSlam` y `slam_tracker` me
-parece por que los referencio bastante -->
 \fig{fig:monado-arch}{source/figures/monado-arch.pdf}{Arquitectura de Monado}{%
 Arquitectura de Monado.
 }
 
 \FloatBarrier
 
-No interiorizaremos en los aspectos de comunicación con la _plataforma_ ni del
+No profundizaremos en los aspectos de comunicación con la _plataforma_ ni del
 _compositor_ de Monado, pero es bueno saber que estos son partes significativas
 del runtime. Son los _controladores_ (o _drivers_) específicos en Monado los que
 interactúan con el hardware especializado como cascos, controles, cámaras, entre
@@ -2118,11 +2147,6 @@ Move_, _PlayStation VR_, y tracking de manos en general. Es aquí entonces en
 donde se comienza la implementación del SLAM tracker presentado en este
 trabajo.
 
-<!-- TODO@high@nico: Lo que le digo "slam tracker implementation" nico pensó que
-debería ser una "interface", implementación/interfaz/adaptador son bastante
-ambiguos así que deberí revisar que los uso de forma consistente -->
-<!-- TODO@high@fig: Del TODO de arriba, viene que tengo que modificar fig:slam-tracker-dataflow -->
-
 La implementación de un pipeline en Monado que permita la comunicación entre
 dispositivos, sistemas de SLAM y la aplicación OpenXR requirió desarrollar la
 infraestructura y herramientas necesarias dentro de Monado. El pipeline en
@@ -2132,10 +2156,7 @@ necesitan poder ser intercambiables: dispositivos, aplicaciones y el sistema que
 provee el SLAM en sí. El resto de esta subsección está dedicada a explicar la
 infraestructura y los distintos componentes que se necesitaron implementar y
 adaptar para obtener un pipeline de SLAM modular corriendo en Monado como se
-intenta mostrar en la \figref{fig:slam-tracker-dataflow}.
-
-<!-- TODO@high@fig: Agregar a esta figura la caja del filtrado de poses -->
-<!-- TODO@high@fig: Hacer versión final -->
+muestra en la \figref{fig:slam-tracker-dataflow}.
 
 \fig{fig:slam-tracker-dataflow}{source/figures/slam-tracker-dataflow.pdf}{Flujo de datos de la implementación}{%
 Diagrama esquemático de como ocurre el flujo de los datos desde que se generan
@@ -2158,18 +2179,18 @@ implementación.
 Desde un principio se entendió que se necesitaría utilizar sistemas ya
 desarrollados como punto de partida. Estos sistemas son complejos y suelen
 utilizar conceptos teóricos de significativa profundidad, por lo que su
-creación suele estar limitado a grupos de investigación expertos durante
-tiempos significativos de desarrollo. Los tres sistemas estudiados por ejemplo,
+creación suele estar limitado a grupos de investigación expertos que toman gran
+tiempo de desarrollo. Los tres sistemas estudiados por ejemplo,
 promedian las 25.000 líneas de código (o 25 _KLOC_) cada uno.
 
 Ahora bien, en muchos casos, haber intentado integrar el código del sistema
 directamente dentro de un componente de Monado no era una opción. Dejando de
 lado las dificultades técnicas, los problemas de compatibilidad de licencia
 fueron de particular interés. La gran mayoría de sistemas SLAM producidos en la
-academia son liberados bajo licencias abiertas “contagiosas” como _GPL_ que
+academia son liberados bajo licencias abiertas “virales” como _GPL_ [@GNUGeneralPublic] que
 obligan a desarrolladores que utilizan código del sistema a liberar y licenciar
-su código con la misma licencia. Esto contrasta con la licencia abierta y
-permisiva de Monado, la _BSL-1.0_, que no impone restricciones sobre como los
+su código de la misma manera. Esto contrasta con la licencia abierta y
+permisiva de Monado, la _BSL-1.0_ [@BoostSoftwareLicensea], que no impone restricciones sobre como los
 usuarios deben licenciar su código.
 
 Estas fueron algunas razones para intentar desacoplar el sistema a utilizar lo
@@ -2177,21 +2198,21 @@ más que se pueda de Monado. Además, considerando la naturaleza experimental de
 este trabajo, la posibilidad de que más de un sistema necesitase ser
 integrado era razonable.
 
-<!-- TODO@def: que es OpenCV -->
-
-Monado está desarrollado principalmente en el lenguaje C, pero gran parte de su
+Monado está desarrollado principalmente en C, pero gran parte de su
 código de tracking está implementado en C++ al igual que todos los sistemas de
 SLAM contemplados. Adicionalmente tanto Monado como estos sistemas suelen hacer
 un uso extensivo de la biblioteca _OpenCV_, y en particular su clase contenedora
 de imágenes y matrices `cv::Mat`. Es por esto que se terminó optando por el uso de
 un archivo _header_ C++, en el cual se declara la clase `slam_tracker` que será
 utilizada por Monado como punto de comunicación con sistemas de SLAM arbitrarios
-y se utilizan `cv::Mat` como contenedor de imágenes. Luego de varias iteraciones
+y se utilizan `cv::Mat` como contenedor de imágenes. Luego de varias iteraciones de diseño,
 la clase `slam_tracker` tiene una interfaz que, quitando detalles de tipos de
 C++, se puede resumir en algo como lo que se muestra en el \Cref{lst:slam-tracker-def}.
 
 <!-- TODO: linkear la clase slam_tracker en gitlab? -->
 
+<!-- TODO@high@end: hacer que esto esté sin cortes en su propia página o algo, lo mismo para todos los fragments -->
+\clearpage
 ``` {#lst:slam-tracker-def .cpp caption="Interfaz a implementar por sistemas de SLAM"}
 class slam_tracker {
 public:
@@ -2232,9 +2253,9 @@ Interacción entre Monado y sistemas SLAM mediante la interfaz en C++.
 
 La versión actual de esta clase es el
 resultado de varias iteraciones y generaliza adecuadamente los tres sistemas
-actualmente en uso. Algunas consideraciones de los puntos marcados en el código:
+en uso. Algunas consideraciones de los puntos marcados en el código:
 
-1. El parámetro `config_file` del constructor surge, ya que todos los sistemas
+1. El parámetro `config_file` del constructor es necesario, ya que todos los sistemas
    con los que se trató requieren proveer información de calibración y puesta a
    punto de parámetros previo a la corrida mediante un archivo de configuración.
    Además estos sistemas suelen tener etapas de creación e inicialización de
@@ -2247,21 +2268,22 @@ actualmente en uso. Algunas consideraciones de los puntos marcados en el código
    mientras que sondea si hay poses ya estimadas por el sistema y las obtiene
    mediante `try_dequeue_pose`.
 
-3. Algo natural del desarrollo de una interfaz de algo que no se conoce del todo
+3. Algo que surge del desarrollo de una interfaz a un tipo de sistemas que aún se desconocen,
    es que va a haber varios cambios en la misma durante su creación. Si además
    esta interfaz es compartida por múltiples sistemas y repositorios, mantener
-   todas las versiones sincronizadas se vuelve rápidamente insostenible. Una
+   todas las versiones sincronizadas se vuelve insostenible. Una
    forma de aliviar este problema fue la implementación de características
-   dinámicas. En ellas, Monado evalúa antes de utilizar alguna característica
-   específica si el sistema la implementa. El ejemplo para el que esto fue
-   utilizado fue la automatización del envío de datos de calibración sin pasar
-   por el archivo `config_file`. Se reserva una `feature_id` para tal característica en
-   la nueva versión de `slam_tracker` de Monado y del fork particular, se
-   implementa tal característica en este último, y en Monado tenemos cuidado de
-   solo utilizarla si el sistema la reporta como disponible. De esta forma nos
-   evitamos tener que actualizar la versión del header de otros forks en los
-   que, o la característica no tenga sentido, o simplemente no se desee
-   implementar de momento.
+   dinámicas. En ellas, Monado evalúa si el sistema implementa alguna
+   característica específica en tiempo de ejecución antes de utilizarla.
+   Uno de sus usos, fue la automatización del envío de datos de calibración sin pasar
+   por el archivo `config_file`. La forma de añadir nuevas características de
+   este tipo se debe reservar un entero `feature_id` que la identifique en una
+   nueva versión del header `slam_tracker` de Monado y del fork que la va a
+   implementar. En Monado tenemos cuidado de
+   solo utilizarla si el sistema la reporta como disponible en tiempo de
+   ejecución, ya que otros forks podrían no implementarla. De esta forma
+   permitimos la extensión de sistemas específicos sin tener que adaptar la
+   versión de la interfaz en todos ellos.
 
 4. El miembro `impl` es una forma de ligar la definición compacta de
    `slam_tracker` con una clase que implementa el estado y métodos privados
@@ -2269,12 +2291,21 @@ actualmente en uso. Algunas consideraciones de los puntos marcados en el código
    es usualmente conocido como _pointer to implementation_ (o _PIMPL_), a `impl`
    se lo denomina un _puntero opaco_ [@lakosLargeScaleSoftwareDesign1996].
 
+
+
 Esta interfaz no es perfecta: no contempla magnetómetros, asume una
 configuración de a lo sumo dos cámaras, asume que el sistema utiliza OpenCV y es
-difícil de actualizar con cambios no contemplados por el concepto de
+difícil de extender con cambios no contemplados por el concepto de
 características dinámicas. A pesar de estos problemas, ha sido suficientemente
 buena para generalizar todos los sistemas propuestos y correrlos con una
-performance adecuada.
+performance adecuada \marginnote{%\
+ILLIXR \autocite{HuzaifaDesai2020} es un proyecto de XR de código libre desarrollado
+por la Universidad de Illinois, que también formó recientemente el Consorcio ILLIXR
+para intentar mejorar el ecosistema de código libre para XR. Ha habido discusiones entre ILLIXR y Monado
+para plantear una interfaz a sistemas de SLAM que le sirva a ambos proyectos y que quizás en un
+futuro pueda transformarse en un estándar que los sistemas implementen por elección propia.
+Para esta nueva interfaz, se tomarán ideas basadas en la experiencia obtenida desarrollando el header \mono{slam_tracker}.
+}.
 
 \FloatBarrier
 
@@ -2283,9 +2314,9 @@ performance adecuada.
 
 <!-- ### Implementaciones de la interfaz -->
 
-A la hora de implementar la interfaz `slam_tracker` se documentan en los tres
+A la hora de implementar la interfaz `slam_tracker` se documentan los tres
 métodos principales `push_imu_sample`, `push_frame` y `try_dequeue_pose`
-precondiciones que el usuario de la interfaz, Monado en este caso, y su
+con las precondiciones que el usuario de la interfaz, Monado en este caso, y su
 implementación deben cumplir:
 
 1. Debe haber un único hilo productor llamando a los métodos `push_*`
@@ -2302,28 +2333,28 @@ implementación deben cumplir:
 Estas condiciones fueron desarrollándose mientras la interfaz evolucionaba y
 nuevos sistemas se iban adaptando. Intentan ser indicaciones que evitarían
 implementaciones deficientes mientras que son lo suficientemente generales
-como para que todas las soluciones estudiadas puedan acatarlas.
+como para que todas las soluciones estudiadas puedan cumplirlas.
 
-La precondición **1** para el usuario le permite a la implementación utilizar
+La precondición $\mathbf{1}$ para el usuario le permite a la implementación utilizar
 colas enfocadas al caso de un único productor, de las cuales puede obtenerse
 mayor rendimiento comparado a las versiones que no tienen esta limitación. Más
 aún, se suelen utilizar colas libres de _locks_ (primitiva de sincronización,
-también conocido como _mutex_). El punto **2** facilita el trabajo a la
+también conocido como _mutex_). El punto $\mathbf{2}$ facilita el trabajo a la
 implementación mientras que suele ser trivial de cumplir para el usuario, ya que
 los dispositivos tienden a reportar las muestras del mismo tipo en orden
-temporal creciente. El punto **3** obliga a la implementación de los métodos
+temporal creciente. El punto $\mathbf{3}$ obliga a la implementación de los métodos
 `push_*` a terminar lo antes posible sin realizar ningún tipo de procesamiento
 en esas funciones. Esto es fundamental, ya que Monado también recibe muestras de
 dispositivos mediante colas y simplemente las redirige al `slam_tracker`, y
 demorarse en estos métodos hace que las colas internas de Monado se llenen y
-muestras se pierdan. El inciso **4** es simplemente una aclaración de en dónde
+muestras se pierdan. El inciso $\mathbf{4}$ aclara en dónde
 se procesarían las muestras; dado que no pueden procesarse en los métodos
 `push_*` se necesita un hilo consumidor que esté esperando por muestras nuevas
-en las distintas colas de la implementación para procesar. El punto **5** es un
+en las distintas colas de la implementación para procesar. El punto $\mathbf{5}$ es un
 requerimiento razonable de algunos sistemas, ya que es común que cámaras estéreo
 pensadas para SLAM tengan sincronización por hardware de sus timestamps. El
-punto **6** facilita algunos procedimientos y chequeos en la implementación. Y
-finalmente, la precondición **7** es similar al punto 1 en donde se le permite a
+punto $\mathbf{6}$ facilita algunos procedimientos y chequeos en la implementación. Y
+finalmente, la precondición $\mathbf{7}$ es similar al punto 1 en donde se le permite a
 la implementación utilizar colas de un único consumidor que sean de mayor
 rendimiento comparado a otras colas concurrentes.
 
@@ -2344,8 +2375,8 @@ directamente a las colas de entrada de sus respectivos pipelines que corren en
 hilos separados. Para ORB-SLAM3, al ser necesario ejecutar explícitamente el
 paso de estimación con el par de imágenes estéreo y muestras IMU nuevas, se
 necesitó implementar colas dedicadas para muestras de cámara izquierda, derecha
-e IMU, junto a un hilo consumidor que ejecuta la estimación cuando cuadros
-nuevos arriban. Cabe mencionar que Basalt no utiliza el tipo `cv::Mat` de OpenCV
+e IMU, junto a un hilo consumidor que ejecuta la estimación cuando llegan cuadros
+nuevos. Cabe mencionar que Basalt no utiliza el tipo `cv::Mat` de OpenCV
 como contenedor para sus imágenes a diferencia de los otros sistemas. Más aún,
 espera imágenes con intensidad de píxeles de 16 bits para soportar conjuntos de
 datos como TUM-VI que provee imágenes de este tipo. Sin embargo, las imágenes
@@ -2360,25 +2391,27 @@ copia innecesaria.
 <!-- TODO@def: definir callbacks? -->
 
 Respecto a la cola de poses estimadas, Kimera implementa un sistema de
-_callbacks_ en el cual una función que encola los resultados del pipeline es
-llamada tan pronto como estén listos. Basalt por su parte ya expone una cola con
-las estimaciones computadas que la implementación de `slam_tracker` simplemente
-utiliza. ORB-SLAM3 devuelve la estimación de la misma llamada explícita al
-estimador, y nuestra implementación se encarga de encolar esos resultados que
-luego serán consultados por Monado mediante `try_dequeue_pose`.
+_callbacks_ que llaman a una función encargada de encolar los resultados del
+pipeline tan pronto como estén listos. Basalt por otra parte, expone una cola
+que se va llenando con los resultados de la estimación; la implementación de
+`slam_tracker` la utiliza directamente, ya que también expone una interfaz de
+cola mediante el método `try_dequeue_pose`. ORB-SLAM3 difiere de los dos
+anteriores ya que el procesamiento sucede en una llamada a una función
+bloqueante que al terminar devuelve la pose estimada. Por lo tanto, nuestra
+implementación se encarga de armar la maquinaria necesaria de hilos productores,
+hilos consumidores y colas de entrada y salida para hacer que Monado no sea
+bloqueado al enviar nuevas muestras de los dispositivos.
 
 Respecto al archivo de configuración referenciado por el parámetro
 `config_file`, Basalt por defecto utiliza dos archivos, uno para parámetros de
 calibración y el otro para configuraciones del sistema en sí; se necesitó
 entonces crear un tipo de archivo nuevo que referencie a estos dos y sea
-utilizado como `config_file`. Kimera a su vez también posee múltiples archivos
-que son referenciados por uno central. ORB-SLAM3 por su parte tiene un único
-archivo de configuración.
-
-<!-- TODO: fotos de las UIs, links a los videos? -->
+utilizado como `config_file`. La misma idea se utilizó para Kimera que también
+posee múltiples archivos de configuración. ORB-SLAM3 por su parte utiliza un
+único archivo por defecto y no necesito de mayores cambios.
 
 Respecto a las interfaces gráficas, todos estos sistemas presentan la
-posibilidad de poder visualizar, al menos, la trayectoria estimada junto a las
+posibilidad de visualizar, al menos, la trayectoria estimada junto a las
 features detectadas en los cuadros entrantes como se muestra en la
 \figref{fig:trackers-ui}. En todos los casos, siempre se intenta permitir la posibilidad
 de utilizar estas herramientas de visualización de forma opcional al utilizar la
@@ -2411,21 +2444,20 @@ controladores de dispositivos de hardware y la interfaz `slam_tracker`. Este
 adaptador recibe el nombre, un poco confuso, de `TrackerSlam` siguiendo las
 convenciones de Monado para con los trackers ya existentes.
 
+
+
 El funcionamiento de `TrackerSlam` es sencillo, los controladores que quieran
 ser localizados por SLAM y puedan proveer imágenes y muestras de IMU deben
 instanciar este adaptador e inicializarlo. Por detrás, esto simplemente llama a
 los métodos adecuados de la interfaz `slam_tracker` con el sistema externo.
-Ahora bien, se aprovecha esta clase adaptadora[^adapter-class-remark] para
+Ahora bien, se aprovecha esta clase adaptadora\marginnote{%\
+Es debatible si el añadido de estas funcionalidades
+haría que \mono{TrackerSlam} deje de ser considerada una clase adaptadora, ya que
+como veremos, ambas pueden ser deshabilitadas en tiempo de ejecución.
+} para
 proveer dos funcionalidades fundamentales que escapan al alcance de los sistemas
 de SLAM/VIO y serán explicados a continuación: **predicción** y **filtrado** de
 poses.
-
-<!-- TODO@high: Hago las "Notas" así? hay una mejor manera? quizás a un
-costado de la página o con un recuadro tcolorbox como vi en un video. EDIT: USE MARGINNOTE -->
-
-[^adapter-class-remark]: Es debatible si el añadido de estas funcionalidades
-haría que `TrackerSlam` deje de ser considerada una clase adaptadora, ya que
-como veremos, ambas pueden ser deshabilitadas en tiempo de ejecución._
 
 #### Predicción de poses
 
@@ -2435,7 +2467,7 @@ como veremos, ambas pueden ser deshabilitadas en tiempo de ejecución._
 
 Las aplicaciones XR requieren poder localizar constantemente a los distintos
 dispositivos de entrada y salida soportados que son utilizados por el usuario.
-En la especificación de OpenXR las dos principales funciones que le permiten a
+En la especificación de OpenXR [@thekhronosgroupinc.OpenXRSpecification] las dos principales funciones que le permiten a
 la aplicación pedirle al runtime las poses de estos dispositivos son
 `xrLocateSpace` y `xrLocateViews`. La primera se utiliza para solicitar poses de
 dispositivos “comunes” (suelen ser distintos tipos de mandos) mientras que la
@@ -2510,7 +2542,7 @@ siguientes duraciones:
 
 En la \figref{fig:prediction-timeline} se puede apreciar una captura de pantalla
 de la interfaz de *Perfetto*[^perfetto-web] que, en conjunto con *Percetto*[^percetto-web],
-son herramientas de medición de tiempos preferidas para Monado.
+son las herramientas de medición de tiempos preferidas para Monado.
 Esta captura es sobre una corrida en tiempo real con Monado, Basalt y una cámara
 RealSense D455 con imágenes estéreo de resolución 640x480 a 30 cuadros por
 segundo. La figura muestra un tramo de unos 35 ms con la particularidad de que
@@ -2555,7 +2587,7 @@ petición a tiempo `[D]` para `[E]` debe ser respondida.
 
 En conclusión, tenemos un **desfasaje temporal** que hace que las poses
 estimadas siempre estén levemente en el pasado; en el tramo seleccionado fue de
-25,5ms (más los 7 ms de predicción), pero es variable durante la corrida.
+25,5 ms (más los 7 ms de predicción), pero es variable durante la corrida.
 Además, las poses se estiman para **puntos discretos** de tiempo, mientras que
 el usuario puede pedir una predicción para cualquier punto arbitrario. Entonces,
 si queremos ser capaces de proveer al usuario una pose para el tiempo
@@ -2603,6 +2635,8 @@ exp(\Delta t \ \hat\omega) & \Delta t \ v \\
 \end{align}
 <!-- $$ -->
 
+
+
 Monado provee varias herramientas que facilitan tareas que suelen ser
 recurrentes en diversos sistemas de tracking. La tarea de estimar espacios
 futuros basándose en uno dado con sus velocidades es una de estas
@@ -2611,19 +2645,18 @@ que permite almacenar un “historial” de estos espacios en una cola circular 
 generar las interpolaciones y extrapolaciones, tanto a futuro como a pasado,
 necesarias para cualquier timestamp requerida por un usuario. Para las
 interpolaciones se utiliza una simple interpolación lineal^[En el caso de la
-orientación es una interpolación esférica lineal o _slerp_
-<https://en.wikipedia.org/wiki/Slerp#Quaternion_Slerp>] o _lerp_ de a trozos
+orientación es la interpolación esférica lineal $slerp$ que definimos en la \Cref{eq:slerp-def}] o _lerp_ de a trozos
 entre cada par de espacios del historial. Para extrapolar hacia el futuro, se
 usa la pose y velocidad almacenada en el espacio más reciente del historial para
 realizar el cómputo con $\Delta T$ como se definió en la
 [](#eq:predicted-space-delta). Simétricamente para extrapolar hacia el pasado
-lejano[^openxr-time-limits], o sea fuera del registro del historial, se utilizará el espacio más
-antiguo almacenado y $\Delta T^{-1}$.
-
-[^openxr-time-limits]: La especificación de OpenXR tiene una sección dedicada a
+lejano\marginnote{%\
+La especificación de OpenXR tiene una sección dedicada a
 las restricciones y condiciones a los que el runtime está sujeto respecto a
 solicitudes en el pasado y en el futuro por parte del usuario. Ver
-[@thekhronosgroupinc.OpenXRSpecification], secc. 2.14.
+\autocite{thekhronosgroupinc.OpenXRSpecification}, secc. 2.14.
+}, o sea fuera del registro del historial, se utilizará el espacio más
+antiguo almacenado y $\Delta T^{-1}$.
 
 Sería razonable, como primera aproximación a nuestro problema, utilizar este
 historial de espacios. Esto nos garantiza que podamos proveerle al usuario una
@@ -2649,8 +2682,6 @@ estimadas por el sistema de SLAM son perfectas por simplicidad.
 }
 
 \FloatBarrier
-
-<!-- TODO@def: Estoy caminando alrededor del tema de los cuaterniones muy fuerte. -->
 
 Esto es una buena primera solución al problema, y es la opción más básica que la
 clase adaptadora `TrackerSlam` le ofrece a los usuarios de Monado.
@@ -2701,6 +2732,7 @@ código que se presenta a continuación. Cabe aclarar que la función
 (el historial de relaciones) y `predict_from_space` (la función de predicción en
 base a un espacio).
 
+\clearpage
 ``` {#lst:predict-pose .cpp caption="Predicción de poses en Monado" emph="timestamp"}
 struct xrt_space_relation predict_pose(timestamp t) {
    if (relation_history.is_empty()) return {0};
@@ -2761,8 +2793,7 @@ ejemplo asume que tanto las muestras de odometría de la IMU a tiempos $t \in
 \{1,3; 1,6; 1,9\}$ como las estimaciones `B` y `C` coinciden perfectamente con
 la trayectoria real del dispositivo.
 
-<!-- TODO@end: estaríá bueno que ambas figuras aparezcan en la misma página -->
-
+<!-- TODO@high@fig: esta figura no creo que se lea bien cuando se imprima, como podría agrandarla? -->
 \fig{fig:prediction-with-imu}{source/figures/prediction-with-imu.pdf}{Predicción con promediado de muestras IMU}{%
 Ejemplo de predicción para tiempos $t \in \{1,45; 1,75; 1,95\}$ utilizando la
 idea de promediar muestras de la IMU posteriores a la pose más reciente del
@@ -2975,22 +3006,28 @@ Con $\alpha$ que se adapta con la velocidad de la señal:
 \tau &= \frac{1}{2 \pi f_C}
 \end{align}
 
-A continuación, $f_C$ es la llamada _frecuencia de corte_[^fc-lowpass] y posee
-un mínimo ajustable por el usuario $f_{C_{min}}$ y un parámetro de intensidad de
-actualización $\beta$ también configurable[^fc-perception].
-\begin{align}
-f_C &= f_{C_{min}} + \beta | \hat{\dot{p}}_k |
-\end{align}
 
-[^fc-lowpass]: Algunos lectores reconocerán que el término “frecuencia de corte”
-proviene de los filtros _low-pass_ y efectivamente, notarán que el filtro 1€ es
+<!-- TODO@high@end: estas marginnotes se cortan horrible -->
+
+
+
+
+A continuación, $f_C$ es la llamada _frecuencia de corte_ \marginnote{%\
+Algunos lectores reconocerán que el término “frecuencia de corte”
+proviene de los filtros low-pass y efectivamente, notarán que el filtro 1€ es
 de este tipo con la particularidad de tener una frecuencia de corte dinámica.
-
-[^fc-perception]: Frecuencias de corte bajas reducen el ruido de las poses a
+} y posee
+un mínimo ajustable por el usuario $f_{C_{min}}$ y un parámetro de intensidad de
+actualización $\beta$ también configurable \marginnote{%\
+Frecuencias de corte bajas reducen el ruido de las poses a
 costa de aumentar la latencia. La forma en la que $f_c$ es definida resulta en
 valores altos (y por ende con baja latencia) cuando se presentan cambios
 significativos en las poses, mientras que para movimientos más suaves se reduce
 $f_c$ para a su vez disminuir el ruido.
+}.
+\begin{align}
+f_C &= f_{C_{min}} + \beta | \hat{\dot{p}}_k |
+\end{align}
 
 La velocidad de la señal es a su vez ajustada con otro filtro de suavizado
 exponencial con factor de suavizado fijo $f_{C_d}$, también configurable por el
@@ -3377,6 +3414,13 @@ coordenadas a las poses que el sistema le devuelve a Monado.
 
 ### RealSense (TODO)
 
+\begin{mdframed}[backgroundcolor=shadecolor]
+TODO: Esta sección con esta cámara, y la siguiente con el casco VR deberían
+simplemente terminar de concretar un poco los problemas que listé arriba con
+algunos matices particulares que hayan aparecido. Escribí un poco de RealSense
+pero no lo terminé.
+\end{mdframed}
+
 Estamos ahora en condiciones de entender las contribuciones a controladores
 realizadas en este trabajo. Comencemos por las del controlador para dispositivos
 RealSense.
@@ -3401,15 +3445,20 @@ parte superior.
 El casco AR libre del proyecto North Star con una cámara T265 sujeta en la parte superior.
 }
 
-https://www.collabora.com/assets/images/blog/ProjectNorthStar.jpg
-[^t265]: <https://www.intelrealsense.com/tracking-camera-t265/>
+\begin{mdframed}[backgroundcolor=shadecolor]
+TODO: Esa imagen seguro la saco por que no es CC-BY, pero probablemente linkeo a
+la URL.
+\end{mdframed}
+
+<!-- https://www.collabora.com/assets/images/blog/ProjectNorthStar.jpg
+[^t265]: <https://www.intelrealsense.com/tracking-camera-t265/> -->
 
 [^north-star]: El proyecto North Star de UltraLeap (prev. LeapMotion) es un
 casco AR "DIY" que puede fabricarse con piezas impresas en 3D y la compra de
 algunos componentes. <https://developer.leapmotion.com/northstar>
 
-[^north-star-img1]:
-[^north-star-img2]:
+<!-- [^north-star-img1]:
+[^north-star-img2]: -->
 
 Al no haber ningún tipo de manejo de las imágenes o muestras de IMU provistas
 por la cámara, se tuvo que implementar la gestión de estos sensores. Es ahora
@@ -3422,11 +3471,33 @@ este trabajo.
 
 ### Windows Mixed Reality (TODO)
 
+\begin{mdframed}[backgroundcolor=shadecolor]
+TODO: Similar a lo que menciné en la sección de arriba. Lo interesante de esta
+sección creo yo es que participé un montón con la comunidad y le estuvimos
+haciendo ingeniería inversa a estos cascos privativos para ver que comandos USB
+mandarles y como leerlos para tener acceso a los streams de la cámara y de la
+IMU. Además, esto es eso que marco en el abstract, es el primer casco comercial
+que tiene tracking de este tipo andando en Linux con el stack full open source.
+Y aunque está genial eso, es cierto que no le llega ni a los talones todavía lo
+que tenemos comparado a la versión privativa de Microsoft. Pero bueno por lo
+menos se puede caminar y dar vuelta un poco para observar cosas sin problemas lo
+cual es mucho mejor que nada.
+\end{mdframed}
 
 
 
 
-## Otras contribuciones
+
+## Otras contribuciones (TODO)
+
+\begin{mdframed}[backgroundcolor=shadecolor]
+TODO: Hubo otras cositas más pequeñas contribuídas también, entre ellos unas
+utilidades para grabar y reproducir datasets de SLAM (en formato EuRoC) muy utiles para testear el
+sistema sin tener que andar moviendo las cámaras siempre. La otra contribución
+fue a Basalt, el modelo de cámara que usan los cascos WMR y Basalt no lo tenía.
+Además me gustaría listar todos los merge requests contribuídos en algún lado.
+\end{mdframed}
+
 ### Utilidades EuRoC (TODO)
 ### Modelo radial-tangencial (TODO)
 
@@ -3440,21 +3511,108 @@ líneas de trabajo a considerar para el futuro.}
 
 ## Resultados (TODO)
 
-TODO
+\begin{mdframed}[backgroundcolor=shadecolor]
+Estuve con esto toda la semana pasada pero tuve un problema en como tomé las
+mediciones y tengo que arreglarlo. En general como es algo bastante particular
+no es que hay resultados de cosas “definitivas”, es más bien mostrar un poco
+cualitativamente con números que tal andan las cosas.
 
-## Conclusiones y trabajo futuro (TODO)
+Las medidas que me van a importar son de performance, de precisión de la
+trayectoria absoluta y relativa (esta ultima no es comun que se mida pero es muy
+importante en XR!).
+Ya hice todos los datasets y los scripts para generar los gráficos, pero por un
+error que cometí voy a necesitar hacer todas las corridas de vuelta (y eso ahora es un
+proceso bastante manual desgraciadamente).
 
-TODO
+El resumen de los resultados creo que va a ser: Basalt debería dar buenos resultados en
+performance y en precisión de movimientos relativos. Mientras que orb-slam3
+debería dar mejores resultados en precisión absoluta de la trayectoria por que
+hace full SLAM. Kimera-VIO está de adorno.
 
-<!-- trabajo futuro:
-  - mejoras de experiencia de usuario en el wrapper de monado
-  - wrapper que permita multiples instancias de distintos sistemas de forma dinamica
-  - mejoras de performance
-  - VIM realtime en basalt
-  - datasets sinteticos
-  - paralelización
-  - integración de módulos en monado
-  -->
+Como no tengo MoCaps para medir la trayectoria absoluta y comparar (salen unos 10k USD un setup basico \url{https://www.optitrack.com/systems/}),
+planeo usar un software que se
+llama COLMAP que se toma su tiempo (unas horas de procesamiento) para integrar todas las mediciones en lugar
+de ser en tiempo real. Mi esperanza es que esa trayectoria debería ser bastante
+razonable como groundtruth, al menos para dar una idea cualitativa de como anda
+el sistema.
+
+Si no también está el video \url{https://youtu.be/g1o2xADr5Fw}
+\end{mdframed}
+
+## Conclusiones y trabajo futuro
+
+En este trabajo se estudiaron distintos sistemas de SLAM/VIO en el contexto de
+localización en tiempo real para XR. Vimos algunos de los conceptos
+fundamentales que estos utilizan como el algoritmo de Gauss Newton para resolver
+problemas de optimización no lineal, de los cuales el área de visión por
+computadora está plagado, y SLAM no es la excepción. También vimos las distintas
+formas de representar transformaciones y rotaciones en dos y tres dimensiones:
+ángulos euler, cuaterniones, ángulo axial, matrices de rotación y una mirada
+práctica sobre los grupos de Lie $SO(n)$ y $SE(n)$ junto a sus álgebras de Lie
+$\so(n)$ y $\se(n)$.
+
+Posteriormente nos adentramos en la implementación de la capa de odometría
+visual-inercial de Basalt. Esto permitió ver de primera mano los distintos tipos
+de algoritmos que se reúnen en este tipo de sistemas. Se integró Kimera-VIO,
+ORB-SLAM3 y Basalt a Monado, el runtime OpenXR de código libre. Para esto hizo
+falta diseñar una interfaz eficiente que generaliza de forma razonable estos
+sistemas. Se analizaron los problemas de implementación particulares a considerar
+para XR como la predicción y filtrado de poses, o como lidiar con la
+imperfección de los sensores de cámara e IMU. Se contribuyeron a Monado todas
+estas mejoras, incluyendo la extensión de dos controladores de dispositivos que
+ahora son capaces de aprovechar este tipo de tracking. Uno de ellos es una
+plataforma VR de producción comercial que ahora puede ser utilizada por usuarios
+entusiastas que deseen utilizar este tipo de hardware en GNU/Linux con un stack
+de software completamente libre.
+
+Este proyecto plantea las bases de infraestructura en Monado para este tipo de
+sistemas, pero aún hay mucho por hacer y por mejorar para lograr tracking con
+calidades similares a las que se encuentran en productos comerciales. Se plantea
+como trabajo futuro:\newline
+
+- Mejorar la experiencia de usuario para al utilizar el SLAM tracker en Monado.
+  El trabajo realizado actualmente puede resultar un poco complejo de instalar y
+  configurar para un usuario inexperto.
+
+- Permitir el uso de múltiples implementaciones de SLAM/VIO de forma dinámica.
+  Es decir, poder tener distintas implementaciones corriendo en simultáneo y
+  localizando a distintos dispositivos.
+
+- Hay espacio de mejora en el rendimiento de las implementaciones. En general,
+  en este trabajo nos limitamos a hacer lo justo y necesario para que el
+  tracking funcione a tiempos razonables y no retrase el pipeline de Monado. Más
+  aún, parece existir poca cantidad de trabajos que apliquen unidades de cómputo
+  masivamente paralelas, como lo son las GPU, al problema de localización
+  visual-inercial. Creemos que existen posibles ganancias de eficiencia en esta
+  línea de trabajo.
+
+- Sería bueno extender Basalt para soportar algún tipo de mapeo global en tiempo
+  real que permita tener trayectorias consistentes que no tiendan a moverse
+  lentamente con el tiempo. Discusiones de esto referenciada en una nota al
+  pie[^basalt-issue-vim].
+
+- Sería bueno mejorar las formas de testeo y evaluación de sistemas SLAM en
+  Monado, poder automatizarlas e integrarlas en los procesos de integración
+  continua del proyecto. Esto permitiría el impacto que nuevos cambios traen al
+  rendimiento y la precisión del sistema.
+
+- Existen pocos conjuntos de datos para SLAM aptos para XR (p. ej. TUM-VI
+  [@schubertBasaltTUMVI2018]), y ante la dificultad de producirlos, sería ideal
+  aprovecharse de las herramientas fotorrealistas que son fácilmente accesibles
+  en la actualidad para la generación de datos sintéticos.
+
+- Existen métodos de predicción más eficientes que podrían adaptarse a Monado en
+  lugar del método ad hoc desarrollado en este trabajo. En particular el mismo
+  trabajde preintegración de muestras de IMU utilizado en Basalt
+  [@forsterOnManifoldPreintegrationRealTime2017] puede ser un muy buen punto de
+  partida para un método de predicción más preciso.
+
+- Finalmente, muchos de los módulos que forman parte de estos sistemas son
+  útiles de manera individual. La integración de estos en Monado podría
+  beneficiar a distintos controladores que quieran hacer uso de algoritmia de
+  visión por computadora específica en otros contextos.
+
+[^basalt-issue-vim]: <https://gitlab.com/VladyslavUsenko/basalt/-/issues/69>
 
 
 
