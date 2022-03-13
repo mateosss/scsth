@@ -60,7 +60,8 @@ La plataforma principal sobre la que Monado corre y se desarrolla
 es GNU/Linux, pero es capaz de ser ejecutarse en otras como Android y Windows.
 Su desarrollo está soportado por _Collabora Ltd._, quien es parte del grupo de
 trabajo de OpenXR desde sus inicios. Las contribuciones a Monado listadas en
-esta sección fueron realizadas durante una pasantía de seis meses en Collabora.
+esta sección fueron realizadas durante una pasantía de seis meses realizada por
+el autor en Collabora.
 
 [^openxr-implementations]: Algunas de las compañías que implementan un runtime de
 OpenXR: <https://www.khronos.org/assets/uploads/apis/OpenXR-After_3.png>.

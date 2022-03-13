@@ -439,8 +439,8 @@ Grupo Euclídeo Especial $SE(n)$, es decir:
 
 Y es este el grupo que buscábamos, ya que $SE(3)$ es capaz de representar las
 transformaciones de cuerpo rígido en $\R^3$ que necesitábamos. Tenemos entonces
-que representaremos rotaciones con matrices cuadradas $3x3$ $R \in SO(3)$ y
-representaremos transformaciones con matrices cuadradas $4x4$ $T \in SE(3)$.
+que representaremos rotaciones con $R \in SO(3)$, osea matrices cuadradas $3 \times 3$; y
+representaremos transformaciones con $T \in SE(3)$, osea matrices cuadradas $4 \times 4$.
 Estos grupos también funcionan con dos dimensiones en $\R^2$ de la misma manera
 para $SO(2)$ y $SE(2)$. Finalmente, se pueden visualizar los conjuntos definidos
 en esta sección en la \figref{fig:hasse-groups}.

@@ -218,8 +218,10 @@ una licencia permisiva Apache 2 \autocite{ApacheLicenseVersion} (prev. BSD-3 \au
 
 Posteriormente se realiza la detección de features nuevas sobre las imágenes
 utilizando el algoritmo _FAST_ [@rostenFasterBetterMachine2010a] para detección
-de esquinas implementado sobre _OpenCV_\marginnote{MN_OPENCV}. Resulta importante
-aclarar que Basalt es uno de los sistemas que menos depende de OpenCV, ya que
+de esquinas, o puntos sobresalientes de la imagen en general (keypoints), implementado
+sobre _OpenCV_\marginnote{MN_OPENCV}. Resulta importante aclarar que Basalt es uno de
+los sistemas que menos depende de OpenCV, siendo `cv::FAST` el único algoritmo de la
+biblioteca en uso durante una ejecución usual. El proyecto
 tiende a reimplementar muchas de las técnicas y algoritmia de forma
 especializada y, como veremos en otros módulos, otras tareas razonablemente
 complejas como la optimización de grafos de poses se implementan también dentro
@@ -423,8 +425,8 @@ cuadros como se ve en el ejemplo de la \figref{fig:sample-frequencies}.
 
 \fig{fig:sample-frequencies}{source/figures/sample-frequencies.pdf}{%
 Ejemplo de frecuencias}{%
-Frecuencia de distintos eventos para un ejemplo con cámaras a 30fps y muestras
-de la IMU a 240hz.
+Frecuencia de distintos eventos para un ejemplo con cámaras a 30 fps y muestras
+de la IMU a 150 Hz.
 }
 
 El proceso de preintegración es el siguiente. Dado el cuadro previo $i$ con

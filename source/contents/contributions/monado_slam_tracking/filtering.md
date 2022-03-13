@@ -20,12 +20,17 @@ caso de uso de XR y suelen estar mayormente interesados en aplicaciones de
 robótica. En este campo, la “sensación” que produciría el tracking no es un
 factor de importancia comparado a la precisión absoluta del mismo. En
 particular, las métricas más utilizadas en estos trabajos son las que evalúan el
-error absoluto de la trayectoria en su totalidad (ATE, APE, AOE). Es intuitivo
-ver que estas métricas, a diferencias de sus versiones relativas (RTE, RPE,
-ROE), incentivan correcciones abruptas en la trayectoria cuando los sistemas
+error _absoluto_ de la trayectoria en su totalidad estimada sobre conjuntos de datos
+estándar. Es intuitivo pensar que estas métricas, a diferencias de sus versiones
+_relativas_, incentivan correcciones abruptas en la trayectoria cuando los sistemas
 determinan que su pose actual no es la mejor posible (p. ej. en momentos de loop
-closure). Más aún, minimizar el ruido en la trayectoria no es uno de sus
-objetivos, ya que la aplicación artificial de filtros que suavicen la
+closure). El trabajo de @zhangTutorialQuantitativeTrajectory2018 es una buena
+explicación de estas métricas y de la forma de evaluar y
+reportar el rendimiento de estos sistemas.
+
+De la misma forma, minimizar el ruido
+en la trayectoria no es uno de los objetivos usualmente considerados, ya que la
+aplicación artificial de filtros que suavicen la
 trayectoria podría tender a empeorar el puntaje obtenido en estos conjuntos de
 datos. Todo esto hace que muchas veces las trayectorias computadas por los
 sistemas en condiciones no óptimas tiendan a presentar una gran cantidad de
@@ -70,8 +75,10 @@ Presentaremos tres filtros, con el más sofisticado basado en
 filtros presentados, muestra gráficas comparativas, y es también una buena
 lectura para contextualizar el uso de filtros para tracking de movimientos
 humanos. Los filtros presentados aquí y en el trabajo mencionado pueden
-visualizarse interactivamente en la siguiente aplicación web:
-<https://cristal.univ-lille.fr/~casiez/1euro/InteractiveDemo/>.
+visualizarse interactivamente en la aplicación web referenciada al pie de
+página[^one-euro-webdemo].
+
+[^one-euro-webdemo]: <https://cristal.univ-lille.fr/~casiez/1euro/InteractiveDemo/>.
 
 El funcionamiento esquemático de un filtro es muy sencillo: es un contenedor de
 **estado**, con un método de **actualización** que recibe un nuevo **dato** con
@@ -107,8 +114,8 @@ Cabe aclarar, que si bien la forma de calcular el promedio para las posiciones
 $p_i$ debería resultar clara, promediar las orientaciones $q_i$ expresadas
 mediante cuaterniones no es trivial. En este caso, nos aprovecharemos del hecho
 de que $w$ suele ser pequeño y por ende contiene orientaciones que no cambian
-significativamente. Esto nos permite utilizar el resultado expuesto en
-[@gramkowAveragingRotations2001] que muestra que, para rotaciones de menos de 40
+significativamente. Esto nos permite utilizar el resultado expuesto por
+@gramkowAveragingRotations2001 que muestra que, para rotaciones de menos de 40
 grados, calcular la media usual (y posteriormente normalizarla) es una muy buena
 aproximación con un error de menos del $1\%$.
 
@@ -185,7 +192,7 @@ de este tipo con la particularidad de tener una frecuencia de corte dinámica.
 
 <!-- #define MN_FC_PERCEPTION %\
 Frecuencias de corte bajas reducen el ruido de las poses a
-costa de aumentar la latencia. La forma en la que $f_c$ es definida resulta en
+costa de aumentar la latencia \autocite{stauffertKaBoomVisuallyExploring2021}. La forma en la que $f_c$ es definida resulta en
 valores altos (y por ende con baja latencia) cuando se presentan cambios
 significativos en las poses, mientras que para movimientos más suaves se reduce
 $f_c$ para a su vez disminuir el ruido.

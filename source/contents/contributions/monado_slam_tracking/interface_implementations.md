@@ -114,8 +114,7 @@ lidiar respecto a shared libraries (https://www.akkadia.org/drepper/dsohowto.pdf
 
 \fig{fig:trackers-ui}{source/figures/trackers-ui.pdf}{Visualizadores de SLAM trackers}{%
 Las distintas interfaces gráficas y formas de visualizar presentadas por cada
-uno de los sistemas adaptados. Arriba a izquierda Kimera, ORB-SLAM3 a derecha;
-abajo Basalt.
+uno de los sistemas adaptados. De arriba a abajo: Kimera, ORB-SLAM3 y Basalt.
 }
 
 \FloatBarrier

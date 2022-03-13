@@ -113,11 +113,13 @@ sensores, optimización, estimación probabilística, entre otras. Esta ola de
 investigación ha dado lugar a una gran cantidad de implementaciones de software
 libre, con distintos grados de rendimiento, robustez, precisión, aplicaciones,
 facilidad de uso, entre otras propiedades de interés. Recursos como
-<http://openslam.org> y estudios como [@servieresVisualVisualInertialSLAM2021a] o
-[@taketomiVisualSLAMAlgorithms2017a] pueden listar docenas de sistemas
+OpenSLAM[^openslam] y estudios como los de las referencias [@servieresVisualVisualInertialSLAM2021] o
+[@taketomiVisualSLAMAlgorithms2017] pueden listar docenas de sistemas
 disponibles para considerar. Más aún, cada año nuevos sistemas aparecen mientras
 otros dejan de ser mantenidos. Seguir los avances del área puede ser
 desafiante, pero esto es una consecuencia de su desarrollo tan activo.
+
+[^openslam]: <http://openslam.org>
 
 Específicamente, en este trabajo trataremos con sistemas de _localización y
 mapeo simultáneo (SLAM)_ mediante sensores visuales-inerciales (VI-SLAM). Como

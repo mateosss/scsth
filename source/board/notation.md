@@ -33,7 +33,6 @@ Arreglar problemas de imagenes con copyright
 <!-- TODO@high@end: los margin par se pueden salir de la página, revisar que ninguno haya quedado así!-->
 <!-- TODO@end: revisar que todos los \begin{align} no tengan una linea vacia arriba: es decir que no haya "\n\n\\begin" -->
 <!-- TODO@end: todo lo que diga TODO@end hay que chequearlo al terminar el trabajo -->
-<!-- TODO@endbig: rehacer todas las figuras manuscritas -->
 <!-- TODO@end: chequear que NINGÚN fragmento se corte en dos páginas a menos que sea super necesario -->
 <!-- TODO@end: Revisar todos los conceptos introducidos con _cursiva_ y ver si lo explico en la tesis -->
 <!-- TODO@end: revisar que no esté introduciendo conceptos en cursiva más de una vez -->
@@ -53,6 +52,7 @@ chequear todo en busca de problemas de ortografía con LTeX -->
 <!-- TODO@end: Hay que citar el template de phd thesis si lo uso supuestamente:
   <https://github.com/tompollard/phd_thesis_markdown#citing-the-template>
   aunque fue más los problems que trajo que los que solucionó me parece. -->
-<!-- TODO@end: revisar todas las footnotes he visto algunos casos en los que se separan en dos páginas. -->
+<!-- TODO@end: revisar todas las footnotes/marginnotes he visto algunos casos en los que se separan en dos páginas. -->
 <!-- TODO@end: see that I have lists of figures and of fragments (optionally of tables if any) also optionally of acronyms -->
 <!-- TODO@end@ref: revisar todoslos papers de zotero si hay alguno que es muy clave que no mencioné, sobre todo los de la lista de basalt-->
+<!-- TODO@end@fig: revisar que las imagenes esten ubicadas en lugares con sentido y no muy lejos -->

@@ -50,11 +50,9 @@ public:
   void stop();
 
   // (2) Métodos principales de la interfaz
-  void push_imu_sample(
-     long timestamp, vec3 accelerometer, vec3 gyroscope);
-  void push_frame(long timestamp, cv::Mat frame, bool is_left);
-  bool try_dequeue_pose(
-    long &out_timestamp, vec3 &out_position, quat &out_rotation);
+  void push_imu_sample(timestamp t, vec3 accelerometer, vec3 gyroscope);
+  void push_frame(timestamp t, cv::Mat frame, bool is_left);
+  bool try_dequeue_pose(timestamp &t, vec3 &position, quat &rotation);
 
   // (3) Características dinámicas opcionales
   bool supports_feature(int feature_id);

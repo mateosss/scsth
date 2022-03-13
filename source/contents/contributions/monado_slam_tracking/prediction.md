@@ -270,7 +270,7 @@ código que se presenta a continuación. Cabe aclarar que la función
 base a un espacio).
 
 \clearpage
-``` {#lst:predict-pose .cpp caption="Predicción de poses en Monado" emph="timestamp"}
+``` {#lst:predict-pose .cpp caption="Predicción de poses en Monado"}
 struct xrt_space_relation predict_pose(timestamp t) {
    if (relation_history.is_empty()) return {0};
 
@@ -280,24 +280,24 @@ struct xrt_space_relation predict_pose(timestamp t) {
 
    // Variables configuradas por el usuario en tiempo de ejecución
    bool pred_on = /* predicción habilitada por usuario? */
-   bool gyro_on = /* giroscopio habilitado por usuario? */
+   bool gyr_on = /* giroscopio habilitado por usuario? */
    bool acc_on = /* acelerómetro habilitado por usuario? */
-   bool imu_on = gyro_on or acc_on;
+   bool imu_on = gyr_on or acc_on;
 
    // Flujo condicional de la predicción según la configuración
-   if (pred_on) return r;
-   if (!imu_on or t <= rt) relation_history.predict(t);
-   if (gyro_on) {
-      vec3 avg_gyro = gyro_average_between(rt, t);
-      vec3 world_gyro = rotate_angular_velocity(r.orientation, avg_gyro);
-      r.angular_velocity = world_gyro;
+   if (not pred_on) return r;
+   if (not imu_on or t <= rt) relation_history.predict(t);
+   if (gyr_on) {
+      vec3 avg_gyr = gyr_average_between(rt, t);
+      vec3 world_gyr = rotate_angular_velocity(r.orientation, avg_gyr);
+      r.angular_velocity = world_gyr;
    }
    if (acc_on) {
-      vec3 avg_accel = accel_average_between(rt, t);
-      vec3 world_accel = rotate_linear_acceleration(r.orientation, avg_accel);
-      world_accel += gravity_vector;
+      vec3 avg_acc = acc_average_between(rt, t);
+      vec3 world_acc = rotate_linear_acceration(r.orientation, avg_acc);
+      world_acc += gravity_vector;
       double dt = last_imu_timestamp - rt;
-      r.linear_velocity += world_accel * dt;
+      r.linear_velocity += world_acc * dt;
    }
 
    return predict_from_space(r, t);
@@ -330,7 +330,6 @@ ejemplo asume que tanto las muestras de odometría de la IMU a tiempos $t \in
 \{1,3; 1,6; 1,9\}$ como las estimaciones `B` y `C` coinciden perfectamente con
 la trayectoria real del dispositivo.
 
-<!-- TODO@high@fig: esta figura no creo que se lea bien cuando se imprima, como podría agrandarla? -->
 \fig{fig:prediction-with-imu}{source/figures/prediction-with-imu.pdf}{Predicción con promediado de muestras IMU}{%
 Ejemplo de predicción para tiempos $t \in \{1,45; 1,75; 1,95\}$ utilizando la
 idea de promediar muestras de la IMU posteriores a la pose más reciente del

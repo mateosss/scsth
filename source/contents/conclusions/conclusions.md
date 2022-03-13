@@ -94,7 +94,7 @@ como trabajo futuro:\newline
 
 - Existen métodos de predicción más eficientes que podrían adaptarse a Monado en
   lugar del método ad hoc desarrollado en este trabajo. En particular el mismo
-  trabajde preintegración de muestras de IMU utilizado en Basalt
+  trabajo de preintegración de muestras de IMU utilizado en Basalt
   [@forsterOnManifoldPreintegrationRealTime2017] puede ser un muy buen punto de
   partida para un método de predicción más preciso.
 
