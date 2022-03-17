@@ -122,3 +122,5 @@ preintegrarlas
 preintegración
 preintegra
 fps
+submilimétrica
+mapper

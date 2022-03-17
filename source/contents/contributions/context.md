@@ -24,7 +24,7 @@ propietario separado para cada SDK de los dispositivos que quisieran soportar.
 [^engines]: <https://www.unrealengine.com>, <https://unity.com> y <https://godotengine.org>
 
 Luego de unos años de sufrir esta fragmentación, en julio de 2019 se presenta la
-primera versión de _OpenXR_ [@thekhronosgroupinc.OpenXRSpecification] de la mano del _Khronos Group_[^khronos]. Este es
+primera versión de _OpenXR_ [@thekhronosgroupinc.OpenXRSpecification] de la mano del _Khronos Group_[^khronos1]. Este es
 un consorcio abierto y sin fines de lucro compuesto de, a la fecha, 170 organizaciones que
 desarrolla estándares en distintas áreas de la industria como computación
 gráfica (_OpenGL_, _Vulkan_), computación paralela (_OpenCL_, _SYCL_) y, ahora con
@@ -39,7 +39,7 @@ permite aprovechar cualquier característica especial ofrecida por alguna
 extensión. Se puede ver la simplificación del esquema de integración con OpenXR
 en la \figref{fig:after-openxr}.
 
-[^khronos]: <https://www.khronos.org>
+[^khronos1]: <https://www.khronos.org>
 [^openxr-companies]: Compañías respaldando públicamente el estándar OpenXR: <https://www.khronos.org/assets/uploads/apis/2019-openxr-logo-field_1_15.jpg>
 
 \fig{fig:after-openxr}{source/figures/after-openxr.pdf}{OpenXR}{%

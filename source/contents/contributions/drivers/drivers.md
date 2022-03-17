@@ -72,8 +72,8 @@ no existía forma de utilizar este tipo de cascos con tracking basado en SLAM/VI
 para correr aplicaciones OpenXR sobre sistemas operativos basados en GNU/Linux
 \marginnote{MN_WMR_NOVELTY} \marginnote{MN_QUEST_ANDROID}.
 
-[^d455]: <https://www.intelrealsense.com/depth-camera-d455/>
-[^odysseyplus]: <https://www.samsung.com/us/support/computing/hmd/hmd-odyssey/hmd-odyssey-plus-mixed-reality/>
+[^d455]: <https://www.intelrealsense.com/depth-camera-d455>
+[^odysseyplus]: <https://www.samsung.com/us/support/computing/hmd/hmd-odyssey/hmd-odyssey-plus-mixed-reality>
 [^realsense-sdk]: <https://github.com/IntelRealSense/librealsense>
 [^wmr]: <https://www.microsoft.com/en-us/mixed-reality/windows-mixed-reality>
 
