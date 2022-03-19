@@ -6,8 +6,8 @@
 
 <!-- #if 1 -->
 
-\begin{table}[h]
 \begin{addmargin*}[-0.2\textwidth]{-0.2\textwidth}
+\label{tab:timing}
 \resizebox{1.4\textwidth}{!}{
 \begin{tabular}{ |l||l|l|l|l|l|l|  }
  \multicolumn{7}{c}{Tiempos de ejecución por cuadro [ms]} \\[3pt]
@@ -44,9 +44,6 @@ TR6    & 1007.87 ± 269.40  & 7.00 ± 1.05   & 10.72 ± 1.80   & 22.33 ± 5.05 &
 \end{tabular}
 }
 \end{addmargin*}
-\caption[Autem usu id]{Autem usu id.}
-\label{tab:moreexamples}
-\end{table}
 
 <!-- #else -->
 
@@ -83,8 +80,8 @@ TR6    & 1007.87 ± 269.40  & 7.00 ± 1.05   & 10.72 ± 1.80   & 22.33 ± 5.05 &
 ### Completitud
 
 <!-- #if 1 -->
-\begin{table}[h]
 \resizebox{\textwidth}{!}{
+\label{tab:completion}
 \begin{tabular}{ |l||l|l|l|l|l|l|  }
  \multicolumn{7}{c}{Completitud de ejecución} \\[3pt]
 \hline
@@ -119,9 +116,6 @@ TR6    & ✓     & ✓     & ✓     & 52.37\% & ✓       & ✓       \\
 \hline
 \end{tabular}
 }
-\caption[Autem usu id]{Autem usu id.}
-\label{tab:moreexamples}
-\end{table}
 <!-- #else -->
 |        | BND   | BNF   | BO   | K      | ON     | OO     |
 |:-------|:------|:------|:-----|:-------|:-------|:-------|
@@ -155,8 +149,8 @@ TR6    & ✓     & ✓     & ✓     & 52.37\% & ✓       & ✓       \\
 ### Precisión absoluta
 
 <!-- #if 1 -->
-\begin{table}[h]
 \begin{addmargin*}[-0.2\textwidth]{-0.2\textwidth}
+\label{tab:ape}
 \resizebox{1.4\textwidth}{!}{
 \begin{tabular}{ |l||l|l|l|l|l|l|  }
  \multicolumn{7}{c}{Error absoluto de la trayectoria (APE) [m]} \\[3pt]
@@ -185,9 +179,6 @@ TR6   & 0.018 ± 0.011 & 0.018 ± 0.011 & 0.018 ± 0.009 & 5003.9 ± 2511.9 & 0.
 \end{tabular}
 }
 \end{addmargin*}
-\caption[Autem usu id]{Autem usu id.}
-\label{tab:moreexamples}
-\end{table}
 <!-- #else -->
 |        | BND           | BNF           | BO            | K                   | ON             | OO            |
 |:-------|:--------------|:--------------|:--------------|:--------------------|:---------------|:--------------|
@@ -213,8 +204,8 @@ TR6   & 0.018 ± 0.011 & 0.018 ± 0.011 & 0.018 ± 0.009 & 5003.9 ± 2511.9 & 0.
 ### Precisión relativa
 
 <!-- #if 1 -->
-\begin{table}[h]
 \begin{addmargin*}[-0.2\textwidth]{-0.2\textwidth}
+\label{tab:rpe}
 \resizebox{1.4\textwidth}{!}{
 \begin{tabular}{ |l||l|l|l|l|l|l|  }
  \multicolumn{7}{c}{Error relativo de la trayectoria (RPE con intervalos de 6 cuadros) [m]} \\[3pt]
@@ -243,9 +234,6 @@ TR6   & 0.003 ± 0.002 & 0.003 ± 0.002 & 0.003 ± 0.002 & 355.299 ± 219.485 & 
 \end{tabular}
 }
 \end{addmargin*}
-\caption[Autem usu id]{Autem usu id.}
-\label{tab:moreexamples}
-\end{table}
 <!-- #else -->
 |        | BND           | BNF           | BO            | K                 | ON            | OO            |
 |:-------|:--------------|:--------------|:--------------|:------------------|:--------------|:--------------|
