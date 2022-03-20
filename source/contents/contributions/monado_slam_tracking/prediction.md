@@ -361,3 +361,5 @@ mayor cantidad de muestras de IMU entre estimaciones y no solo las 3 que se
 muestran en las figuras (p.ej. a 30 cuadros por segundo con la IMU a 250 hz,
 tenemos unas ~8 muestras de IMU entre cada par de cuadros consecutivos), lo cual
 mejora la precisión de la predicción aún más.
+
+\FloatBarrier

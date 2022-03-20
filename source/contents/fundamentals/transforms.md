@@ -50,8 +50,9 @@ función $L : V \rightarrow W$ tal que:
 \end{itemize}
 
 Property (Matriz de una transformación)
-: Si $V$ tiene base canónica $e_1, ..., e_n$ con $e_i \in \R^m$ tenemos que la matriz $A =
-[L(e_1), ..., L(e_n)] \in \R^{m \times n}$ cumple $Ax = L(x) \quad \forall x \in V$
+: Si $V \subseteq \R^n$ tiene base canónica $e_1, ..., e_n$ con $e_i \in \R^m$
+tenemos que la matriz $A = [L(e_1), ..., L(e_n)] \in \R^{m \times n}$ cumple
+$Ax = L(x) \quad \forall x \in V$
 
 Property (Matrices cuadradas)
 : El conjunto de matrices en $\R^{n\times n}$, con las operaciones de adición y
@@ -522,8 +523,8 @@ $R = R(t)$. Además, utilizaremos la notación $\dot{R} = \frac{dR}{dt}$.
 
 Como $RR^T = I$ tenemos que
 \begin{align}
-& 0 = \frac{d}{dt}I = \frac{d}{dt}(RR^T) = \dot{R}R^T + R \dot{R^T} \\
-& \Rightarrow \dot{R}R^T = -R \dot{R^T}
+& 0 = \frac{d}{dt}I = \frac{d}{dt}(RR^T) = \dot{R}R^T + R \dot{R}^T \\
+& \Rightarrow \dot{R}R^T = -R \dot{R}^T
 \end{align}
 
 O sea que $\dot{R}R^T \in \so3$. Por la \Cref{prop:skew-mat-vec} tenemos que

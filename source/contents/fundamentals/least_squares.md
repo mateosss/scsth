@@ -21,7 +21,7 @@ no-lineal.
 
 Querremos encontrar algún punto $x \in \R^n$ que cumpla una serie de $m$
 restricciones **lineales** $f_i(x) = b_i$ con $f_i \in \R^n \rightarrow \R$
-combinación lineal de los componentes $x$; $\ b \in \R^m$ y con $i = 1, ..., m$.
+combinación lineal de los componentes de $x$; $\ b \in \R^m$ y con $i = 1, ..., m$.
 Además definimos $f(x) = [f_1(x) \dots f_m(x)]^T$ y al ser $f_i$ combinaciones
 lineales de $x$, tenemos que existe una transformación lineal $A \in \R^{m
 \times n}$ tal que $f(x) = Ax$. De esta forma podemos replantear nuestras
@@ -75,8 +75,8 @@ Theorem thm:aligraminv
 linealmente independientes.
 
 Proof
-: Como $A$ tiene columnas linealmente independientes, por
-[](#thm:li1inv2nots3) (3) tenemos que $x = 0 \Leftrightarrow Ax = 0$, nos basta
+: Por [](#thm:li1inv2nots3) (3) $A$ tiene columnas linealmente independientes si y solo si
+$x = 0 \Leftrightarrow Ax = 0$, entonces nos basta
 con ver que $Ax = 0 \Leftrightarrow A^T A x = 0$.
 \bigbreak
 \begin{itemize}
@@ -89,8 +89,7 @@ Definition def:pseudoinverse
 : Sea $A$ con columnas linealmente independientes. La matriz pseudo-inversa de
 $A$ es $A^{\dagger} = (A^T A)^{-1} A^T$
 
-Notar que $(A^T A)^{-1}$ existe por [](#thm:aligraminv). Finalmente, la
-siguiente observación:
+Notar que $(A^T A)^{-1}$ existe por [](#thm:aligraminv).
 
 Con estas herramientas, estamos en posición de presentar la solución directa al
 problema de los cuadrados mínimos lineales.
@@ -129,15 +128,15 @@ Las últimas dos ecuaciones reciben nombres particulares
 \marginnote{MN_NORMAL_EQUATIONS} \marginnote{MN_ORTHOGONALITY_PRINCIPLE}.
 Veamos ahora para un $x \in \R^n$ cualquiera.
 \begin{align}
-  \| Ax - b \|^2 &= \| (Ax - A\hat{x}) + (A\hat{x} - b) \|^2 \\
-  \text{(\cref{rmk:sqnormofsum})}\quad
+  & \| Ax - b \|^2 = \| (Ax - A\hat{x}) + (A\hat{x} - b) \|^2 \\
+  & \text{Por \cref{rmk:sqnormofsum}:}\notag\\
   &= \| A(x - \hat{x}) \|^2 +  \| A\hat{x} - b \|^2 + 2 (A(x - \hat{x}))^T
   (A\hat{x} - b) \\
   &= \| A(x - \hat{x}) \|^2 +  \| A\hat{x} - b \|^2 + 2 (x - \hat{x})^T A^T
   (A\hat{x} - b) \\
-  \text{(\cref{eq:ataxmbis0})}\quad
+  & \text{Por \cref{eq:ataxmbis0}:}\notag\\
   &= \| A(x - \hat{x}) \|^2 +  \| A\hat{x} - b \|^2 \\
-  &\therefore \|Ax-b\|^2 \geq \|A\hat{x}-b\|^2
+  &\therefore \quad \|Ax-b\|^2 \geq \|A\hat{x}-b\|^2
 \end{align}
 Más aún, esta solución es única, ya que la igualdad en la última ecuación solo se
 da si $\|A(x-\hat{x})\|^2 = 0$, y como $A$ es no-singular, esto solo pasa

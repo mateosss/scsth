@@ -39,7 +39,7 @@ especializados; en nuestro caso nos limitaremos a utilizar su IMU y cámaras
 estéreo. Estos vienen precalibrados, y además se tiene un SDK[^realsense-sdk]
 de código abierto en C/C++, con _bindings_ para otros lenguajes, que facilita la
 obtención y manipulación de datos. En contraste con esto, el casco de Samsung es
-un casco ligado a la plataforma privativa _Windows Mixed Reality (WMR)_[^wmr]
+un casco ligado a la plataforma privativa _Windows Mixed Reality (WMR)_[^wmr1]
 que solo es soportada en sistemas operativos Windows[^windows]. WMR incluye algoritmos
 propietarios de tracking por SLAM desarrollados por Microsoft.
 
@@ -75,7 +75,7 @@ para correr aplicaciones OpenXR sobre sistemas operativos basados en GNU/Linux
 [^d455]: <https://www.intelrealsense.com/depth-camera-d455>
 [^odysseyplus]: <https://www.samsung.com/us/support/computing/hmd/hmd-odyssey/hmd-odyssey-plus-mixed-reality>
 [^realsense-sdk]: <https://github.com/IntelRealSense/librealsense>
-[^wmr]: <https://www.microsoft.com/en-us/mixed-reality/windows-mixed-reality>
+[^wmr1]: <https://www.microsoft.com/en-us/mixed-reality/windows-mixed-reality>
 
 ### Características de los datos {#sec:data-characteristics}
 
