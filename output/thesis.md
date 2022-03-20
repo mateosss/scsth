@@ -1529,6 +1529,7 @@ visitadas, obteniendo así un mapa que es globalmente consistente. Además, el
 problema de optimización se reduce, ya que a diferencia de otros sistemas, no es
 necesario estimar velocidades ni biases (de la IMU).
 
+
 ### Implementación
 
 A continuación describiremos la arquitectura e implementación de Basalt de una
@@ -1561,6 +1562,8 @@ de marginalización parcial_.
 en tiempo real: <https://gitlab.com/VladyslavUsenko/basalt/-/issues/69>
 
 #### Optical flow {#optical-flow}
+
+<!-- #### Optical flow {#optical-flow} -->
 
 <!-- TODO@fig: algún gráfico que represente lo que le entra al módulo y lo que
 sale, lo mismo para todo el pipeline de VIO, y lo mismo para todo Basalt -->
@@ -1703,15 +1706,11 @@ keypoints a posiciones en la escena tridimensional y en caso de que el error
 de reproyección supere cierto umbral, estos keypoints serán descartados por
 considerarse outliers.
 
+
+<!-- TODO@high: RENOMBRAR A "Manejo/Gestión de muestras" o "Muestras" -->
 #### Bundle adjustment visual-inercial
 
-<!-- Cosas que tienen que estar:
-- [ ] pi es estático (no autocalibration comparado a openvins)
-- [ ] se estima la pose del IMU
-- [ ] el estado es sk (frame_poses?), sf (frame_states), sl (lmdb)
-- [ ] "representation of unit vectors in 3D" stereographic projection
-- [ ] "reprojection error"
- -->
+<!-- #### Bundle adjustment visual-inercial -->
 
 En un hilo separado al módulo de optical flow, corre el estimador de VIO
 encargado de realizar el bundle adjustment sobre los cuadros y muestras de la
@@ -2039,14 +2038,16 @@ otras observaciones de esta landmark no se utilizan todavía para añadir
 información a su posición, si no que simplemente se añaden las observaciones
 para uso futuro.
 
+
+#### Optimización y marginalización (TODO)
+
+<!-- #### Optimización y marginalización -->
+
+<!-- TODO@high: escribir -->
 <!-- TODO@license: openvslam, avoid reading ORB-SLAM3 code -->
 <!-- TODO@future: punto de mejora para basalt: usar dogleg minimization en vez de levenberg-marquardt. No se si vale la pena mencionarlo -->
 <!-- TODO@question: question for basalt: why are they not using gtsam/g2o/ceres for the solvers? -->
 <!-- TODO@future: parallelization/vectorization of gauss newton seems very easy, levenberg marquardt not so much -->
-
-#### Optimización y marginalización (TODO)
-
-<!-- TODO@high: escribir -->
 
 \begin{mdframed}[backgroundcolor=shadecolor]
 TODO: Esta última parte es un poco
@@ -2080,6 +2081,7 @@ acomodando los resultados de las variables de interés para que sean los de mayo
 probabilidad (“de mayor verosimilitud“) dadas las restricciones impuestas por las mediciones tomadas (los
 factores del grafo).
 \end{mdframed}
+
 
 
 \cleardoublepage
