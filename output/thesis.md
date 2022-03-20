@@ -1283,6 +1283,7 @@ objetivos bien definidos.}
 representation, first-estimate Jacobians, marginalization
 scheme) que podría ser interesante discutir -->
 <!-- TODO@high@ref: Checkear que los 6 papers de basalt esten siendo citados -->
+<!-- TODO: I think this paper has what I need to understand the code better http://www.roboticsproceedings.org/rss09/p37.pdf -->
 
 # Implementación de un sistema
 
@@ -2021,7 +2022,7 @@ landmark queda ligada al keyframe que la aloja.
 
 <!-- TODO@high@fig: rehacer esta fig -->
 
-\fig{fig:stereographic-projection}{source/figures/stereographic-projection.png}{Proyección estereográfica}{%
+\fig{fig:stereographic-projection}{source/figures/stereographic-projection.pdf}{Proyección estereográfica}{%
 Interpretación geométrica de la proyección estereográfica utilizada para
 representar bearing vectors. Las coordenadas definidas por la propiedad \mono{Vector2
 direction} en \mono{Landmark} definen un punto en el plano $XY$ ($Z=0$) mostrado en azul. Para
@@ -2079,8 +2080,6 @@ acomodando los resultados de las variables de interés para que sean los de mayo
 probabilidad (“de mayor verosimilitud“) dadas las restricciones impuestas por las mediciones tomadas (los
 factores del grafo).
 \end{mdframed}
-
-<!-- I think this paper has what I need to understand the code better http://www.roboticsproceedings.org/rss09/p37.pdf -->
 
 
 \cleardoublepage
@@ -4033,6 +4032,24 @@ TR6   & 0.003 ± 0.002 & 0.003 ± 0.002 & 0.003 ± 0.002 & 355.299 ± 219.485 & 
 \end{addmargin*}
 \end{table}
 
+
+<!--
+TODO: More ideas
+
+AR Datasets:
+- AR datasets (referenced in HybVIO paper)
+- http://vr-ih.com/vrih/resource/article/unzip/1555468247915/2018.0011/2018.0011/2018.0011_NormalPdf.pdf
+- https://github.com/AaltoVision/ADVIO
+
+COLMAP:
+- Idea of using COLMAP as ground truth for custom datasets?
+- Este paper tiene una forma similar de generar groundtruth con offline processing:
+  https://www.researchgate.net/publication/312019498_ON_CONSTRUCTION_OF_A_RELIABLE_GROUND_TRUTH_FOR_EVALUATION_OF_VISUAL_SLAM_ALGORITHMS
+- https://arxiv.org/pdf/2202.08894.pdf: "COLMAP is able to reconstruct an
+  accurate trajectory on every sequence of this dataset. For this
+  reason, including the inertial measurements in the estimation
+  process does not bring any significant benefit."
+-->
 
 
 ## Conclusiones y trabajo futuro

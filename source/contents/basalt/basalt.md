@@ -741,7 +741,7 @@ landmark queda ligada al keyframe que la aloja.
 
 <!-- TODO@high@fig: rehacer esta fig -->
 
-\fig{fig:stereographic-projection}{source/figures/stereographic-projection.png}{Proyección estereográfica}{%
+\fig{fig:stereographic-projection}{source/figures/stereographic-projection.pdf}{Proyección estereográfica}{%
 Interpretación geométrica de la proyección estereográfica utilizada para
 representar bearing vectors. Las coordenadas definidas por la propiedad \mono{Vector2
 direction} en \mono{Landmark} definen un punto en el plano $XY$ ($Z=0$) mostrado en azul. Para
