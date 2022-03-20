@@ -131,3 +131,6 @@ handheld
 ground
 truth
 Odyssey
+preintegrada
+preintegradas
+bearing

@@ -1,4 +1,4 @@
-<!-- #### Bundle adjustment visual-inercial -->
+<!-- #### Procesamiento de muestras -->
 
 En un hilo separado al módulo de optical flow, corre el estimador de VIO
 encargado de realizar el bundle adjustment sobre los cuadros y muestras de la
@@ -10,38 +10,15 @@ salida en una cola, la estimación de los estados del agente a localizar.
 
 ##### Inicialización y preintegración {#basalt-preintegration}
 
-<!-- TODO@high@def: referencia a la sección "Calibración de IMU", escribirla, referenciarla -->
-
-\begin{mdframed}[backgroundcolor=shadecolor]
-TODO: En el párrafo que sigue hablo de una sección “Calibración de IMU” que todavía no
-existe, tengo la mitad de esa sección escrita pero todavía estoy considerando si
-agregarla al trabajo o simplemente referenciarla de un libro.
-Cuando uno trabaja con sensores se tienen modelos matemáticos que describen las
-distorsiones que se suelen dar en el sensor. Calibrar un sensor significa
-encontrar los valores de los parámetros de este modelo para tu sensor particular.
-
-Se usa también cuadrados mínimos no lineales para calibrar un sensor. Uno toma varias
-mediciones y despues optimiza para encontrar los parámetros más adecuados.
-
-Esto aplica exactamente igual para las cámaras (aunque ahí hay muchos más
-modelos en uso). Y hay unos detalles muy copados de los que hablar por que
-el equipo de Basalt desarrolló sus propios modelos de cámaras que son muy
-rápidos por que están bien pensados para SLAM (la inversa de los modelos tienen expresión
-cerrada que no es usual en los modelos de cámara estándar). Además tengo un merge request abierto
-en donde contribuyo un nuevo modelo de cámara que se usa en unos cascos que les
-hicimos ingeniería inversa (los de Windows Mixed Reality) y que Basalt no
-soportaba anteriormente:
-\url{https://gitlab.com/VladyslavUsenko/basalt-headers/-/merge_requests/21}.
-
-Así que sí, me gustaría detallar más todo esto en el trabajo, pero el tiempo se
-está acabando.
-\end{mdframed}
+<!-- TODO: Acá la idea original era referenciar a la secciónimu_calibration.md
+que dejé a medias en vez de mandar directamente al libro de Barfoot -->
 
 Para comenzar, el hilo de procesamiento de este módulo espera a que la primera
 muestra de la IMU arribe. Estas muestras son recibidas de forma raw y antes de
-tratarlas, Basalt utiliza los parámetros de calibración estáticos provistos por
-archivos de configuración para corregirlas. La corrección, o calibración, ocurre
-como se explica en la sección de "Calibración de IMU" sin considerar todavía los
+tratarlas, Basalt utiliza parámetros de calibración estáticos provistos por
+archivos de configuración para corregirlas. La corrección ocurre con base al
+modelo de calibración de IMU explicado en @barfootStateEstimationRobotics2017
+secc. 6.4.4 sin considerar todavía los
 parámetros de los procesos aleatorios detallados en la misma. Una particularidad
 de Basalt, es que el acelerómetro es utilizado como origen del agente localizado
 y, fundándose en esto, se fija su orientación. Es decir, no se aplica ningún
@@ -249,9 +226,9 @@ continúa de la siguiente manera:\newline
   $\pi_t$, $\mathbf{i}_t$ y $\mathbf{T}_{i_t c_t}$ para la cámara $t$.
 
 - Podemos ahora desproyectar $\mathbf{p}_h$ y $\mathbf{p}_t$ a sus respectivas
-  posiciones 3D estimadas $\mathbf{p}'_h := \pi^{-1}_h(\mathbf{p}_h, \mathbf{i}_h)$
+  proyecciones (rayos) estimados $\mathbf{p}'_h := \pi^{-1}_h(\mathbf{p}_h, \mathbf{i}_h)$
   y $\mathbf{p}'_t := \pi^{-1}_t(\mathbf{p}_t, \mathbf{i}_t)$ con $\mathbf{p}'_h,
-\mathbf{p}'_t \in \R^3$.
+  \mathbf{p}'_t \in \R^3$ en coordenadas homogéneas.
 
 - Computamos ahora la transformación de la IMU de $h$ a la IMU de $t$ dada por
   $\mathbf{T}_{i_h i_t} := \mathbf{T}_{i_h}^{-1} \mathbf{T}_{i_t}$
@@ -261,25 +238,16 @@ continúa de la siguiente manera:\newline
 \mathbf{T}_{i_t c_t}$
 
 - Finalmente con estos tres datos $\mathbf{p}'_h$, $\mathbf{p}'_t$ y
-  $\mathbf{T}_{c_h c_t}$ es posible realizar la triangulación utilizando DLT con
-  SVD como se explicó en la sección "DLT con SVD" para obtener un punto en
-  coordenadas homogéneas en $\R^4$ con el cuarto componente representando el
-  inverso de la distancia entre la cámara y el punto de interés, mientras que
-  los tres primeros componentes corresponden al _bearing vector_, es decir, un
-  vector unitario que determina la dirección desde la cámara hacia la landmark.
-
-\begin{mdframed}[backgroundcolor=shadecolor]
-TODO: En el último punto hablo de una sección “DLT con SVD” que no existe en el
-trabajo.
-Estoy todavía viendo si agregarla o simplemente referenciar el capítulo del libro
-de Multiple View Geometry de la bibliografía.
-
-DLT es direct linear transform y SVD es single value decomposition.
-Esto se usa para triangular puntos 3D dadas dos vistas 2D.
-Pero los detalles no necesité profundizarlos.
-\end{mdframed}
-
-<!-- TODO@high: ese último punto hablo de SVD, y DLT y referencio una sección que no existe. -->
+  $\mathbf{T}_{c_h c_t}$ es posible triangular el punto 3D resultante de la
+  forma descrita en @hartleyMultipleViewGeometry2004 Cap. 12. Cabe aclarar que
+  se necesitará utilizar cuadrados mínimos lineales para obtener el punto 3D
+  final ya que los rayos proyectados provienen de mediciones ruidosas y
+  usualmente no se alinearan de forma perfecta. Obtendremos el punto de la
+  escena en coordenadas homogéneas en $\R^4$ con el cuarto componente
+  representando el inverso de la distancia entre la cámara y el punto de
+  interés, mientras que los tres primeros componentes corresponden al
+  _bearing vector_, es decir, un vector unitario que determina la dirección
+  desde la cámara hacia la landmark.\newline
 
 <!-- TODO@def: distancia inversa: ver paper referenciado en basalt [6]: Inverse depth parametrization
 for monocular SLAM -->
@@ -292,7 +260,7 @@ quizás ver el apendix de multiple view geometry que se veía bueno -->
 su cuenta en la sección "DLT con SVD" cuando se explicar el resultado de la triangulación -->
 
 Un detalle a considerar es que Basalt comprueba que la distancia relativa entre
-los dos cuadros, la baseline, sea lo suficientemente grande para considerar la
+los dos cuadros, la _baseline_, sea lo suficientemente grande para considerar la
 triangulación exitosa, de lo contrario se busca un nuevo cuadro para comparar
 con el keyframe. Esta comprobación se reduce a revisar que la norma del vector
 de traslación contenido en $\mathbf{T}_{c_h c_t}$ sea de, por defecto, más
@@ -307,8 +275,6 @@ utiliza una _proyección estereográfica_ como se explica en la
 a este punto producto de la triangulación, de esta forma la posición de la
 landmark queda ligada al keyframe que la aloja.
 
-<!-- TODO@high@fig: rehacer esta fig -->
-
 \fig{fig:stereographic-projection}{source/figures/stereographic-projection.pdf}{Proyección estereográfica}{%
 Interpretación geométrica de la proyección estereográfica utilizada para
 representar bearing vectors. Las coordenadas definidas por la propiedad \mono{Vector2
@@ -316,12 +282,12 @@ direction} en \mono{Landmark} definen un punto en el plano $XY$ ($Z=0$) mostrado
 obtener el vector unitario correspondiente, se traza una línea desde el punto
 $(0,\ 0,\ -1)^T$ hacia \mono{direction} en el plano $XY$. El vector en el que esta línea
 interseca a la esfera unitaria será el bearing vector codificado. Se muestran
-tres ejemplos en rojo, verde y amarillo, con lineas punteadas que representan
+tres ejemplos en rojo, verde y amarillo, con líneas punteadas que representan
 las líneas trazadas y flechas representando los bearing vectors obtenidos.
 }
 
-Si todos los procedimientos relacionados a la triangulación de estos dos cuadros
+Si todos los procedimientos relacionados con la triangulación de estos dos cuadros
 fueron correctos, se almacena la landmark nueva en la base de datos. De haber
 otras observaciones de esta landmark no se utilizan todavía para añadir
-información a su posición, si no que simplemente se añaden las observaciones
+información a su posición, sino que simplemente se añaden las observaciones
 para uso futuro.

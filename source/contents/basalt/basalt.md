@@ -21,8 +21,8 @@ ayudar al entendimiento y que no son posibles a la hora de escribir código.
 
 Cómo vimos anteriormente, el funcionamiento de Basalt se divide en dos
 etapas. La primera etapa de odometría visual-inercial (VIO), en el cual se
-emplea un sistema de VIO que supera a sistemas equivalentes de vanguardia
-mientras que la segunda etapa de mapeo visual-inercial (VIM), toma keyframes
+emplea un sistema de VIO que supera a sistemas equivalentes de vanguardia.
+La segunda etapa de mapeo visual-inercial (VIM), toma keyframes
 producidos por la capa de VIO y ejecuta un algoritmo de bundle adjustment para
 obtener un mapa global consistente. Estas dos capas son completamente
 independientes. En una corrida usual, se ejecuta inicialmente el sistema de VIO y
@@ -45,8 +45,7 @@ en tiempo real: <https://gitlab.com/VladyslavUsenko/basalt/-/issues/69>
 
 <!-- #include contents/basalt/opticalflow.md -->
 
-<!-- TODO@high: RENOMBRAR A "Manejo/Gestión de muestras" o "Muestras" -->
-#### Bundle adjustment visual-inercial
+#### Procesamiento de muestras
 
 <!-- #include contents/basalt/measurements.md -->
 
