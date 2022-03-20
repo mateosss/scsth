@@ -2,7 +2,6 @@
 
 <!-- TODO@ref: Barfoot capitulo 6 habla de modelo de la IMU -->
 
-<!-- TODO@def: Que es propioceptivo? -->
 <!-- TODO@def: Que es odometría? -->
 
 # IMUs

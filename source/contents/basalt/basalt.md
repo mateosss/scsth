@@ -2,6 +2,7 @@
 representation, first-estimate Jacobians, marginalization
 scheme) que podría ser interesante discutir -->
 <!-- TODO@high@ref: Checkear que los 6 papers de basalt esten siendo citados -->
+<!-- TODO: I think this paper has what I need to understand the code better http://www.roboticsproceedings.org/rss09/p37.pdf -->
 
 # Implementación de un sistema
 

@@ -26,44 +26,43 @@ Notación:
 - [AUTO] Lista de tablas
 - [AUTO] Lista de abreviaturas
 - [AUTO] Lista de fragmentos (listings?), algoritmos y otras?
-- [TODO] Introducción
-  - [TODO] Contexto/motivación (mencionar algo de las comunidades con las que trabajé,
+- [DONE] Introducción
+  - [DONE] Contexto/motivación (mencionar algo de las comunidades con las que trabajé,
         mencionar que CV es muy trial and error, oversights pueden costar horas)
-  - [WHAT] Trabajos relacionados? @thaytan CV1, ILLIXR
   - [TODO] Estructura de la tesis
 - [TODO] Preliminares y fundamentos teóricos
-  - [TODO] IMU: modelos y calibración
-    - [DRAFT] Matriz de alineación
-    - [TODO] Proceso de Wiener (random walk & gaussian white noise)
-  - [TODO] Cámara: modelos y calibración
-    - [TODO] Modelo pinhole (project, unproject, intrinsic parameters, range)
-    - [WAIT] Modelo de distorsión radial-tangential (Brown-Conrady)
-    - [WAIT] Modelo de distorsión equidistant / modelo kannala-brandt (que es una camara fisheye)
-    - [TODO] Otras características en una cámara (global shutter, vignetting, frequency,
+  - [WONT] IMU: modelos y calibración
+    - [WONT] Matriz de alineación
+    - [WONT] Proceso de Wiener (random walk & gaussian white noise)
+  - [WONT] Cámara: modelos y calibración
+    - [WONT] Modelo pinhole (project, unproject, intrinsic parameters, range)
+    - [WONT] Modelo de distorsión radial-tangential (Brown-Conrady)
+    - [WONT] Modelo de distorsión equidistant / modelo kannala-brandt (que es una camara fisheye)
+    - [WONT] Otras características en una cámara (global shutter, vignetting, frequency,
           exposure, gain, hw sync, ver paper TUM-VI para otras caracteristicas)
-  - [TODO] Conjuntos de Datos: EuRoC, TUM-VI, Kitti, synthetic datasets (listar
+  - [WONT] Conjuntos de Datos: EuRoC, TUM-VI, Kitti, synthetic datasets (listar
         características particulares, layout de los datasets, utilidad, algunos
         scores, traer tabla comparativa del paper de TUM-VI?)
-  - [DRAFT] Cuadrados mínimos
-    - [DRAFT] Definición del problema no-lineal
-    - [DRAFT] Algoritmo de Gauss-Newton
+  - [DONE] Cuadrados mínimos
+    - [DONE] Definición del problema no-lineal
+    - [DONE] Algoritmo de Gauss-Newton
     - [WONTDO] Algoritmo de Levenberg-Marquardt
-  - [DRAFT] Cuaterniones
-  - [DRAFT] Grupos de Lie para transformaciones 2D y 3D
-    - [DRAFT] Definición
-    - [DRAFT] Operadores (Exp y Log, hat y vee) y Propiedades
-    - [DRAFT] SO(3), SE(3), SO(2), SE(2)
-  - [TOREAD] Grafo de factores
+  - [DONE] Cuaterniones
+  - [DONE] Grupos de Lie para transformaciones 2D y 3D
+    - [DONE] Definición
+    - [DONE] Operadores (Exp y Log, hat y vee) y Propiedades
+    - [DONE] SO(3), SE(3), SO(2), SE(2)
+  - [WONT] Grafo de factores
 - [TODO] Sistemas Estudiados
-  - [TODO] Introducción: Panorama de sistemas (cuales, metricas, rendimiento,
+  - [DONE] Introducción: Panorama de sistemas (cuales, metricas, rendimiento,
         licencias (GPL), soluciones privativas, comunidades, actividad (graficos de
         actividad/estrellas/etc?), por que se eligieron los sistemas que se
         eligieron)
   - [WONTDO] Kimera
   - [TOREAD|DOING] Basalt
     - [DOING] VIO
-      - [DRAFT] optical flow
-      - [DRAFT] measure
+      - [DONE] optical flow
+      - [DONE] measure
       - [DOING] optimization
       - [DOING] marginalization
     - [WONTDO] VIM
@@ -83,7 +82,7 @@ Notación:
     - [DRAFT] Predicción (explicar los distintos niveles)
     - [DRAFT] Filtrado (explicar los distintos tipos, mencionar kalman?)
   - [DRAFT] Controladores en Monado
-    - [TODO] Controlador para dispositivos RealSense (rs_source, D455 and others)
+    - [DRAFT] Controlador para dispositivos RealSense (rs_source, D455 and others)
     - [TODO] Controlador para dispositivos WMR (wmr_source, Odyssey+ and others)
       - [TODO] Atenuación exponencial para sincronización temporal
       - [TODO] Problemas específicos de calibración: camaras con poco solapamiento,
@@ -105,5 +104,5 @@ Notación:
     - [WONT] Interpolación de muestras de IMU
     - [WONT] Cámaras OAK-D / Luxonis / Depth-aI
 - [TODO] Resultados
-- [TODO] Conclusion
+- [DONE] Conclusion
 - [AUTO] Bibliografía

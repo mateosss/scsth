@@ -14,20 +14,9 @@ un poco para el lado donde no está el anillado -->
 <!-- TODO@nico: Tratar de no usar parentesis en el texto -->
 <!-- TODO@end: las listas of figures/framents/etc estan andando? -->
 
-<!-- TODO@high@fig:
-Arreglar problemas de imagenes con copyright
-- [x] NO: rolling-shuitter NUEVA
-- [ ] NO: northstar LINKEAR (https://docs.projectnorthstar.org/)
-- [ ] NO: basalt double sphere REHACER
-- [x] NO: basalt euroc mipmap REHACER
-- [x] NO: openxr diagram, REHACER (https://www.khronos.org/legal/terms-of-use/)
-- [x] NO: openxr companies, LINKEAR (https://www.khronos.org/legal/terms-of-use/)
--->
-
 <!-- TODO@style: there is this \ac acronym commands in the classictemplate thesis that I could've used -->
 
 <!-- TODO@high@style: preguntar si da mucho rechazo que sea tan colorido -->
-<!-- TODO@high@fig: revisar todos los gráficos manuscritos: sacar cuadriculados y que estén bien el idioma, capaz pasar largo a fira code? -->
 <!-- TODO@end: revisar que todas las ^T transpuestas estén escrita con T mayuscula -->
 <!-- TODO@high@end: Revisar \\ colgantes con la busqueda regex: "\\\\\n\\end" -->
 <!-- TODO@high@end: los margin par se pueden salir de la página, revisar que ninguno haya quedado así!-->
