@@ -187,7 +187,10 @@ poder utilizar dispositivos con este tipo de tracking en Monado, incluyendo
 cascos de la plataforma Windows Mixed Reality. Estos, según el mejor
 entendimiento del autor, son ahora los primeros cascos comerciales capaces de
 ser localizados por SLAM/VIO en una plataforma basada completamente en código
-libre.
+libre. Se puede ver un video demostrando el tracking funcionando en la URL
+referenciada al pie de página [^bar-demo].
+
+[^bar-demo]: <https://youtu.be/g1o2xADr5Fw>
 
 ### Estructura de la tesis
 

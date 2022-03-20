@@ -1,7 +1,6 @@
 <!-- Posibles valores de MODE: DRAFT, RELEASE -->
 
 
-
 \cleardoublepage
 \pagestyle{scrheadings}
 \pagenumbering{arabic}
@@ -82,9 +81,8 @@ capaces de integrar tipos de muestras tremendamente distintos en una estimación
 de la pose que es suficientemente buena.
 
 Table: \label{tbl:imu-accumulated-error} Error acumulado luego de cierto tiempo
-de integrar mediciones de IMU de distinta calidad. Vale aclarar que en
+de integrar mediciones de IMU de distinta calidad[@InertialNavigationPrimer, secc 3.3]. Vale aclarar que en
 dispositivos XR las IMU utilizadas son del tipo _consumidor_ por su menor costo.
-Datos de [@InertialNavigationPrimer, secc 3.3].
 
 
 | **Categoría / Tiempo** | **1 s** | **10 s** | **60 s** | **10 min** | **1 hr**  |
@@ -130,11 +128,13 @@ sensores, optimización, estimación probabilística, entre otras. Esta ola de
 investigación ha dado lugar a una gran cantidad de implementaciones de software
 libre, con distintos grados de rendimiento, robustez, precisión, aplicaciones,
 facilidad de uso, entre otras propiedades de interés. Recursos como
-<http://openslam.org> y estudios como [@servieresVisualVisualInertialSLAM2021a] o
-[@taketomiVisualSLAMAlgorithms2017a] pueden listar docenas de sistemas
+OpenSLAM[^openslam] y estudios como los de las referencias [@servieresVisualVisualInertialSLAM2021] o
+[@taketomiVisualSLAMAlgorithms2017] pueden listar docenas de sistemas
 disponibles para considerar. Más aún, cada año nuevos sistemas aparecen mientras
 otros dejan de ser mantenidos. Seguir los avances del área puede ser
 desafiante, pero esto es una consecuencia de su desarrollo tan activo.
+
+[^openslam]: <http://openslam.org>
 
 Específicamente, en este trabajo trataremos con sistemas de _localización y
 mapeo simultáneo (SLAM)_ mediante sensores visuales-inerciales (VI-SLAM). Como
@@ -202,7 +202,10 @@ poder utilizar dispositivos con este tipo de tracking en Monado, incluyendo
 cascos de la plataforma Windows Mixed Reality. Estos, según el mejor
 entendimiento del autor, son ahora los primeros cascos comerciales capaces de
 ser localizados por SLAM/VIO en una plataforma basada completamente en código
-libre.
+libre. Se puede ver un video demostrando el tracking funcionando en la URL
+referenciada al pie de página [^bar-demo].
+
+[^bar-demo]: <https://youtu.be/g1o2xADr5Fw>
 
 ### Estructura de la tesis
 
@@ -295,8 +298,9 @@ función $L : V \rightarrow W$ tal que:
 \end{itemize}
 
 Property (Matriz de una transformación)
-: Si $V$ tiene base canónica $e_1, ..., e_n$ con $e_i \in \R^m$ tenemos que la matriz $A =
-[L(e_1), ..., L(e_n)] \in \R^{m \times n}$ cumple $Ax = L(x) \quad \forall x \in V$
+: Si $V \subseteq \R^n$ tiene base canónica $e_1, ..., e_n$ con $e_i \in \R^m$
+tenemos que la matriz $A = [L(e_1), ..., L(e_n)] \in \R^{m \times n}$ cumple
+$Ax = L(x) \quad \forall x \in V$
 
 Property (Matrices cuadradas)
 : El conjunto de matrices en $\R^{n\times n}$, con las operaciones de adición y
@@ -684,8 +688,8 @@ Grupo Euclídeo Especial $SE(n)$, es decir:
 
 Y es este el grupo que buscábamos, ya que $SE(3)$ es capaz de representar las
 transformaciones de cuerpo rígido en $\R^3$ que necesitábamos. Tenemos entonces
-que representaremos rotaciones con matrices cuadradas $3x3$ $R \in SO(3)$ y
-representaremos transformaciones con matrices cuadradas $4x4$ $T \in SE(3)$.
+que representaremos rotaciones con $R \in SO(3)$, osea matrices cuadradas $3 \times 3$; y
+representaremos transformaciones con $T \in SE(3)$, osea matrices cuadradas $4 \times 4$.
 Estos grupos también funcionan con dos dimensiones en $\R^2$ de la misma manera
 para $SO(2)$ y $SE(2)$. Finalmente, se pueden visualizar los conjuntos definidos
 en esta sección en la \figref{fig:hasse-groups}.
@@ -1279,9 +1283,7 @@ objetivos bien definidos.}
 <!-- TODO@def: VIO habla acerca de componentes: (patch tracking, landmark
 representation, first-estimate Jacobians, marginalization
 scheme) que podría ser interesante discutir -->
-<!-- TODO: Mencionar que TUM lo desarrolla y las personas que lo mantienen -->
 <!-- TODO@high@ref: Checkear que los 6 papers de basalt esten siendo citados -->
-<!-- TODO@high@ref: Los papers de orbslam y kimera deberían estar citados -->
 
 # Implementación de un sistema
 
@@ -1289,42 +1291,146 @@ scheme) que podría ser interesante discutir -->
 
 ### Preliminares
 
-#### Otros sistemas integrados (TODO)
+La decisión sobre cuál sistema de localización visual-inercial integrar con
+Monado no fue sencilla. Fue necesario descartar docenas de implementaciones e
+incluso así, no fue trivial entender si los sistemas elegidos finalmente
+resultaron los más adecuados para el contexto de XR. Cada implementación
+presentaba ventajas y desventajas, aunque es usual que las respectivas
+publicaciones se concentren en destacar solo las métricas favorables. Más aún,
+es necesario conocimiento experto para comprender cómo la elección de ciertos
+fundamentos teóricos, técnicas algorítmicas, decisiones arquitecturales o de
+tecnología afectan a la calidad del tracking dedicado a XR. Gran parte
+de este trabajo se basó en el estudio de los conceptos necesarios para poder
+tomar este tipo de decisiones.
 
-\begin{mdframed}[backgroundcolor=shadecolor]
-TODO: En esta sección me gustaría hablar un poco de dos sistemas que no voy
-detallar mucho en el resto del trabajo: Kimera-VIO y ORB-SLAM3.\\
-\newline
-En el trabajo integré tres sistemas.
-\begin{enumerate}
-\item Kimera-VIO: Este parecía muy bueno, es del MIT, con licencia permisiva BSD-2
-   pero resulto ser bastante malo. Intentaba hacer mucho y había mucho
-   ``overengineering'' y técnicas lentas en general.
-\item ORB-SLAM3: De la universidad de Zaragoza, es \emph{la} referencia del mejor
-   sistema de SLAM de código libre. Y sí, resultó andar bastante bien salvo por
-   unos detalles. El problema es que tiene licencia GPL3
-\item Basalt: Este me lo topé medio de casualidad, es del TUM, y tiene licencia
-   permisiva (BSD3). El problema es que solo puede hacer VIO en realtime y no
-   SLAM completo. Para usar bien el mapa usa necesita una pasada offline. A pesar de eso,
-   anda \emph{muy} bien en comparación a los otros: es rapidísimo, super estable y
-   tiene un código bastante bien escrito (cosa que es dificil encontrar en
-   software de investigación). Por esto decidí meterle mucha pila a entender el
-   código de este. Si bien también leí Kimera bastante a fondo y algo de
-   ORB-SLAM3; creo que fue muy provechoso leer Basalt, y todo lo que sigue de
-   esta segunda parte del trabajo está dedicada a la implementación de Basalt.
-\end{enumerate}
+A grandes rasgos y sin un orden en particular, las propiedades deseables que se
+consideraron a la hora de elegir sistemas fueron:
 
-También pondría como footnotes unos videos de como quedó la integración andando con cada uno:
-\begin{itemize}
-\item Basalt: \url{https://youtu.be/gxu3Ve8VCnI}
-\item ORB-SLAM3: \url{https://youtu.be/kJwWY973b10}
-\item Kimera-VIO: \url{https://youtu.be/ajuqQ7E1MFw}
-\end{itemize}
+1. Versatilidad en la configuración sensores: Monado necesita soportar una gran
+  variedad de dispositivos, es por esto que se prefirieron sistemas que soporten
+  la mayor cantidad de combinaciones y tipos de sensores. En el mejor de los
+  casos, Monado debería ser capaz de localizar desde cascos con cámaras estéreo
+  y una IMU, hasta celulares con una única cámara y sin giroscopio.
 
-En definitiva, lo que sigue habla puramente de Basalt:
-\end{mdframed}
+2. Licencia permisiva: La licencia y filosofía de Monado da gran libertad al
+   programador que lo utilice de hacer lo que desee con su código fuente. Esto
+   incluye poder utilizarlo en proyectos en dónde se prefiere no distribuir
+   dicho código. Licencias de código libre “virales” como la GPL
+   [@GNUGeneralPublic] no permiten esto y enlazar Monado a sistemas con este
+   tipo de licencias contagiaría a los proyectos que dependen de Monado
+   quitándoles la libertad de decidir no publicar su código.
 
-#### Problemáticas
+3. Desarrolladores activos: Estos sistemas suelen surgir de grupos de
+   investigación y es muy común que se abandonen luego de que el trabajo sea
+   publicado. Será necesario encontrar, dentro de lo posible, sistemas con un
+   desarrollo activo, con mantenedores accesibles y que, en el mejor de los
+   casos, acepten contribuciones a su proyecto.
+
+4. Estabilidad, facilidad de instalación y buenas prácticas de desarrollo: Los
+   sistemas de SLAM son muy complejos y es usual que se optimicen para funcionar
+   únicamente en los conjuntos de datos de prueba dejando de lado estas
+   características que son fundamentales a la hora de querer brindar un sistema
+   para ser utilizado por usuarios finales.
+
+5. Rendimiento: El área de XR tiende a buscar la reducción del tamaño de los
+   dispositivos para mejorar su ergonomía y practicidad. Un sistema de tracking
+   debe ser capaz de operar en contextos con recursos acotados, debería utilizar
+   poca memoria, poca energía y ser capaz de estimar poses a altas frecuencias y
+   utilizando poca capacidad de cómputo.
+
+6. Precisión: Por último y no menos importante, queremos que la precisión de la
+   localización sea adecuada. El nivel de precisión requerido dependerá del tipo
+   de aplicación. Es común que se necesite precisión submilimétrica en contextos
+   de VR donde la simulación cubre completamente el campo de visión del usuario,
+   y fallos en el tracking puedan inducir mareos. Mientras que para otros
+   contextos como AR realizado por un celular, no es tan vital contar con ese
+   nivel de exactitud.
+
+#### Sistemas integrados
+
+En este trabajo se integraron con Monado tres sistemas de código libre
+distintos, primero _Kimera-VIO_ [@rosinolKimeraOpenSourceLibrary2020], luego
+_ORB-SLAM3_ [@camposORBSLAM3AccurateOpenSource2021] y finalmente _Basalt_
+[@usenkoBasaltVisualInertialMapping2020].
+
+Kimera-VIO[^kimera-repo] es una implementación desarrollada en el Instituto de
+Tecnología de Massachusetts (MIT) con una licencia permisiva BSD-2
+[@2ClauseBSDLicense]. Fue publicada originalmente en octubre de 2019 y su última
+actualización significativa[^kimera-last-update], en dónde se introduce la
+posibilidad utilizar una única cámara, ocurrió en abril de 2021.
+Kimera resultó inicialmente atractivo por su licencia y su promesa de correr en
+tiempo real. Además de esto posee funcionalidades muy interesantes para XR como
+la reconstrucción y análisis semántico del entorno en el que el dispositivo se
+encuentra. Desgraciadamente, no logró ser adecuado mostrando grandes
+dificultades a la hora de correrlo en sensores distintos a los presentados en su
+publicación. Más aún el término “tiempo real” en el contexto de la publicación
+es ambiguo, ya que está lejos de ser capaz de ejecutarse a frecuencias adecuadas
+para XR y es más adecuado para uso en robots con frecuencias de menos de 10 Hz
+[@rosinolKimeraOpenSourceLibrary2020, Fig. 5].
+
+ORB-SLAM3[^orbslam3-repo] es desarrollado por la Universidad de Zaragoza con una
+licencia viral GPL-3.0 [@GNUGeneralPublic]. Fue publicado inicialmente en julio
+de 2020 y su última actualización significativa[^orbslam3-last-update] ocurrió
+en diciembre de 2021. ORB-SLAM3 es la tercera iteración de una línea de sistemas
+que dominan las tablas comparativas de SLAM desde hace unos cuantos años y es
+por esto que se implementó incluso aunque no posea una licencia permisiva. El
+sistema presenta varios métodos novedosos que mejoran la precisión del tracking
+mientras que muestra ser capaz de estimar poses a unos 20 Hz o 30 Hz
+[@camposORBSLAM3AccurateOpenSource2021, Tabla 6]. El sistema es el más versátil
+del campo permitiendo ser ejecutado en configuraciones con una cámara
+(monocular) o dos (estéreo), con o sin uso de la IMU e incluso con cámaras de
+profundidad. Además, soporta la reconstrucción de múltiples mapas y la capacidad
+de interconectarlos o incluso guardarlos en almacenamiento persistente para ser
+reutilizados en sesiones de tracking posteriores. Una desventaja es que la
+trayectoria que se da al construir el mapa es particularmente ruidosa y difícil
+de utilizar en XR. Se plantea como trabajo a futuro investigar más acerca de la
+funcionalidad de reutilización del mapa y como funciona el tracking con mapas ya
+construidos.
+
+Finalmente, Basalt[^basalt-repo] es desarrollado por el Instituto Técnico de
+Múnich con una licencia permisiva BSD-3 [@3ClauseBSDLicense]. Fue publicado
+originalmente en abril de 2019 y su última actualización
+significativa[^basalt-last-update] [@demmelBasaltSquareRoot2021] ocurrió en
+octubre de 2021. Basalt solo es capaz de correr en tiempo real su sistema de VIO
+necesitando de una pasada offline de su _“mapper”_ para lograr un mapa
+consistente. A pesar de esto, mostró ser sorprendentemente preciso y tener un
+gran desempeño. En particular, es un sistema que puede correr fácilmente a 60 Hz
+consumiendo cuadros a mayores resoluciones que las probadas en ORB-SLAM3 y
+Kimera y duplicando las frecuencias de muestreo a 60 fps. Esta capacidad de
+soportar mayor cantidad de muestras aumenta significativamente la precisión de
+la trayectoria a pesar de que no sea un sistema de SLAM completo. Además de
+esto, el sistema es notablemente más sencillo de compilar al tener un buen
+manejo de sus dependencias, posee mejores prácticas de ingeniería de software y
+es en general mucho más estable logrando fácilmente sesiones de tracking
+ininterrumpidas a diferencia de los sistemas anteriores.
+
+[^kimera-repo]: <https://github.com/MIT-SPARK/Kimera-VIO>
+[^orbslam3-repo]: <https://github.com/UZ-SLAMLab/ORB_SLAM3>
+[^basalt-repo]: <https://gitlab.com/VladyslavUsenko/basalt>
+[^kimera-last-update]: <https://github.com/MIT-SPARK/Kimera-VIO/pull/152>
+[^orbslam3-last-update]: <https://github.com/UZ-SLAMLab/ORB_SLAM3/releases/tag/v1.0-release>
+[^basalt-last-update]: <https://gitlab.com/VladyslavUsenko/basalt/-/commit/24325f2a>
+
+Los tres sistemas fueron integrados en Monado con distintos niveles de éxito,
+pueden verse demostraciones de cómo funcionan en los videos referenciados al pie
+de página [^kimera-video] [^orbslam3-video] [^basalt-video]. Más adelante, en el
+[](#evaluation), se verán resultados y distintas métricas comparativas entre los
+sistemas.
+
+[^kimera-video]: Kimera-VIO con Monado: <https://youtu.be/gxu3Ve8VCnI>
+[^orbslam3-video]: ORB-SLAM3 con Monado: <https://youtu.be/kJwWY973b10>
+[^basalt-video]: Basalt con Monado: <https://youtu.be/ajuqQ7E1MFw>
+
+Las terminologías y jerga del área de SLAM/VIO pueden resultar abrumadoras, pero
+se espera que introduciéndolas en el contexto de una implementación concreta se
+puedan entender mejor los problemas que los sistemas, en general, tienen que
+resolver. Por todas las razones mencionadas anteriormente, Basalt es actualmente
+el sistema de preferencia para ser utilizado con Monado y, si bien se estudió el
+código fuentes de los tres sistemas, en esta parte del trabajo que sigue a
+continuación _nos vamos a enfocar en profundizar en la implementación de
+Basalt_.
+
+#### Problemáticas de un sistema
 
 
 
@@ -1338,7 +1444,7 @@ poses de cámara, o vistas, y puntos 3D en el mapa que han sido observados por
 estas vistas. Así, se intenta reducir el llamado “error de reproyección” del
 conjunto actualizando tanto las poses de las cámaras como la posición de los
 puntos observados. Este error hace referencia a la distancia entre las
-posiciones de los puntos y donde las vistas esperan que estos
+posiciones de los puntos y en dónde las vistas esperan que estos
 se encuentren \autocite{hartleyMultipleViewGeometry2004}.
 }
 sobre todas las imágenes capturadas a lo largo de una corrida,
@@ -1414,7 +1520,7 @@ varios cuadros (esto es el _optical flow_ que veremos en la sección
 [](#optical-flow)), mientras que en la capa de mapeo se usan features adecuadas
 que son indiferentes a las condiciones de luz o al punto de
 vista de la cámara\marginnote{%\
-Esto es fundamental para entender cuando el dispositivo está visitando un lugar
+Esto es fundamental para entender cuándo el dispositivo está visitando un lugar
 por el que ya pasó. Esto se denomina “loop closing”.
 }. De esta forma tenemos un sistema que es capaz de utilizar
 las mediciones a alta frecuencias de los sensores y al mismo tiempo tiene la
@@ -1492,12 +1598,14 @@ EuRoC \autocite{burriEuRoCMicroAerial2016}.
 
 Posteriormente se realiza la detección de features nuevas sobre las imágenes
 utilizando el algoritmo _FAST_ [@rostenFasterBetterMachine2010a] para detección
-de esquinas implementado sobre _OpenCV_\marginnote{%\
+de esquinas, o puntos sobresalientes de la imagen en general (keypoints), implementado
+sobre _OpenCV_\marginnote{%\
 OpenCV es una de las bibliotecas de visión por computadora más populares y
 utilizadas en este tipo de sistemas. Combina múltiples algoritmos y presenta
 una licencia permisiva Apache 2 \autocite{ApacheLicenseVersion} (prev. BSD-3 \autocite{3ClauseBSDLicense}).
-}. Resulta importante
-aclarar que Basalt es uno de los sistemas que menos depende de OpenCV, ya que
+}. Resulta importante aclarar que Basalt es uno de
+los sistemas que menos depende de OpenCV, siendo `cv::FAST` el único algoritmo de la
+biblioteca en uso durante una ejecución usual. El proyecto
 tiende a reimplementar muchas de las técnicas y algoritmia de forma
 especializada y, como veremos en otros módulos, otras tareas razonablemente
 complejas como la optimización de grafos de poses se implementan también dentro
@@ -1701,8 +1809,8 @@ cuadros como se ve en el ejemplo de la \figref{fig:sample-frequencies}.
 
 \fig{fig:sample-frequencies}{source/figures/sample-frequencies.pdf}{%
 Ejemplo de frecuencias}{%
-Frecuencia de distintos eventos para un ejemplo con cámaras a 30fps y muestras
-de la IMU a 240hz.
+Frecuencia de distintos eventos para un ejemplo con cámaras a 30 fps y muestras
+de la IMU a 150 Hz.
 }
 
 El proceso de preintegración es el siguiente. Dado el cuadro previo $i$ con
@@ -1973,6 +2081,8 @@ probabilidad (“de mayor verosimilitud“) dadas las restricciones impuestas po
 factores del grafo).
 \end{mdframed}
 
+<!-- I think this paper has what I need to understand the code better http://www.roboticsproceedings.org/rss09/p37.pdf -->
+
 
 \cleardoublepage
 \ctparttext{Describiremos algunas de las contribuciones clave que fueron
@@ -2010,7 +2120,7 @@ propietario separado para cada SDK de los dispositivos que quisieran soportar.
 [^engines]: <https://www.unrealengine.com>, <https://unity.com> y <https://godotengine.org>
 
 Luego de unos años de sufrir esta fragmentación, en julio de 2019 se presenta la
-primera versión de _OpenXR_ [@thekhronosgroupinc.OpenXRSpecification] de la mano del _Khronos Group_[^khronos]. Este es
+primera versión de _OpenXR_ [@thekhronosgroupinc.OpenXRSpecification] de la mano del _Khronos Group_[^khronos1]. Este es
 un consorcio abierto y sin fines de lucro compuesto de, a la fecha, 170 organizaciones que
 desarrolla estándares en distintas áreas de la industria como computación
 gráfica (_OpenGL_, _Vulkan_), computación paralela (_OpenCL_, _SYCL_) y, ahora con
@@ -2025,7 +2135,7 @@ permite aprovechar cualquier característica especial ofrecida por alguna
 extensión. Se puede ver la simplificación del esquema de integración con OpenXR
 en la \figref{fig:after-openxr}.
 
-[^khronos]: <https://www.khronos.org>
+[^khronos1]: <https://www.khronos.org>
 [^openxr-companies]: Compañías respaldando públicamente el estándar OpenXR: <https://www.khronos.org/assets/uploads/apis/2019-openxr-logo-field_1_15.jpg>
 
 \fig{fig:after-openxr}{source/figures/after-openxr.pdf}{OpenXR}{%
@@ -2046,7 +2156,8 @@ La plataforma principal sobre la que Monado corre y se desarrolla
 es GNU/Linux, pero es capaz de ser ejecutarse en otras como Android y Windows.
 Su desarrollo está soportado por _Collabora Ltd._, quien es parte del grupo de
 trabajo de OpenXR desde sus inicios. Las contribuciones a Monado listadas en
-esta sección fueron realizadas durante una pasantía de seis meses en Collabora.
+esta sección fueron realizadas durante una pasantía de seis meses realizada por
+el autor en Collabora.
 
 [^openxr-implementations]: Algunas de las compañías que implementan un runtime de
 OpenXR: <https://www.khronos.org/assets/uploads/apis/OpenXR-After_3.png>.
@@ -2222,11 +2333,9 @@ public:
   void stop();
 
   // (2) Métodos principales de la interfaz
-  void push_imu_sample(
-     long timestamp, vec3 accelerometer, vec3 gyroscope);
-  void push_frame(long timestamp, cv::Mat frame, bool is_left);
-  bool try_dequeue_pose(
-    long &out_timestamp, vec3 &out_position, quat &out_rotation);
+  void push_imu_sample(timestamp t, vec3 accelerometer, vec3 gyroscope);
+  void push_frame(timestamp t, cv::Mat frame, bool is_left);
+  bool try_dequeue_pose(timestamp &t, vec3 &position, quat &rotation);
 
   // (3) Características dinámicas opcionales
   bool supports_feature(int feature_id);
@@ -2428,8 +2537,7 @@ lidiar respecto a shared libraries (https://www.akkadia.org/drepper/dsohowto.pdf
 
 \fig{fig:trackers-ui}{source/figures/trackers-ui.pdf}{Visualizadores de SLAM trackers}{%
 Las distintas interfaces gráficas y formas de visualizar presentadas por cada
-uno de los sistemas adaptados. Arriba a izquierda Kimera, ORB-SLAM3 a derecha;
-abajo Basalt.
+uno de los sistemas adaptados. De arriba a abajo: Kimera, ORB-SLAM3 y Basalt.
 }
 
 \FloatBarrier
@@ -2733,7 +2841,7 @@ código que se presenta a continuación. Cabe aclarar que la función
 base a un espacio).
 
 \clearpage
-``` {#lst:predict-pose .cpp caption="Predicción de poses en Monado" emph="timestamp"}
+``` {#lst:predict-pose .cpp caption="Predicción de poses en Monado"}
 struct xrt_space_relation predict_pose(timestamp t) {
    if (relation_history.is_empty()) return {0};
 
@@ -2743,24 +2851,24 @@ struct xrt_space_relation predict_pose(timestamp t) {
 
    // Variables configuradas por el usuario en tiempo de ejecución
    bool pred_on = /* predicción habilitada por usuario? */
-   bool gyro_on = /* giroscopio habilitado por usuario? */
+   bool gyr_on = /* giroscopio habilitado por usuario? */
    bool acc_on = /* acelerómetro habilitado por usuario? */
-   bool imu_on = gyro_on or acc_on;
+   bool imu_on = gyr_on or acc_on;
 
    // Flujo condicional de la predicción según la configuración
-   if (pred_on) return r;
-   if (!imu_on or t <= rt) relation_history.predict(t);
-   if (gyro_on) {
-      vec3 avg_gyro = gyro_average_between(rt, t);
-      vec3 world_gyro = rotate_angular_velocity(r.orientation, avg_gyro);
-      r.angular_velocity = world_gyro;
+   if (not pred_on) return r;
+   if (not imu_on or t <= rt) relation_history.predict(t);
+   if (gyr_on) {
+      vec3 avg_gyr = gyr_average_between(rt, t);
+      vec3 world_gyr = rotate_angular_velocity(r.orientation, avg_gyr);
+      r.angular_velocity = world_gyr;
    }
    if (acc_on) {
-      vec3 avg_accel = accel_average_between(rt, t);
-      vec3 world_accel = rotate_linear_acceleration(r.orientation, avg_accel);
-      world_accel += gravity_vector;
+      vec3 avg_acc = acc_average_between(rt, t);
+      vec3 world_acc = rotate_linear_acceration(r.orientation, avg_acc);
+      world_acc += gravity_vector;
       double dt = last_imu_timestamp - rt;
-      r.linear_velocity += world_accel * dt;
+      r.linear_velocity += world_acc * dt;
    }
 
    return predict_from_space(r, t);
@@ -2793,7 +2901,6 @@ ejemplo asume que tanto las muestras de odometría de la IMU a tiempos $t \in
 \{1,3; 1,6; 1,9\}$ como las estimaciones `B` y `C` coinciden perfectamente con
 la trayectoria real del dispositivo.
 
-<!-- TODO@high@fig: esta figura no creo que se lea bien cuando se imprima, como podría agrandarla? -->
 \fig{fig:prediction-with-imu}{source/figures/prediction-with-imu.pdf}{Predicción con promediado de muestras IMU}{%
 Ejemplo de predicción para tiempos $t \in \{1,45; 1,75; 1,95\}$ utilizando la
 idea de promediar muestras de la IMU posteriores a la pose más reciente del
@@ -2826,6 +2933,8 @@ muestran en las figuras (p.ej. a 30 cuadros por segundo con la IMU a 250 hz,
 tenemos unas ~8 muestras de IMU entre cada par de cuadros consecutivos), lo cual
 mejora la precisión de la predicción aún más.
 
+\FloatBarrier
+
 
 #### Filtrado de poses
 
@@ -2851,12 +2960,17 @@ caso de uso de XR y suelen estar mayormente interesados en aplicaciones de
 robótica. En este campo, la “sensación” que produciría el tracking no es un
 factor de importancia comparado a la precisión absoluta del mismo. En
 particular, las métricas más utilizadas en estos trabajos son las que evalúan el
-error absoluto de la trayectoria en su totalidad (ATE, APE, AOE). Es intuitivo
-ver que estas métricas, a diferencias de sus versiones relativas (RTE, RPE,
-ROE), incentivan correcciones abruptas en la trayectoria cuando los sistemas
+error _absoluto_ de la trayectoria en su totalidad estimada sobre conjuntos de datos
+estándar. Es intuitivo pensar que estas métricas, a diferencias de sus versiones
+_relativas_, incentivan correcciones abruptas en la trayectoria cuando los sistemas
 determinan que su pose actual no es la mejor posible (p. ej. en momentos de loop
-closure). Más aún, minimizar el ruido en la trayectoria no es uno de sus
-objetivos, ya que la aplicación artificial de filtros que suavicen la
+closure). El trabajo de @zhangTutorialQuantitativeTrajectory2018 es una buena
+explicación de estas métricas y de la forma de evaluar y
+reportar el rendimiento de estos sistemas.
+
+De la misma forma, minimizar el ruido
+en la trayectoria no es uno de los objetivos usualmente considerados, ya que la
+aplicación artificial de filtros que suavicen la
 trayectoria podría tender a empeorar el puntaje obtenido en estos conjuntos de
 datos. Todo esto hace que muchas veces las trayectorias computadas por los
 sistemas en condiciones no óptimas tiendan a presentar una gran cantidad de
@@ -2901,8 +3015,10 @@ Presentaremos tres filtros, con el más sofisticado basado en
 filtros presentados, muestra gráficas comparativas, y es también una buena
 lectura para contextualizar el uso de filtros para tracking de movimientos
 humanos. Los filtros presentados aquí y en el trabajo mencionado pueden
-visualizarse interactivamente en la siguiente aplicación web:
-<https://cristal.univ-lille.fr/~casiez/1euro/InteractiveDemo/>.
+visualizarse interactivamente en la aplicación web referenciada al pie de
+página[^one-euro-webdemo].
+
+[^one-euro-webdemo]: <https://cristal.univ-lille.fr/~casiez/1euro/InteractiveDemo/>.
 
 El funcionamiento esquemático de un filtro es muy sencillo: es un contenedor de
 **estado**, con un método de **actualización** que recibe un nuevo **dato** con
@@ -2938,8 +3054,8 @@ Cabe aclarar, que si bien la forma de calcular el promedio para las posiciones
 $p_i$ debería resultar clara, promediar las orientaciones $q_i$ expresadas
 mediante cuaterniones no es trivial. En este caso, nos aprovecharemos del hecho
 de que $w$ suele ser pequeño y por ende contiene orientaciones que no cambian
-significativamente. Esto nos permite utilizar el resultado expuesto en
-[@gramkowAveragingRotations2001] que muestra que, para rotaciones de menos de 40
+significativamente. Esto nos permite utilizar el resultado expuesto por
+@gramkowAveragingRotations2001 que muestra que, para rotaciones de menos de 40
 grados, calcular la media usual (y posteriormente normalizarla) es una muy buena
 aproximación con un error de menos del $1\%$.
 
@@ -3020,7 +3136,7 @@ de este tipo con la particularidad de tener una frecuencia de corte dinámica.
 un mínimo ajustable por el usuario $f_{C_{min}}$ y un parámetro de intensidad de
 actualización $\beta$ también configurable \marginnote{%\
 Frecuencias de corte bajas reducen el ruido de las poses a
-costa de aumentar la latencia. La forma en la que $f_c$ es definida resulta en
+costa de aumentar la latencia \autocite{stauffertKaBoomVisuallyExploring2021}. La forma en la que $f_c$ es definida resulta en
 valores altos (y por ende con baja latencia) cuando se presentan cambios
 significativos en las poses, mientras que para movimientos más suaves se reduce
 $f_c$ para a su vez disminuir el ruido.
@@ -3073,7 +3189,7 @@ comunicarse con esta clase. Veremos en la siguiente sección los dos
 controladores (y por ende dispositivos) que necesitaron ser expandidos para este
 trabajo y que constituyen una contribución importante al runtime.
 
-## Controladores en Monado
+## Controladores en Monado {#drivers}
 
 En Monado, la interacción con la gran variedad de dispositivos que el runtime
 soporta es realizada mediante _drivers_ o _controladores_. Estos, como se mostró
@@ -3114,7 +3230,7 @@ especializados; en nuestro caso nos limitaremos a utilizar su IMU y cámaras
 estéreo. Estos vienen precalibrados, y además se tiene un SDK[^realsense-sdk]
 de código abierto en C/C++, con _bindings_ para otros lenguajes, que facilita la
 obtención y manipulación de datos. En contraste con esto, el casco de Samsung es
-un casco ligado a la plataforma privativa _Windows Mixed Reality (WMR)_[^wmr]
+un casco ligado a la plataforma privativa _Windows Mixed Reality (WMR)_[^wmr1]
 que solo es soportada en sistemas operativos Windows[^windows]. WMR incluye algoritmos
 propietarios de tracking por SLAM desarrollados por Microsoft.
 
@@ -3147,10 +3263,10 @@ sobre sistemas operativos basados en Android, que a su vez está basado en
 GNU/Linux.
 }.
 
-[^d455]: <https://www.intelrealsense.com/depth-camera-d455/>
-[^odysseyplus]: <https://www.samsung.com/us/support/computing/hmd/hmd-odyssey/hmd-odyssey-plus-mixed-reality/>
+[^d455]: <https://www.intelrealsense.com/depth-camera-d455>
+[^odysseyplus]: <https://www.samsung.com/us/support/computing/hmd/hmd-odyssey/hmd-odyssey-plus-mixed-reality>
 [^realsense-sdk]: <https://github.com/IntelRealSense/librealsense>
-[^wmr]: <https://www.microsoft.com/en-us/mixed-reality/windows-mixed-reality>
+[^wmr1]: <https://www.microsoft.com/en-us/mixed-reality/windows-mixed-reality>
 
 ### Características de los datos {#sec:data-characteristics}
 
@@ -3432,33 +3548,21 @@ Para soportar la cámara D455, se extendió significativamente en Monado el
 controlador de dispositivos RealSense. Hasta el momento, la única cámara de esta
 línea soportada por Monado era la T265[^t265]. Esta cámara es curiosa, ya que
 presenta un algoritmo de SLAM privativo que corre dentro del dispositivo sin
-necesidad de interactuar con el host. Este controlador se encargaba únicamente
+necesidad de interactuar con el host. Este controlador se encarga únicamente
 de inicializar el módulo interno de SLAM de la cámara y obtener las poses
 computadas por la misma para uso en las aplicaciones OpenXR. Uno de sus usuarios
 clave era el casco libre del proyecto North Star [^north-star] que las
 utilizaba, en iteraciones anteriores, como principal forma de tracking. En la
-web del proyecto pueden encontrarse imágenes [^north-star-img1]
-[^north-star-img2] que muestran estos cascos con la cámara T265 sujeta en su
-parte superior.
+web pueden encontrarse imágenes [^north-star-img1] que
+muestran estos cascos con la cámara T265 sujeta en su parte superior.
 
-\fig{fig:northstar-t265}{source/figures/northstar-t265.jpg}{T265 y proyecto North Star}{%
-El casco AR libre del proyecto North Star con una cámara T265 sujeta en la parte superior.
-}
-
-\begin{mdframed}[backgroundcolor=shadecolor]
-TODO: Esa imagen seguro la saco por que no es CC-BY, pero probablemente linkeo a
-la URL.
-\end{mdframed}
-
-<!-- https://www.collabora.com/assets/images/blog/ProjectNorthStar.jpg
-[^t265]: <https://www.intelrealsense.com/tracking-camera-t265/> -->
+[^t265]: <https://www.intelrealsense.com/tracking-camera-t265/>
 
 [^north-star]: El proyecto North Star de UltraLeap (prev. LeapMotion) es un
 casco AR "DIY" que puede fabricarse con piezas impresas en 3D y la compra de
 algunos componentes. <https://developer.leapmotion.com/northstar>
 
-<!-- [^north-star-img1]:
-[^north-star-img2]: -->
+[^north-star-img1]: https://www.collabora.com/assets/images/blog/ProjectNorthStar.jpg
 
 Al no haber ningún tipo de manejo de las imágenes o muestras de IMU provistas
 por la cámara, se tuvo que implementar la gestión de estos sensores. Es ahora
@@ -3467,7 +3571,40 @@ cámaras estéreo y una IMU. Como trabajo futuro, sería interesante comparar el
 tracking interno de una T265 con los distintos sistemas externos integrados en
 este trabajo.
 
+La cámara D455 tiene un par de sensores con líneas de visión paralelas y por
+ende las dos imágenes comparten la mayoría de sus respectivos campos de visión.
+Las cámaras tienen una separación de unos 10cm entre ellas. Presentan imágenes
+estéreo _prerectificadas_, es decir que las imágenes llegan al sistema de SLAM
+virtualmente sin ningún tipo de distorsión, esto evita que se necesiten modelos
+de cámaras particulares implementados en los sistemas externos. Poseen un
+_obturador global_ y el sensor en sí es de _buena calidad_ siendo capaz de
+producir imágenes con buena cantidad de información incluso en situaciones con
+poca luz y con valores de exposición y ganancia bajos. Cuenta con la capacidad
+de _ajustar automáticamente_ la ganancia y exposición, aunque no pareciera que
+el algoritmo en uso beneficie a los sistemas de SLAM y por ende se decidió
+desactivar esta característica para en su lugar configurar estos valores
+manualmente desde la interfaz gráfica de Monado.
 
+Intel provee un SDK en C/C++ de código abierto y con una licensia permisiva
+Apache 2.0 [@ApacheLicenseVersion]. El SDK facilita la interacción entre Monado
+y las cámaras; se encarga de la gestión de colas y provee estructuras para
+manejo automático de la memoria de los cuadros recibidos. Con el SDK es posible
+configurar múltiples formas de ejecución de los sensores. Las cámaras soportan
+frecuencias de hasta 90 fps y resoluciones de hasta 1280x720 píxeles cada una,
+mientras que los sensores que conforman la IMU se encuentra explicitamente
+divididos en acelerómetro que puede ejecutarse a 60hz y 250hz y giroscopio que
+logra alcanzar frecuencias de 200hz y 400hz.
+
+Los _relojes de la IMU y cámaras_ están sincronizados por hardware, pero es
+necesario aplicar un parche al kernel de la versión de Linux instalada lo cual
+dificulta el uso. Sin este parche, se intenta utilizar los tiempos de arribo al
+host de las muestras, pero es usual que estos causen que los sistemas divergan
+por lo poco preciso que son. Una vez que se tiene este parche, el SDK estima
+automáticamente la sincronización entre los _relojes del host y de la cámara_ y
+por ende es capaz de traducir timestamps de un dominio temporal al otro y
+viceversa.
+
+<!-- TODO: tabla para comparar estas características de los dispositivos? -->
 
 ### Windows Mixed Reality (TODO)
 
@@ -3509,35 +3646,395 @@ actual. Concluiremos con una revisión general de los temas tratados y posibles
 líneas de trabajo a considerar para el futuro.}
 # Conclusiones
 
-## Resultados (TODO)
+## Resultados {#evaluation}
 
-\begin{mdframed}[backgroundcolor=shadecolor]
-Estuve con esto toda la semana pasada pero tuve un problema en como tomé las
-mediciones y tengo que arreglarlo. En general como es algo bastante particular
-no es que hay resultados de cosas “definitivas”, es más bien mostrar un poco
-cualitativamente con números que tal andan las cosas.
+El proceso de evaluar y obtener métricas en sistemas de SLAM/VIO requiere de
+ciertas consideraciones. A grandes rasgos, podemos dividir las métricas de
+interés usuales en medidas de _precisión_ y de _eficiencia_ que describen,
+respectivamente, la exactitud de la trayectoria estimada y el uso de recursos
+por parte de los sistemas. Para la evaluación de sistemas se desarrollaron
+funcionalidades [^slambatch1] [^slambatch2] y herramientas [^xrtslam-metrics]
+dedicadas a la evaluación de sistemas de SLAM en Monado. Para más información
+sobre evaluación que la que presentaremos en esta sección, referimos al lector
+al trabajo de @kummerleMeasuringAccuracySLAM2009 que detalla en mayor
+profundidad el proceso de evaluación y a la suite de herramientas
+SLAMBench[^slambench] [@nardiIntroducingSLAMBenchPerformance2015] que intenta
+generalizarlo para una gran variedad de sistemas.
 
-Las medidas que me van a importar son de performance, de precisión de la
-trayectoria absoluta y relativa (esta ultima no es comun que se mida pero es muy
-importante en XR!).
-Ya hice todos los datasets y los scripts para generar los gráficos, pero por un
-error que cometí voy a necesitar hacer todas las corridas de vuelta (y eso ahora es un
-proceso bastante manual desgraciadamente).
+[^slambatch1]: <https://gitlab.freedesktop.org/monado/monado/-/merge_requests/1152>
+[^slambatch2]: <https://gitlab.freedesktop.org/monado/monado/-/merge_requests/1172>
+[^xrtslam-metrics]: <https://gitlab.freedesktop.org/mateosss/xrtslam-metrics>
+[^slambench]: <https://apt.cs.manchester.ac.uk/projects/PAMELA/tools/SLAMBench>
 
-El resumen de los resultados creo que va a ser: Basalt debería dar buenos resultados en
-performance y en precisión de movimientos relativos. Mientras que orb-slam3
-debería dar mejores resultados en precisión absoluta de la trayectoria por que
-hace full SLAM. Kimera-VIO está de adorno.
+<!-- TODO@high: que serán reproducidos con el EUROC PLAYER!! -->
+<!-- TODO@high: I really need that appendix with contributions to reference -->
 
-Como no tengo MoCaps para medir la trayectoria absoluta y comparar (salen unos 10k USD un setup basico \url{https://www.optitrack.com/systems/}),
-planeo usar un software que se
-llama COLMAP que se toma su tiempo (unas horas de procesamiento) para integrar todas las mediciones en lugar
-de ser en tiempo real. Mi esperanza es que esa trayectoria debería ser bastante
-razonable como groundtruth, al menos para dar una idea cualitativa de como anda
-el sistema.
+Para la evaluación se utilizan _conjuntos de datos_ o _datasets_ pregrabados con
+distintos dispositivos. Utilizaremos dos datasets populares en el área: _EuRoC_
+[@burriEuRoCMicroAerial2016] que es grabado con un _vehículo micro aéreo_
+(_MAV_ o _drone_) y _TUM-VI_
+[@schubertTUMVIBenchmark2018] con muestras provenientes de un dispositivo que es
+sostenido con la mano (_handheld_) lo cual lo hace particularmente bueno para
+evaluar tracking en aplicaciones de XR. Además, estos conjuntos de datos fueron
+tomados con sistemas de captura de movimiento (_MoCap_) externos de gran
+precisión pero también de gran costo. Esto les permite presentar una trayectoria
+muy precisa que se utiliza como punto de referencia y se la conoce como _ground
+truth_.
 
-Si no también está el video \url{https://youtu.be/g1o2xADr5Fw}
-\end{mdframed}
+Además de estos datasets, se presentan datos tomados especialmente para este
+trabajo[^custom-datasets] con los dispositivos introducidos en el [](#drivers):
+la cámara RealSense D455 y el casco Odyssey+. Se tienen también datos
+monoculares del celular móvil Poco X3 Pro capturados con el trabajo de
+@huaiMobileARSensor2019 pero no llegaron a utilizarse en estos resultados; es
+decir, todos los datos evaluados son con cámaras estéreo. Estos conjuntos
+capturados con la D455 y el Odyssey+ no presentan ground truth, pero ofrecen
+grabaciones especialmente pensadas para XR y utilizan dispositivos que Monado ya
+soporta. En la figura \figref{fig:datasets-preview} se pueden observar algunas
+imágenes de los distintos datasets utilizados en al evaluación.
+
+[^custom-datasets]: <https://drive.google.com/drive/folders/163KuF88viW_wPcVNZJ2Onxe7zHf2Qo7L?usp=sharing>
+
+\fig{fig:datasets-preview}{source/figures/datasets-preview.pdf}{Datasets}{%
+Imágenes para visualizar el tipo de entorno en el que los datasets de evaluación fueron capturados.
+}
+
+Como es usual en este tipo de estudios comparativos, utilizaremos acrónimos para
+referirnos a los distintos conjuntos de datos con las siguientes características:
+\newline
+
+- C*: Datasets específicos para este trabajo (_custom_). Cada uno presenta dos
+  modalidades, la primera EASY tiene movimientos tranquilos similares a los que
+  se verían al inspeccionar una habitación. Por otro lado la modalidad HARD
+  contiene una sucesión de movimientos agitados e intenta simular momentos de
+  acción en un juego. Los sensores utilizados son:
+  \newline
+
+  - C6*: RealSense D455 en 640x480 a 30 fps e IMU a 250 Hz.
+
+  - C8*: RealSense D455 en 848x480 a 60 fps e IMU a 250 Hz.
+
+  - CO*: Odyssey+ en 640x480 a 30 fps e IMU a 250 Hz. Para Basalt
+    en particular tenemos dos posibles modelos de cámara para utilizar con los lentes de
+    este casco. Por defecto se utilizará el modelo radial-tangencial de 8
+    parámetros [^basalt-rt8-mr] dado de fábrica pero también se comparará con el
+    modelo Kannala-Brandt de 4 parámetros (KB4) recalibrado y nativo en Basalt.
+
+- E*: Los datasets EuRoC en dos habitaciones (V1 y V2) y una sala de máquinas
+  (MH) en 752x480 a 20 fps e IMU a 200 Hz.
+
+- T*: TUM-VI en una habitación (R) en 512x512 a 20 fps e IMU a 200 Hz.
+
+[^basalt-rt8-mr]: <https://gitlab.com/VladyslavUsenko/basalt-headers/-/merge_requests/21>
+
+También utilizaremos acrónimos para los distintos sistemas evaluados, que son
+variantes de Basalt, Kimera y ORB-SLAM3 dados actualizaciones significativas que
+le ocurrieron a Basalt[^basalt-last-important-update] y
+ORB-SLAM3[^orbslam3-last-important-update] durante el desarrollo de este
+trabajo.
+
+- K: Kimera-VIO
+- OO: ORB-SLAM3 original antes de la versión 1.0.
+- ON: ORB-SLAM3 nueva versión 1.0.
+- BO: Basalt original.
+- BNF: Basalt nuevo luego de la actualización presentada en @demmelBasaltSquareRoot2021
+  la cual incluye, entre otras cosas, la posibilidad de especificar la precisión
+  de punto flotante utilizada. Esta versión utiliza `float`.
+- BND: Idéntico al punto anterior pero con precisión `double`.
+\newline
+
+[^orbslam3-last-important-update]: <https://github.com/UZ-SLAMLab/ORB_SLAM3/releases/tag/v1.0-release>
+[^basalt-last-important-update]: <https://gitlab.com/VladyslavUsenko/basalt/-/commit/24325f2a>
+
+Todas las corridas fueron realizadas sobre un procesador Intel i7-1065G7 con
+consumo de hasta 15 W y memoria suficiente; ninguno de los sistemas hace uso de
+GPU.
+
+### Completitud
+
+Nuestro primer análisis se encuentra en la \autoref{tab:completion} y se centra
+en la capacidad de los sistemas integrados de no presentar fallas fatales
+durante las corridas de los conjuntos de datos probados. Esta métrica muestra la
+tolerancia a fallas de las distintas implementaciones. La tabla presenta a
+Basalt como el más estable mientras que ORB-SLAM3 presenta algunas fallas
+ocasionales. Kimera por el otro lado presenta severas fallas incluso en
+conjuntos estándares como TUM-VI. Vale la pena aclarar que en la práctica, si
+bien Basalt resulta más estable que los otros sistemas, existen situaciones que
+pueden hacerlo fallar, particularmente ante la presencia de muestras de baja
+calidad durante tiempos prolongados. Es notable que la introducción de los
+datasets C* es particularmente desafiante para la estabilidad de los sistemas en
+comparación a los conjuntos estándares EuRoC y TUM-VI para los cuales las
+implementaciones suelen estar bien probados y configurados por defecto.
+
+
+\begin{table}[h]
+\caption[Completitud de ejecución]{Completitud de ejecución}
+\label{tab:completion}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{ |l||l|l|l|l|l|l|  }
+\hline
+  \spacedlowsmallcaps{Dataset} & \spacedlowsmallcaps{BND} & \spacedlowsmallcaps{BNF} & \spacedlowsmallcaps{BO}  & \spacedlowsmallcaps{K} & \spacedlowsmallcaps{ON} & \spacedlowsmallcaps{OO}\\[3pt]
+ \hline
+C6EASY & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
+C6HARD & ✓     & ✓     & ✓     & 35.89\% & ✓       & ✓       \\
+C8EASY & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
+C8HARD & ✓     & ✓     & ✓     & 52.25\% & 56.61\% & 55.86\% \\
+COEASY & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
+(KB4)  & ✓     & ✓     & ✓     &         &         &         \\
+COHARD & ✓     & ✓     & ✓     & ✓       & ✓       & 95.71\% \\
+(KB4)  & ✓     & ✓     & ✓     &         &         &         \\
+EMH01  & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
+EMH02  & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
+EMH03  & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
+EMH04  & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
+EMH05  & ✓     & ✓     & ✓     & ✓       & ✓       & 96.48\% \\
+EV101  & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
+EV102  & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
+EV103  & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
+EV201  & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
+EV202  & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
+TR1    & ✓     & ✓     & ✓     & 40.25\% & ✓       & ✓       \\
+TR2    & ✓     & ✓     & ✓     & 38.32\% & ✓       & ✓       \\
+TR3    & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
+TR4    & ✓     & ✓     & ✓     & 63.58\% & ✓       & ✓       \\
+TR5    & ✓     & ✓     & ✓     & 52.67\% & 74.81\% & ✓       \\
+TR6    & ✓     & ✓     & ✓     & 52.37\% & ✓       & ✓       \\
+\hline
+\textbf{Media} & \textbf{100\%} & \textbf{100\%} & \textbf{100\%} & \textbf{83.42\%} & \textbf{96.88\%} & \textbf{97.64\%} \\
+\hline
+\end{tabular}
+}
+\end{table}
+
+
+### Tiempos
+
+En este trabajo nos limitaremos a presentar el tiempo promedio que le toma a
+cada sistema devolver la estimación de la pose. Se plantea como trabajo a futuro
+la posibilidad de automatizar la medición del consumo de otros recursos como
+memoria, energía y capacidad de cómputo. Recordar que los conjuntos de datos
+probados presentan cuadros a 20, 30 y 60 fps respectivamente y para lograr
+tracking a tiempo real necesitaríamos tiempos de estimación menores a 50, 33 y
+16 ms respectivamente.
+
+Viendo la \autoref{tab:timing} vemos que Basalt (BNF) sale ganador con tiempos
+bien por debajo de los 16 ms. La versión BND se presenta como curiosidad y
+muestra lo ineficiente que es el pipeline cuando se utilizan números `double`;
+como veremos en las siguientes tablas el tracking de BNF y BND dan los mismos
+resultados de precisión gracias a la técnica introducida en la actualización
+[@demmelBasaltSquareRoot2021]. ORB-SLAM3 y Kimera tienen tiempos de ejecución
+significativamente mayores indicando que convendría utilizar sensores a menor
+frecuencia para estos sistemas si se quieren evitar congestiones. Es necesario
+aclarar que los tiempos de ORB-SLAM3 podrían ser mejorados si se evitara
+utilizar las configuraciones que vienen por defecto. De la misma manera, la
+construcción del mapa en tiempo real de ORB-SLAM3 es pesada y en la nueva
+versión (ON) soporta la capacidad construirlo de antemano para luego sólo
+ejecutar los módulos de localización y no de mapeo, reduciendo así
+considerablemente los tiempos de cómputo. Probar estas configuraciones con
+ORB-SLAM3 se deja como trabajo a futuro.
+
+
+
+\begin{table}[h]
+\caption[Tiempos de ejecución]{Tiempos de ejecución medio por cuadro [ms]}
+\label{tab:timing}
+\begin{addmargin*}[-0.2\textwidth]{-0.2\textwidth}
+\resizebox{1.4\textwidth}{!}{
+\begin{tabular}{ |l||l|l|l|l|l|l|  }
+\hline
+  \spacedlowsmallcaps{Dataset} & \spacedlowsmallcaps{BND} & \spacedlowsmallcaps{BNF} & \spacedlowsmallcaps{BO}  & \spacedlowsmallcaps{K} & \spacedlowsmallcaps{ON} & \spacedlowsmallcaps{OO}\\[3pt]
+ \hline
+C6EASY & 826.60 ± 441.30   & 5.84 ± 1.38   & 9.05 ± 2.40    & 46.00 ± 6.10 & 36.11 ± 7.67  & 35.09 ± 11.81 \\
+C6HARD & 668.75 ± 555.59   & 5.58 ± 1.38   & 9.83 ± 3.01    & 47.45 ± 7.94 & 30.66 ± 9.64  & 32.92 ± 12.41 \\
+C8EASY & 940.54 ± 485.31   & 6.93 ± 2.10   & 12.89 ± 13.63  & 49.23 ± 7.37 & 33.69 ± 10.50 & 33.24 ± 10.22 \\
+C8HARD & 716.58 ± 579.89   & 6.20 ± 2.46   & 12.60 ± 8.38   & 46.28 ± 7.89 & 35.83 ± 11.75 & 37.43 ± 12.04 \\
+COEASY & 873.74 ± 404.36   & 6.17 ± 1.12   & 10.96 ± 2.94   & 37.25 ± 4.94 & 35.40 ± 9.35  & 29.41 ± 9.69  \\
+(KB4)  & 734.47 ± 357.71 K & 6.24 ± 1.02 K & 10.92 ± 2.98 K &              &               &               \\
+COHARD & 617.47 ± 419.17   & 5.71 ± 1.16   & 12.90 ± 3.83   & 37.31 ± 5.20 & 21.52 ± 7.61  & 23.69 ± 7.98  \\
+(KB4)  & 592.62 ± 410.55 K & 5.81 ± 1.02 K & 12.81 ± 3.81 K &              &               &               \\
+EMH01  & 2123.22 ± 1118.05 & 10.63 ± 3.22  & 14.17 ± 3.15   & 53.15 ± 7.00 & 30.29 ± 6.63  & 36.73 ± 12.68 \\
+EMH02  & 2280.38 ± 1118.44 & 11.16 ± 4.28  & 15.33 ± 5.76   & 53.93 ± 6.05 & 29.29 ± 5.37  & 35.32 ± 10.40 \\
+EMH03  & 2184.08 ± 940.11  & 11.02 ± 2.81  & 15.17 ± 3.65   & 53.83 ± 6.05 & 32.09 ± 5.71  & 37.08 ± 12.91 \\
+EMH04  & 2117.07 ± 916.61  & 11.82 ± 3.73  & 15.83 ± 3.41   & 53.12 ± 7.19 & 29.77 ± 6.94  & 32.67 ± 11.86 \\
+EMH05  & 2187.28 ± 902.72  & 11.17 ± 2.15  & 15.47 ± 3.63   & 53.40 ± 7.07 & 29.04 ± 6.17  & 34.06 ± 15.61 \\
+EV101  & 1687.89 ± 524.66  & 10.23 ± 1.76  & 13.62 ± 2.21   & 54.37 ± 6.18 & 30.26 ± 5.95  & 35.43 ± 13.93 \\
+EV102  & 1322.72 ± 624.59  & 10.18 ± 2.09  & 15.35 ± 3.63   & 55.48 ± 5.79 & 29.74 ± 6.06  & 32.71 ± 13.47 \\
+EV103  & 844.55 ± 609.03   & 11.65 ± 2.56  & 17.31 ± 4.37   & 56.54 ± 6.47 & 34.74 ± 11.43 & 31.13 ± 10.70 \\
+EV201  & 1628.73 ± 718.45  & 10.08 ± 1.89  & 15.53 ± 3.04   & 55.00 ± 5.66 & 36.63 ± 11.87 & 32.51 ± 10.04 \\
+EV202  & 1296.74 ± 667.75  & 10.65 ± 3.49  & 17.57 ± 4.14   & 55.37 ± 5.24 & 37.77 ± 10.90 & 34.78 ± 11.45 \\
+TR1    & 800.61 ± 327.45   & 6.37 ± 1.02   & 12.54 ± 2.70   & 21.34 ± 3.51 & 46.72 ± 11.81 & 44.95 ± 12.33 \\
+TR2    & 767.92 ± 287.46   & 6.08 ± 0.93   & 11.47 ± 2.37   & 21.42 ± 2.53 & 44.78 ± 12.06 & 43.94 ± 13.21 \\
+TR3    & 697.36 ± 285.12   & 5.96 ± 0.93   & 11.93 ± 2.47   & 23.31 ± 3.69 & 38.33 ± 9.31  & 41.27 ± 11.67 \\
+TR4    & 857.84 ± 330.19   & 6.57 ± 1.19   & 11.74 ± 2.38   & 22.62 ± 6.31 & 39.54 ± 10.50 & 42.37 ± 11.85 \\
+TR5    & 694.90 ± 308.46   & 6.09 ± 1.01   & 12.53 ± 2.98   & 20.44 ± 3.01 & 32.79 ± 5.37  & 42.42 ± 11.87 \\
+TR6    & 1007.87 ± 269.40  & 7.00 ± 1.05   & 10.72 ± 1.80   & 22.33 ± 5.05 & 33.19 ± 6.98  & 44.83 ± 12.68 \\
+\hline
+\textbf{Media} & \textbf{1186.25 ± 566.77} & \textbf{8.13 ± 1.91} & \textbf{13.26 ± 3.86} & \textbf{42.69 ± 5.74} & \textbf{34.01 ± 8.62} & \textbf{36.09 ± 11.86}\\
+\hline
+\end{tabular}
+}
+\end{addmargin*}
+\end{table}
+
+
+
+### Precisión de la trayectoria
+
+Para medir la precisión de la trayectoria completa estimada por el sistema se la
+compara con las trayectorias ground truth provistas por los datasets. La métrica
+usual para representar esta precisión es la _raíz del error cuadrático medio
+(RMSE)_ del _error de trayectoria absoluto (ATE)_ que se define de la siguiente
+manera [@sturmBenchmarkEvaluationRGBD2012].
+
+Una trayectoria será una secuencia de poses $P_i \in SE(3)$ con $i$ siendo el
+tiempo o timestamp en el que la pose ocurrió. Tenemos dos trayectorias que
+considerar; la estimada que denotaremos con $P^{est}_i$ y la de referencia o
+groud truth que denotaremos con $P^{ref}_i$ con $i=N$ la última timestamp.
+
+El $ATE_i$ entre cada pose $P^{est}_i$ y $P^{ref}_i$ al momento $i$ es la
+distancia entre las posiciones de las poses es decir:
+\begin{align}
+ATE_i = ||pos(P^{est}_i) - pos(P^{ref}_i)||
+\end{align}
+
+Con $pos(P) \in \R^3$ el componente de posición o traslación de la pose $P$.
+Notar que no se considera el componente de rotación de las poses.
+
+Finalmente utilizamos el RMSE de los ATE al cuadrado:
+\begin{align}
+RMSE = \sqrt{\frac{1}{N} \sum_{i=1}^{N} ATE_i^2}
+\end{align}
+
+Y es esta la métrica que se utiliza en esta sección para medir la
+precisión en las trayectorias estimadas. Cabe aclarar además que las poses dadas
+por la ground truth y las dadas por las estimaciones, en general, no van a
+coincidir en sus timestamps y se debe utilizar alguna forma de relacionarlas.
+Este trabajo utiliza la biblioteca EVO [@grupp2017evo] y por defecto esta
+simplemente utiliza la trayectoria con menos poses y las relaciona a las poses
+con timestamps más cercanas de la otra trayectoria. Otro detalle en el proceso
+que es estándar en la práctica es alinear previamente las dos trayectorias
+minimizando con cuadrados mínimos el error de las mismas con el trabajo de
+@umeyamaLeastsquaresEstimationTransformation1991.
+
+Ahora sí, podemos ver los resultados en la \autoref{tab:ate}. En general Basalt
+es también superior en estas métricas, pero aquí hay una aclaración importante
+que hacer. ORB-SLAM3 es usualmente considerado el estado del arte porque las
+métricas que reporta ocurren luego de que los datasets hayan terminado de
+procesarse. Esto hace que el mapa utilizado sea el final ya construido, lo cual
+afecta retroactivamente a las poses computadas anteriormente. En este caso como
+estamos corriendo ORB-SLAM3 en tiempo real y utilizamos las poses que reporta
+inmediatamente con el mapa en construcción, estas son mucho peores. Se deja como
+trabajo próximo la evaluación de ORB-SLAM3 con el mapa pre construido, creemos
+que en este caso deberían verse valores más parecidos a los reportados por la
+publicación original del sistema y probablemente sobrepasen a Basalt. También
+hay que notar que todos los datasets tienen duraciones menores a 5 minutos, esto
+hace que el desvío que se acumula en sistemas como Basalt que no tienen noción
+de mapa global no se note tanto. Con esto queremos decir que es usual en Basalt
+notar luego de sesiones de uso más largas que el entorno simulado empieza a
+cambiar de lugar lentamente a causa de la deriva (_drift_) usuales en sistemas
+de VIO y no de SLAM. Se plantea también como trabajo a futuro mejorar este
+aspecto de Basalt (ver discusión relacionada[^basalt-slam-issue]).
+
+[^basalt-slam-issue]: <https://gitlab.com/VladyslavUsenko/basalt/-/issues/69>
+
+
+\begin{table}[h]
+\caption[Error en las trayectorias]{Error absoluto de la trayectoria (ATE) [m]}
+\label{tab:ate}
+\begin{addmargin*}[-0.2\textwidth]{-0.2\textwidth}
+\resizebox{1.4\textwidth}{!}{
+\begin{tabular}{ |l||l|l|l|l|l|l|  }
+\hline
+  \spacedlowsmallcaps{Dataset} & \spacedlowsmallcaps{BND} & \spacedlowsmallcaps{BNF} & \spacedlowsmallcaps{BO}  & \spacedlowsmallcaps{K} & \spacedlowsmallcaps{ON} & \spacedlowsmallcaps{OO}\\[3pt]
+ \hline
+EMH01 & 0.061 ± 0.023 & 0.061 ± 0.023 & 0.087 ± 0.026 & 0.290 ± 0.568   & 0.173 ± 0.230  & 0.216 ± 0.306 \\
+EMH02 & 0.043 ± 0.022 & 0.043 ± 0.022 & 0.049 ± 0.023 & 0.127 ± 0.051   & 0.151 ± 0.133  & 0.627 ± 0.811 \\
+EMH03 & 0.059 ± 0.019 & 0.059 ± 0.019 & 0.075 ± 0.039 & 0.192 ± 0.056   & 1.797 ± 1.175  & 2.513 ± 1.797 \\
+EMH04 & 0.107 ± 0.038 & 0.107 ± 0.038 & 0.099 ± 0.040 & 0.188 ± 0.081   & 0.815 ± 0.517  & 2.065 ± 1.132 \\
+EMH05 & 0.139 ± 0.041 & 0.139 ± 0.041 & 0.120 ± 0.041 & 0.206 ± 0.071   & 1.797 ± 0.785  & 3.537 ± 1.868 \\
+EV101 & 0.040 ± 0.017 & 0.040 ± 0.017 & 0.040 ± 0.016 & 0.071 ± 0.027   & 9.842 ± 10.408 & 0.179 ± 0.168 \\
+EV102 & 0.043 ± 0.013 & 0.043 ± 0.013 & 0.053 ± 0.019 & 0.093 ± 0.039   & 0.600 ± 0.359  & 0.951 ± 0.393 \\
+EV103 & 0.049 ± 0.020 & 0.049 ± 0.020 & 0.067 ± 0.026 & 0.182 ± 0.050   & 13.274 ± 9.972 & 0.127 ± 0.105 \\
+EV201 & 0.036 ± 0.015 & 0.036 ± 0.015 & 0.031 ± 0.017 & 0.046 ± 0.024   & 0.141 ± 0.130  & 0.098 ± 0.096 \\
+EV202 & 0.045 ± 0.021 & 0.045 ± 0.021 & 0.060 ± 0.022 & 0.120 ± 0.041   & 0.323 ± 0.351  & 0.471 ± 0.248 \\
+TR1   & 0.096 ± 0.048 & 0.096 ± 0.048 & 0.093 ± 0.042 & 4264.6 ± 2534.0 & 0.081 ± 0.028  & 0.546 ± 0.567 \\
+TR2   & 0.067 ± 0.040 & 0.067 ± 0.040 & 0.062 ± 0.030 & 4447.9 ± 2728.6 & 0.087 ± 0.075  & 0.061 ± 0.082 \\
+TR3   & 0.110 ± 0.057 & 0.110 ± 0.057 & 0.123 ± 0.063 & 6916.5 ± 4071.1 & 0.076 ± 0.032  & 0.123 ± 0.127 \\
+TR4   & 0.050 ± 0.029 & 0.050 ± 0.029 & 0.049 ± 0.022 & 4918.2 ± 2749.4 & 0.105 ± 0.059  & 0.211 ± 0.175 \\
+TR5   & 0.160 ± 0.067 & 0.160 ± 0.067 & 0.121 ± 0.051 & 5417.1 ± 2905.8 & 0.159 ± 0.122  & 0.112 ± 0.086 \\
+TR6   & 0.018 ± 0.011 & 0.018 ± 0.011 & 0.018 ± 0.009 & 5003.9 ± 2511.9 & 0.105 ± 0.059  & 0.122 ± 0.168 \\
+\hline
+\textbf{Media} & \textbf{0.070 ± 0.030} & \textbf{0.070 ± 0.030} & \textbf{0.072 ± 0.030} & \textbf{1935.6 ± 1093.8} & \textbf{1.845 ± 1.527} & \textbf{0.747 ± 0.508} \\
+\hline
+\end{tabular}
+}
+\end{addmargin*}
+\end{table}
+
+
+### Precisión de los movimientos
+
+Finalmente presentamos en la \autoref{tab:rte} el RMSE del _error relativo de la
+trayectoria (RTE)_. Este error es capaz de representar las imprecisiones en
+tramos cortos de la trayectoria. Una forma de pensar esto en el contexto de XR
+es qué tan mal se sentirán los movimientos individuales realizados por un
+usuario.
+
+Para definir este error primero dividimos la trajectoria $P_k$ en vectores
+definidos entre pares de timestamps $i$ y $j$:
+\begin{align}
+\delta_{ij} = pos(P_j) - pos(P_i) \ \in \R^3
+\end{align}
+
+Luego, definimos el error de traslación entre las timestamps $i$ y $j$ como:
+\begin{align}
+RTE_{ij} = ||\delta^{ref}_{ij} - \delta^{est}_{ij}||
+\end{align}
+
+Y finalmente el RMSE RTE queda definido como:
+\begin{align}
+RMSE = \sqrt{\frac{1}{N} \sum_{\forall i, j} RTE_{ij}^2}
+\end{align}
+
+Notar que aquí la elección de que tan largo son los vectores $\delta_{ij}$ puede
+variar. En nuestro caso, usando EVO, utilizamos vectores con timestamps
+separadas por el equivalente tiempo a 6 cuadros de cada dataset, es decir unos
+0.3, 0.2, y 0.1 segundos para 20, 30 y 60 fps.
+
+
+\begin{table}[h]
+\caption[Error en los movimientos]{Error relativo de la trayectoria (RTE, intervalos de 6 cuadros) [m]}
+\label{tab:rte}
+\begin{addmargin*}[-0.2\textwidth]{-0.2\textwidth}
+\resizebox{1.4\textwidth}{!}{
+\begin{tabular}{ |l||l|l|l|l|l|l|  }
+\hline
+  \spacedlowsmallcaps{Dataset} & \spacedlowsmallcaps{BND} & \spacedlowsmallcaps{BNF} & \spacedlowsmallcaps{BO}  & \spacedlowsmallcaps{K} & \spacedlowsmallcaps{ON} & \spacedlowsmallcaps{OO}\\[3pt]
+ \hline
+EMH01 & 0.004 ± 0.003 & 0.004 ± 0.003 & 0.004 ± 0.003 & 0.069 ± 0.283     & 0.138 ± 0.113 & 0.137 ± 0.110 \\
+EMH02 & 0.004 ± 0.002 & 0.004 ± 0.002 & 0.004 ± 0.003 & 0.019 ± 0.019     & 0.140 ± 0.094 & 0.147 ± 0.167 \\
+EMH03 & 0.009 ± 0.008 & 0.009 ± 0.008 & 0.010 ± 0.008 & 0.038 ± 0.030     & 0.368 ± 0.398 & 0.385 ± 0.460 \\
+EMH04 & 0.010 ± 0.008 & 0.010 ± 0.008 & 0.011 ± 0.009 & 0.043 ± 0.031     & 0.335 ± 0.281 & 0.341 ± 0.392 \\
+EMH05 & 0.009 ± 0.006 & 0.009 ± 0.006 & 0.010 ± 0.007 & 0.041 ± 0.030     & 0.307 ± 0.308 & 0.365 ± 0.660 \\
+EV101 & 0.011 ± 0.006 & 0.011 ± 0.006 & 0.011 ± 0.006 & 0.044 ± 0.024     & 0.222 ± 1.958 & 0.136 ± 0.080 \\
+EV102 & 0.011 ± 0.005 & 0.011 ± 0.005 & 0.011 ± 0.005 & 0.040 ± 0.022     & 0.277 ± 0.183 & 0.276 ± 0.188 \\
+EV103 & 0.011 ± 0.007 & 0.011 ± 0.007 & 0.014 ± 0.009 & 0.039 ± 0.025     & 0.358 ± 2.249 & 0.246 ± 0.173 \\
+EV201 & 0.003 ± 0.002 & 0.003 ± 0.002 & 0.003 ± 0.002 & 0.015 ± 0.012     & 0.092 ± 0.064 & 0.097 ± 0.081 \\
+EV202 & 0.007 ± 0.006 & 0.007 ± 0.006 & 0.012 ± 0.025 & 0.025 ± 0.018     & 0.219 ± 0.148 & 0.221 ± 0.160 \\
+TR1   & 0.007 ± 0.005 & 0.007 ± 0.005 & 0.008 ± 0.006 & 384.484 ± 305.665 & 0.505 ± 0.288 & 0.524 ± 0.294 \\
+TR2   & 0.006 ± 0.005 & 0.006 ± 0.005 & 0.007 ± 0.006 & 468.756 ± 475.490 & 0.492 ± 0.421 & 0.503 ± 0.421 \\
+TR3   & 0.005 ± 0.004 & 0.005 ± 0.004 & 0.006 ± 0.005 & 262.503 ± 201.940 & 0.618 ± 0.488 & 0.624 ± 0.486 \\
+TR4   & 0.005 ± 0.005 & 0.005 ± 0.005 & 0.005 ± 0.005 & 342.893 ± 179.226 & 0.295 ± 0.161 & 0.300 ± 0.164 \\
+TR5   & 0.009 ± 0.007 & 0.009 ± 0.007 & 0.010 ± 0.008 & 341.326 ± 155.828 & 0.477 ± 0.284 & 0.483 ± 0.285 \\
+TR6   & 0.003 ± 0.002 & 0.003 ± 0.002 & 0.003 ± 0.002 & 355.299 ± 219.485 & 0.268 ± 0.214 & 0.275 ± 0.227 \\
+\hline
+\textbf{Media} & \textbf{0.007 ± 0.005} & \textbf{0.007 ± 0.005} & \textbf{0.008 ± 0.007} & \textbf{134.727 ± 96.133} & \textbf{0.319 ± 0.478} & \textbf{0.316 ± 0.272} \\
+\hline
+\end{tabular}
+}
+\end{addmargin*}
+\end{table}
+
+
 
 ## Conclusiones y trabajo futuro
 
@@ -3603,7 +4100,7 @@ como trabajo futuro:\newline
 
 - Existen métodos de predicción más eficientes que podrían adaptarse a Monado en
   lugar del método ad hoc desarrollado en este trabajo. En particular el mismo
-  trabajde preintegración de muestras de IMU utilizado en Basalt
+  trabajo de preintegración de muestras de IMU utilizado en Basalt
   [@forsterOnManifoldPreintegrationRealTime2017] puede ser un muy buen punto de
   partida para un método de predicción más preciso.
 
@@ -3613,6 +4110,4 @@ como trabajo futuro:\newline
   visión por computadora específica en otros contextos.
 
 [^basalt-issue-vim]: <https://gitlab.com/VladyslavUsenko/basalt/-/issues/69>
-
-
 

@@ -124,3 +124,10 @@ preintegra
 fps
 submilimétrica
 mapper
+SLAMBench
+datasets
+pregrabados
+handheld
+ground
+truth
+Odyssey

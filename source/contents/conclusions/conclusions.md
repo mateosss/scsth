@@ -2,15 +2,226 @@
 
 ## Resultados {#evaluation}
 
+El proceso de evaluar y obtener métricas en sistemas de SLAM/VIO requiere de
+ciertas consideraciones. A grandes rasgos, podemos dividir las métricas de
+interés usuales en medidas de _precisión_ y de _eficiencia_ que describen,
+respectivamente, la exactitud de la trayectoria estimada y el uso de recursos
+por parte de los sistemas. Para la evaluación de sistemas se desarrollaron
+funcionalidades [^slambatch1] [^slambatch2] y herramientas [^xrtslam-metrics]
+dedicadas a la evaluación de sistemas de SLAM en Monado. Para más información
+sobre evaluación que la que presentaremos en esta sección, referimos al lector
+al trabajo de @kummerleMeasuringAccuracySLAM2009 que detalla en mayor
+profundidad el proceso de evaluación y a la suite de herramientas
+SLAMBench[^slambench] [@nardiIntroducingSLAMBenchPerformance2015] que intenta
+generalizarlo para una gran variedad de sistemas.
+
+[^slambatch1]: <https://gitlab.freedesktop.org/monado/monado/-/merge_requests/1152>
+[^slambatch2]: <https://gitlab.freedesktop.org/monado/monado/-/merge_requests/1172>
+[^xrtslam-metrics]: <https://gitlab.freedesktop.org/mateosss/xrtslam-metrics>
+[^slambench]: <https://apt.cs.manchester.ac.uk/projects/PAMELA/tools/SLAMBench>
+
+<!-- TODO@high: que serán reproducidos con el EUROC PLAYER!! -->
+<!-- TODO@high: I really need that appendix with contributions to reference -->
+
+Para la evaluación se utilizan _conjuntos de datos_ o _datasets_ pregrabados con
+distintos dispositivos. Utilizaremos dos datasets populares en el área: _EuRoC_
+[@burriEuRoCMicroAerial2016] que es grabado con un _vehículo micro aéreo_
+(_MAV_ o _drone_) y _TUM-VI_
+[@schubertTUMVIBenchmark2018] con muestras provenientes de un dispositivo que es
+sostenido con la mano (_handheld_) lo cual lo hace particularmente bueno para
+evaluar tracking en aplicaciones de XR. Además, estos conjuntos de datos fueron
+tomados con sistemas de captura de movimiento (_MoCap_) externos de gran
+precisión pero también de gran costo. Esto les permite presentar una trayectoria
+muy precisa que se utiliza como punto de referencia y se la conoce como _ground
+truth_.
+
+Además de estos datasets, se presentan datos tomados especialmente para este
+trabajo[^custom-datasets] con los dispositivos introducidos en el [](#drivers):
+la cámara RealSense D455 y el casco Odyssey+. Se tienen también datos
+monoculares del celular móvil Poco X3 Pro capturados con el trabajo de
+@huaiMobileARSensor2019 pero no llegaron a utilizarse en estos resultados; es
+decir, todos los datos evaluados son con cámaras estéreo. Estos conjuntos
+capturados con la D455 y el Odyssey+ no presentan ground truth, pero ofrecen
+grabaciones especialmente pensadas para XR y utilizan dispositivos que Monado ya
+soporta. En la figura \figref{fig:datasets-preview} se pueden observar algunas
+imágenes de los distintos datasets utilizados en al evaluación.
+
+[^custom-datasets]: <https://drive.google.com/drive/folders/163KuF88viW_wPcVNZJ2Onxe7zHf2Qo7L?usp=sharing>
+
+\fig{fig:datasets-preview}{source/figures/datasets-preview.pdf}{Datasets}{%
+Imágenes para visualizar el tipo de entorno en el que los datasets de evaluación fueron capturados.
+}
+
+Como es usual en este tipo de estudios comparativos, utilizaremos acrónimos para
+referirnos a los distintos conjuntos de datos con las siguientes características:
+\newline
+
+- C*: Datasets específicos para este trabajo (_custom_). Cada uno presenta dos
+  modalidades, la primera EASY tiene movimientos tranquilos similares a los que
+  se verían al inspeccionar una habitación. Por otro lado la modalidad HARD
+  contiene una sucesión de movimientos agitados e intenta simular momentos de
+  acción en un juego. Los sensores utilizados son:
+  \newline
+
+  - C6*: RealSense D455 en 640x480 a 30 fps e IMU a 250 Hz.
+
+  - C8*: RealSense D455 en 848x480 a 60 fps e IMU a 250 Hz.
+
+  - CO*: Odyssey+ en 640x480 a 30 fps e IMU a 250 Hz. Para Basalt
+    en particular tenemos dos posibles modelos de cámara para utilizar con los lentes de
+    este casco. Por defecto se utilizará el modelo radial-tangencial de 8
+    parámetros [^basalt-rt8-mr] dado de fábrica pero también se comparará con el
+    modelo Kannala-Brandt de 4 parámetros (KB4) recalibrado y nativo en Basalt.
+
+- E*: Los datasets EuRoC en dos habitaciones (V1 y V2) y una sala de máquinas
+  (MH) en 752x480 a 20 fps e IMU a 200 Hz.
+
+- T*: TUM-VI en una habitación (R) en 512x512 a 20 fps e IMU a 200 Hz.
+
+[^basalt-rt8-mr]: <https://gitlab.com/VladyslavUsenko/basalt-headers/-/merge_requests/21>
+
+También utilizaremos acrónimos para los distintos sistemas evaluados, que son
+variantes de Basalt, Kimera y ORB-SLAM3 dados actualizaciones significativas que
+le ocurrieron a Basalt[^basalt-last-important-update] y
+ORB-SLAM3[^orbslam3-last-important-update] durante el desarrollo de este
+trabajo.
+
+- K: Kimera-VIO
+- OO: ORB-SLAM3 original antes de la versión 1.0.
+- ON: ORB-SLAM3 nueva versión 1.0.
+- BO: Basalt original.
+- BNF: Basalt nuevo luego de la actualización presentada en @demmelBasaltSquareRoot2021
+  la cual incluye, entre otras cosas, la posibilidad de especificar la precisión
+  de punto flotante utilizada. Esta versión utiliza `float`.
+- BND: Idéntico al punto anterior pero con precisión `double`.
+\newline
+
+[^orbslam3-last-important-update]: <https://github.com/UZ-SLAMLab/ORB_SLAM3/releases/tag/v1.0-release>
+[^basalt-last-important-update]: <https://gitlab.com/VladyslavUsenko/basalt/-/commit/24325f2a>
+
+Todas las corridas fueron realizadas sobre un procesador Intel i7-1065G7 con
+consumo de hasta 15 W y memoria suficiente; ninguno de los sistemas hace uso de
+GPU.
+
+### Completitud
+
+Nuestro primer análisis se encuentra en la \autoref{tab:completion} y se centra
+en la capacidad de los sistemas integrados de no presentar fallas fatales
+durante las corridas de los conjuntos de datos probados. Esta métrica muestra la
+tolerancia a fallas de las distintas implementaciones. La tabla presenta a
+Basalt como el más estable mientras que ORB-SLAM3 presenta algunas fallas
+ocasionales. Kimera por el otro lado presenta severas fallas incluso en
+conjuntos estándares como TUM-VI. Vale la pena aclarar que en la práctica, si
+bien Basalt resulta más estable que los otros sistemas, existen situaciones que
+pueden hacerlo fallar, particularmente ante la presencia de muestras de baja
+calidad durante tiempos prolongados. Es notable que la introducción de los
+datasets C* es particularmente desafiante para la estabilidad de los sistemas en
+comparación a los conjuntos estándares EuRoC y TUM-VI para los cuales las
+implementaciones suelen estar bien probados y configurados por defecto.
+
+<!-- #if 1 -->
+\begin{table}[h]
+\caption[Completitud de ejecución]{Completitud de ejecución}
+\label{tab:completion}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{ |l||l|l|l|l|l|l|  }
+\hline
+  \spacedlowsmallcaps{Dataset} & \spacedlowsmallcaps{BND} & \spacedlowsmallcaps{BNF} & \spacedlowsmallcaps{BO}  & \spacedlowsmallcaps{K} & \spacedlowsmallcaps{ON} & \spacedlowsmallcaps{OO}\\[3pt]
+ \hline
+C6EASY & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
+C6HARD & ✓     & ✓     & ✓     & 35.89\% & ✓       & ✓       \\
+C8EASY & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
+C8HARD & ✓     & ✓     & ✓     & 52.25\% & 56.61\% & 55.86\% \\
+COEASY & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
+(KB4)  & ✓     & ✓     & ✓     &         &         &         \\
+COHARD & ✓     & ✓     & ✓     & ✓       & ✓       & 95.71\% \\
+(KB4)  & ✓     & ✓     & ✓     &         &         &         \\
+EMH01  & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
+EMH02  & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
+EMH03  & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
+EMH04  & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
+EMH05  & ✓     & ✓     & ✓     & ✓       & ✓       & 96.48\% \\
+EV101  & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
+EV102  & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
+EV103  & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
+EV201  & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
+EV202  & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
+TR1    & ✓     & ✓     & ✓     & 40.25\% & ✓       & ✓       \\
+TR2    & ✓     & ✓     & ✓     & 38.32\% & ✓       & ✓       \\
+TR3    & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
+TR4    & ✓     & ✓     & ✓     & 63.58\% & ✓       & ✓       \\
+TR5    & ✓     & ✓     & ✓     & 52.67\% & 74.81\% & ✓       \\
+TR6    & ✓     & ✓     & ✓     & 52.37\% & ✓       & ✓       \\
+\hline
+\textbf{Media} & \textbf{100\%} & \textbf{100\%} & \textbf{100\%} & \textbf{83.42\%} & \textbf{96.88\%} & \textbf{97.64\%} \\
+\hline
+\end{tabular}
+}
+\end{table}
+<!-- #else -->
+|        | BND   | BNF   | BO   | K      | ON     | OO     |
+|:-------|:------|:------|:-----|:-------|:-------|:-------|
+| C6EASY | ✓     | ✓     | ✓    | ✓      | ✓      | ✓      |
+| C6HARD | ✓     | ✓     | ✓    | 35.89% | ✓      | ✓      |
+| C8EASY | ✓     | ✓     | ✓    | ✓      | ✓      | ✓      |
+| C8HARD | ✓     | ✓     | ✓    | 52.25% | 56.61% | 55.86% |
+| COEASY | ✓     | ✓     | ✓    | ✓      | ✓      | ✓      |
+| (KB4)  | ✓     | ✓     | ✓    |        |        |        |
+| COHARD | ✓     | ✓     | ✓    | ✓      | ✓      | 95.71% |
+| (KB4)  | ✓     | ✓     | ✓    |        |        |        |
+| EMH01  | ✓     | ✓     | ✓    | ✓      | ✓      | ✓      |
+| EMH02  | ✓     | ✓     | ✓    | ✓      | ✓      | ✓      |
+| EMH03  | ✓     | ✓     | ✓    | ✓      | ✓      | ✓      |
+| EMH04  | ✓     | ✓     | ✓    | ✓      | ✓      | ✓      |
+| EMH05  | ✓     | ✓     | ✓    | ✓      | ✓      | 96.48% |
+| EV101  | ✓     | ✓     | ✓    | ✓      | ✓      | ✓      |
+| EV102  | ✓     | ✓     | ✓    | ✓      | ✓      | ✓      |
+| EV103  | ✓     | ✓     | ✓    | ✓      | ✓      | ✓      |
+| EV201  | ✓     | ✓     | ✓    | ✓      | ✓      | ✓      |
+| EV202  | ✓     | ✓     | ✓    | ✓      | ✓      | ✓      |
+| TR1    | ✓     | ✓     | ✓    | 40.25% | ✓      | ✓      |
+| TR2    | ✓     | ✓     | ✓    | 38.32% | ✓      | ✓      |
+| TR3    | ✓     | ✓     | ✓    | ✓      | ✓      | ✓      |
+| TR4    | ✓     | ✓     | ✓    | 63.58% | ✓      | ✓      |
+| TR5    | ✓     | ✓     | ✓    | 52.67% | 74.81% | ✓      |
+| TR6    | ✓     | ✓     | ✓    | 52.37% | ✓      | ✓      |
+| Media  | 100%  | 100%  | 100% | 83.42% | 96.88% | 97.64% |
+<!-- #endif -->
+
 ### Tiempos
+
+En este trabajo nos limitaremos a presentar el tiempo promedio que le toma a
+cada sistema devolver la estimación de la pose. Se plantea como trabajo a futuro
+la posibilidad de automatizar la medición del consumo de otros recursos como
+memoria, energía y capacidad de cómputo. Recordar que los conjuntos de datos
+probados presentan cuadros a 20, 30 y 60 fps respectivamente y para lograr
+tracking a tiempo real necesitaríamos tiempos de estimación menores a 50, 33 y
+16 ms respectivamente.
+
+Viendo la \autoref{tab:timing} vemos que Basalt (BNF) sale ganador con tiempos
+bien por debajo de los 16 ms. La versión BND se presenta como curiosidad y
+muestra lo ineficiente que es el pipeline cuando se utilizan números `double`;
+como veremos en las siguientes tablas el tracking de BNF y BND dan los mismos
+resultados de precisión gracias a la técnica introducida en la actualización
+[@demmelBasaltSquareRoot2021]. ORB-SLAM3 y Kimera tienen tiempos de ejecución
+significativamente mayores indicando que convendría utilizar sensores a menor
+frecuencia para estos sistemas si se quieren evitar congestiones. Es necesario
+aclarar que los tiempos de ORB-SLAM3 podrían ser mejorados si se evitara
+utilizar las configuraciones que vienen por defecto. De la misma manera, la
+construcción del mapa en tiempo real de ORB-SLAM3 es pesada y en la nueva
+versión (ON) soporta la capacidad construirlo de antemano para luego sólo
+ejecutar los módulos de localización y no de mapeo, reduciendo así
+considerablemente los tiempos de cómputo. Probar estas configuraciones con
+ORB-SLAM3 se deja como trabajo a futuro.
 
 <!-- #if 1 -->
 
-\begin{addmargin*}[-0.2\textwidth]{-0.2\textwidth}
+\begin{table}[h]
+\caption[Tiempos de ejecución]{Tiempos de ejecución medio por cuadro [ms]}
 \label{tab:timing}
+\begin{addmargin*}[-0.2\textwidth]{-0.2\textwidth}
 \resizebox{1.4\textwidth}{!}{
 \begin{tabular}{ |l||l|l|l|l|l|l|  }
- \multicolumn{7}{c}{Tiempos de ejecución por cuadro [ms]} \\[3pt]
 \hline
   \spacedlowsmallcaps{Dataset} & \spacedlowsmallcaps{BND} & \spacedlowsmallcaps{BNF} & \spacedlowsmallcaps{BO}  & \spacedlowsmallcaps{K} & \spacedlowsmallcaps{ON} & \spacedlowsmallcaps{OO}\\[3pt]
  \hline
@@ -44,6 +255,7 @@ TR6    & 1007.87 ± 269.40  & 7.00 ± 1.05   & 10.72 ± 1.80   & 22.33 ± 5.05 &
 \end{tabular}
 }
 \end{addmargin*}
+\end{table}
 
 <!-- #else -->
 
@@ -77,83 +289,72 @@ TR6    & 1007.87 ± 269.40  & 7.00 ± 1.05   & 10.72 ± 1.80   & 22.33 ± 5.05 &
 
 <!-- #endif -->
 
-### Completitud
+### Precisión de la trayectoria
+
+Para medir la precisión de la trayectoria completa estimada por el sistema se la
+compara con las trayectorias ground truth provistas por los datasets. La métrica
+usual para representar esta precisión es la _raíz del error cuadrático medio
+(RMSE)_ del _error de trayectoria absoluto (ATE)_ que se define de la siguiente
+manera [@sturmBenchmarkEvaluationRGBD2012].
+
+Una trayectoria será una secuencia de poses $P_i \in SE(3)$ con $i$ siendo el
+tiempo o timestamp en el que la pose ocurrió. Tenemos dos trayectorias que
+considerar; la estimada que denotaremos con $P^{est}_i$ y la de referencia o
+groud truth que denotaremos con $P^{ref}_i$ con $i=N$ la última timestamp.
+
+El $ATE_i$ entre cada pose $P^{est}_i$ y $P^{ref}_i$ al momento $i$ es la
+distancia entre las posiciones de las poses es decir:
+\begin{align}
+ATE_i = ||pos(P^{est}_i) - pos(P^{ref}_i)||
+\end{align}
+
+Con $pos(P) \in \R^3$ el componente de posición o traslación de la pose $P$.
+Notar que no se considera el componente de rotación de las poses.
+
+Finalmente utilizamos el RMSE de los ATE al cuadrado:
+\begin{align}
+RMSE = \sqrt{\frac{1}{N} \sum_{i=1}^{N} ATE_i^2}
+\end{align}
+
+Y es esta la métrica que se utiliza en esta sección para medir la
+precisión en las trayectorias estimadas. Cabe aclarar además que las poses dadas
+por la ground truth y las dadas por las estimaciones, en general, no van a
+coincidir en sus timestamps y se debe utilizar alguna forma de relacionarlas.
+Este trabajo utiliza la biblioteca EVO [@grupp2017evo] y por defecto esta
+simplemente utiliza la trayectoria con menos poses y las relaciona a las poses
+con timestamps más cercanas de la otra trayectoria. Otro detalle en el proceso
+que es estándar en la práctica es alinear previamente las dos trayectorias
+minimizando con cuadrados mínimos el error de las mismas con el trabajo de
+@umeyamaLeastsquaresEstimationTransformation1991.
+
+Ahora sí, podemos ver los resultados en la \autoref{tab:ate}. En general Basalt
+es también superior en estas métricas, pero aquí hay una aclaración importante
+que hacer. ORB-SLAM3 es usualmente considerado el estado del arte porque las
+métricas que reporta ocurren luego de que los datasets hayan terminado de
+procesarse. Esto hace que el mapa utilizado sea el final ya construido, lo cual
+afecta retroactivamente a las poses computadas anteriormente. En este caso como
+estamos corriendo ORB-SLAM3 en tiempo real y utilizamos las poses que reporta
+inmediatamente con el mapa en construcción, estas son mucho peores. Se deja como
+trabajo próximo la evaluación de ORB-SLAM3 con el mapa pre construido, creemos
+que en este caso deberían verse valores más parecidos a los reportados por la
+publicación original del sistema y probablemente sobrepasen a Basalt. También
+hay que notar que todos los datasets tienen duraciones menores a 5 minutos, esto
+hace que el desvío que se acumula en sistemas como Basalt que no tienen noción
+de mapa global no se note tanto. Con esto queremos decir que es usual en Basalt
+notar luego de sesiones de uso más largas que el entorno simulado empieza a
+cambiar de lugar lentamente a causa de la deriva (_drift_) usuales en sistemas
+de VIO y no de SLAM. Se plantea también como trabajo a futuro mejorar este
+aspecto de Basalt (ver discusión relacionada[^basalt-slam-issue]).
+
+[^basalt-slam-issue]: <https://gitlab.com/VladyslavUsenko/basalt/-/issues/69>
 
 <!-- #if 1 -->
-\resizebox{\textwidth}{!}{
-\label{tab:completion}
-\begin{tabular}{ |l||l|l|l|l|l|l|  }
- \multicolumn{7}{c}{Completitud de ejecución} \\[3pt]
-\hline
-  \spacedlowsmallcaps{Dataset} & \spacedlowsmallcaps{BND} & \spacedlowsmallcaps{BNF} & \spacedlowsmallcaps{BO}  & \spacedlowsmallcaps{K} & \spacedlowsmallcaps{ON} & \spacedlowsmallcaps{OO}\\[3pt]
- \hline
-C6EASY & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
-C6HARD & ✓     & ✓     & ✓     & 35.89\% & ✓       & ✓       \\
-C8EASY & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
-C8HARD & ✓     & ✓     & ✓     & 52.25\% & 56.61\% & 55.86\% \\
-COEASY & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
-(KB4)  & ✓     & ✓     & ✓     &         &         &         \\
-COHARD & ✓     & ✓     & ✓     & ✓       & ✓       & 95.71\% \\
-(KB4)  & ✓     & ✓     & ✓     &         &         &         \\
-EMH01  & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
-EMH02  & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
-EMH03  & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
-EMH04  & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
-EMH05  & ✓     & ✓     & ✓     & ✓       & ✓       & 96.48\% \\
-EV101  & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
-EV102  & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
-EV103  & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
-EV201  & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
-EV202  & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
-TR1    & ✓     & ✓     & ✓     & 40.25\% & ✓       & ✓       \\
-TR2    & ✓     & ✓     & ✓     & 38.32\% & ✓       & ✓       \\
-TR3    & ✓     & ✓     & ✓     & ✓       & ✓       & ✓       \\
-TR4    & ✓     & ✓     & ✓     & 63.58\% & ✓       & ✓       \\
-TR5    & ✓     & ✓     & ✓     & 52.67\% & 74.81\% & ✓       \\
-TR6    & ✓     & ✓     & ✓     & 52.37\% & ✓       & ✓       \\
-\hline
-\textbf{Media} & \textbf{100\%} & \textbf{100\%} & \textbf{100\%} & \textbf{83.42\%} & \textbf{96.88\%} & \textbf{97.64\%} \\
-\hline
-\end{tabular}
-}
-<!-- #else -->
-|        | BND   | BNF   | BO   | K      | ON     | OO     |
-|:-------|:------|:------|:-----|:-------|:-------|:-------|
-| C6EASY | ✓     | ✓     | ✓    | ✓      | ✓      | ✓      |
-| C6HARD | ✓     | ✓     | ✓    | 35.89% | ✓      | ✓      |
-| C8EASY | ✓     | ✓     | ✓    | ✓      | ✓      | ✓      |
-| C8HARD | ✓     | ✓     | ✓    | 52.25% | 56.61% | 55.86% |
-| COEASY | ✓     | ✓     | ✓    | ✓      | ✓      | ✓      |
-| (KB4)  | ✓     | ✓     | ✓    |        |        |        |
-| COHARD | ✓     | ✓     | ✓    | ✓      | ✓      | 95.71% |
-| (KB4)  | ✓     | ✓     | ✓    |        |        |        |
-| EMH01  | ✓     | ✓     | ✓    | ✓      | ✓      | ✓      |
-| EMH02  | ✓     | ✓     | ✓    | ✓      | ✓      | ✓      |
-| EMH03  | ✓     | ✓     | ✓    | ✓      | ✓      | ✓      |
-| EMH04  | ✓     | ✓     | ✓    | ✓      | ✓      | ✓      |
-| EMH05  | ✓     | ✓     | ✓    | ✓      | ✓      | 96.48% |
-| EV101  | ✓     | ✓     | ✓    | ✓      | ✓      | ✓      |
-| EV102  | ✓     | ✓     | ✓    | ✓      | ✓      | ✓      |
-| EV103  | ✓     | ✓     | ✓    | ✓      | ✓      | ✓      |
-| EV201  | ✓     | ✓     | ✓    | ✓      | ✓      | ✓      |
-| EV202  | ✓     | ✓     | ✓    | ✓      | ✓      | ✓      |
-| TR1    | ✓     | ✓     | ✓    | 40.25% | ✓      | ✓      |
-| TR2    | ✓     | ✓     | ✓    | 38.32% | ✓      | ✓      |
-| TR3    | ✓     | ✓     | ✓    | ✓      | ✓      | ✓      |
-| TR4    | ✓     | ✓     | ✓    | 63.58% | ✓      | ✓      |
-| TR5    | ✓     | ✓     | ✓    | 52.67% | 74.81% | ✓      |
-| TR6    | ✓     | ✓     | ✓    | 52.37% | ✓      | ✓      |
-| Media  | 100%  | 100%  | 100% | 83.42% | 96.88% | 97.64% |
-<!-- #endif -->
-
-### Precisión absoluta
-
-<!-- #if 1 -->
+\begin{table}[h]
+\caption[Error en las trayectorias]{Error absoluto de la trayectoria (ATE) [m]}
+\label{tab:ate}
 \begin{addmargin*}[-0.2\textwidth]{-0.2\textwidth}
-\label{tab:ape}
 \resizebox{1.4\textwidth}{!}{
 \begin{tabular}{ |l||l|l|l|l|l|l|  }
- \multicolumn{7}{c}{Error absoluto de la trayectoria (APE) [m]} \\[3pt]
 \hline
   \spacedlowsmallcaps{Dataset} & \spacedlowsmallcaps{BND} & \spacedlowsmallcaps{BNF} & \spacedlowsmallcaps{BO}  & \spacedlowsmallcaps{K} & \spacedlowsmallcaps{ON} & \spacedlowsmallcaps{OO}\\[3pt]
  \hline
@@ -179,6 +380,7 @@ TR6   & 0.018 ± 0.011 & 0.018 ± 0.011 & 0.018 ± 0.009 & 5003.9 ± 2511.9 & 0.
 \end{tabular}
 }
 \end{addmargin*}
+\end{table}
 <!-- #else -->
 |        | BND           | BNF           | BO            | K                   | ON             | OO            |
 |:-------|:--------------|:--------------|:--------------|:--------------------|:---------------|:--------------|
@@ -201,14 +403,42 @@ TR6   & 0.018 ± 0.011 & 0.018 ± 0.011 & 0.018 ± 0.009 & 5003.9 ± 2511.9 & 0.
 | Media  | 0.070 ± 0.030 | 0.070 ± 0.030 | 0.072 ± 0.030 | 1935.6 ± 1093.8     | 1.845 ± 1.527  | 0.747 ± 0.508 |
 <!-- #endif -->
 
-### Precisión relativa
+### Precisión de los movimientos
+
+Finalmente presentamos en la \autoref{tab:rte} el RMSE del _error relativo de la
+trayectoria (RTE)_. Este error es capaz de representar las imprecisiones en
+tramos cortos de la trayectoria. Una forma de pensar esto en el contexto de XR
+es qué tan mal se sentirán los movimientos individuales realizados por un
+usuario.
+
+Para definir este error primero dividimos la trajectoria $P_k$ en vectores
+definidos entre pares de timestamps $i$ y $j$:
+\begin{align}
+\delta_{ij} = pos(P_j) - pos(P_i) \ \in \R^3
+\end{align}
+
+Luego, definimos el error de traslación entre las timestamps $i$ y $j$ como:
+\begin{align}
+RTE_{ij} = ||\delta^{ref}_{ij} - \delta^{est}_{ij}||
+\end{align}
+
+Y finalmente el RMSE RTE queda definido como:
+\begin{align}
+RMSE = \sqrt{\frac{1}{N} \sum_{\forall i, j} RTE_{ij}^2}
+\end{align}
+
+Notar que aquí la elección de que tan largo son los vectores $\delta_{ij}$ puede
+variar. En nuestro caso, usando EVO, utilizamos vectores con timestamps
+separadas por el equivalente tiempo a 6 cuadros de cada dataset, es decir unos
+0.3, 0.2, y 0.1 segundos para 20, 30 y 60 fps.
 
 <!-- #if 1 -->
+\begin{table}[h]
+\caption[Error en los movimientos]{Error relativo de la trayectoria (RTE, intervalos de 6 cuadros) [m]}
+\label{tab:rte}
 \begin{addmargin*}[-0.2\textwidth]{-0.2\textwidth}
-\label{tab:rpe}
 \resizebox{1.4\textwidth}{!}{
 \begin{tabular}{ |l||l|l|l|l|l|l|  }
- \multicolumn{7}{c}{Error relativo de la trayectoria (RPE con intervalos de 6 cuadros) [m]} \\[3pt]
 \hline
   \spacedlowsmallcaps{Dataset} & \spacedlowsmallcaps{BND} & \spacedlowsmallcaps{BNF} & \spacedlowsmallcaps{BO}  & \spacedlowsmallcaps{K} & \spacedlowsmallcaps{ON} & \spacedlowsmallcaps{OO}\\[3pt]
  \hline
@@ -234,6 +464,7 @@ TR6   & 0.003 ± 0.002 & 0.003 ± 0.002 & 0.003 ± 0.002 & 355.299 ± 219.485 & 
 \end{tabular}
 }
 \end{addmargin*}
+\end{table}
 <!-- #else -->
 |        | BND           | BNF           | BO            | K                 | ON            | OO            |
 |:-------|:--------------|:--------------|:--------------|:------------------|:--------------|:--------------|
@@ -256,33 +487,6 @@ TR6   & 0.003 ± 0.002 & 0.003 ± 0.002 & 0.003 ± 0.002 & 355.299 ± 219.485 & 
 | Media  | 0.007 ± 0.005 | 0.007 ± 0.005 | 0.008 ± 0.007 | 134.727 ± 96.133  | 0.319 ± 0.478 | 0.316 ± 0.272 |
 <!-- #endif -->
 
-\begin{mdframed}[backgroundcolor=shadecolor]
-Estuve con esto toda la semana pasada pero tuve un problema en como tomé las
-mediciones y tengo que arreglarlo. En general como es algo bastante particular
-no es que hay resultados de cosas “definitivas”, es más bien mostrar un poco
-cualitativamente con números que tal andan las cosas.
-
-Las medidas que me van a importar son de performance, de precisión de la
-trayectoria absoluta y relativa (esta ultima no es comun que se mida pero es muy
-importante en XR!).
-Ya hice todos los datasets y los scripts para generar los gráficos, pero por un
-error que cometí voy a necesitar hacer todas las corridas de vuelta (y eso ahora es un
-proceso bastante manual desgraciadamente).
-
-El resumen de los resultados creo que va a ser: Basalt debería dar buenos resultados en
-performance y en precisión de movimientos relativos. Mientras que orb-slam3
-debería dar mejores resultados en precisión absoluta de la trayectoria por que
-hace full SLAM. Kimera-VIO está de adorno.
-
-Como no tengo MoCaps para medir la trayectoria absoluta y comparar (salen unos 10k USD un setup basico \url{https://www.optitrack.com/systems/}),
-planeo usar un software que se
-llama COLMAP que se toma su tiempo (unas horas de procesamiento) para integrar todas las mediciones en lugar
-de ser en tiempo real. Mi esperanza es que esa trayectoria debería ser bastante
-razonable como groundtruth, al menos para dar una idea cualitativa de como anda
-el sistema.
-
-Si no también está el video \url{https://youtu.be/g1o2xADr5Fw}
-\end{mdframed}
 
 ## Conclusiones y trabajo futuro
 

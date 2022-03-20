@@ -1,4 +1,4 @@
-## Controladores en Monado
+## Controladores en Monado {#drivers}
 
 En Monado, la interacción con la gran variedad de dispositivos que el runtime
 soporta es realizada mediante _drivers_ o _controladores_. Estos, como se mostró
