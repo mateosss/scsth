@@ -1,40 +1,32 @@
 <!-- #### Optimización y marginalización -->
 
-<!-- TODO@high: escribir -->
 <!-- TODO@license: openvslam, avoid reading ORB-SLAM3 code -->
 <!-- TODO@future: punto de mejora para basalt: usar dogleg minimization en vez de levenberg-marquardt. No se si vale la pena mencionarlo -->
 <!-- TODO@question: question for basalt: why are they not using gtsam/g2o/ceres for the solvers? -->
 <!-- TODO@future: parallelization/vectorization of gauss newton seems very easy, levenberg marquardt not so much -->
 
-\begin{mdframed}[backgroundcolor=shadecolor]
-TODO: Esta última parte es un poco
-compleja y me ha estado costando terminar de cerrar como explicarla. Basicamente
-lo que se hace es plantear la función de error a optimizar $E(x)$ que combina un
-montón de términos de error. Y se le quiere aplicar gauss newton. El problema es
-que al haber tantos términos que optimizar, el cálculo de los jacobianos se hace muy rebuscado
-y se arma un callstack de funciones muy profundo que lo único que hace es
-computar valores parciales de estos jacobianos.\\
-\\
-Por otro lado la idea de
-“marginalización“ es importante por que habla de uno de los términos que aparece
-en $E(x)$ y que es un poco la novedad que trae Basalt, ellos logran eliminar
-(marginalizar) los efectos de muchas mediciones en unas pocas distribuciones
-aproximadas.\\
-\\
-Para sumar a la complejidad de esta sección, está, un poco escondido en la
-implementación, el concepto de “grafo de factores“ para armar antes de la
-optimización. No lo he profundizado lo suficiente como para explicarlo pero a
-grandes rasgos, es un grafo en donde se tienen nodos que son variables
-aleatorias mientras que los lados son las mediciones que uno toma (los factores). Por ejemplo
-un nodo puede ser la variable que representa la posición de una landmark que
-quiero estimar,
-mientras que un factor puede ser el vector distancia que el agente trianguló con
-sus cámaras hacia esa landmark (también tiene ruido).\\
-La idea de estos grafos es hacer una estimación
-“máxima a posteriori“ (MAP) con todo lo que tienen adentro. MAP es un concepto
-muy parecido al de estimación de máxima verosimilitud. Básicamente lo que se
-tiene es que minimizar la función de error $E(x)$ lo que está haciendo es
-acomodando los resultados de las variables de interés para que sean los de mayor
-probabilidad (“de mayor verosimilitud“) dadas las restricciones impuestas por las mediciones tomadas (los
-factores del grafo).
-\end{mdframed}
+Finalmente, la optimización central o _bundle adjustment_ que ocurre en Basalt
+se centra en minimizar con cuadrados mínimos una función de error que combina
+residuales introducidos por las observaciones de las landmarks y la
+preintegración de la IMU. En la versión original se aplicaba Gauss Newton, pero
+luego de la actualización introducida en @demmelBasaltSquareRoot2021 se utiliza
+Levenberg-Marquardt como algoritmo de minimización por defecto.
+
+No nos adentraremos en los detalles de implementación de estos métodos por su
+complejidad, pero basta con aclarar que una buena parte de esta se debe al el
+cómputo explícito de los jacobianos para la linealización. En la práctica
+existen formas de calcular estos jacobianos con técnicas de diferenciación
+automática en tiempo de compilación como lo hace el optimizador
+Ceres[^ceres-nlls] pero estas pueden incurrir en algunas pérdidas de
+rendimiento[^ceres-analytical].
+
+[^ceres-nlls]: <http://ceres-solver.org/nnls_solving.html>
+[^ceres-analytical]: <http://ceres-solver.org/analytical_derivatives.html#when-should-you-use-analytical-derivatives>
+
+Vale la pena aclarar, que la minimización de la función de error es equivalente
+a realizar una estimación _máxima a posteriori (MAP)_
+[@camposORBSLAM3AccurateOpenSource2021] que a su vez se desprende de ideas
+similares a las encontradas en los estimadores de _máxima verosimilitud_[^map] pero
+con probabilidades condicionales de por medio.
+
+[^map]: <https://en.wikipedia.org/wiki/Maximum_a_posteriori_estimation>
