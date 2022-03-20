@@ -118,7 +118,7 @@ comparación a los conjuntos estándares EuRoC y TUM-VI para los cuales las
 implementaciones suelen estar bien probados y configurados por defecto.
 
 <!-- #if 1 -->
-\begin{table}[h]
+\begin{table}[H]
 \caption[Completitud de ejecución]{Completitud de ejecución}
 \label{tab:completion}
 \resizebox{\textwidth}{!}{
@@ -214,7 +214,7 @@ ORB-SLAM3 se deja como trabajo a futuro.
 
 <!-- #if 1 -->
 
-\begin{table}[h]
+\begin{table}[H]
 \caption[Tiempos de ejecución]{Tiempos de ejecución medio por cuadro [ms]}
 \label{tab:timing}
 \begin{addmargin*}[-0.2\textwidth]{-0.2\textwidth}
@@ -347,7 +347,7 @@ aspecto de Basalt (ver discusión relacionada[^basalt-slam-issue]).
 [^basalt-slam-issue]: <https://gitlab.com/VladyslavUsenko/basalt/-/issues/69>
 
 <!-- #if 1 -->
-\begin{table}[h]
+\begin{table}[H]
 \caption[Error en las trayectorias]{Error absoluto de la trayectoria (ATE) [m]}
 \label{tab:ate}
 \begin{addmargin*}[-0.2\textwidth]{-0.2\textwidth}
@@ -431,7 +431,7 @@ separadas por el equivalente tiempo a 6 cuadros de cada dataset, es decir unos
 0.3, 0.2, y 0.1 segundos para 20, 30 y 60 fps.
 
 <!-- #if 1 -->
-\begin{table}[h]
+\begin{table}[H]
 \caption[Error en los movimientos]{Error relativo de la trayectoria (RTE, intervalos de 6 cuadros) [m]}
 \label{tab:rte}
 \begin{addmargin*}[-0.2\textwidth]{-0.2\textwidth}
@@ -485,6 +485,45 @@ TR6   & 0.003 ± 0.002 & 0.003 ± 0.002 & 0.003 ± 0.002 & 355.299 ± 219.485 & 
 | Media  | 0.007 ± 0.005 | 0.007 ± 0.005 | 0.008 ± 0.007 | 134.727 ± 96.133  | 0.319 ± 0.478 | 0.316 ± 0.272 |
 <!-- #endif -->
 
+### Resultados específicos
+
+Presentamos a continuación algunos gráficos para dar una idea cualitativa del
+funcionamiento de los sistemas. Las figuras fueron obtenidas utilizando BNF, ON
+y K sobre el dataset EV201 que es correctamente procesado por las tres
+implementaciones. La \figref{fig:timing-comparisson} presenta una comparación de
+tiempos de procesamiento. La \figref{fig:trajectories-comparisson-3d} muestra la
+forma general de las trayectorias estimadas mientras que la
+\figref{fig:trajectories-comparisson-2d} presenta algunos detalles sobre
+ORB-SLAM3. Por último se pueden ver los valores de $ATE_i$ en los distintos
+tiempos de la trayectoria de Basalt (BNF) en la
+\figref{fig:basalt-trajectory-ate}.
+
+\fig{fig:timing-comparisson}{source/figures/timing-comparisson.png}{Tiempos de cómputo}{%
+Tiempos de cómputo de BNF, ON y K sobre el dataset EV201. Notar que Basalt tiene
+más información sobre las distintas etapas de su pipeline interna simplemente
+porque fue el más estudiado. Notar que ORB-SLAM3 presenta problemas de
+congestión y que los tiempos de Kimera son bastante estables en comparación a
+Basalt a pesar de ser mayores. Por no usar OpenCV, Basalt requiere (por ahora)
+copiar los cuadros de entrada y ese tiempo puede visualizarse en rosa en el gráfico.
+}
+
+\fig{fig:trajectories-comparisson-3d}{source/figures/trajectories-comparisson-3d.pdf}{Trayectorias 3D}{%
+Trayectorias de los tres sitemas comparados a la groundtruth. Considerar que
+estas trayectorias están alineadas con Umeyama para minimizar sus diferencias y
+por esta razón no coinciden sus inicios ni finales.
+}
+
+\fig{fig:trajectories-comparisson-2d}{source/figures/trajectories-comparisson-2d.pdf}{Trayectorias 2D}{%
+Vista del plano XY de la trayectoria a derecha. A izquierda se hace zoom a una
+porción de la trayectoria para mostrar cómo un momento de loop closure que en
+ORB-SLAM3 cuando el mapa fue actualizado durante la corrida genera una
+corrección brusca que es indeseable en XR.
+}
+
+\fig{fig:basalt-trajectory-ate}{source/figures/basalt-trajectory-ate.pdf}{ATE de Basalt}{%
+Se muestra el error $ATE_i$ para cada timestamp $i$ de Basalt. Además este error
+se mapea en el color de la trayectoria a izquierda.
+}
 <!--
 TODO: More ideas
 

@@ -49,6 +49,6 @@ en tiempo real: <https://gitlab.com/VladyslavUsenko/basalt/-/issues/69>
 
 <!-- #include contents/basalt/measurements.md -->
 
-#### Optimización y marginalización (TODO)
+#### Optimización y marginalización
 
 <!-- #include contents/basalt/optimization.md -->
