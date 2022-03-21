@@ -7,18 +7,13 @@ La bibliografía de este trabajo está escrita mayormente en inglés, y es por e
 que muchas veces será más práctico utilizar el término en este idioma, aunque
 en varias ocasiones intentará brindar una traducción adecuada en español.
 
-<!-- TODO@high@benja@print: necesito dejar 2cm para el anillado, como esta ahora
-se va a comer algunas letras de las marginnotes. Debería ser capaz de tirar todo
-un poco para el lado donde no está el anillado -->
-
 <!-- TODO@nico: Tratar de no usar parentesis en el texto -->
 <!-- TODO@end: las listas of figures/framents/etc estan andando? -->
 
 <!-- TODO@style: there is this \ac acronym commands in the classictemplate thesis that I could've used -->
 
-<!-- TODO@high@style: preguntar si da mucho rechazo que sea tan colorido -->
 <!-- TODO@end: revisar que todas las ^T transpuestas estén escrita con T mayuscula -->
-<!-- TODO@high@end: Revisar \\ colgantes con la busqueda regex: "\\\\\n\\end" -->
+<!-- TODO@end: Revisar \\ colgantes con la busqueda regex: "\\\\\n\\end" -->
 <!-- TODO@high@end: los margin par se pueden salir de la página, revisar que ninguno haya quedado así!-->
 <!-- TODO@end: revisar que todos los \begin{align} no tengan una linea vacia arriba: es decir que no haya "\n\n\\begin" -->
 <!-- TODO@end: todo lo que diga TODO@end hay que chequearlo al terminar el trabajo -->

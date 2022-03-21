@@ -494,7 +494,7 @@ private:
       lost_landmarks = {kpids in lmdb that do not appear in curr_frame left nor right}
     }
 
-    optimize_and_marg(num_points_connected, lost_landmarks); // TODO@high
+    optimize_and_marg(num_points_connected, lost_landmarks); // TODO
 
     out_state_queue.push(frame_states[t]);
     out_vis_queue.push(built_data_for_visualizer_from_frame_states_t);
@@ -586,7 +586,7 @@ optimize() {
     }
 
     // Update points
-    for@parallel (rld in rld_vec) updatePoints(aom, rld, inc); // TODO@high
+    for@parallel (rld in rld_vec) updatePoints(aom, rld, inc); // TODO
   }
 }
 

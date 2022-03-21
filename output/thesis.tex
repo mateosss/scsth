@@ -3458,12 +3458,13 @@ Se utilizaron los dos dispositivos que se muestran en la
 \figref{fig:devices-ody-d455} como principales fuentes de datos para
 SLAM. A la derecha de la imagen tenemos una cámara de profundidad
 \emph{Intel RealSense D455}\footnote{\url{https://www.intelrealsense.com/depth-camera-d455}}
-mientras que a izquierda tenemos un casco \emph{Samsung Odyssey+}. La
-línea de cámaras y módulos RealSense de Intel se enfoca en aplicaciones
-de robótica y visión por computadora, presentan distintos modelos con
-múltiples sensores especializados; en nuestro caso nos limitaremos a
-utilizar su IMU y cámaras estéreo. Estos vienen precalibrados, y además
-se tiene un SDK\footnote{\url{https://github.com/IntelRealSense/librealsense}}
+mientras que a izquierda tenemos un casco \emph{Samsung
+Odyssey+}\footnote{\url{https://www.samsung.com/hk_en/news/product/reality-headset-hmd-odyssey-plus}}.
+La línea de cámaras y módulos RealSense de Intel se enfoca en
+aplicaciones de robótica y visión por computadora, presentan distintos
+modelos con múltiples sensores especializados; en nuestro caso nos
+limitaremos a utilizar su IMU y cámaras estéreo. Estos vienen
+precalibrados, y además se tiene un SDK\footnote{\url{https://github.com/IntelRealSense/librealsense}}
 de código abierto en C/C++, con \emph{bindings} para otros lenguajes,
 que facilita la obtención y manipulación de datos. En contraste con
 esto, el casco de Samsung es un casco ligado a la plataforma privativa
@@ -3911,6 +3912,8 @@ las métricas de interés usuales en medidas de \emph{precisión} y de
 \emph{eficiencia} que describen, respectivamente, la exactitud de la
 trayectoria estimada y el uso de recursos por parte de los sistemas.
 Para la evaluación de sistemas se desarrollaron funcionalidades
+\footnote{\url{https://gitlab.freedesktop.org/monado/monado/-/merge_requests/880}}
+\footnote{\url{https://gitlab.freedesktop.org/monado/monado/-/merge_requests/1017}}
 \footnote{\url{https://gitlab.freedesktop.org/monado/monado/-/merge_requests/1152}}
 \footnote{\url{https://gitlab.freedesktop.org/monado/monado/-/merge_requests/1172}}
 y herramientas \footnote{\url{https://gitlab.freedesktop.org/mateosss/xrtslam-metrics}}
@@ -3928,7 +3931,7 @@ Para la evaluación se utilizan \emph{conjuntos de datos} o
 datasets populares en el área: \emph{EuRoC}
 \autocite{burriEuRoCMicroAerial2016} que es grabado con un
 \emph{vehículo micro aéreo} (\emph{MAV} o \emph{drone}) y \emph{TUM-VI}
-\autocite{schubertTUMVIBenchmark2018} con muestras provenientes de un
+\autocite{schubertBasaltTUMVI2018} con muestras provenientes de un
 dispositivo que es sostenido con la mano (\emph{handheld}) lo cual lo
 hace particularmente bueno para evaluar tracking en aplicaciones de XR.
 Además, estos conjuntos de datos fueron tomados con sistemas de captura

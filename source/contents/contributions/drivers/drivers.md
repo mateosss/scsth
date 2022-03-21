@@ -32,7 +32,7 @@ Odyssey+ y a derecha una cámara Intel RealSense D455.
 Se utilizaron los dos dispositivos que se muestran en la
 \figref{fig:devices-ody-d455} como principales fuentes de datos para SLAM. A la derecha
 de la imagen tenemos una cámara de profundidad _Intel RealSense D455_[^d455]
-mientras que a izquierda tenemos un casco _Samsung Odyssey+_. La línea de
+mientras que a izquierda tenemos un casco _Samsung Odyssey+_[^odysseyplus]. La línea de
 cámaras y módulos RealSense de Intel se enfoca en aplicaciones de robótica y
 visión por computadora, presentan distintos modelos con múltiples sensores
 especializados; en nuestro caso nos limitaremos a utilizar su IMU y cámaras
@@ -73,7 +73,7 @@ para correr aplicaciones OpenXR sobre sistemas operativos basados en GNU/Linux
 \marginnote{MN_WMR_NOVELTY} \marginnote{MN_QUEST_ANDROID}.
 
 [^d455]: <https://www.intelrealsense.com/depth-camera-d455>
-[^odysseyplus]: <https://www.samsung.com/us/support/computing/hmd/hmd-odyssey/hmd-odyssey-plus-mixed-reality>
+[^odysseyplus]: <https://www.samsung.com/hk_en/news/product/reality-headset-hmd-odyssey-plus>
 [^realsense-sdk]: <https://github.com/IntelRealSense/librealsense>
 [^wmr1]: <https://www.microsoft.com/en-us/mixed-reality/windows-mixed-reality>
 
@@ -429,7 +429,7 @@ de las cámaras que no es muy usual que los sistemas de SLAM soporten, este es e
 modelo radial-tangencial [@brownDecenteringDistortionLenses1966] de 8
 parámetros. Inicialmente se recalibró el dispositivo a un modelo más usual
 (Kannala-Brandt [@kannalaGenericCameraModel2006] de 4 parámetros) pero
-eventualmente se decidió extender y contribuir a Basalt[^basalt-rt8-mr] el
+eventualmente se decidió extender y contribuir a Basalt[^basalt-rt8-mr21] el
 modelo de 8 parámetros. Otras peculiaridades de estas cámaras es que no son
 paralelas como en el caso de la D455, sino que tienen un gran ángulo de
 separación haciendo que solo la mitad de ambas imágenes posean una zona de
@@ -458,7 +458,7 @@ con la ayuda de `libusb`[^libusb] y basados en la ingeniería inversa aplicada s
 controlador oficial.
 
 [^wmr-mr]: <https://gitlab.freedesktop.org/monado/monado/-/merge_requests/1035>
-[^basalt-rt8-mr]: <https://gitlab.com/VladyslavUsenko/basalt-headers/-/merge_requests/21>
+[^basalt-rt8-mr21]: <https://gitlab.com/VladyslavUsenko/basalt-headers/-/merge_requests/21>
 [^fisheye-issue]: <https://gitlab.com/VladyslavUsenko/basalt/-/issues/62>
 [^libusb]: <https://libusb.info>
 

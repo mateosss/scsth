@@ -1,4 +1,4 @@
-<!-- TODO@high@section: finish this and put it in the thesis -->
+<!-- TODO@section: finish this and put it in the thesis -->
 
 <!-- TODO@ref: Barfoot capitulo 6 habla de modelo de la IMU -->
 

@@ -44,8 +44,6 @@ finalmente, la precondición $\mathbf{7}$ es similar al punto 1 en donde se le p
 la implementación utilizar colas de un único consumidor que sean de mayor
 rendimiento comparado a otras colas concurrentes.
 
-<!-- TODO@high: Debería haber links a todos los repos en algún lado de la tesis -->
-
 La interfaz `slam_tracker` se implementó en los tres forks presentados en este
 trabajo; Kimera, ORB-SLAM3 y Basalt. La idea general de las implementaciones es
 similar: permitir a Monado, el usuario de la interfaz, utilizar el sistema de

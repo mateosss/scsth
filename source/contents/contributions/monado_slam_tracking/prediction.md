@@ -36,9 +36,6 @@ dispositivos emulados por software[^qwerty-driver]. Los espacios que
 aplican a nuestro caso son aquellos que representaran dispositivos que posean
 sensores IMU y cámaras que puedan utilizarse en nuestros sistemas de SLAM/VIO.
 
-<!-- TODO@high@ref: Todos los MR importantes deberían estar listados y referenciados
-en alguna parte del trabajo -->
-
 [^qwerty-driver]: Una de las primeras contribuciones realizadas para
 familiarizarse con el código fuente de Monado fue la implementación del
 controlador `qwerty` que le permite a los usuarios emular de forma modular un

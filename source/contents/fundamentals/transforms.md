@@ -206,7 +206,7 @@ contexto de la siguiente manera:
 q - p = p^{-1} q
 \end{align}
 
-<!-- TODO@high@def: menciono $lerp$ -->
+<!-- TODO@def: menciono $lerp$ -->
 
 Será también útil poder interpolar entre dos orientaciones $p$ y $q$ con un
 factor $t \in [0, 1]$ para conseguir orientaciones intermedias de $p$ a $q$. La

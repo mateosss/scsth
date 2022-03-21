@@ -454,7 +454,7 @@ contexto de la siguiente manera:
 q - p = p^{-1} q
 \end{align}
 
-<!-- TODO@high@def: menciono $lerp$ -->
+<!-- TODO@def: menciono $lerp$ -->
 
 Será también útil poder interpolar entre dos orientaciones $p$ y $q$ con un
 factor $t \in [0, 1]$ para conseguir orientaciones intermedias de $p$ a $q$. La
@@ -1265,7 +1265,7 @@ objetivos bien definidos.}
 <!-- TODO@def: VIO habla acerca de componentes: (patch tracking, landmark
 representation, first-estimate Jacobians, marginalization
 scheme) que podría ser interesante discutir -->
-<!-- TODO@high@ref: Checkear que los 6 papers de basalt esten siendo citados -->
+<!-- TODO@ref: Checkear que los 6 papers de basalt esten siendo citados -->
 <!-- TODO: I think this paper has what I need to understand the code better http://www.roboticsproceedings.org/rss09/p37.pdf -->
 
 # Implementación de un sistema
@@ -2407,8 +2407,6 @@ finalmente, la precondición $\mathbf{7}$ es similar al punto 1 en donde se le p
 la implementación utilizar colas de un único consumidor que sean de mayor
 rendimiento comparado a otras colas concurrentes.
 
-<!-- TODO@high: Debería haber links a todos los repos en algún lado de la tesis -->
-
 La interfaz `slam_tracker` se implementó en los tres forks presentados en este
 trabajo; Kimera, ORB-SLAM3 y Basalt. La idea general de las implementaciones es
 similar: permitir a Monado, el usuario de la interfaz, utilizar el sistema de
@@ -2546,9 +2544,6 @@ mecanismos externos (por visión por computadora por ejemplo) o incluso
 dispositivos emulados por software[^qwerty-driver]. Los espacios que
 aplican a nuestro caso son aquellos que representaran dispositivos que posean
 sensores IMU y cámaras que puedan utilizarse en nuestros sistemas de SLAM/VIO.
-
-<!-- TODO@high@ref: Todos los MR importantes deberían estar listados y referenciados
-en alguna parte del trabajo -->
 
 [^qwerty-driver]: Una de las primeras contribuciones realizadas para
 familiarizarse con el código fuente de Monado fue la implementación del
@@ -3095,7 +3090,7 @@ Con velocidades instantáneas.
 La versión del filtro utilizada para la orientación $q_k$ es análoga a la
 definición anterior con algunas aclaraciones:
 
-<!-- TODO@high@def: uso lerp acá, lo definí en algún lado? -->
+<!-- TODO@def: uso lerp acá, lo definí en algún lado? -->
 \bigbreak
 
 - En lugar de $lerp$ se utiliza $slerp$.
@@ -3156,7 +3151,7 @@ Odyssey+ y a derecha una cámara Intel RealSense D455.
 Se utilizaron los dos dispositivos que se muestran en la
 \figref{fig:devices-ody-d455} como principales fuentes de datos para SLAM. A la derecha
 de la imagen tenemos una cámara de profundidad _Intel RealSense D455_[^d455]
-mientras que a izquierda tenemos un casco _Samsung Odyssey+_. La línea de
+mientras que a izquierda tenemos un casco _Samsung Odyssey+_[^odysseyplus]. La línea de
 cámaras y módulos RealSense de Intel se enfoca en aplicaciones de robótica y
 visión por computadora, presentan distintos modelos con múltiples sensores
 especializados; en nuestro caso nos limitaremos a utilizar su IMU y cámaras
@@ -3197,7 +3192,7 @@ GNU/Linux.
 }.
 
 [^d455]: <https://www.intelrealsense.com/depth-camera-d455>
-[^odysseyplus]: <https://www.samsung.com/us/support/computing/hmd/hmd-odyssey/hmd-odyssey-plus-mixed-reality>
+[^odysseyplus]: <https://www.samsung.com/hk_en/news/product/reality-headset-hmd-odyssey-plus>
 [^realsense-sdk]: <https://github.com/IntelRealSense/librealsense>
 [^wmr1]: <https://www.microsoft.com/en-us/mixed-reality/windows-mixed-reality>
 
@@ -3553,7 +3548,7 @@ de las cámaras que no es muy usual que los sistemas de SLAM soporten, este es e
 modelo radial-tangencial [@brownDecenteringDistortionLenses1966] de 8
 parámetros. Inicialmente se recalibró el dispositivo a un modelo más usual
 (Kannala-Brandt [@kannalaGenericCameraModel2006] de 4 parámetros) pero
-eventualmente se decidió extender y contribuir a Basalt[^basalt-rt8-mr] el
+eventualmente se decidió extender y contribuir a Basalt[^basalt-rt8-mr21] el
 modelo de 8 parámetros. Otras peculiaridades de estas cámaras es que no son
 paralelas como en el caso de la D455, sino que tienen un gran ángulo de
 separación haciendo que solo la mitad de ambas imágenes posean una zona de
@@ -3582,7 +3577,7 @@ con la ayuda de `libusb`[^libusb] y basados en la ingeniería inversa aplicada s
 controlador oficial.
 
 [^wmr-mr]: <https://gitlab.freedesktop.org/monado/monado/-/merge_requests/1035>
-[^basalt-rt8-mr]: <https://gitlab.com/VladyslavUsenko/basalt-headers/-/merge_requests/21>
+[^basalt-rt8-mr21]: <https://gitlab.com/VladyslavUsenko/basalt-headers/-/merge_requests/21>
 [^fisheye-issue]: <https://gitlab.com/VladyslavUsenko/basalt/-/issues/62>
 [^libusb]: <https://libusb.info>
 
@@ -3615,27 +3610,26 @@ ciertas consideraciones. A grandes rasgos, podemos dividir las métricas de
 interés usuales en medidas de _precisión_ y de _eficiencia_ que describen,
 respectivamente, la exactitud de la trayectoria estimada y el uso de recursos
 por parte de los sistemas. Para la evaluación de sistemas se desarrollaron
-funcionalidades [^slambatch1] [^slambatch2] y herramientas [^xrtslam-metrics]
-dedicadas a la evaluación de sistemas de SLAM en Monado. Para más información
-sobre evaluación que la que presentaremos en esta sección, referimos al lector
-al trabajo de @kummerleMeasuringAccuracySLAM2009 que detalla en mayor
-profundidad el proceso de evaluación y a la suite de herramientas
-SLAMBench[^slambench] [@nardiIntroducingSLAMBenchPerformance2015] que intenta
-generalizarlo para una gran variedad de sistemas.
+funcionalidades [^euroc-player] [^euroc-recorder] [^slambatch1] [^slambatch2] y
+herramientas [^xrtslam-metrics] dedicadas a la evaluación de sistemas de SLAM en
+Monado. Para más información sobre evaluación que la que presentaremos en esta
+sección, referimos al lector al trabajo de @kummerleMeasuringAccuracySLAM2009
+que detalla en mayor profundidad el proceso de evaluación y a la suite de
+herramientas SLAMBench[^slambench] [@nardiIntroducingSLAMBenchPerformance2015]
+que intenta generalizarlo para una gran variedad de sistemas.
 
+[^euroc-player]: <https://gitlab.freedesktop.org/monado/monado/-/merge_requests/880>
+[^euroc-recorder]: <https://gitlab.freedesktop.org/monado/monado/-/merge_requests/1017>
 [^slambatch1]: <https://gitlab.freedesktop.org/monado/monado/-/merge_requests/1152>
 [^slambatch2]: <https://gitlab.freedesktop.org/monado/monado/-/merge_requests/1172>
 [^xrtslam-metrics]: <https://gitlab.freedesktop.org/mateosss/xrtslam-metrics>
 [^slambench]: <https://apt.cs.manchester.ac.uk/projects/PAMELA/tools/SLAMBench>
 
-<!-- TODO@high: que serán reproducidos con el EUROC PLAYER!! -->
-<!-- TODO@high: I really need that appendix with contributions to reference -->
-
 Para la evaluación se utilizan _conjuntos de datos_ o _datasets_ pregrabados con
 distintos dispositivos. Utilizaremos dos datasets populares en el área: _EuRoC_
 [@burriEuRoCMicroAerial2016] que es grabado con un _vehículo micro aéreo_
 (_MAV_ o _drone_) y _TUM-VI_
-[@schubertTUMVIBenchmark2018] con muestras provenientes de un dispositivo que es
+[@schubertBasaltTUMVI2018] con muestras provenientes de un dispositivo que es
 sostenido con la mano (_handheld_) lo cual lo hace particularmente bueno para
 evaluar tracking en aplicaciones de XR. Además, estos conjuntos de datos fueron
 tomados con sistemas de captura de movimiento (_MoCap_) externos de gran

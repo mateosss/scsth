@@ -1,5 +1,3 @@
-<!-- TODO@high: en algún lado voy a tener que hablar y explicar las métricas, quizás acá? sino directamente en la sección de evaluation.md -->
-
 ### Conjuntos de Datos
 
 Los sistemas de SLAM y VIO que estudiaremos son sistemas que reciben como
@@ -27,7 +25,7 @@ entre ellos el conjunto KITTI [@geigerVisionMeetsRobotics2013] es uno de los má
 populares. Otros por su parte centrados en la navegación autónoma de _vehículos
 micro aéreos_ (MAV o drones) como lo es el conjunto EuRoC MAV
 [@burriEuRoCMicroAerial2016]. El dataset TUM-VI presentado en
-@schubertTUMVIBenchmark2018 presenta secuencias capturadas por un camarógrafo
+@schubertBasaltTUMVI2018 presenta secuencias capturadas por un camarógrafo
 humano que pueden ayudar a aproximar los movimientos que uno esperaría encontrar
 en entornos de XR.
 
@@ -59,5 +57,5 @@ a los sistemas de SLAM visuales-inerciales que veremos más adelante.
 
 Para un análisis más profundo de alternativas
 de conjuntos de datos referimos al lector al artículo de TUM-VI
-[@schubertTUMVIBenchmark2018].
+[@schubertBasaltTUMVI2018].
 <!-- #endif -->

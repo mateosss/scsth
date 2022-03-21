@@ -215,7 +215,7 @@ Con velocidades instantáneas.
 La versión del filtro utilizada para la orientación $q_k$ es análoga a la
 definición anterior con algunas aclaraciones:
 
-<!-- TODO@high@def: uso lerp acá, lo definí en algún lado? -->
+<!-- TODO@def: uso lerp acá, lo definí en algún lado? -->
 \bigbreak
 
 - En lugar de $lerp$ se utiliza $slerp$.

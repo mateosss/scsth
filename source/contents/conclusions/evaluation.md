@@ -5,27 +5,26 @@ ciertas consideraciones. A grandes rasgos, podemos dividir las métricas de
 interés usuales en medidas de _precisión_ y de _eficiencia_ que describen,
 respectivamente, la exactitud de la trayectoria estimada y el uso de recursos
 por parte de los sistemas. Para la evaluación de sistemas se desarrollaron
-funcionalidades [^slambatch1] [^slambatch2] y herramientas [^xrtslam-metrics]
-dedicadas a la evaluación de sistemas de SLAM en Monado. Para más información
-sobre evaluación que la que presentaremos en esta sección, referimos al lector
-al trabajo de @kummerleMeasuringAccuracySLAM2009 que detalla en mayor
-profundidad el proceso de evaluación y a la suite de herramientas
-SLAMBench[^slambench] [@nardiIntroducingSLAMBenchPerformance2015] que intenta
-generalizarlo para una gran variedad de sistemas.
+funcionalidades [^euroc-player] [^euroc-recorder] [^slambatch1] [^slambatch2] y
+herramientas [^xrtslam-metrics] dedicadas a la evaluación de sistemas de SLAM en
+Monado. Para más información sobre evaluación que la que presentaremos en esta
+sección, referimos al lector al trabajo de @kummerleMeasuringAccuracySLAM2009
+que detalla en mayor profundidad el proceso de evaluación y a la suite de
+herramientas SLAMBench[^slambench] [@nardiIntroducingSLAMBenchPerformance2015]
+que intenta generalizarlo para una gran variedad de sistemas.
 
+[^euroc-player]: <https://gitlab.freedesktop.org/monado/monado/-/merge_requests/880>
+[^euroc-recorder]: <https://gitlab.freedesktop.org/monado/monado/-/merge_requests/1017>
 [^slambatch1]: <https://gitlab.freedesktop.org/monado/monado/-/merge_requests/1152>
 [^slambatch2]: <https://gitlab.freedesktop.org/monado/monado/-/merge_requests/1172>
 [^xrtslam-metrics]: <https://gitlab.freedesktop.org/mateosss/xrtslam-metrics>
 [^slambench]: <https://apt.cs.manchester.ac.uk/projects/PAMELA/tools/SLAMBench>
 
-<!-- TODO@high: que serán reproducidos con el EUROC PLAYER!! -->
-<!-- TODO@high: I really need that appendix with contributions to reference -->
-
 Para la evaluación se utilizan _conjuntos de datos_ o _datasets_ pregrabados con
 distintos dispositivos. Utilizaremos dos datasets populares en el área: _EuRoC_
 [@burriEuRoCMicroAerial2016] que es grabado con un _vehículo micro aéreo_
 (_MAV_ o _drone_) y _TUM-VI_
-[@schubertTUMVIBenchmark2018] con muestras provenientes de un dispositivo que es
+[@schubertBasaltTUMVI2018] con muestras provenientes de un dispositivo que es
 sostenido con la mano (_handheld_) lo cual lo hace particularmente bueno para
 evaluar tracking en aplicaciones de XR. Además, estos conjuntos de datos fueron
 tomados con sistemas de captura de movimiento (_MoCap_) externos de gran
