@@ -136,3 +136,6 @@ preintegradas
 bearing
 linealizar
 Ceres
+recalibró
+monocrómaticas
+precalibradas

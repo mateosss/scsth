@@ -3485,14 +3485,7 @@ causa inconsistencias que suelen terminar en divergencias de los algoritmos de
 optimización. Además, es usual que también se necesite aplicar un cambio de
 coordenadas a las poses que el sistema le devuelve a Monado.
 
-### RealSense (TODO)
-
-\begin{mdframed}[backgroundcolor=shadecolor]
-TODO: Esta sección con esta cámara, y la siguiente con el casco VR deberían
-simplemente terminar de concretar un poco los problemas que listé arriba con
-algunos matices particulares que hayan aparecido. Escribí un poco de RealSense
-pero no lo terminé.
-\end{mdframed}
+### RealSense
 
 Estamos ahora en condiciones de entender las contribuciones a controladores
 realizadas en este trabajo. Comencemos por las del controlador para dispositivos
@@ -3501,25 +3494,26 @@ RealSense.
 <!-- TODO@def: "host", lo uso acá y en otros lados -->
 <!-- TODO@def: DIY -->
 
-Para soportar la cámara D455, se extendió significativamente en Monado el
+Para soportar la cámara D455, se extendió[^realsense-mr] significativamente en Monado el
 controlador de dispositivos RealSense. Hasta el momento, la única cámara de esta
 línea soportada por Monado era la T265[^t265]. Esta cámara es curiosa, ya que
 presenta un algoritmo de SLAM privativo que corre dentro del dispositivo sin
-necesidad de interactuar con el host. Este controlador se encarga únicamente
+necesidad de interactuar con el host. Este controlador se encargaba únicamente
 de inicializar el módulo interno de SLAM de la cámara y obtener las poses
 computadas por la misma para uso en las aplicaciones OpenXR. Uno de sus usuarios
-clave era el casco libre del proyecto North Star [^north-star] que las
+clave era el casco libre del proyecto North Star[^north-star] que las
 utilizaba, en iteraciones anteriores, como principal forma de tracking. En la
-web pueden encontrarse imágenes [^north-star-img1] que
+web pueden encontrarse imágenes[^north-star-img1] que
 muestran estos cascos con la cámara T265 sujeta en su parte superior.
 
+[^realsense-mr]: <https://gitlab.freedesktop.org/monado/monado/-/merge_requests/907>
 [^t265]: <https://www.intelrealsense.com/tracking-camera-t265/>
 
 [^north-star]: El proyecto North Star de UltraLeap (prev. LeapMotion) es un
 casco AR "DIY" que puede fabricarse con piezas impresas en 3D y la compra de
 algunos componentes. <https://developer.leapmotion.com/northstar>
 
-[^north-star-img1]: https://www.collabora.com/assets/images/blog/ProjectNorthStar.jpg
+[^north-star-img1]: <https://www.collabora.com/assets/images/blog/ProjectNorthStar.jpg>
 
 Al no haber ningún tipo de manejo de las imágenes o muestras de IMU provistas
 por la cámara, se tuvo que implementar la gestión de estos sensores. Es ahora
@@ -3530,7 +3524,7 @@ este trabajo.
 
 La cámara D455 tiene un par de sensores con líneas de visión paralelas y por
 ende las dos imágenes comparten la mayoría de sus respectivos campos de visión.
-Las cámaras tienen una separación de unos 10cm entre ellas. Presentan imágenes
+Las cámaras tienen una separación de unos 10 cm entre ellas. Presentan imágenes
 estéreo _prerectificadas_, es decir que las imágenes llegan al sistema de SLAM
 virtualmente sin ningún tipo de distorsión, esto evita que se necesiten modelos
 de cámaras particulares implementados en los sistemas externos. Poseen un
@@ -3542,12 +3536,12 @@ el algoritmo en uso beneficie a los sistemas de SLAM y por ende se decidió
 desactivar esta característica para en su lugar configurar estos valores
 manualmente desde la interfaz gráfica de Monado.
 
-Intel provee un SDK en C/C++ de código abierto y con una licensia permisiva
+Intel provee un SDK en C/C++ de código abierto y con una licencia permisiva
 Apache 2.0 [@ApacheLicenseVersion]. El SDK facilita la interacción entre Monado
 y las cámaras; se encarga de la gestión de colas y provee estructuras para
 manejo automático de la memoria de los cuadros recibidos. Con el SDK es posible
-configurar múltiples formas de ejecución de los sensores. Las cámaras soportan
-frecuencias de hasta 90 fps y resoluciones de hasta 1280x720 píxeles cada una,
+configurar múltiples formas de ejecución de los sensores. El modelo D455 soporta
+frecuencias de hasta 90 fps y resoluciones de hasta 1280x720 píxeles en cada cámara,
 mientras que los sensores que conforman la IMU se encuentra explicitamente
 divididos en acelerómetro que puede ejecutarse a 60hz y 250hz y giroscopio que
 logra alcanzar frecuencias de 200hz y 400hz.
@@ -3563,37 +3557,72 @@ viceversa.
 
 <!-- TODO: tabla para comparar estas características de los dispositivos? -->
 
-### Windows Mixed Reality (TODO)
+### Windows Mixed Reality
 
-\begin{mdframed}[backgroundcolor=shadecolor]
-TODO: Similar a lo que menciné en la sección de arriba. Lo interesante de esta
-sección creo yo es que participé un montón con la comunidad y le estuvimos
-haciendo ingeniería inversa a estos cascos privativos para ver que comandos USB
-mandarles y como leerlos para tener acceso a los streams de la cámara y de la
-IMU. Además, esto es eso que marco en el abstract, es el primer casco comercial
-que tiene tracking de este tipo andando en Linux con el stack full open source.
-Y aunque está genial eso, es cierto que no le llega ni a los talones todavía lo
-que tenemos comparado a la versión privativa de Microsoft. Pero bueno por lo
-menos se puede caminar y dar vuelta un poco para observar cosas sin problemas lo
-cual es mucho mejor que nada.
-\end{mdframed}
+La integración[^wmr-mr] con el casco Samsung Odyssey+ de la plataforma Windows Mixed
+Reality fue, en comparación a la cámara RealSense D455, desafiante. Este casco
+no soporta Linux por defecto y el controlador WMR es desarrollado y mantenido
+por miembros de la comunidad de Monado. El soporte de características básicas de
+estos dispositivos necesita un análisis cuidadoso de paquetes USB obtenidos
+mediante capturas realizadas en sesiones de uso en Windows, el único sistema
+operativo soportado oficialmente. Con este proceso de ingeniería inversa se
+logró entender cómo activar los sensores y cómo leer sus muestras así como
+también la posibilidad de configurar parámetros como la ganancia y exposición de
+las cámaras.
 
+El dispositivo cuenta internamente con un bloque de configuración que se puede
+decodificar a un archivo JSON. Este presenta los parámetros de calibración de
+los sensores. En particular, presenta parámetros para un modelo de calibración
+de las cámaras que no es muy usual que los sistemas de SLAM soporten, este es el
+modelo radial-tangencial [@brownDecenteringDistortionLenses1966] de 8
+parámetros. Inicialmente se recalibró el dispositivo a un modelo más usual
+(Kannala-Brandt [@kannalaGenericCameraModel2006] de 4 parámetros) pero
+eventualmente se decidió extender y contribuir a Basalt[^basalt-rt8-mr] el
+modelo de 8 parámetros. Otras peculiaridades de estas cámaras es que no son
+paralelas como en el caso de la D455, sino que tienen un gran ángulo de
+separación haciendo que solo la mitad de ambas imágenes posean una zona de
+visión compartida. Se discuten estos problemas en más detalle en la referencia
+al pie de página[^fisheye-issue].
 
+Otra particularidad es que las muestras de IMU no están precalibradas y por ende
+deben calibrarse en tiempo de ejecución. Por suerte esta característica es
+soportada por Basalt, pero no por los otros dos sistemas. Un punto en el que el
+casco fue más conveniente que la cámara RealSense es que se puede acceder a las
+timestamps sincronizadas de la IMU y las cámaras sin necesidad de aplicar ningún
+parche en el kernel del usuario. Para poder traducir timestamps desde el reloj
+del dispositivo al reloj del host, se utilizó un filtro de suavizado exponencial
+sencillo para estimar el offset entre los dos relojes que parece funcionar
+suficientemente bien.
 
+Las cámaras son monocrómaticas con obturador global y presentan cuadros con una
+resolución fija de 640x480 píxeles a 30 fps. La IMU reporta 250 mensajes por
+segundo y cada uno de estos contiene 4 muestras del sensor; 1000 Hz. En el
+controlador se decidió promediar estas 4 muestras para tener así una frecuencia
+efectiva de 250 Hz. El sensor utilizado parecer ser de menor calidad que la
+D455, ya que presenta imágenes notablemente más ruidosas y requiere valores más
+altos de exposición y ganancia para lograr imágenes con brillo suficiente. La
+comunicación con el hardware ocurre mediante comandos USB directos construidos
+con la ayuda de `libusb`[^libusb] y basados en la ingeniería inversa aplicada sobre el
+controlador oficial.
 
+[^wmr-mr]: <https://gitlab.freedesktop.org/monado/monado/-/merge_requests/1035>
+[^basalt-rt8-mr]: <https://gitlab.com/VladyslavUsenko/basalt-headers/-/merge_requests/21>
+[^fisheye-issue]: <https://gitlab.com/VladyslavUsenko/basalt/-/issues/62>
+[^libusb]: <https://libusb.info>
 
-## Otras contribuciones (TODO)
+<!-- TODO: no se si es un TODO pero esta tabla me sirvió bastante y capaz sería bueno tenerla en el escrito?
+| Caraceterística/Controlador      | WMR                                                                                                      | RealSense                                                                                                                                                 |
+|----------------------------------|----------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Calibración de Cámaras           | Cámara fisheye, con modelo rt8 (extraño). No soportado en ningún sistema. Cámaras con poco solapamiento. | Modelo de cámara rt4 precalibrado, los parámetros son cero, no hay distorsión. Cámaras con mucho solapamiento.                                            |
+| Calibración de IMU               | No precalibrado. Solo soportado por Basalt. Aunque la calibración es sencilla de realizar en Monado.     | Precalibrados. Parámetros son cero. Soportado por cualquier sistema. Soportado por cualquier sistema.                                                     |
+| Sincronización temporal interna  | Sí.                                                                                                      | Sí, aunque requiere parche en el kernel.                                                                                                                  |
+| Sincronización temporal con host | Manual con suavizado exponencial. Resta hacer cálculo de latencia.                                       | Automática por SDK.                                                                                                                                       |
+| Muestras de IMU                  | Muestras unificadas. 1000hz en paquetes de 4. Se promedian y se usan 250hz.                              | Muestras no unificadas. Se utiliza omisión de sensor más lento. Resta interpolar. D455: accel. 60-250hz y giro. 200-400hz.                                |
+| Muestras de Cámara               | Cámaras monocromáticas 640x480 a 30fps. Obturador global.                                                | Múltiples resoluciones y frecuencias para elegir. Obturador global.                                                                                       |
+| Exposición y ganancia            | Manual. Resta implementar curvas estudiadas. Sensores baratos. Ingeniería inversa.                       | Manual. Alternativa automática con el SDK aunque no es ideal para aplicaciones  de SLAM por que aumenta exposure rápido. Los sensores son de más calidad. |
+| Interfaz con hardware            | Libusb. Manejo manual de memoria. Protocolo desconocido.                                                 | RealSense SDK. Manejo automático de colas. rs_frame.                                                                                                      |
+-->
 
-\begin{mdframed}[backgroundcolor=shadecolor]
-TODO: Hubo otras cositas más pequeñas contribuídas también, entre ellos unas
-utilidades para grabar y reproducir datasets de SLAM (en formato EuRoC) muy utiles para testear el
-sistema sin tener que andar moviendo las cámaras siempre. La otra contribución
-fue a Basalt, el modelo de cámara que usan los cascos WMR y Basalt no lo tenía.
-Además me gustaría listar todos los merge requests contribuídos en algún lado.
-\end{mdframed}
-
-### Utilidades EuRoC (TODO)
-### Modelo radial-tangencial (TODO)
 
 
 \cleardoublepage
