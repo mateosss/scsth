@@ -515,8 +515,8 @@ corrección brusca que es indeseable en XR.
 }
 
 \fig{fig:basalt-trajectory-ate}{source/figures/basalt-trajectory-ate.pdf}{ATE de Basalt}{%
-Se muestra el error $ATE_i$ para cada timestamp $i$ de Basalt. Además este error
-se mapea en el color de la trayectoria a izquierda.
+Abajo se muestra el error $ATE_i$ para cada timestamp $i$ de Basalt. Además este error
+se mapea en el color de la trayectoria en la figura de arriba.
 }
 <!--
 TODO: More ideas

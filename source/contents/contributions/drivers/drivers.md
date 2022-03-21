@@ -255,10 +255,11 @@ ejemplos esto se muestran en la \figref{fig:expgain-grids}.
 
 \fig{fig:under-over-exposure}{source/figures/under-over-exposure.pdf}{Poca y sobre-exposición}{
 Arriba: imagen con valores de exposición y ganancia adecuados a las condiciones
-de iluminación de la toma. Izquierda: imagen oscura. Derecha: imagen sobre
-expuesta. Los histogramas muestran la cantidad de píxeles que toman los valores
-del eje X de 0 a 255. En las imágenes de abajo hay pérdida de información hacia
-ambos extremos del histograma.
+de iluminación de la toma. Izquierda: imagen oscura. Derecha: imagen
+sobreexpuesta.
+Los histogramas muestran la cantidad de píxeles que toman los valores
+del eje X de 0 a 255. En las imágenes de abajo hay pérdida de información que se
+identifica cuando los histogramas se concentran en alguno de los extremos.
 }
 
 \fig{fig:expgain-grids}{source/figures/expgain-grids.pdf}{Ruido y motion blur}{%
