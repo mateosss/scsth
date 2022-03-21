@@ -7,15 +7,8 @@
   journal = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
   volume = {32},
   number = {1},
-  eprint = {0810.2434},
   eprinttype = {arxiv},
-  pages = {105--119},
-  issn = {0162-8828},
   doi = {10.1109/TPAMI.2008.275},
-  url = {http://arxiv.org/abs/0810.2434},
-  urldate = {2022-01-06},
-  abstract = {The repeatability and efficiency of a corner detector determines how likely it is to be useful in a real-world application. The repeatability is importand because the same scene viewed from different positions should yield features which correspond to the same real-world 3D locations [Schmid et al 2000]. The efficiency is important because this determines whether the detector combined with further processing can operate at frame rate. Three advances are described in this paper. First, we present a new heuristic for feature detection, and using machine learning we derive a feature detector from this which can fully process live PAL video using less than 5\% of the available processing time. By comparison, most other detectors cannot even operate at frame rate (Harris detector 115\%, SIFT 195\%). Second, we generalize the detector, allowing it to be optimized for repeatability, with little loss of efficiency. Third, we carry out a rigorous comparison of corner detectors based on the above repeatability criterion applied to 3D scenes. We show that despite being principally constructed for speed, on these stringent tests, our heuristic detector significantly outperforms existing feature detectors. Finally, the comparison demonstrates that using machine learning produces significant improvements in repeatability, yielding a detector that is both very fast and very high quality.},
-  archiveprefix = {arXiv},
   keywords = {Computer Science - Computer Vision and Pattern Recognition,Computer Science - Machine Learning},
   file = {/home/mateo/Documents/apps/zotero-files/storage/E4CVFCYR/Rosten et al. - 2010 - Faster and better a machine learning approach to .pdf;/home/mateo/Documents/apps/zotero-files/storage/L3R66XM5/0810.html}
 }
@@ -26,33 +19,28 @@
   year = {1983},
   journal = {SIGGRAPH},
   doi = {10.1145/800059.801126},
-  abstract = {This paper advances a ``pyramidal parametric'' prefiltering and sampling geometry which minimizes aliasing effects and assures continuity within and between target images. The mapping of images onto surfaces may substantially increase the realism and information content of computer-generated imagery. The projection of a flat source image onto a curved surface may involve sampling difficulties, however, which are compounded as the view of the surface changes. As the projected scale of the surface increases, interpolation between the original samples of the source image is necessary; as the scale is reduced, approximation of multiple samples in the source is required. Thus a constantly changing sampling window of view-dependent shape must traverse the source image. To reduce the computation implied by these requirements, a set of prefiltered source images may be created. This approach can be applied to particular advantage in animation, where a large number of frames using the same source image must be generated. This paper advances a ``pyramidal parametric'' prefiltering and sampling geometry which minimizes aliasing effects and assures continuity within and between target images. Although the mapping of texture onto surfaces is an excellent example of the process and provided the original motivation for its development, pyramidal parametric data structures admit of wider application. The aliasing of not only surface texture, but also highlights and even the surface representations themselves, may be minimized by pyramidal parametric means.},
   file = {/home/mateo/Documents/apps/zotero-files/storage/4AUBITP2/Williams - 1983 - Pyramidal parametrics.pdf}
 }
 
-
-@article{lucasIterativeImageRegistration1981,
-  title = {An {{Iterative Image Registration Technique}} with an {{Application}} to {{Stereo Vision}}},
-  author = {Lucas, B. D. and Kanade, T.},
+@inproceedings{lucasIterativeImageRegistration1981,
+  title = {An Iterative Image Registration Technique with an Application to Stereo Vision},
+  booktitle = {Proceedings of the 7th International Joint Conference on {{Artificial}} Intelligence - {{Volume}} 2},
+  author = {Lucas, Bruce D. and Kanade, Takeo},
   year = {1981},
-  journal = {undefined},
-  url = {https://www.semanticscholar.org/paper/An-Iterative-Image-Registration-Technique-with-an-Lucas-Kanade/a06547951c97b2a32f23a6c2b5f79c8c75c9b9bd},
-  urldate = {2022-01-06},
-  abstract = {This work presents a new image registration technique that makes use of the spatial intensity gradient of the images to find a good match using a type of Newton-Raphson iteration, and can be generalized to handle rotation, scaling and shearing. Image registration finds a variety of applications in computer vision. Unfortunately, traditional image registration techniques tend to be costly. We present a new image registration technique that makes use of the spatial intensity gradient of the images to find a good match using a type of Newton-Raphson iteration. Our technique is taster because it examines far fewer potential matches between the images than existing techniques Furthermore, this registration technique can be generalized to handle rotation, scaling and shearing. We show how our technique can be adapted tor use in a stereo vision system.},
-  langid = {english},
+  month = aug,
+  series = {{{IJCAI}}'81},
+  pages = {674--679},
+  publisher = {{Morgan Kaufmann Publishers Inc.}},
+  address = {{San Francisco, CA, USA}},
+  abstract = {Image registration finds a variety of applications in computer vision. Unfortunately, traditional image registration techniques tend to be costly. We present a new image registration technique that makes use of the spatial intensity gradient of the images to find a good match using a type of Newton-Raphson iteration. Our technique is taster because it examines far fewer potential matches between the images than existing techniques Furthermore, this registration technique can be generalized to handle rotation, scaling and shearing. We show how our technique can be adapted tor use in a stereo vision system.},
   file = {/home/mateo/Documents/apps/zotero-files/storage/RQMEMZAX/Lucas and Kanade - An Iterative Image Registration Technique with an .pdf;/home/mateo/Documents/apps/zotero-files/storage/EVZVR3AG/a06547951c97b2a32f23a6c2b5f79c8c75c9b9bd.html}
 }
 
-@article{bouguetPyramidalImplementationLucas1999,
-  title = {Pyramidal Implementation of the Lucas Kanade Feature Tracker},
-  author = {Bouguet, J.},
-  year = {1999},
-  journal = {undefined},
-  url = {https://www.semanticscholar.org/paper/Pyramidal-implementation-of-the-lucas-kanade-Bouguet/aa972b40c0f8e20b07e02d1fd320bc7ebadfdfc7},
-  urldate = {2021-07-15},
-  abstract = {1 Problem Statement Let I and J be two 2D grayscaled images. The two quantities I(x) = I(x, y) and J(x) = J(x, y) are then the grayscale value of the two images are the location x = [x y] , where x and y are the two pixel coordinates of a generic image point x. The image I will sometimes be referenced as the first image, and the image J as the second image. For practical issues, the images I and J are discret function (or arrays), and the upper left corner pixel coordinate vector is [0 0] . Let nx and ny be the width and height of the two images. Then the lower right pixel coordinate vector is [nx - 1 ny - 1] . Consider an image point u = [ux uy] on the first image I. The goal of feature tracking is to find the location v = u + d = [ux+dx uy +dy] on the second image J such as I(u) and J(v) are ``similar''. The vector d = [dx dy] is the image velocity at x, also known as the optical flow at x. Because of the aperture problem, it is essential to define the notion of similarity in a 2D neighborhood sense. Let {$\omega$}x and {$\omega$}y two integers. We define the image velocity d as being the vector that minimizes the residual function defined as follows:},
-  langid = {english},
-  file = {/home/mateo/Documents/apps/zotero-files/storage/XXAPLCNK/algo_affine_tracking.pdf;/home/mateo/Documents/apps/zotero-files/storage/J47UTQ2H/aa972b40c0f8e20b07e02d1fd320bc7ebadfdfc7.html}
+@ARTICLE{bouguetPyramidalImplementationLucas1999,
+  author = {Jean-yves Bouguet},
+  title = {Pyramidal implementation of the Lucas Kanade feature tracker},
+  journal = {Intel Corporation, Microprocessor Research Labs},
+  year = {2000}
 }
 
 @article{mur-artalVisualInertialMonocularSLAM2017,
@@ -63,15 +51,8 @@
   journal = {IEEE Robotics and Automation Letters},
   volume = {2},
   number = {2},
-  eprint = {1610.05949},
   eprinttype = {arxiv},
-  pages = {796--803},
-  issn = {2377-3766, 2377-3774},
   doi = {10.1109/LRA.2017.2653359},
-  url = {http://arxiv.org/abs/1610.05949},
-  urldate = {2022-01-07},
-  abstract = {In recent years there have been excellent results in Visual-Inertial Odometry techniques, which aim to compute the incremental motion of the sensor with high accuracy and robustness. However these approaches lack the capability to close loops, and trajectory estimation accumulates drift even if the sensor is continually revisiting the same place. In this work we present a novel tightly-coupled Visual-Inertial Simultaneous Localization and Mapping system that is able to close loops and reuse its map to achieve zero-drift localization in already mapped areas. While our approach can be applied to any camera configuration, we address here the most general problem of a monocular camera, with its well-known scale ambiguity. We also propose a novel IMU initialization method, which computes the scale, the gravity direction, the velocity, and gyroscope and accelerometer biases, in a few seconds with high accuracy. We test our system in the 11 sequences of a recent micro-aerial vehicle public dataset achieving a typical scale factor error of 1\% and centimeter precision. We compare to the state-of-the-art in visual-inertial odometry in sequences with revisiting, proving the better accuracy of our method due to map reuse and no drift accumulation.},
-  archiveprefix = {arXiv},
   keywords = {Computer Science - Computer Vision and Pattern Recognition,Computer Science - Robotics},
   file = {/home/mateo/Documents/apps/zotero-files/storage/N796TLNB/Mur-Artal and Tardos - 2017 - Visual-Inertial Monocular SLAM with Map Reuse.pdf;/home/mateo/Documents/apps/zotero-files/storage/IB9CE9UQ/1610.html}
 }
@@ -95,14 +76,8 @@
   year = {2018},
   month = oct,
   journal = {2018 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)},
-  eprint = {1804.06120},
   eprinttype = {arxiv},
-  pages = {1680--1687},
   doi = {10.1109/IROS.2018.8593419},
-  url = {http://arxiv.org/abs/1804.06120},
-  urldate = {2021-11-05},
-  abstract = {Visual odometry and SLAM methods have a large variety of applications in domains such as augmented reality or robotics. Complementing vision sensors with inertial measurements tremendously improves tracking accuracy and robustness, and thus has spawned large interest in the development of visual-inertial (VI) odometry approaches. In this paper, we propose the TUM VI benchmark, a novel dataset with a diverse set of sequences in different scenes for evaluating VI odometry. It provides camera images with 1024x1024 resolution at 20 Hz, high dynamic range and photometric calibration. An IMU measures accelerations and angular velocities on 3 axes at 200 Hz, while the cameras and IMU sensors are timesynchronized in hardware. For trajectory evaluation, we also provide accurate pose ground truth from a motion capture system at high frequency (120 Hz) at the start and end of the sequences which we accurately aligned with the camera and IMU measurements. The full dataset with raw and calibrated data is publicly available. We also evaluate state-of-the-art VI odometry approaches on our dataset.},
-  archiveprefix = {arXiv},
   langid = {english},
   keywords = {Computer Science - Computer Vision and Pattern Recognition,Computer Science - Robotics},
   file = {/home/mateo/Documents/apps/zotero-files/storage/JFCDABFV/Schubert et al. - 2018 - The TUM VI Benchmark for Evaluating Visual-Inertia.pdf;/home/mateo/Documents/apps/zotero-files/storage/QA537WMK/1804.html}
@@ -116,15 +91,8 @@
   journal = {IEEE Transactions on Robotics},
   volume = {33},
   number = {1},
-  eprint = {1512.02363},
   eprinttype = {arxiv},
-  pages = {1--21},
-  issn = {1552-3098, 1941-0468},
   doi = {10.1109/TRO.2016.2597321},
-  url = {http://arxiv.org/abs/1512.02363},
-  urldate = {2021-07-08},
-  abstract = {Current approaches for visual-inertial odometry (VIO) are able to attain highly accurate state estimation via nonlinear optimization. However, real-time optimization quickly becomes infeasible as the trajectory grows over time, this problem is further emphasized by the fact that inertial measurements come at high rate, hence leading to fast growth of the number of variables in the optimization. In this paper, we address this issue by preintegrating inertial measurements between selected keyframes into single relative motion constraints. Our first contribution is a \textbackslash emph\{preintegration theory\} that properly addresses the manifold structure of the rotation group. We formally discuss the generative measurement model as well as the nature of the rotation noise and derive the expression for the \textbackslash emph\{maximum a posteriori\} state estimator. Our theoretical development enables the computation of all necessary Jacobians for the optimization and a-posteriori bias correction in analytic form. The second contribution is to show that the preintegrated IMU model can be seamlessly integrated into a visual-inertial pipeline under the unifying framework of factor graphs. This enables the application of incremental-smoothing algorithms and the use of a \textbackslash emph\{structureless\} model for visual measurements, which avoids optimizing over the 3D points, further accelerating the computation. We perform an extensive evaluation of our monocular \textbackslash VIO pipeline on real and simulated datasets. The results confirm that our modelling effort leads to accurate state estimation in real-time, outperforming state-of-the-art approaches.},
-  archiveprefix = {arXiv},
   keywords = {Computer Science - Robotics},
   file = {/home/mateo/Documents/apps/zotero-files/storage/NXS6QMX6/Forster et al. - 2017 - On-Manifold Preintegration for Real-Time Visual-In.pdf;/home/mateo/Documents/apps/zotero-files/storage/VCDQMUBZ/1512.html}
 }
@@ -175,9 +143,7 @@
   month = jul,
   journal = {Journal of Mathematical Imaging and Vision},
   volume = {15},
-  pages = {7--16},
   doi = {10.1023/A:1011217513455},
-  abstract = {In this paper two common approaches to averaging rotations are compared to a more advanced approach based on a Riemannian metric. Very often the barycenter of the quaternions or matrices that represent the rotations are used as an estimate of the mean. These methods neglect that rotations belong to a non-linear manifold and re-normalization or orthogonalization must be applied to obtain proper rotations. These latter steps have been viewed as ad hoc corrections for the errors introduced by assuming a vector space. The article shows that the two approximative methods can be derived from natural approximations to the Riemannian metric, and that the subsequent corrections are inherent in the least squares estimation.},
   file = {/home/mateo/Documents/apps/zotero-files/storage/8HDHI6NX/Gramkow - 2001 - On Averaging Rotations.pdf}
 }
 
@@ -187,13 +153,9 @@
   booktitle = {Proceedings of the 24th Annual Conference on {{Computer}} Graphics and Interactive Techniques  - {{SIGGRAPH}} '97},
   author = {Welch, Greg and Bishop, Gary},
   year = {1997},
-  pages = {333--344},
   publisher = {{ACM Press}},
   address = {{Not Known}},
   doi = {10.1145/258734.258876},
-  url = {http://portal.acm.org/citation.cfm?doid=258734.258876},
-  urldate = {2021-12-27},
-  isbn = {978-0-89791-896-1},
   langid = {english},
   keywords = {filter},
   file = {/home/mateo/Documents/apps/zotero-files/storage/GDFGK9VE/Welch and Bishop - 1997 - SCAAT incremental tracking with incomplete inform.pdf}
@@ -206,14 +168,9 @@
   author = {Casiez, G{\'e}ry and Roussel, Nicolas and Vogel, Daniel},
   year = {2012},
   month = may,
-  pages = {2527--2530},
   publisher = {{ACM}},
   address = {{Austin Texas USA}},
   doi = {10.1145/2207676.2208639},
-  url = {https://dl.acm.org/doi/10.1145/2207676.2208639},
-  urldate = {2021-12-28},
-  abstract = {The 1e filter (``one Euro filter'') is a simple algorithm to filter noisy signals for high precision and responsiveness. It uses a first order low-pass filter with an adaptive cutoff frequency: at low speeds, a low cutoff stabilizes the signal by reducing jitter, but as speed increases, the cutoff is increased to reduce lag. The algorithm is easy to implement, uses very few resources, and with two easily understood parameters, it is easy to tune. In a comparison with other filters, the 1e filter has less lag using a reference amount of jitter reduction.},
-  isbn = {978-1-4503-1015-4},
   langid = {english},
   keywords = {filter},
   file = {/home/mateo/Documents/apps/zotero-files/storage/PTVIZIDX/Casiez et al. - 2012 - 1 € filter a simple speed-based low-pass filter f.pdf;/home/mateo/Documents/apps/zotero-files/storage/4ASD2RJJ/noise-filtering-using-one-euro-filter.html}
@@ -225,7 +182,6 @@
   year = {2016},
   journal = {Int. J. Robotics Res.},
   doi = {10.1177/0278364915620033},
-  abstract = {Eleven datasets are provided, ranging from slow flights under good visual conditions to dynamic flights with motion blur and poor illumination, enabling researchers to thoroughly test and evaluate their algorithms. This paper presents visual-inertial datasets collected on-board a micro aerial vehicle. The datasets contain synchronized stereo images, IMU measurements and accurate ground truth. The first batch of datasets facilitates the design and evaluation of visual-inertial localization algorithms on real flight data. It was collected in an industrial environment and contains millimeter accurate position ground truth from a laser tracking system. The second batch of datasets is aimed at precise 3D environment reconstruction and was recorded in a room equipped with a motion capture system. The datasets contain 6D pose ground truth and a detailed 3D scan of the environment. Eleven datasets are provided in total, ranging from slow flights under good visual conditions to dynamic flights with motion blur and poor illumination, enabling researchers to thoroughly test and evaluate their algorithms. All datasets contain raw sensor measurements, spatio-temporally aligned sensor data and ground truth, extrinsic and intrinsic calibrations and datasets for custom calibrations.},
   keywords = {dataset,euroc},
   file = {/home/mateo/Documents/apps/zotero-files/storage/8WW4LJ43/Burri et al. - 2016 - The EuRoC micro aerial vehicle datasets.pdf}
 }
@@ -236,14 +192,9 @@
   author = {Zhang, Zichao and Forster, Christian and Scaramuzza, Davide},
   year = {2017},
   month = may,
-  pages = {3894--3901},
   publisher = {{IEEE}},
   address = {{Singapore, Singapore}},
   doi = {10.1109/ICRA.2017.7989449},
-  url = {http://ieeexplore.ieee.org/document/7989449/},
-  urldate = {2022-02-05},
-  abstract = {We propose an active exposure control method to improve the robustness of visual odometry in HDR (high dynamic range) environments. Our method evaluates the proper exposure time by maximizing a robust gradient-based image quality metric. The optimization is achieved by exploiting the photometric response function of the camera. Our exposure control method is evaluated in different real world environments and outperforms the built-in auto-exposure function of the camera. To validate the benefit of our approach, we adapt a state-ofthe-art visual odometry pipeline (SVO) to work with varying exposure time and demonstrate improved performance using our exposure control method in challenging HDR environments.},
-  isbn = {978-1-5090-4633-1},
   langid = {english},
   file = {/home/mateo/Documents/apps/zotero-files/storage/QW5HZNEL/Zhang et al. - 2017 - Active exposure control for robust visual odometry.pdf}
 }
@@ -255,14 +206,9 @@
   author = {Geneva, Patrick and Eckenhoff, Kevin and Lee, Woosik and Yang, Yulin and Huang, Guoquan},
   year = {2020},
   month = may,
-  pages = {4666--4672},
   publisher = {{IEEE}},
   address = {{Paris, France}},
   doi = {10.1109/ICRA40945.2020.9196524},
-  url = {https://ieeexplore.ieee.org/document/9196524/},
-  urldate = {2021-11-14},
-  abstract = {In this paper, we present an open platform, termed OpenVINS, for visual-inertial estimation research for both the academic community and practitioners from industry. The open sourced codebase provides a foundation for researchers and engineers to quickly start developing new capabilities for their visual-inertial systems. This codebase has out of the box support for commonly desired visual-inertial estimation features, which include: (i) on-manifold sliding window Kalman filter, (ii) online camera intrinsic and extrinsic calibration, (iii) camera to inertial sensor time offset calibration, (iv) SLAM landmarks with different representations and consistent First-Estimates Jacobian (FEJ) treatments, (v) modular type system for state management, (vi) extendable visual-inertial system simulator, and (vii) extensive toolbox for algorithm evaluation. Moreover, we have also focused on detailed documentation and theoretical derivations to support rapid development and research, which are greatly lacked in the current open sourced algorithms. Finally, we perform comprehensive validation of the proposed OpenVINS against state-of-the-art open sourced algorithms, showing its competing estimation performance.},
-  isbn = {978-1-72817-395-5},
   langid = {english},
   keywords = {autocalibration,calibration,gpl,slam},
   file = {/home/mateo/Documents/apps/zotero-files/storage/5CJPLRZM/Geneva et al. - 2020 - OpenVINS A Research Platform for Visual-Inertial .pdf}
@@ -276,12 +222,7 @@
   journal = {ACM SIGGRAPH Computer Graphics},
   volume = {19},
   number = {3},
-  pages = {245--254},
-  issn = {0097-8930},
   doi = {10.1145/325165.325242},
-  url = {https://doi.org/10.1145/325165.325242},
-  urldate = {2022-02-07},
-  abstract = {Solid bodies roll and tumble through space. In computer animation, so do cameras. The rotations of these objects are best described using a four coordinate system, quaternions, as is shown in this paper. Of all quaternions, those on the unit sphere are most suitable for animation, but the question of how to construct curves on spheres has not been much explored. This paper gives one answer by presenting a new kind of spline curve, created on a sphere, suitable for smoothly in-betweening (i.e. interpolating) sequences of arbitrary rotations. Both theory and experiment show that the motion generated is smooth and natural, without quirks found in earlier methods.},
   keywords = {animation,approximation,B-spline,Bézier curve,in-betweening,interpolation,quaternion,rotation,slerp,spherical geometry,spline},
   file = {/home/mateo/Documents/apps/zotero-files/storage/D2F4ZEAP/Shoemake - 1985 - Animating rotation with quaternion curves.pdf}
 }
@@ -309,9 +250,6 @@
   eprint = {1812.01537},
   eprinttype = {arxiv},
   primaryclass = {cs},
-  url = {http://arxiv.org/abs/1812.01537},
-  urldate = {2022-01-03},
-  abstract = {A Lie group is an old mathematical abstract object dating back to the XIX century, when mathematician Sophus Lie laid the foundations of the theory of continuous transformation groups. As it often happens, its usage has spread over diverse areas of science and technology many years later. In robotics, we are recently experiencing an important trend in its usage, at least in the fields of estimation, and particularly in motion estimation for navigation. Yet for a vast majority of roboticians, Lie groups are highly abstract constructions and therefore difficult to understand and to use. This may be due to the fact that most of the literature on Lie theory is written by and for mathematicians and physicists, who might be more used than us to the deep abstractions this theory deals with. In estimation for robotics it is often not necessary to exploit the full capacity of the theory, and therefore an effort of selection of materials is required. In this paper, we will walk through the most basic principles of the Lie theory, with the aim of conveying clear and useful ideas, and leave a significant corpus of the Lie theory behind. Even with this mutilation, the material included here has proven to be extremely useful in modern estimation algorithms for robotics, especially in the fields of SLAM, visual odometry, and the like. Alongside this micro Lie theory, we provide a chapter with a few application examples, and a vast reference of formulas for the major Lie groups used in robotics, including most jacobian matrices and the way to easily manipulate them. We also present a new C++ template-only library implementing all the functionality described here.},
   archiveprefix = {arXiv},
   keywords = {Computer Science - Robotics},
   file = {/home/mateo/Documents/apps/zotero-files/storage/VAE92AJC/Solà et al. - 2021 - A micro Lie theory for state estimation in robotic.pdf;/home/mateo/Documents/apps/zotero-files/storage/W25AQ5BE/1812.html}
@@ -324,9 +262,6 @@
   publisher = {{Cambridge University Press}},
   address = {{Cambridge}},
   doi = {10.1017/9781316671528},
-  url = {http://ebooks.cambridge.org/ref/id/CBO9781316671528},
-  urldate = {2022-01-02},
-  isbn = {978-1-316-67152-8},
   langid = {english},
   file = {/home/mateo/Documents/apps/zotero-files/storage/W4F2W62E/Barfoot - 2017 - State Estimation for Robotics.pdf}
 }
@@ -334,7 +269,7 @@
 @techreport{eadeDerivativeExponentialMap,
   title = {Derivative of the {{Exponential Map}}},
   author = {Eade, Ethan},
-  pages = {10},
+  url = {https://ethaneade.com/exp_diff.pdf},
   langid = {english},
   file = {/home/mateo/Documents/apps/zotero-files/storage/3PFSYVHD/Eade - Derivative of the Exponential Map.pdf}
 }
@@ -358,19 +293,15 @@
   journal = {IEEE Computer Graphics and Applications},
   volume = {22},
   number = {6},
-  pages = {24--38},
-  issn = {1558-1756},
   doi = {10.1109/MCG.2002.1046626},
-  abstract = {This article introduces the physical principles underlying the variety of approaches to motion tracking. Although no single technology will work for all purposes, certain methods work quite well for specific applications.},
   keywords = {Degradation,Delay,history,introduction,Magnetic fields,Motion estimation,Motion measurement,narration,Pipelines,Roads,Robustness,Silver,Tracking},
   file = {/home/mateo/Documents/apps/zotero-files/storage/W4XD5QZJ/Welch and Foxlin - 2002 - Motion tracking no silver bullet, but a respectab.pdf;/home/mateo/Documents/apps/zotero-files/storage/3VSB2BNW/1046626.html}
 }
 
-@misc{InertialNavigationPrimer,
+@book{vectornavInertialNavigationPrimer,
   title = {Inertial {{Navigation Primer}}},
-  journal = {VectorNav},
+  author = {{Vector Nav}},
   url = {https://www.vectornav.com/resources/inertial-navigation-primer},
-  urldate = {2021-11-14},
   langid = {english},
   keywords = {calibration,filter,imu,kalman,manufacturing},
   file = {/home/mateo/Documents/apps/zotero-files/storage/M4PLHXJV/inertial-navigation-primer.html}
@@ -384,13 +315,8 @@
   month = feb,
   journal = {Journal of Sensors},
   volume = {2021},
-  pages = {e2054828},
   publisher = {{Hindawi}},
-  issn = {1687-725X},
   doi = {10.1155/2021/2054828},
-  url = {https://www.hindawi.com/journals/js/2021/2054828/},
-  urldate = {2022-02-19},
-  abstract = {Simultaneous Localization and Mapping is now widely adopted by many applications, and researchers have produced very dense literature on this topic. With the advent of smart devices, embedding cameras, inertial measurement units, visual SLAM (vSLAM), and visual-inertial SLAM (viSLAM) are enabling novel general public applications. In this context, this paper conducts a review of popular SLAM approaches with a focus on vSLAM/viSLAM, both at fundamental and experimental levels. It starts with a structured overview of existing vSLAM and viSLAM designs and continues with a new classification of a dozen main state-of-the-art methods. A chronological survey of viSLAM's development highlights the historical milestones and presents more recent methods into a classification. Finally, the performance of vSLAM is experimentally assessed for the use case of pedestrian pose estimation with a handheld device in urban environments. The performance of five open-source methods Vins-Mono, ROVIO, ORB-SLAM2, DSO, and LSD-SLAM is compared using the EuRoC MAV dataset and a new visual-inertial dataset corresponding to urban pedestrian navigation. A detailed analysis of the computation results identifies the strengths and weaknesses for each method. Globally, ORB-SLAM2 appears to be the most promising algorithm to address the challenges of urban pedestrian navigation, tested with two datasets.},
   langid = {english},
   file = {/home/mateo/Documents/apps/zotero-files/storage/C6GZFGC7/Servières et al. - 2021 - Visual and Visual-Inertial SLAM State of the Art,.pdf}
 }
@@ -404,12 +330,7 @@
   journal = {IPSJ Transactions on Computer Vision and Applications},
   volume = {9},
   number = {1},
-  pages = {16},
-  issn = {1882-6695},
   doi = {10.1186/s41074-017-0027-2},
-  url = {https://doi.org/10.1186/s41074-017-0027-2},
-  urldate = {2021-12-07},
-  abstract = {SLAM is an abbreviation for simultaneous localization and mapping, which is a technique for estimating sensor motion and reconstructing structure in an unknown environment. Especially, Simultaneous Localization and Mapping (SLAM) using cameras is referred to as visual SLAM (vSLAM) because it is based on visual information only. vSLAM can be used as a fundamental technology for various types of applications and has been discussed in the field of computer vision, augmented reality, and robotics in the literature. This paper aims to categorize and summarize recent vSLAM algorithms proposed in different research communities from both technical and historical points of views. Especially, we focus on vSLAM algorithms proposed mainly from 2010 to 2016 because major advance occurred in that period. The technical categories are summarized as follows: feature-based, direct, and RGB-D camera-based approaches.},
   keywords = {Augmented reality,Computer vision,Robotics,Survey,Visual SLAM},
   file = {/home/mateo/Documents/apps/zotero-files/storage/CJALKKJG/Taketomi - 2017 - Visual-SLAM Algorithms a Survey from 2010 to 2016.pdf;/home/mateo/Documents/apps/zotero-files/storage/GG2MW29K/s41074-017-0027-2.html}
 }
@@ -424,9 +345,6 @@
   eprint = {1910.02490},
   eprinttype = {arxiv},
   primaryclass = {cs},
-  url = {http://arxiv.org/abs/1910.02490},
-  urldate = {2021-07-08},
-  abstract = {We provide an open-source C++ library for real-time metric-semantic visual-inertial Simultaneous Localization And Mapping (SLAM). The library goes beyond existing visual and visual-inertial SLAM libraries (e.g., ORB-SLAM, VINS- Mono, OKVIS, ROVIO) by enabling mesh reconstruction and semantic labeling in 3D. Kimera is designed with modularity in mind and has four key components: a visual-inertial odometry (VIO) module for fast and accurate state estimation, a robust pose graph optimizer for global trajectory estimation, a lightweight 3D mesher module for fast mesh reconstruction, and a dense 3D metric-semantic reconstruction module. The modules can be run in isolation or in combination, hence Kimera can easily fall back to a state-of-the-art VIO or a full SLAM system. Kimera runs in real-time on a CPU and produces a 3D metric-semantic mesh from semantically labeled images, which can be obtained by modern deep learning methods. We hope that the flexibility, computational efficiency, robustness, and accuracy afforded by Kimera will build a solid basis for future metric-semantic SLAM and perception research, and will allow researchers across multiple areas (e.g., VIO, SLAM, 3D reconstruction, segmentation) to benchmark and prototype their own efforts without having to start from scratch.},
   archiveprefix = {arXiv},
   keywords = {Computer Science - Computer Vision and Pattern Recognition,Computer Science - Robotics},
   file = {/home/mateo/Documents/apps/zotero-files/storage/52BRGHY3/compilation-ubuntu2104.md;/home/mateo/Documents/apps/zotero-files/storage/PQUBSZDN/todo.md;/home/mateo/Documents/apps/zotero-files/storage/UCEMSZRU/howtocompile.md;/home/mateo/Documents/apps/zotero-files/storage/W8Z79ITG/Rosinol et al. - 2020 - Kimera an Open-Source Library for Real-Time Metri.pdf;/home/mateo/Documents/apps/zotero-files/storage/5RKU9I6W/1910.html}
@@ -441,15 +359,8 @@
   journal = {IEEE Transactions on Robotics},
   volume = {37},
   number = {6},
-  eprint = {2007.11898},
   eprinttype = {arxiv},
-  pages = {1874--1890},
-  issn = {1552-3098, 1941-0468},
   doi = {10.1109/TRO.2021.3075644},
-  url = {http://arxiv.org/abs/2007.11898},
-  urldate = {2021-12-13},
-  abstract = {This paper presents ORB-SLAM3, the first system able to perform visual, visual-inertial and multi-map SLAM with monocular, stereo and RGB-D cameras, using pin-hole and fisheye lens models. The first main novelty is a feature-based tightly-integrated visual-inertial SLAM system that fully relies on Maximum-a-Posteriori (MAP) estimation, even during the IMU initialization phase. The result is a system that operates robustly in real-time, in small and large, indoor and outdoor environments, and is 2 to 5 times more accurate than previous approaches. The second main novelty is a multiple map system that relies on a new place recognition method with improved recall. Thanks to it, ORB-SLAM3 is able to survive to long periods of poor visual information: when it gets lost, it starts a new map that will be seamlessly merged with previous maps when revisiting mapped areas. Compared with visual odometry systems that only use information from the last few seconds, ORB-SLAM3 is the first system able to reuse in all the algorithm stages all previous information. This allows to include in bundle adjustment co-visible keyframes, that provide high parallax observations boosting accuracy, even if they are widely separated in time or if they come from a previous mapping session. Our experiments show that, in all sensor configurations, ORB-SLAM3 is as robust as the best systems available in the literature, and significantly more accurate. Notably, our stereo-inertial SLAM achieves an average accuracy of 3.6 cm on the EuRoC drone and 9 mm under quick hand-held motions in the room of TUM-VI dataset, a setting representative of AR/VR scenarios. For the benefit of the community we make public the source code.},
-  archiveprefix = {arXiv},
   keywords = {Computer Science - Robotics,slam},
   file = {/home/mateo/Documents/apps/zotero-files/storage/U5UXIE9Y/Campos et al. - 2021 - ORB-SLAM3 An Accurate Open-Source Library for Vis.pdf;/home/mateo/Documents/apps/zotero-files/storage/8FY85C3Z/2007.html}
 }
@@ -462,15 +373,8 @@
   journal = {IEEE Robotics and Automation Letters},
   volume = {5},
   number = {2},
-  eprint = {1904.06504},
   eprinttype = {arxiv},
-  pages = {422--429},
-  issn = {2377-3766, 2377-3774},
   doi = {10.1109/LRA.2019.2961227},
-  url = {http://arxiv.org/abs/1904.06504},
-  urldate = {2021-11-05},
-  abstract = {Cameras and inertial measurement units are complementary sensors for ego-motion estimation and environment mapping. Their combination makes visual-inertial odometry (VIO) systems more accurate and robust. For globally consistent mapping, however, combining visual and inertial information is not straightforward. To estimate the motion and geometry with a set of images large baselines are required. Because of that, most systems operate on keyframes that have large time intervals between each other. Inertial data on the other hand quickly degrades with the duration of the intervals and after several seconds of integration, it typically contains only little useful information.},
-  archiveprefix = {arXiv},
   langid = {english},
   keywords = {Computer Science - Computer Vision and Pattern Recognition,Computer Science - Robotics},
   file = {/home/mateo/Documents/apps/zotero-files/storage/43DY6EVF/basalt_eq_3_4.pdf;/home/mateo/Documents/apps/zotero-files/storage/5QY5TFCN/Usenko et al. - 2020 - Visual-Inertial Mapping with Non-Linear Factor Rec.pdf}
@@ -484,10 +388,6 @@
   publisher = {{Cambridge University Press}},
   address = {{Cambridge}},
   doi = {10.1017/CBO9780511811685},
-  url = {https://www.cambridge.org/core/books/multiple-view-geometry-in-computer-vision/0B6F289C78B2B23F596CAA76D3D43F7A},
-  urldate = {2022-01-18},
-  abstract = {A basic problem in computer vision is to understand the structure of a real world scene given several images of it. Techniques for solving this problem are taken from projective geometry and photogrammetry. Here, the authors cover the geometric principles and their algebraic representation in terms of camera projection matrices, the fundamental matrix and the trifocal tensor. The theory and methods of computation of these entities are discussed with real examples, as is their use in the reconstruction of scenes from multiple images. The new edition features an extended introduction covering the key ideas in the book (which itself has been updated with additional examples and appendices) and significant new results which have appeared since the first edition. Comprehensive background material is provided, so readers familiar with linear algebra and basic numerical methods can understand the projective geometry and estimation algorithms presented, and implement the algorithms directly from the book.},
-  isbn = {978-0-521-54051-3},
   file = {/home/mateo/Documents/apps/zotero-files/storage/WF8F2HS8/Hartley and Zisserman - 2004 - Multiple View Geometry in Computer Vision.pdf;/home/mateo/Documents/apps/zotero-files/storage/358NAIBL/0B6F289C78B2B23F596CAA76D3D43F7A.html}
 }
 
@@ -498,11 +398,7 @@
   journal = {Foundations and Trends in Robotics},
   volume = {6},
   number = {1-2},
-  pages = {1--139},
-  issn = {1935-8253, 1935-8261},
   doi = {10.1561/2300000043},
-  url = {http://www.nowpublishers.com/article/Details/ROB-043},
-  urldate = {2022-01-22},
   langid = {english},
   file = {/home/mateo/Documents/apps/zotero-files/storage/HFUH9LIQ/Dellaert and Kaess - 2017 - Factor Graphs for Robot Perception.pdf}
 }
@@ -510,35 +406,30 @@
 @misc{3ClauseBSDLicense,
   title = {The 3-{{Clause BSD License}}},
   url = {https://opensource.org/licenses/BSD-3-Clause},
-  urldate = {2022-02-21},
   file = {/home/mateo/Documents/apps/zotero-files/storage/BW7LSVHR/BSD-3-Clause.html}
 }
 
 @misc{2ClauseBSDLicense,
   title = {The 2-{{Clause BSD License}}},
   url = {https://opensource.org/licenses/BSD-2-Clause},
-  urldate = {2022-02-21},
   file = {/home/mateo/Documents/apps/zotero-files/storage/GNUJ5JN7/BSD-2-Clause.html}
 }
 
 @misc{ApacheLicenseVersion,
   title = {Apache {{License}}, {{Version}} 2.0},
   url = {https://opensource.org/licenses/Apache-2.0},
-  urldate = {2022-02-21},
   file = {/home/mateo/Documents/apps/zotero-files/storage/9TMCWJ9W/Apache-2.html}
 }
 
 @misc{BoostSoftwareLicensea,
   title = {Boost {{Software License}} 1.0 ({{BSL-1}}.0)},
   url = {https://opensource.org/licenses/BSL-1.0},
-  urldate = {2022-02-21},
   file = {/home/mateo/Documents/apps/zotero-files/storage/JMAFWQ4B/BSL-1.html}
 }
 
 @misc{GNUGeneralPublic,
   title = {{{GNU General Public License}} Version 3},
   url = {https://opensource.org/licenses/gpl-3.0.html},
-  urldate = {2022-02-21},
   file = {/home/mateo/Documents/apps/zotero-files/storage/VL3THVFV/gpl-3.0.html}
 }
 
@@ -547,6 +438,7 @@
     author={Muhammad Huzaifa and Rishi Desai and Samuel Grayson and Xutao Jiang and Ying Jing and Jae Lee and Fang Lu and Yihan Pang and Joseph Ravichandran and Finn Sinclair and Boyuan Tian and Hengzhi Yuan and Jeffrey Zhang and Sarita V. Adve},
     year={2021},
     eprint={2004.04643},
+    archiveprefix = {arXiv},
     primaryClass={cs.DC}
 }
 
@@ -556,14 +448,9 @@
   author = {Zhang, Zichao and Scaramuzza, Davide},
   year = {2018},
   month = oct,
-  pages = {7244--7251},
   publisher = {{IEEE}},
   address = {{Madrid}},
   doi = {10.1109/IROS.2018.8593941},
-  url = {https://ieeexplore.ieee.org/document/8593941/},
-  urldate = {2022-03-11},
-  abstract = {In this tutorial, we provide principled methods to quantitatively evaluate the quality of an estimated trajectory from visual(-inertial) odometry (VO/VIO), which is the foundation of benchmarking the accuracy of different algorithms. First, we show how to determine the transformation type to use in trajectory alignment based on the specific sensing modality (i.e., monocular, stereo and visual-inertial). Second, we describe commonly used error metrics (i.e., the absolute trajectory error and the relative error) and their strengths and weaknesses. To make the methodology presented for VO/VIO applicable to other setups, we also generalize our formulation to any given sensing modality. To facilitate the reproducibility of related research, we publicly release our implementation of the methods described in this tutorial.},
-  isbn = {978-1-5386-8094-0},
   langid = {english},
   keywords = {evaluation,metrics,SLAM},
   file = {/home/mateo/Documents/apps/zotero-files/storage/9LCZI9YM/Zhang and Scaramuzza - 2018 - A Tutorial on Quantitative Trajectory Evaluation f.pdf;/home/mateo/Documents/apps/zotero-files/storage/FDVMHVGD/Zhang and Scaramuzza - 2018 - A Tutorial on Quantitative Trajectory Evaluation f.pdf}
@@ -576,13 +463,9 @@
   year = {2021},
   month = may,
   number = {20},
-  pages = {1--9},
   publisher = {{Association for Computing Machinery}},
   address = {{New York, NY, USA}},
-  url = {https://doi.org/10.1145/3411763.3450379},
-  urldate = {2022-03-13},
-  abstract = {Latency can be detrimental for the experience of Virtual Reality. High latency can lead to loss of performance and cybersickness. There are simple approaches to measure approximate latency and more elaborated for more insight into latency behavior. Yet there are still researchers who do not measure the latency of the system they are using to conduct VR experiments. This paper provides an illustrated overview of different approaches to measure latency of VR applications, as well as a small decision-making guide to assist in the choice of the measurement method. The visual style offers a more approachable way to understand how to measure latency.},
-  isbn = {978-1-4503-8095-9},
+  doi = {10.1145/3411763.3450379},
   keywords = {comic,latency,measurement,VR,XR}
 }
 
@@ -595,9 +478,6 @@
   eprint = {2109.02182},
   eprinttype = {arxiv},
   primaryclass = {cs},
-  url = {http://arxiv.org/abs/2109.02182},
-  urldate = {2022-01-01},
-  abstract = {In this paper we propose a novel square root sliding-window bundle adjustment suitable for real-time odometry applications. The square root formulation pervades three major aspects of our optimization-based sliding-window estimator: for bundle adjustment we eliminate landmark variables with nullspace projection; to store the marginalization prior we employ a matrix square root of the Hessian; and when marginalizing old poses we avoid forming normal equations and update the square root prior directly with a specialized QR decomposition. We show that the proposed square root marginalization is algebraically equivalent to the conventional use of Schur complement (SC) on the Hessian. Moreover, it elegantly deals with rank-deficient Jacobians producing a prior equivalent to SC with Moore-Penrose inverse. Our evaluation of visual and visual-inertial odometry on real-world datasets demonstrates that the proposed estimator is 36\% faster than the baseline. It furthermore shows that in single precision, conventional Hessian-based marginalization leads to numeric failures and reduced accuracy. We analyse numeric properties of the marginalization prior to explain why our square root form does not suffer from the same effect and therefore entails superior performance.},
   archiveprefix = {arXiv},
   keywords = {Computer Science - Computer Vision and Pattern Recognition},
   file = {/home/mateo/Documents/apps/zotero-files/storage/48R9Q6HF/Demmel et al. - 2021 - Square Root Marginalization for Sliding-Window Bun.pdf;/home/mateo/Documents/apps/zotero-files/storage/74E59NXL/2109.html}
@@ -611,12 +491,7 @@
   journal = {Autonomous Robots},
   volume = {27},
   number = {4},
-  pages = {387--407},
-  issn = {0929-5593, 1573-7527},
   doi = {10.1007/s10514-009-9155-6},
-  url = {http://link.springer.com/10.1007/s10514-009-9155-6},
-  urldate = {2022-03-11},
-  abstract = {In this paper, we address the problem of creating an objective benchmark for evaluating SLAM approaches. We propose a framework for analyzing the results of a SLAM approach based on a metric for measuring the error of the corrected trajectory. This metric uses only relative relations between poses and does not rely on a global reference frame. This overcomes serious shortcomings of approaches using a global reference frame to compute the error. Our method furthermore allows us to compare SLAM approaches that use different estimation techniques or different sensor modalities since all computations are made based on the corrected trajectory of the robot.},
   langid = {english},
   keywords = {metrics},
   file = {/home/mateo/Documents/apps/zotero-files/storage/5UPYBHC4/Kümmerle et al. - 2009 - On measuring the accuracy of SLAM algorithms.pdf}
@@ -628,14 +503,8 @@
   year = {2015},
   month = may,
   journal = {2015 IEEE International Conference on Robotics and Automation (ICRA)},
-  eprint = {1410.2167},
   eprinttype = {arxiv},
-  pages = {5783--5790},
   doi = {10.1109/ICRA.2015.7140009},
-  url = {http://ieeexplore.ieee.org/xpl/articleDetails.jsp?arnumber=7140009 IEEE Xplore 2015},
-  urldate = {2022-03-19},
-  abstract = {Real-time dense computer vision and SLAM offer great potential for a new level of scene modelling, tracking and real environmental interaction for many types of robot, but their high computational requirements mean that use on mass market embedded platforms is challenging. Meanwhile, trends in low-cost, low-power processing are towards massive parallelism and heterogeneity, making it difficult for robotics and vision researchers to implement their algorithms in a performance-portable way. In this paper we introduce SLAMBench, a publicly-available software framework which represents a starting point for quantitative, comparable and validatable experimental research to investigate trade-offs in performance, accuracy and energy consumption of a dense RGB-D SLAM system. SLAMBench provides a KinectFusion implementation in C++, OpenMP, OpenCL and CUDA, and harnesses the ICL-NUIM dataset of synthetic RGB-D sequences with trajectory and scene ground truth for reliable accuracy comparison of different implementation and algorithms. We present an analysis and breakdown of the constituent algorithmic elements of KinectFusion, and experimentally investigate their execution time on a variety of multicore and GPUaccelerated platforms. For a popular embedded platform, we also present an analysis of energy efficiency for different configuration alternatives.},
-  archiveprefix = {arXiv},
   langid = {english},
   keywords = {Computer Science - Computer Vision and Pattern Recognition,Computer Science - Distributed; Parallel; and Cluster Computing,Computer Science - Performance,Computer Science - Robotics},
   file = {/home/mateo/Documents/apps/zotero-files/storage/B242XBQJ/Nardi et al. - 2015 - Introducing SLAMBench, a performance and accuracy .pdf}
@@ -650,9 +519,6 @@
   eprint = {2001.00470},
   eprinttype = {arxiv},
   primaryclass = {cs, eess},
-  url = {http://arxiv.org/abs/2001.00470},
-  urldate = {2022-03-19},
-  abstract = {In recent years, commodity mobile devices equipped with cameras and inertial measurement units (IMUs) have attracted much research and design effort for augmented reality (AR) and robotics applications. Based on such sensors, many commercial AR toolkits and public benchmark datasets have been made available to accelerate hatching and validating new ideas. To lower the difficulty and enhance the flexibility in accessing the rich raw data of typical AR sensors on mobile devices, this paper present the mobile AR sensor (MARS) logger for two of the most popular mobile operating systems, Android and iOS. The logger highlights the best possible synchronization between the camera and the IMU allowed by a mobile device, and efficient saving of images at about 30Hz, and recording the metadata relevant to AR applications. This logger has been tested on a relatively large spectrum of mobile devices, and the collected data has been used for analyzing the sensor characteristics. We see that this application will facilitate research and development related to AR and robotics, so it has been open sourced at https://github.com/OSUPCVLab/mobile-ar-sensor-logger.},
   archiveprefix = {arXiv},
   keywords = {Computer Science - Human-Computer Interaction,Electrical Engineering and Systems Science - Image and Video Processing},
   file = {/home/mateo/Documents/apps/zotero-files/storage/GXXI8LA2/Huai et al. - 2019 - The Mobile AR Sensor Logger for Android and iOS De.pdf;/home/mateo/Documents/apps/zotero-files/storage/6DTAP93S/2001.html}
@@ -664,10 +530,7 @@
   author = {Sturm, J{\"u}rgen and Engelhard, Nikolas and Endres, Felix and Burgard, Wolfram and Cremers, Daniel},
   year = {2012},
   month = oct,
-  pages = {573--580},
-  issn = {2153-0866},
   doi = {10.1109/IROS.2012.6385773},
-  abstract = {In this paper, we present a novel benchmark for the evaluation of RGB-D SLAM systems. We recorded a large set of image sequences from a Microsoft Kinect with highly accurate and time-synchronized ground truth camera poses from a motion capture system. The sequences contain both the color and depth images in full sensor resolution (640 \texttimes{} 480) at video frame rate (30 Hz). The ground-truth trajectory was obtained from a motion-capture system with eight high-speed tracking cameras (100 Hz). The dataset consists of 39 sequences that were recorded in an office environment and an industrial hall. The dataset covers a large variety of scenes and camera motions. We provide sequences for debugging with slow motions as well as longer trajectories with and without loop closures. Most sequences were recorded from a handheld Kinect with unconstrained 6-DOF motions but we also provide sequences from a Kinect mounted on a Pioneer 3 robot that was manually navigated through a cluttered indoor environment. To stimulate the comparison of different approaches, we provide automatic evaluation tools both for the evaluation of drift of visual odometry systems and the global pose error of SLAM systems. The benchmark website [1] contains all data, detailed descriptions of the scenes, specifications of the data formats, sample code, and evaluation tools.},
   keywords = {Calibration,Cameras,metrics,Simultaneous localization and mapping,Trajectory,Visualization},
   file = {/home/mateo/Documents/apps/zotero-files/storage/3UHB33YL/Sturm et al. - 2012 - A benchmark for the evaluation of RGB-D SLAM syste.pdf;/home/mateo/Documents/apps/zotero-files/storage/ERYP9BNC/6385773.html}
 }
@@ -687,10 +550,7 @@
   journal = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
   volume = {13},
   number = {4},
-  pages = {376--380},
-  issn = {1939-3539},
   doi = {10.1109/34.88573},
-  abstract = {In many applications of computer vision, the following problem is encountered. Two point patterns (sets of points) (x/sub i/) and (x/sub i/); i=1, 2, . . ., n are given in m-dimensional space, and the similarity transformation parameters (rotation, translation, and scaling) that give the least mean squared error between these point patterns are needed. Recently, K.S. Arun et al. (1987) and B.K.P. Horn et al. (1987) presented a solution of this problem. Their solution, however, sometimes fails to give a correct rotation matrix and gives a reflection instead when the data is severely corrupted. The proposed theorem is a strict solution of the problem, and it always gives the correct transformation parameters even when the data is corrupted.{$<>$}},
   keywords = {Application software,Calibration,Cameras,Computer graphics,Computer vision,Image processing,Parameter estimation,Pattern recognition,Robot vision systems,Robotics and automation},
   file = {/home/mateo/Documents/apps/zotero-files/storage/UGXX7D2D/umeyama.pdf;/home/mateo/Documents/apps/zotero-files/storage/N8JGP3MH/88573.html}
 }
@@ -703,12 +563,7 @@
   journal = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
   volume = {28},
   number = {8},
-  pages = {1335--1340},
-  issn = {0162-8828, 2160-9292},
   doi = {10.1109/TPAMI.2006.153},
-  url = {http://ieeexplore.ieee.org/document/1642666/},
-  urldate = {2021-11-02},
-  abstract = {Fish-eye lenses are convenient in such applications where a very wide angle of view is needed but their use for measurement purposes has been limited by the lack of an accurate, generic, and easy-to-use calibration procedure. We hence propose a generic camera model, which is suitable for fish-eye lens cameras as well as for conventional and wide-angle lens cameras, and a calibration method for estimating the parameters of the model. The achieved level of calibration accuracy is comparable to the previously reported state-of-the-art.},
   langid = {english},
   file = {/home/mateo/Documents/apps/zotero-files/storage/XHC43HV5/Kannala and Brandt - 2006 - A generic camera model and calibration method for .pdf}
 }
@@ -717,9 +572,6 @@
   title = {Decentering Distortion of Lenses},
   author = {Brown, Dean},
   year = {1966},
-  url = {https://www.semanticscholar.org/paper/Decentering-distortion-of-lenses-Brown/2ef001c656378a1c5cf80488b35684742220d3f9},
-  urldate = {2021-12-21},
-  abstract = {The thin prism model has been widely adopted in the photogrammetric literature to describe the effects of a sensibly decentered lens and its observed characteristics are in general agreethin prism distortion. The thin prism model has been widely adopted in the photogrammetric literature to describe the effects of a sensibly decentered lens. Exact expressions are derived for the radial and tangential components of the disto\&\#39;rtion introduced by a thin prism placed in front of a perfectly centered lens. This model is compared with an alternative model (Conrady, 1919) based on rigorous analytical ray tracing through a decentered lens. When the principal point of autocollimation is adopted as the plate origin, the two models are found to be in precise agreement regarding the tangential component of decentering distortion, but are found to be at variance by a factor of three regarding the radial component. However, when compensatory translation of the plate and tipping of the camera are permitted to operate, the two models are found to be projectively equivalent to terms of leading order. Because this projective equivalence does not extend to higher order effects (which may assume prominence with wide angle cameras), Conrady\&\#39;s model is clearly to be preferred for general application. A n extended form of Conrady\&\#39;s model has been put to practical application in the stellar calibration of ballistic cameras. Results of ltctlutl calibrations are presented and discussed, and the implications of the present development to analytical photogrammetry are examined. (Conrady, 1919) the thin prism model appears to have been almost universally adopted to account for decentering distortion. The few textbooks on optics according any consideration at all to decentered lenses invoke the thin prism model with little or no special justification (Hardy and Perrin, 1932; Strong, 1958; Martin, 1948). The same is true throughout the photogrammetric literature. Bennett (1927) was one of the earliest to resort to the thin prism model to explain the tangential distortion observed in a number of lenses. Pennington (1947) noted the systematic effects of tangential distortion on photogram metric extension of control and discussed the practical determination of tangential distortion, pointing out that its observed characteristics are in general agreethin prism distortion Washer (1957 a, b) photographed target arrays both with and without a thin prism of known deviation placed in front of a well centered lens. He was thereby able to demonstrate J:!xplicitly that significant asymmetric radial e\textasciitilde ects are to be expected from thin prism distprtion in adcjition to the tangential effects :\&\#39;considered by other investigators. I t should be noted, however, that the radial effects of decentering distortion had been implicitly taken into consideration, in an investigation performed by Carman (1948). In this investigation sets of rays from points on a uniform grid in object space were numerically traced through a thin prism placed in front of a hypothetical mapping camera. Carman was thereby able to demonstrate 446 PHOTOGRAMMETRIC ENGINEERING At the principal point the tangential profile Per) is zero and is tangen t to the axis of maximum tangential distortion. Using the method suggested by Pennington, Livingston (1951) measured tangential distortion across both diagonals of the photographic format of a total of 33 Metrogon lenses and one Topogon. As we shall presently \textasciitilde ee, Livingston\&\#39;s results are not generally in strict accord with the thin prism model for angles in excess of about 25\textdegree{} from the axis of the camera. However, they do substantiate the \&quot;cosine variation\&quot; of tangential distortion in accordance with Equation 1. in which \textasciitilde t(x,y) = tangential distortion at x, y in image plane (origin taken at principal point of autocollimation), r = (X2+y2)1/2 = radial distance, Per) = tangential profile (tangential distortion at radial distance r along axis of maximum tangential distortion) , cPo = angle between positive x-axis and axis of maximum tangential distortion (see Figure 1), cP = angle between posi ti ve x-axis and radius vector from origin to x, y. that a suitable choice of principal point can significantly reduce, though not eliminate, the effects of thin prism distortion. It is well to consider at this point the precise behavior of tangential distortion according to the thin prism model. As described by Pennington (1947) there exists in the image plane an axis passing through the principal point along which the tangential distortion is maximum (the term principal point is used here in a loose sense). There also exists in the image plane an axis through the principal point along which the tangential distortion is zero. The axis of zero tangen tial distortion is orthogonal to the axis of maximum tangential distortion. The tangential distortion along any other axis passing through the principal point and lying in the image plane is proportional to that along the axis of maximum tangential distortion, the constant of proportionality being the cosine of the angle between the two axes. In analytical terms, the thin prism model for tangential distortion may be expressed as (2) EXACT ANALYTICAL EXPRESSIONS . FOR THIN PRISM DISTORTION\&\#39; Despite the widespread adoption of the thin prism model, we have been unable to find in the literature exact analytical expressions defining the precise relationship between the radial and tangential distortion induced by a thin prism at any specified azimuth. \&\#39;vVasher\&\#39;s (1957 a, b) explicit results, for instance, are restricted to the plane through the principal section of the prism and to the plane normal to the principal section (both planes contain the optical axis); his discussion of azimuthal variation is brief and is strictly qualitative, apparently being based on limited experimental findings rather than on detailed analytical results. In order to shed light on this matter, we have performed exact analytical, threedimensional ray tracing through a thin prism. The key resul ts of this investigation as reported in our earlier paper (Brown, 1964) are as follows. The radial and tangen tial components of thin prism distortion of an image of plate coordinates x, yare given by Ll,(X, y) = P cos (cf\&gt; cf\&gt;o), Ll,(X, y) = P sin (cf\&gt; cf\&gt;o),},
   langid = {english},
   file = {/home/mateo/Documents/apps/zotero-files/storage/J3SWJFXT/Brown - 1966 - Decentering distortion of lenses.pdf;/home/mateo/Documents/apps/zotero-files/storage/YDLXYQBF/2ef001c656378a1c5cf80488b35684742220d3f9.html}
 }
