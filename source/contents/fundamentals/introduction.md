@@ -191,6 +191,8 @@ referenciada al pie de página [^bar-demo].
 
 [^bar-demo]: <https://youtu.be/g1o2xADr5Fw>
 
+\clearpage
+
 ### Estructura de la tesis
 
 En la primera parte de este trabajo veremos algunos conceptos fundamentales para

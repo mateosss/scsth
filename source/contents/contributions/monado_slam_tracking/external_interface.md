@@ -126,6 +126,8 @@ futuro pueda transformarse en un estándar que los sistemas implementen por elec
 Para esta nueva interfaz, se tomarán ideas basadas en la experiencia obtenida desarrollando el header \mono{slam_tracker}.
 -->
 
+\clearpage
+
 Esta interfaz no es perfecta: no contempla magnetómetros, asume una
 configuración de a lo sumo dos cámaras, asume que el sistema utiliza OpenCV y es
 difícil de extender con cambios no contemplados por el concepto de

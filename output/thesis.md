@@ -207,6 +207,8 @@ referenciada al pie de página [^bar-demo].
 
 [^bar-demo]: <https://youtu.be/g1o2xADr5Fw>
 
+\clearpage
+
 ### Estructura de la tesis
 
 En la primera parte de este trabajo veremos algunos conceptos fundamentales para
@@ -1841,6 +1843,8 @@ cámaras. Por estas razones entonces, será fundamental la correcta gestión de 
 información de las landmarks y sus observaciones. En Basalt, la clase que se
 encarga de esto es la `LandmarkDatabase` con la estructura como se define en el \Cref{lst:basalt-defs}.
 
+\clearpage
+
 ```{#lst:basalt-defs .cpp caption="Estructuras de Basalt"}
 class LandmarkDatabase {
   map<LandmarkId, Landmark> landmarks;
@@ -2341,6 +2345,8 @@ en uso. Algunas consideraciones de los puntos marcados en el código:
    se lo denomina un _puntero opaco_ [@lakosLargeScaleSoftwareDesign1996].
 
 
+
+\clearpage
 
 Esta interfaz no es perfecta: no contempla magnetómetros, asume una
 configuración de a lo sumo dos cámaras, asume que el sistema utiliza OpenCV y es

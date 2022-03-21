@@ -147,6 +147,8 @@ cámaras. Por estas razones entonces, será fundamental la correcta gestión de 
 información de las landmarks y sus observaciones. En Basalt, la clase que se
 encarga de esto es la `LandmarkDatabase` con la estructura como se define en el \Cref{lst:basalt-defs}.
 
+\clearpage
+
 ```{#lst:basalt-defs .cpp caption="Estructuras de Basalt"}
 class LandmarkDatabase {
   map<LandmarkId, Landmark> landmarks;
