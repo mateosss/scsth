@@ -182,7 +182,6 @@ computar $p'$ de la siguiente manera:
 \begin{align}
 p' = qpq^{-1} = 0 + p'_x i + p'_y j + p'_z k
 \end{align}
-
 El cuaternión resultante $p'$ tendrá parte real nula y el vector $v' = [p'_x,
 p'_y, p'_z]^T \in \R^3$ es el vector $v$ rotado por $q$.
 
@@ -412,7 +411,6 @@ B & b \\
 = \begin{bmatrix} Bx + b \\ 1 \end{bmatrix}
 = \begin{bmatrix} L(x) \\ 1 \end{bmatrix}
 \end{align}
-
 Notar que hay un isomorfismo entre $L$ y $L'$, ya que $0$ y $1$ son constantes y
 por esto diremos que son la misma transformación. La matriz $\begin{bmatrix} B &
 b \\ 0 & 1 \end{bmatrix}$ se dice una matriz afín y pertenece a $GL(n + 1)$.
@@ -526,7 +524,6 @@ Como $RR^T = I$ tenemos que
 & 0 = \frac{d}{dt}I = \frac{d}{dt}(RR^T) = \dot{R}R^T + R \dot{R}^T \\
 & \Rightarrow \dot{R}R^T = -R \dot{R}^T
 \end{align}
-
 O sea que $\dot{R}R^T \in \so3$. Por la \Cref{prop:skew-mat-vec} tenemos que
 existe un vector único $v(t) \in \R^3$ tal que
 \begin{align}
@@ -537,7 +534,6 @@ la matriz antisimétrica $\hat{v}(0)$ nos da la aproximacíon de primer orden de
 \begin{align}
 R(dt) = R(0) + (dR)(0) = I + \hat{v}(0)dt \label{eq:hatop-is-rotvel}
 \end{align}
-
 Notar que si pensamos a $t$ en términos de tiempo, la \Cref{eq:hatop-is-rotvel}
 deja ver a $\hat{v}$ como una matriz que describe la velocidad de la rotación.
 
@@ -592,12 +588,10 @@ siguiente sistema de ecuaciones diferenciales:
 R(0) = I
 \end{cases}
 \end{align}
-
 Es posible ver que este sistema tiene como solución la siguiente expresión.
 \begin{align}
 R(t) = exp(\hat{v}t) = \sum_{n=0}^{\infty}\frac{(\hat{v}t)^n}{n!} \label{eq:exp-def}
 \end{align}
-
 Notar que los exponentes de la \Cref{eq:exp-def} son respecto a la multiplicación matricial.
 
 Esta rotación se corresponde con, dado $w = v t \in \R^3$, la rotación de
@@ -616,7 +610,6 @@ computando $w$ de la siguiente manera [@eadeDerivativeExponentialMap]:
   w = \frac{\norm{w}}{2sin(\norm{w})} \begin{bmatrix} R_{3,2} - R_{2,3} \\
   R_{1,3} - R_{3,1} \\ R_{2,1} - R_{1,2} \end{bmatrix} \label{eq:log-def-end}
 \end{align}
-
 Notar que definimos $exp$ en la \Cref{eq:exp-def} como una suma infinita
 mientras que $log$ pudo definirse con una expresión cerrada en las
 \Crefrange{eq:log-def-start}{eq:log-def-end}. Existe la _fórmula de Rodrigues_
@@ -639,7 +632,6 @@ R(t) & b(t) \\
 0 & 1
 \end{bmatrix}
 \end{align}
-
 Considerando que esta vez la inversa de $T$ es $T^{-1}$ y no su transpuesta como era el caso con las
 rotaciones. Podemos aplicar un desarrollo similar al de la sección anterior
 y llegar a que:
@@ -649,7 +641,6 @@ y llegar a que:
 0 & 0
 \end{bmatrix} \in \RR4
 \end{align}
-
 De vuelta, $\dot{R}R^T$ corresponde a alguna matriz antisimétrica $\hat{v} \in
 \so3$. Definiendo un vector $y(t) = \dot{b}(t) - \hat{v}(t) b(t)$ podemos
 reescribir la \Cref{eq:translation-deriv} e introducir el concepto de _giro o twist_ $\hat{\xi}(t)$:
@@ -659,7 +650,6 @@ reescribir la \Cref{eq:translation-deriv} e introducir el concepto de _giro o tw
 0 & 0
 \end{bmatrix}
 \end{align}
-
 La matriz de giro $\hat{\xi}$ pertenece al álgebra de Lie $\se3$ del grupo de Lie $SE(3)$ y
 puede ser parametrizada por las coordenadas de giro $\xi \in \R^6$. Para esto se utiliza un operador
 _hat_ $\cdot^{\wedge}$ y su inversa _vee_ $\cdot^{\vee}$ de la siguiente manera:
@@ -669,7 +659,6 @@ y \\ 0 & 0 \end{bmatrix} \in \RR4 \\
 {\begin{bmatrix}\hat{v} & y \\ 0 & 0 \end{bmatrix}}^{\vee} &= \begin{bmatrix}y \\
 v\end{bmatrix} = \xi \in \R^6
 \end{align}
-
 Es decir, podemos codificar el cambio infinitesimal de una transformación en un
 vector de giro $\xi$ de seis dimensiones en donde:
 \bigbreak
@@ -696,19 +685,16 @@ exp(\hat{v}) & Jy \\
 0 & 1
 \end{bmatrix}
 \end{align}
-
 Con $J$ el llamado _jacobiano izquierdo_ de $SO(3)$ que se puede computar con el ángulo
 $\omega$ de $v$, es decir con $\omega = \norm{v}$ de esta manera [@eadeDerivativeExponentialMap]:
 \begin{align}
 J = I + \frac{1-cos(\omega)}{\omega^2} \hat{v} + \frac{\omega -
 sin(\omega)}{\omega^3} \hat{v}^2.
 \end{align}
-
 Para $log(T)$ con $T = \begin{bmatrix}R & b \\ 0 & 1\end{bmatrix}\in SE(3)$ tenemos:
 \begin{align}
 log(T) = \begin{bmatrix}log(R)^{\vee} \\ J^{-1}b\end{bmatrix}^{\wedge}
 \end{align}
-
 Con el jacobiano inverso $J^{-1}$ dado por [@eadeDerivativeExponentialMap]:
 \begin{align}
 J^{-1} = I - \frac{1}{2} \hat{v} +

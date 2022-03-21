@@ -48,7 +48,6 @@ vector $Ax - b \in \R^m$, y por ende $r(x) = Ax - b$.
 \begin{align}
 E(x) = \sum_{i=1}^m{(Ax - b)_i^2} = \| Ax - b \| ^ 2
 \end{align}
-
 Lo que queremos minimizar es entonces equivalente a la norma cuadrada del vector
 residual $Ax - b$. Introduciremos a continuación una serie de conceptos y
 teoremas necesarios para poder presentar una forma sucinta de minimizar esta
@@ -147,6 +146,9 @@ cuando $x=\hat{x}$.
 Generalizaremos el problema anterior para que también considere funciones no
 lineales. Reutilizaremos la notación introducida en la sección anterior.
 
+<!-- TODO@def: creo que estoy "introduciendo" con _cursivas_ el término
+funcion afín, funciones afines, etc en una banda de lugares -->
+
 En este caso permitimos ahora que las $f_i$ sean no lineales, aunque requerimos
 que continúen siendo diferenciables. Además, ignoraremos el vector $b$ haciendo
 que $f(x) = r(x)$. Es decir querremos que $f(x) = 0$ en lugar de $f(x) = b$. En
@@ -156,10 +158,6 @@ función de error es entonces:
 \begin{align}
 E(x) = \sum_{i=1}^m{f_i(x)^2} = \| f(x) \| ^ 2
 \end{align}
-
-<!-- TODO@def: creo que estoy "introduciendo" con _cursivas_ el término
-funcion afín, funciones afines, etc en una banda de lugares -->
-
 Encontrar $x$ solución que minimice tal error es el _problema de los cuadrados
 mínimos no lineales_. En este caso, al no ser necesario que los residuales sean
 _funciones afines_ (lineales más un escalar), no podemos dar una matriz $A$ y
@@ -230,7 +228,6 @@ matriz pseudo-inversa $A_k^{\dagger} = (A_k^T A_k)^{-1} A_k^T$.
 \begin{align}
 \| f^{(k)}(x) \| ^ 2 = \| A_k x - (A_k x^{(k)} - f(x^{(k)})) \|^2
 \end{align}
-
 Se minimiza por [Teorema](#thm:linleastsquaresol) cuando
 \begin{align}
 x &= A_k^{\dagger} (A_k x^{(k)} - f(x^{(k)})) \\

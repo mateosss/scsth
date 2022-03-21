@@ -81,7 +81,7 @@ capaces de integrar tipos de muestras tremendamente distintos en una estimación
 de la pose que es suficientemente buena.
 
 Table: \label{tbl:imu-accumulated-error} Error acumulado luego de cierto tiempo
-de integrar mediciones de IMU de distinta calidad[@InertialNavigationPrimer, secc 3.3]. Vale aclarar que en
+de integrar mediciones de IMU de distinta calidad [@InertialNavigationPrimer, secc 3.3]. Vale aclarar que en
 dispositivos XR las IMU utilizadas son del tipo _consumidor_ por su menor costo.
 
 
@@ -430,7 +430,6 @@ computar $p'$ de la siguiente manera:
 \begin{align}
 p' = qpq^{-1} = 0 + p'_x i + p'_y j + p'_z k
 \end{align}
-
 El cuaternión resultante $p'$ tendrá parte real nula y el vector $v' = [p'_x,
 p'_y, p'_z]^T \in \R^3$ es el vector $v$ rotado por $q$.
 
@@ -660,7 +659,6 @@ B & b \\
 = \begin{bmatrix} Bx + b \\ 1 \end{bmatrix}
 = \begin{bmatrix} L(x) \\ 1 \end{bmatrix}
 \end{align}
-
 Notar que hay un isomorfismo entre $L$ y $L'$, ya que $0$ y $1$ son constantes y
 por esto diremos que son la misma transformación. La matriz $\begin{bmatrix} B &
 b \\ 0 & 1 \end{bmatrix}$ se dice una matriz afín y pertenece a $GL(n + 1)$.
@@ -774,7 +772,6 @@ Como $RR^T = I$ tenemos que
 & 0 = \frac{d}{dt}I = \frac{d}{dt}(RR^T) = \dot{R}R^T + R \dot{R}^T \\
 & \Rightarrow \dot{R}R^T = -R \dot{R}^T
 \end{align}
-
 O sea que $\dot{R}R^T \in \so3$. Por la \Cref{prop:skew-mat-vec} tenemos que
 existe un vector único $v(t) \in \R^3$ tal que
 \begin{align}
@@ -785,7 +782,6 @@ la matriz antisimétrica $\hat{v}(0)$ nos da la aproximacíon de primer orden de
 \begin{align}
 R(dt) = R(0) + (dR)(0) = I + \hat{v}(0)dt \label{eq:hatop-is-rotvel}
 \end{align}
-
 Notar que si pensamos a $t$ en términos de tiempo, la \Cref{eq:hatop-is-rotvel}
 deja ver a $\hat{v}$ como una matriz que describe la velocidad de la rotación.
 
@@ -840,12 +836,10 @@ siguiente sistema de ecuaciones diferenciales:
 R(0) = I
 \end{cases}
 \end{align}
-
 Es posible ver que este sistema tiene como solución la siguiente expresión.
 \begin{align}
 R(t) = exp(\hat{v}t) = \sum_{n=0}^{\infty}\frac{(\hat{v}t)^n}{n!} \label{eq:exp-def}
 \end{align}
-
 Notar que los exponentes de la \Cref{eq:exp-def} son respecto a la multiplicación matricial.
 
 Esta rotación se corresponde con, dado $w = v t \in \R^3$, la rotación de
@@ -864,7 +858,6 @@ computando $w$ de la siguiente manera [@eadeDerivativeExponentialMap]:
   w = \frac{\norm{w}}{2sin(\norm{w})} \begin{bmatrix} R_{3,2} - R_{2,3} \\
   R_{1,3} - R_{3,1} \\ R_{2,1} - R_{1,2} \end{bmatrix} \label{eq:log-def-end}
 \end{align}
-
 Notar que definimos $exp$ en la \Cref{eq:exp-def} como una suma infinita
 mientras que $log$ pudo definirse con una expresión cerrada en las
 \Crefrange{eq:log-def-start}{eq:log-def-end}. Existe la _fórmula de Rodrigues_
@@ -887,7 +880,6 @@ R(t) & b(t) \\
 0 & 1
 \end{bmatrix}
 \end{align}
-
 Considerando que esta vez la inversa de $T$ es $T^{-1}$ y no su transpuesta como era el caso con las
 rotaciones. Podemos aplicar un desarrollo similar al de la sección anterior
 y llegar a que:
@@ -897,7 +889,6 @@ y llegar a que:
 0 & 0
 \end{bmatrix} \in \RR4
 \end{align}
-
 De vuelta, $\dot{R}R^T$ corresponde a alguna matriz antisimétrica $\hat{v} \in
 \so3$. Definiendo un vector $y(t) = \dot{b}(t) - \hat{v}(t) b(t)$ podemos
 reescribir la \Cref{eq:translation-deriv} e introducir el concepto de _giro o twist_ $\hat{\xi}(t)$:
@@ -907,7 +898,6 @@ reescribir la \Cref{eq:translation-deriv} e introducir el concepto de _giro o tw
 0 & 0
 \end{bmatrix}
 \end{align}
-
 La matriz de giro $\hat{\xi}$ pertenece al álgebra de Lie $\se3$ del grupo de Lie $SE(3)$ y
 puede ser parametrizada por las coordenadas de giro $\xi \in \R^6$. Para esto se utiliza un operador
 _hat_ $\cdot^{\wedge}$ y su inversa _vee_ $\cdot^{\vee}$ de la siguiente manera:
@@ -917,7 +907,6 @@ y \\ 0 & 0 \end{bmatrix} \in \RR4 \\
 {\begin{bmatrix}\hat{v} & y \\ 0 & 0 \end{bmatrix}}^{\vee} &= \begin{bmatrix}y \\
 v\end{bmatrix} = \xi \in \R^6
 \end{align}
-
 Es decir, podemos codificar el cambio infinitesimal de una transformación en un
 vector de giro $\xi$ de seis dimensiones en donde:
 \bigbreak
@@ -944,19 +933,16 @@ exp(\hat{v}) & Jy \\
 0 & 1
 \end{bmatrix}
 \end{align}
-
 Con $J$ el llamado _jacobiano izquierdo_ de $SO(3)$ que se puede computar con el ángulo
 $\omega$ de $v$, es decir con $\omega = \norm{v}$ de esta manera [@eadeDerivativeExponentialMap]:
 \begin{align}
 J = I + \frac{1-cos(\omega)}{\omega^2} \hat{v} + \frac{\omega -
 sin(\omega)}{\omega^3} \hat{v}^2.
 \end{align}
-
 Para $log(T)$ con $T = \begin{bmatrix}R & b \\ 0 & 1\end{bmatrix}\in SE(3)$ tenemos:
 \begin{align}
 log(T) = \begin{bmatrix}log(R)^{\vee} \\ J^{-1}b\end{bmatrix}^{\wedge}
 \end{align}
-
 Con el jacobiano inverso $J^{-1}$ dado por [@eadeDerivativeExponentialMap]:
 \begin{align}
 J^{-1} = I - \frac{1}{2} \hat{v} +
@@ -1041,7 +1027,6 @@ vector $Ax - b \in \R^m$, y por ende $r(x) = Ax - b$.
 \begin{align}
 E(x) = \sum_{i=1}^m{(Ax - b)_i^2} = \| Ax - b \| ^ 2
 \end{align}
-
 Lo que queremos minimizar es entonces equivalente a la norma cuadrada del vector
 residual $Ax - b$. Introduciremos a continuación una serie de conceptos y
 teoremas necesarios para poder presentar una forma sucinta de minimizar esta
@@ -1140,6 +1125,9 @@ cuando $x=\hat{x}$.
 Generalizaremos el problema anterior para que también considere funciones no
 lineales. Reutilizaremos la notación introducida en la sección anterior.
 
+<!-- TODO@def: creo que estoy "introduciendo" con _cursivas_ el término
+funcion afín, funciones afines, etc en una banda de lugares -->
+
 En este caso permitimos ahora que las $f_i$ sean no lineales, aunque requerimos
 que continúen siendo diferenciables. Además, ignoraremos el vector $b$ haciendo
 que $f(x) = r(x)$. Es decir querremos que $f(x) = 0$ en lugar de $f(x) = b$. En
@@ -1149,10 +1137,6 @@ función de error es entonces:
 \begin{align}
 E(x) = \sum_{i=1}^m{f_i(x)^2} = \| f(x) \| ^ 2
 \end{align}
-
-<!-- TODO@def: creo que estoy "introduciendo" con _cursivas_ el término
-funcion afín, funciones afines, etc en una banda de lugares -->
-
 Encontrar $x$ solución que minimice tal error es el _problema de los cuadrados
 mínimos no lineales_. En este caso, al no ser necesario que los residuales sean
 _funciones afines_ (lineales más un escalar), no podemos dar una matriz $A$ y
@@ -1223,7 +1207,6 @@ matriz pseudo-inversa $A_k^{\dagger} = (A_k^T A_k)^{-1} A_k^T$.
 \begin{align}
 \| f^{(k)}(x) \| ^ 2 = \| A_k x - (A_k x^{(k)} - f(x^{(k)})) \|^2
 \end{align}
-
 Se minimiza por [Teorema](#thm:linleastsquaresol) cuando
 \begin{align}
 x &= A_k^{\dagger} (A_k x^{(k)} - f(x^{(k)})) \\
@@ -3022,7 +3005,6 @@ Tenemos entonces que el filtro queda definido por la siguiente ecuación.
 \quad \text{con} \\
 W &= \{ i : t_k - w \leq t_i \leq t_k \} \quad \text{(ventana del filtro)}
 \end{align}
-
 Notar que podemos definir el concepto de sumatoria componente a componente en
 $\R^7$ gracias a la aproximación de los cuaterniones mencionada anteriormente.
 
@@ -3037,14 +3019,12 @@ forma:
 \hat{x}_0 &= x_0 \\
 \hat{x}_k &= \alpha x_k + (1 - \alpha) \hat{x}_{k-1} \label{eq:exp-smoothing-scalar}
 \end{align}
-
 Reformulemos la [Ecuación](#eq:exp-smoothing-scalar) de la siguiente manera:
 \begin{align}
 \hat{x}_k &= \alpha x_k + (1 - \alpha) \hat{x}_{k-1} \\
 &= \alpha x_k + \hat{x}_{k-1} - \alpha \hat{x}_{k-1} \\
 &= \hat{x}_{k-1} + \alpha (x_k - \hat{x}_{k-1})
 \end{align}
-
 Esto nos deja ver el paso de actualización del filtro como una interpolación
 (lineal) de $\hat{x}_{k-1}$ hacia $x_k$ con paso $\alpha$. Utilizaremos esta
 idea para interpolar esféricamente la orientación de $\hat{X}_k$. Tenemos
@@ -3071,7 +3051,6 @@ posición $p_k$ de la siguiente manera:
 \hat{p}_0 &= p_0 \\
 \hat{p}_k &= lerp(\hat{p}_{k-1}, p_k, \alpha)
 \end{align}
-
 Con $\alpha$ que se adapta con la velocidad de la señal:
 \begin{align}
 \alpha &= \frac{1}{1 + \frac{\tau}{\Delta t_k}} \\
@@ -3101,7 +3080,6 @@ $f_c$ para a su vez disminuir el ruido.
 \begin{align}
 f_C &= f_{C_{min}} + \beta | \hat{\dot{p}}_k |
 \end{align}
-
 La velocidad de la señal es a su vez ajustada con otro filtro de suavizado
 exponencial con factor de suavizado fijo $f_{C_d}$, también configurable por el
 usuario.
@@ -3109,13 +3087,11 @@ usuario.
 \hat{\dot{p}}_0 &= 0 \\
 \hat{\dot{p}}_k &= lerp(\hat{\dot{p}}_{k-1}, \dot{p}_k, f_{C_d})
 \end{align}
-
 Con velocidades instantáneas.
 \begin{align}
 \dot{p}_0 &= 0 \\
 \dot{p}_k &= \frac{p_k - \hat{p}_{k-1}}{\Delta t_k}
 \end{align}
-
 La versión del filtro utilizada para la orientación $q_k$ es análoga a la
 definición anterior con algunas aclaraciones:
 
@@ -3881,16 +3857,14 @@ distancia entre las posiciones de las poses es decir:
 \begin{align}
 ATE_i = ||pos(P^{est}_i) - pos(P^{ref}_i)||
 \end{align}
-
 Con $pos(P) \in \R^3$ el componente de posición o traslación de la pose $P$.
 Notar que no se considera el componente de rotación de las poses.
-
 Finalmente utilizamos el RMSE de los ATE al cuadrado:
 \begin{align}
 RMSE = \sqrt{\frac{1}{N} \sum_{i=1}^{N} ATE_i^2}
 \end{align}
 
-Y es esta la métrica que se utiliza en esta sección para medir la
+Esta es la métrica que se utiliza en esta sección para medir la
 precisión en las trayectorias estimadas. Cabe aclarar además que las poses dadas
 por la ground truth y las dadas por las estimaciones, en general, no van a
 coincidir en sus timestamps y se debe utilizar alguna forma de relacionarlas.
@@ -3970,17 +3944,14 @@ definidos entre pares de timestamps $i$ y $j$:
 \begin{align}
 \delta_{ij} = pos(P_j) - pos(P_i) \ \in \R^3
 \end{align}
-
 Luego, definimos el error de traslación entre las timestamps $i$ y $j$ como:
 \begin{align}
 RTE_{ij} = ||\delta^{ref}_{ij} - \delta^{est}_{ij}||
 \end{align}
-
 Y finalmente el RMSE RTE queda definido como:
 \begin{align}
 RMSE = \sqrt{\frac{1}{N} \sum_{\forall i, j} RTE_{ij}^2}
 \end{align}
-
 Notar que aquí la elección de que tan largo son los vectores $\delta_{ij}$ puede
 variar. En nuestro caso, usando EVO, utilizamos vectores con timestamps
 separadas por el equivalente tiempo a 6 cuadros de cada dataset, es decir unos

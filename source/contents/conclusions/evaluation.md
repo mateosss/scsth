@@ -305,16 +305,14 @@ distancia entre las posiciones de las poses es decir:
 \begin{align}
 ATE_i = ||pos(P^{est}_i) - pos(P^{ref}_i)||
 \end{align}
-
 Con $pos(P) \in \R^3$ el componente de posición o traslación de la pose $P$.
 Notar que no se considera el componente de rotación de las poses.
-
 Finalmente utilizamos el RMSE de los ATE al cuadrado:
 \begin{align}
 RMSE = \sqrt{\frac{1}{N} \sum_{i=1}^{N} ATE_i^2}
 \end{align}
 
-Y es esta la métrica que se utiliza en esta sección para medir la
+Esta es la métrica que se utiliza en esta sección para medir la
 precisión en las trayectorias estimadas. Cabe aclarar además que las poses dadas
 por la ground truth y las dadas por las estimaciones, en general, no van a
 coincidir en sus timestamps y se debe utilizar alguna forma de relacionarlas.
@@ -414,17 +412,14 @@ definidos entre pares de timestamps $i$ y $j$:
 \begin{align}
 \delta_{ij} = pos(P_j) - pos(P_i) \ \in \R^3
 \end{align}
-
 Luego, definimos el error de traslación entre las timestamps $i$ y $j$ como:
 \begin{align}
 RTE_{ij} = ||\delta^{ref}_{ij} - \delta^{est}_{ij}||
 \end{align}
-
 Y finalmente el RMSE RTE queda definido como:
 \begin{align}
 RMSE = \sqrt{\frac{1}{N} \sum_{\forall i, j} RTE_{ij}^2}
 \end{align}
-
 Notar que aquí la elección de que tan largo son los vectores $\delta_{ij}$ puede
 variar. En nuestro caso, usando EVO, utilizamos vectores con timestamps
 separadas por el equivalente tiempo a 6 cuadros de cada dataset, es decir unos

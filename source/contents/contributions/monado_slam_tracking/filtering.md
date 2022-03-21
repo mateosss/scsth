@@ -125,7 +125,6 @@ Tenemos entonces que el filtro queda definido por la siguiente ecuación.
 \quad \text{con} \\
 W &= \{ i : t_k - w \leq t_i \leq t_k \} \quad \text{(ventana del filtro)}
 \end{align}
-
 Notar que podemos definir el concepto de sumatoria componente a componente en
 $\R^7$ gracias a la aproximación de los cuaterniones mencionada anteriormente.
 
@@ -140,14 +139,12 @@ forma:
 \hat{x}_0 &= x_0 \\
 \hat{x}_k &= \alpha x_k + (1 - \alpha) \hat{x}_{k-1} \label{eq:exp-smoothing-scalar}
 \end{align}
-
 Reformulemos la [Ecuación](#eq:exp-smoothing-scalar) de la siguiente manera:
 \begin{align}
 \hat{x}_k &= \alpha x_k + (1 - \alpha) \hat{x}_{k-1} \\
 &= \alpha x_k + \hat{x}_{k-1} - \alpha \hat{x}_{k-1} \\
 &= \hat{x}_{k-1} + \alpha (x_k - \hat{x}_{k-1})
 \end{align}
-
 Esto nos deja ver el paso de actualización del filtro como una interpolación
 (lineal) de $\hat{x}_{k-1}$ hacia $x_k$ con paso $\alpha$. Utilizaremos esta
 idea para interpolar esféricamente la orientación de $\hat{X}_k$. Tenemos
@@ -174,7 +171,6 @@ posición $p_k$ de la siguiente manera:
 \hat{p}_0 &= p_0 \\
 \hat{p}_k &= lerp(\hat{p}_{k-1}, p_k, \alpha)
 \end{align}
-
 Con $\alpha$ que se adapta con la velocidad de la señal:
 \begin{align}
 \alpha &= \frac{1}{1 + \frac{\tau}{\Delta t_k}} \\
@@ -204,7 +200,6 @@ actualización $\beta$ también configurable \marginnote{MN_FC_PERCEPTION}.
 \begin{align}
 f_C &= f_{C_{min}} + \beta | \hat{\dot{p}}_k |
 \end{align}
-
 La velocidad de la señal es a su vez ajustada con otro filtro de suavizado
 exponencial con factor de suavizado fijo $f_{C_d}$, también configurable por el
 usuario.
@@ -212,13 +207,11 @@ usuario.
 \hat{\dot{p}}_0 &= 0 \\
 \hat{\dot{p}}_k &= lerp(\hat{\dot{p}}_{k-1}, \dot{p}_k, f_{C_d})
 \end{align}
-
 Con velocidades instantáneas.
 \begin{align}
 \dot{p}_0 &= 0 \\
 \dot{p}_k &= \frac{p_k - \hat{p}_{k-1}}{\Delta t_k}
 \end{align}
-
 La versión del filtro utilizada para la orientación $q_k$ es análoga a la
 definición anterior con algunas aclaraciones:
 

@@ -65,7 +65,7 @@ capaces de integrar tipos de muestras tremendamente distintos en una estimación
 de la pose que es suficientemente buena.
 
 Table: \label{tbl:imu-accumulated-error} Error acumulado luego de cierto tiempo
-de integrar mediciones de IMU de distinta calidad[@InertialNavigationPrimer, secc 3.3]. Vale aclarar que en
+de integrar mediciones de IMU de distinta calidad [@InertialNavigationPrimer, secc 3.3]. Vale aclarar que en
 dispositivos XR las IMU utilizadas son del tipo _consumidor_ por su menor costo.
 
 
