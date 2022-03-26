@@ -1,85 +1,160 @@
 ---
 theme: seriph
-background: https://source.unsplash.com/collection/94734566/1920x1080
 class: text-center
 highlighter: shiki
 lineNumbers: false
+colorSchema: light
 info: |
-  ## Slidev Starter Template
-  Presentation slides for developers.
+  ## Localización visual-inercial en tiempo real para aplicaciones de XR
 
-  Learn more at [Sli.dev](https://sli.dev)
+  Por Mateo de Mayo.
+
+  Más información [aquí](https://github.com/mateosss/scsth).
 drawings:
   persist: false
-title: Welcome to Slidev
+title: Tesis visual-inercial
 ---
 
-# Welcome to Slidev
+<!-- TODO@mateosss: what's the info field? -->
 
-Presentation slides for developers
-
-<div class="pt-12">
-  <span @click="$slidev.nav.next" class="px-2 py-1 rounded cursor-pointer" hover="bg-white bg-opacity-10">
-    Press Space for next page <carbon:arrow-right class="inline"/>
-  </span>
-</div>
-
-<div class="abs-br m-6 flex gap-2">
-  <button @click="$slidev.nav.openInEditor()" title="Open in Editor" class="text-xl icon-btn opacity-50 !border-none !hover:text-white">
-    <carbon:edit />
-  </button>
-  <a href="https://github.com/slidevjs/slidev" target="_blank" alt="GitHub"
-    class="text-xl icon-btn opacity-50 !border-none !hover:text-white">
-    <carbon-logo-github />
-  </a>
-</div>
-
-<!--
-The last comment block of each slide will be treated as slide notes. It will be visible and editable in Presenter Mode along with the slide. [Read more in the docs](https://sli.dev/guide/syntax.html#notes)
--->
-
----
-
-# What is Slidev?
-
-Slidev is a slides maker and presenter designed for developers, consist of the following features
-
-- 📝 **Text-based** - focus on the content with Markdown, and then style them later
-- 🎨 **Themable** - theme can be shared and used with npm packages
-- 🧑‍💻 **Developer Friendly** - code highlighting, live coding with autocompletion
-- 🤹 **Interactive** - embedding Vue components to enhance your expressions
-- 🎥 **Recording** - built-in recording and camera view
-- 📤 **Portable** - export into PDF, PNGs, or even a hostable SPA
-- 🛠 **Hackable** - anything possible on a webpage
+### *Localización visual-inercial en tiempo real para aplicaciones de XR*
 
 <br>
+
+*Trabajo especial de Licenciatura en Ciencias de la Computación*
+
+| **Autor**  |  Mateo de Mayo |
+|---:|:---|
+| **Director**  |  Dr. Nicolás Wolovick |
+| **Trabajo Completo**  |  [bit.ly/tesis-xr](https://bit.ly/tesis-xr) |
+
+<div width="100%" style="bottom: 0">
+<img src="res/famaf-unc.svg" width="200" style="margin: auto"/>
+
+<i>Facultad de Matemática, Astronomía, Física y Computación</i>
 <br>
-
-Read more about [Why Slidev?](https://sli.dev/guide/why)
-
-<!--
-You can have `style` tag in markdown to override the style for the current page.
-Learn more: https://sli.dev/guide/syntax#embedded-styles
--->
+<i>Universidad Nacional de Córdoba</i>
+</div>
 
 <style>
-h1 {
-  background-color: #2B90B6;
-  background-image: linear-gradient(45deg, #4EC5D4 10%, #146b8c 20%);
-  background-size: 100%;
-  -webkit-background-clip: text;
-  -moz-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  -moz-text-fill-color: transparent;
-}
+  table {
+    margin-bottom: 4rem;
+  }
+
+  h3 {
+    margin-top: 2rem;
+    color: var(--slidev-theme-primary) !important;
+  }
+
+  .cover {
+    background-color: white;
+    background-image: none !important;
+    color: rgba(85, 85, 85, var(--tw-text-opacity)) !important;
+  }
+
+  #slide-content {
+    color: red !important;
+  }
 </style>
 
+<!--
+1. Me presento
+2. Presento al tribunal
+3. Qué es esta presentación?
+-->
 
 ---
 
-# Navigation
+# Introducción
 
-Hover on the bottom-left corner to see the navigation's controls panel, [learn more](https://sli.dev/guide/navigation.html)
+Entendiendo el nombre de este trabajo
+
+<v-clicks>
+
+- **XR** - Espectro entre VR y AR, incluye AV, MR.
+- **Localización** - Interacciones intuitivas. Sensores y tracking 3DoF o 6DoF.
+- **Visual-inercial** - Cámaras e IMU como sensores preferidos.
+- **Aplicaciones** - Fragmentación en la industria. Khronos, OpenXR, Collabora y Monado.
+
+</v-clicks>
+
+<!--
+TODO@mateosss: Podría pasar cada una a su propia filminas y agregar imágenes para cada item.
+-->
+
+---
+
+# Ideas Teóricas
+
+En este trabajo decidimos enfocarnos en dos.
+
+<v-clicks>
+
+- **Transformaciones** - Formalizaciones que nos permiten representar y manipular relaciones espaciales.
+
+- **Cuadrados Mínimos** - Método central de optimización (convexa).
+
+</v-clicks>
+
+---
+
+# Transformaciones
+
+Intuición del concepto.
+
+<img src="res/transforms.svg" style="margin: auto"/>
+
+<v-clicks>
+
+- Traslaciones y rotaciones.
+- Posición y orientación.
+
+</v-clicks>
+
+---
+
+# Transformaciones
+
+*Definición:* un grupo es un conjunto $G$ con una operación binaria $\circ : G
+\times G \rightarrow G$ tal que $\forall a, b, c \in G$:
+
+<v-clicks>
+
+1. Es cerrada: $a \circ b \in G$
+2. Es asociativa: $(a \circ b) \circ c = a \circ (b \circ c)$
+3. Tiene neutro: $\exists!\ e \in G: e \circ a = a \circ e = a$
+4. Tiene inverso: $\exists a^{-1} \in G: a \circ a^{-1} = a^{-1} \circ a = e$
+
+</v-clicks>
+
+<v-click>
+
+*Esta idea encaja con nuestra intuición de traslaciones, rotaciones y transformaciones.*
+
+</v-click>
+
+<!-- TODO@mateosss: imagen de cubo de rubik -->
+
+---
+
+# Transformaciones
+
+En la práctica usamos las siguientes representaciones.
+
+- **Traslaciones** - Vectores en $\R^n$ (caso $n = 2$ es válido y lo usamos)
+- **Rotaciones** - Ángulos Euler, ángulo-axial, cuaterniones, matrices de
+  rotación $SO(n)$.
+- **Transformaciones** - Matriz homogénea $SE(n)$.
+- **Infinitesimales** - Grupos y álgebras de Lie: $SE(n)$, $\mathfrak{se(n)}$, $SO(n)$, $\mathfrak{so(n)}$.
+
+<!-- TODO@mateosss: imagenes que ayuden a entender mejor las representaciones
+
+Grupos y algebras de Lie no son triviales, pero usarlas es mas sencillo y hay algunas demostraciones que ayudan a entenderlo en el escrito.
+- Manifold/variedad: al hacer zoom se parece a R^n
+- Smooth manifold: no hay partes bruscas
+- Grupo de Lie: smooth manifold en donde la operacion del grupo es diferenciable
+- Álgebra de Lie: espacio R^n de las posibles "velocidades" sobre la identidad del grupo
+-->
 
 ### Keyboard Shortcuts
 
