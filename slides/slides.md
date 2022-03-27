@@ -173,9 +173,6 @@ Gran adopción (~170 y principales fabricantes)
 <br>
 <br>
 <br>
-<br>
-<br>
-<br>
 
 <div grid="~ cols-3 gap-2" m="-t-2">
 <img src="res/camera-sensor.jpg" border="rounded" style="height: 140px; margin: auto"/>
@@ -183,11 +180,32 @@ Gran adopción (~170 y principales fabricantes)
 <img src="res/rpy.jpg" border="rounded" style="height: 140px; margin: auto"/>
 </div>
 
+<br>
+<br>
+<br>
+
+<v-clicks>
+
+- **IMU**: muestras ruidosas propioceptivas con acelerómetro y giroscopio (cf.
+  sistema vestibular).
+- **Cámaras estéreo**: muestras de referencias exteroceptivas (cf. sistema visual).
+- **Sistemas académicos** - SLAM, VIO, SfM.
+
+</v-clicks>
+
 <!--
-- IMU: ruido y drift
-- propioceptivo/exteroceptivo (sistema vestibular, gyro: canales semicircular, accel: otoliths)
+- sistema vestibular: utrículo y sáculo
 - fusion de sensores inteligente
+- áreas: CV, optimizacion, probabilidad, filtrado de señales,
 -->
+
+---
+layout: cover
+background: none
+---
+# Ideas Teóricas
+
+Dos ideas fundamentales: transformaciones y optimización.
 
 ---
 
@@ -263,6 +281,100 @@ Grupos y algebras de Lie no son triviales, pero usarlas es mas sencillo y hay al
 - Álgebra de Lie: espacio R^n de las posibles "velocidades" sobre la identidad del grupo
 -->
 
+---
+
+# Cuadrados Mínimos
+
+Cómo fusionar la información de los distintos tipos de muestras?
+
+<v-clicks>
+
+- En la literatura clásica: filtros Kalman.
+- Recientemente: optimización por cuadrados mínimos.
+- Un sistema tiene usualmente varios aspectos en los que se puede aplicar optimización:
+  - Calibración de los sensores.
+  - Reproyección de puntos en la escena (cuando no existe expresión cerrada).
+  - Bundle adjustment.
+  - Alineamiento de trayectorias para métricas.
+
+</v-clicks>
+
+---
+
+# Cuadrados Mínimos - Planteo
+
+Encontrar $\hat{x}$ tal que $E(\hat{x})$ sea mínimo.
+
+$m$ restricciones, estimación $x \in \R^n$, residuales $r_i : \R^n \rightarrow \R$.
+
+$$
+E(x) = \sum_{i=1}^m{r_i(x) ^ 2} = \| r(x) \| ^ 2
+$$
+
+<v-click>
+
+#### Caso Lineal - $Ax \sim b$
+
+$$
+E(x) = \sum_{i=1}^m{(Ax - b)_i^2} = \| Ax - b \| ^ 2
+$$
+
+</v-click>
+
+<v-click>
+
+#### Caso no lineal - $f(x) \sim 0$
+
+$$
+E(x) = \sum_{i=1}^m{f_i(x)^2} = \| f(x) \| ^ 2
+$$
+
+</v-click>
+
+<v-click>
+
+*Correspondencia con estimadores MAP (cf. de máxima verosimilitud)*.
+
+</v-click>
+
+---
+
+# Cuadrados Mínimos - Soluciones
+
+#### Caso Lineal - $Ax \sim b$ - Solución directa.
+
+$$
+\begin{align}
+\hat{x} &= A^{\dagger} b \nonumber \\
+\text{con} \  A^{\dagger} &= (A^T A)^{-1} A^T \nonumber
+\end{align}
+$$
+
+<v-click>
+
+#### Caso no lineal - $f(x) \sim 0$ - Solución iterativa.
+
+**Dado** $x^{(0)}$ inicial suficientemente cercano a la solución.
+
+1. **Linealizar**. Dado $A_k$ el jacobiano de $f$ alrededor de $x^{(k)}$:
+
+$$
+f^{(k)}(x) = f(x^{(k)}) + A_k (x - x^{(k)})
+$$
+
+1. **Actualizar**. Resolviendo con la solución para el caso lineal.
+$$
+x^{(k+1)} = x^{(k)} - A_k^{\dagger} f(x^{(k)})
+$$
+
+</v-click>
+
+
+<v-click>
+
+*Esto es el algoritmo de Gauss-Newton, existen otros: Levenberg-Marquardt, método dogleg de Powell.*
+
+</v-click>
 ### Keyboard Shortcuts
 
 |     |     |
