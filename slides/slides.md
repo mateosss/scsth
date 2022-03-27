@@ -76,6 +76,13 @@ Cámara Intel RealSense D455
 layout: cover
 background: none
 ---
+
+<iframe style="margin:auto" width="800" height="450" src="https://www.youtube.com/embed/g1o2xADr5Fw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+---
+layout: cover
+background: none
+---
 # Introducción
 
 Entendiendo el nombre de este trabajo.
@@ -439,7 +446,7 @@ Detección de características de la escena con `cv::FAST`.
 <br>
 
 <div grid="~ cols-1 gap-2" m="-t-2">
-<img border="round" src="res/fastfeatures.jpg" style="margin: auto"/>
+<img border="rounded" src="res/fastfeatures.jpg" style="margin: auto"/>
 </div>
 
 ---
@@ -457,7 +464,7 @@ r_i =
 $$
 
 <div grid="~ cols-1 gap-2" m="-t-2">
-<img border="round" src="res/basalt-patches.png" style="margin: auto"/>
+<img border="rounded" src="res/basalt-patches.png" style="margin: auto"/>
 </div>
 ---
 
@@ -474,14 +481,14 @@ r_i =
 $$
 
 <div grid="~ cols-1 gap-2" m="-t-2">
-<img border="round" src="res/opticalflow.webp" style="margin: auto"/>
+<img border="rounded" src="res/opticalflow.webp" style="margin: auto"/>
 </div>
 
 ---
 
 # Basalt - Triangulación de landmarks
 
-<img border="round" src="res/stereo-triangulation.jpg" style="margin: auto; height:90%"/>
+<img border="rounded" src="res/stereo-triangulation.jpg" style="margin: auto; height:90%"/>
 
 ---
 
@@ -489,9 +496,168 @@ $$
 
 Grafo de factores implícito en Basalt, explícito en otros sistemas con `g2o` o `GTSAM`.
 
-<img border="round" src="res/factorgraph.png" style="margin: auto; height:80%"/>
+<img border="rounded" src="res/factorgraph.png" style="margin: auto; height:80%"/>
 
 <!-- Aquí ocurre la optimización por gauss newton -->
+---
+layout: cover
+background: none
+---
+# Contribuciones
+
+Los merge requests que surgieron producto de este trabajo.
+
+---
+
+# `slam_tracker.hpp`
+
+<div class="flex gap-8">
+<div class="w-2/3">
+
+```c
+class slam_tracker {
+public:
+  // (1) Constructor y funciones de inicio/fin
+  slam_tracker(string config_file);
+  void start();
+  void stop();
+
+  // (2) Métodos principales de la interfaz
+  void push_imu_sample(timestamp t, vec3 accelerometer, vec3 gyroscope);
+  void push_frame(timestamp t, cv::Mat frame, bool is_left);
+  bool try_dequeue_pose(timestamp &t, vec3 &position, quat &rotation);
+
+  // (3) Características dinámicas opcionales
+  bool supports_feature(int feature_id);
+  void* use_feature(int feature_id, void* params);
+
+private:
+  // (4) Puntero a la implementación (patrón PIMPL)
+  void* impl;
+}
+```
+
+</div>
+
+<div class="w-1/3" v-click>
+<ul>
+<li>Documenta precondiciones</li>
+<li>Forks separados de Monado</li>
+<li>Problemas con GPL</li>
+<li>ILLIXR Consortium</li>
+<li>SLAMBench</li>
+</ul>
+</div>
+</div>
+
+---
+
+# Predicción
+
+Las aplicaciones OpenXR siempre piden información en el futuro.
+
+![](res/prediction-timeline.png)
+
+---
+
+# Predicción de poses
+
+Solución: preintegrar muestras recientes de la IMU.
+
+<div>
+
+![](res/prediction.svg)
+
+</div>
+
+<style>
+img {
+    position: absolute;
+    bottom: -20px;
+    width: 90%;
+}
+</style>
+
+---
+
+# Filtrado de poses
+
+Cómo eliminar el ruido o jitter de las estimaciones.
+
+<iframe src="https://cristal.univ-lille.fr/~casiez/1euro/InteractiveDemo/"/>
+
+<style>
+    iframe {
+      --zoom: 0.75;
+      border: 4px solid var(--slidev-theme-primary);
+      border-radius: 5px;
+      width: calc(100% * 1 / var(--zoom));
+      height: calc(100% * 1 / var(--zoom) - 5rem);
+      -ms-zoom: var(--zoom);
+      -moz-transform: scale(var(--zoom));
+      -moz-transform-origin: 0 0;
+      -o-transform: scale(var(--zoom));
+      -o-transform-origin: 0 0;
+      -webkit-transform: scale(var(--zoom));
+      -webkit-transform-origin: 0 0;
+    }
+</style>
+
+---
+
+# Flujo de datos
+
+<img src="res/dataflow.svg"/>
+
+<style>
+img {
+  width: calc(100% - 2rem);
+  position: absolute;
+  left: 1rem;
+  top: 10rem;
+}
+</style>
+
+
+---
+layout: two-cols
+---
+
+# Controladores
+
+- Intel RealSense D455
+  - Extenderlo más allá de la T265.
+  - Global shutter.
+  - Cámaras e IMU precalibradas.
+  - Modo de muestreo configurable.
+
+- Windows Mixed Reality - Samsung Odyssey+
+  - Ingeniería inversa y trabajo con la comunidad.
+  - Calibración radial-tangencial de 8 parámetros.
+  - Cámaras con poco solapamiento
+  - Stereo 640x480@30fps - IMU 4x250Hz
+
+
+::right::
+
+<img border="rounded" src="res/devices-ody-d455.jpg"/>
+<br>
+<img border="rounded" src="res/northstar.jpg">
+
+
+---
+layout: cover
+background: none
+---
+# Todo lo demás
+
+Otras contribuciones miscelaneas
+
+---
+layout: image
+image:
+---
+
 ---
 
 ### Keyboard Shortcuts
