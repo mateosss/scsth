@@ -46,40 +46,145 @@ title: Tesis visual-inercial
     color: var(--slidev-theme-primary) !important;
   }
 
-  .cover {
-    background-color: white;
-    background-image: none !important;
-    color: rgba(85, 85, 85, var(--tw-text-opacity)) !important;
-  }
-
-  #slide-content {
-    color: red !important;
-  }
 </style>
 
 <!--
 1. Me presento
-2. Presento al tribunal
-3. Qué es esta presentación?
+2. Qué es esta presentación?
+3. Presento al tribunal
+-->
+
+---
+layout: cover
+background: none
+---
+# Demostración 1
+
+Cámara Intel RealSense D455
+
+![](res/realsensed455.jpg)
+
+<style>
+  img {
+    width: 60%;
+    margin: auto;
+    margin-top: 5rem;
+  }
+</style>
+
+---
+layout: cover
+background: none
+---
+# Introducción
+
+Entendiendo el nombre de este trabajo.
+
+---
+
+# XR - Realidad extendida
+
+<center><h3>Localización visual-inercial en tiempo real para aplicaciones de <u>XR</u></h3></center>
+
+![](res/xrspectrum.png)
+
+<div grid="~ cols-2 gap-2" m="-t-2">
+<v-click><img src="res/pokemongo.jpg" border="rounded" style="height: 180px"/></v-click>
+<v-after><img src="res/beatsaber.jpg" border="rounded" style="height: 180px; margin-left: auto"/></v-after>
+</div>
+
+---
+
+# Localización / Tracking
+
+<center><h3><u>Localización</u> visual-inercial en tiempo real para aplicaciones de XR</h3></center>
+
+<br>
+<br>
+
+<div grid="~ cols-3 gap-2" m="-t-2">
+<img src="res/mocap.jpg" border="rounded" style="height: 180px"/>
+<img src="res/acoustic-tracking.png" border="rounded" style="height: 180px; margin-left: auto"/>
+<img src="res/optitrack-big.png" border="rounded" style="height: 180px; margin-left: auto"/>
+<img src="res/lighthouse.jpg" border="rounded" style="height: 180px; margin-left: auto"/>
+<img src="res/lighthouse-basestations.jpg" border="rounded" style="height: 180px; margin-left: auto"/>
+<img src="res/vive-trackers.jpg" border="rounded" style="height: 180px; margin-left: auto"/>
+</div>
+
+<!--
+- Optitrack grande 360k USD, chico 10k, una 700 (USD)
+- 1 lighhouse 100usd
 -->
 
 ---
 
-# Introducción
+# Sensores
 
-Entendiendo el nombre de este trabajo
+<center><h3>Localización <u>visual-inercial</u> en tiempo real para aplicaciones de XR</h3></center>
 
-<v-clicks>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
-- **XR** - Espectro entre VR y AR, incluye AV, MR.
-- **Localización** - Interacciones intuitivas. Sensores y tracking 3DoF o 6DoF.
-- **Visual-inercial** - Cámaras e IMU como sensores preferidos.
-- **Aplicaciones** - Fragmentación en la industria. Khronos, OpenXR, Collabora y Monado.
-
-</v-clicks>
+<div grid="~ cols-3 gap-2" m="-t-2">
+<img src="res/camera-sensor.jpg" border="rounded" style="height: 140px; margin: auto"/>
+<img src="res/imu.png" border="rounded" style="height: 140px"/>
+<img src="res/rpy.jpg" border="rounded" style="height: 140px; margin: auto"/>
+</div>
 
 <!--
-TODO@mateosss: Podría pasar cada una a su propia filminas y agregar imágenes para cada item.
+- IMU: ruido y drift
+- propioceptivo/exteroceptivo (sistema vestibular, gyro: canales semicircular, accel: otoliths)
+- fusion de sensores inteligente
+-->
+
+---
+
+# The Khronos Group
+
+<center><h3>Localización visual-inercial en tiempo real para <u>aplicaciones</u> de XR</h3></center>
+
+<br>
+
+<br>
+
+<img src="res/khronos.jpg" border="rounded"/>
+
+<!--
+Consorcio de industria sin fines de lucro.
+-->
+---
+
+# OpenXR
+
+<center><h3>Localización visual-inercial en tiempo real para <u>aplicaciones</u> de XR</h3></center>
+
+<br>
+<br>
+
+<img src="res/openxr.png" border="rounded"/>
+
+<!--
+Gran adopción (~170 y principales fabricantes)
+-->
+
+---
+
+# Monado y Collabora
+
+<center><h3>Localización visual-inercial en tiempo real para <u>aplicaciones</u> de XR</h3></center>
+
+<br>
+<br>
+
+<img src="res/openxr.png" border="rounded"/>
+
+<!--
+- Consultora open source
+- Pasantía de 6 meses
 -->
 
 ---
