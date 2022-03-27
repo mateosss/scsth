@@ -11,7 +11,7 @@ info: |
 
   Más información [aquí](https://github.com/mateosss/scsth).
 drawings:
-  persist: false
+  persist: true
 title: Tesis visual-inercial
 ---
 
@@ -95,54 +95,6 @@ Entendiendo el nombre de este trabajo.
 
 ---
 
-# Localización / Tracking
-
-<center><h3><u>Localización</u> visual-inercial en tiempo real para aplicaciones de XR</h3></center>
-
-<br>
-<br>
-
-<div grid="~ cols-3 gap-2" m="-t-2">
-<img src="res/mocap.jpg" border="rounded" style="height: 180px"/>
-<img src="res/acoustic-tracking.png" border="rounded" style="height: 180px; margin-left: auto"/>
-<img src="res/optitrack-big.png" border="rounded" style="height: 180px; margin-left: auto"/>
-<img src="res/lighthouse.jpg" border="rounded" style="height: 180px; margin-left: auto"/>
-<img src="res/lighthouse-basestations.jpg" border="rounded" style="height: 180px; margin-left: auto"/>
-<img src="res/vive-trackers.jpg" border="rounded" style="height: 180px; margin-left: auto"/>
-</div>
-
-<!--
-- Optitrack grande 360k USD, chico 10k, una 700 (USD)
-- 1 lighhouse 100usd
--->
-
----
-
-# Sensores
-
-<center><h3>Localización <u>visual-inercial</u> en tiempo real para aplicaciones de XR</h3></center>
-
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-
-<div grid="~ cols-3 gap-2" m="-t-2">
-<img src="res/camera-sensor.jpg" border="rounded" style="height: 140px; margin: auto"/>
-<img src="res/imu.png" border="rounded" style="height: 140px"/>
-<img src="res/rpy.jpg" border="rounded" style="height: 140px; margin: auto"/>
-</div>
-
-<!--
-- IMU: ruido y drift
-- propioceptivo/exteroceptivo (sistema vestibular, gyro: canales semicircular, accel: otoliths)
-- fusion de sensores inteligente
--->
-
----
-
 # The Khronos Group
 
 <center><h3>Localización visual-inercial en tiempo real para <u>aplicaciones</u> de XR</h3></center>
@@ -185,6 +137,56 @@ Gran adopción (~170 y principales fabricantes)
 <!--
 - Consultora open source
 - Pasantía de 6 meses
+- Integrar soluciones de la academia
+-->
+
+---
+
+
+# Localización - Tracking
+
+<center><h3><u>Localización</u> visual-inercial en tiempo real para aplicaciones de XR</h3></center>
+
+<br>
+<br>
+
+<div grid="~ cols-3 gap-2" m="-t-2">
+<img src="res/mocap.jpg" border="rounded" style="height: 180px"/>
+<img src="res/acoustic-tracking.png" border="rounded" style="height: 180px; margin-left: auto"/>
+<img src="res/optitrack-big.png" border="rounded" style="height: 180px; margin-left: auto"/>
+<img src="res/lighthouse.jpg" border="rounded" style="height: 180px; margin-left: auto"/>
+<img src="res/lighthouse-basestations.jpg" border="rounded" style="height: 180px; margin-left: auto"/>
+<img src="res/vive-trackers.jpg" border="rounded" style="height: 180px; margin-left: auto"/>
+</div>
+
+<!--
+- Optitrack grande 360k USD, chico 10k, una 700 (USD)
+- 1 lighhouse 100usd
+-->
+
+---
+
+# Visual-inercial - Sensores
+
+<center><h3>Localización <u>visual-inercial</u> en tiempo real para aplicaciones de XR</h3></center>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<div grid="~ cols-3 gap-2" m="-t-2">
+<img src="res/camera-sensor.jpg" border="rounded" style="height: 140px; margin: auto"/>
+<img src="res/imu.png" border="rounded" style="height: 140px"/>
+<img src="res/rpy.jpg" border="rounded" style="height: 140px; margin: auto"/>
+</div>
+
+<!--
+- IMU: ruido y drift
+- propioceptivo/exteroceptivo (sistema vestibular, gyro: canales semicircular, accel: otoliths)
+- fusion de sensores inteligente
 -->
 
 ---
