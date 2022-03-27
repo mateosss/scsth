@@ -295,6 +295,7 @@ Cómo fusionar la información de los distintos tipos de muestras?
   - Calibración de los sensores.
   - Reproyección de puntos en la escena (cuando no existe expresión cerrada).
   - Bundle adjustment.
+  - Flujo óptico.
   - Alineamiento de trayectorias para métricas.
 
 </v-clicks>
@@ -375,6 +376,124 @@ $$
 *Esto es el algoritmo de Gauss-Newton, existen otros: Levenberg-Marquardt, método dogleg de Powell.*
 
 </v-click>
+
+---
+layout: cover
+background: none
+---
+# Sistemas Integrados
+
+Y las problemáticas de lidiar con software desarrollado en la academia.
+
+---
+
+# Sistemas
+
+<v-clicks>
+
+1. Muchos sistemas con objetivos varios. Publicaciones con métodos poco claros, bias en las métricas.
+2. Sistemas integrados (~25kloc):
+    1. **Kimera-VIO**: del MIT, licencia BSD-2 (~200ms).
+    2. **ORB-SLAM3**: de la Unizar, licencia GPL-3, supuesto estado del arte (~40ms).
+    3. **Basalt**: de la TUM, licencia BSD-3 (~10ms).
+3. Basalt el más adecuado para XR.
+
+</v-clicks>
+
+---
+
+# Basalt - Preintegración de muestras de la IMU
+
+Frecuencias y ecuaciones de mecanización.
+
+![](res/sample-frequencies.svg)
+
+$$
+\begin{align}
+(\Delta \mathbf{R}_{t_i}, \Delta \mathbf{v}_{t_i}, \Delta
+\mathbf{p}_{t_i}) := (\mathbf{I}, \mathbf{0}, \mathbf{0})
+\\
+\Delta \mathbf{R}_{t+1} := \Delta \mathbf{R}_t exp(\mathbf{\omega}_{t+1} \Delta t)\\
+\Delta \mathbf{v}_{t+1} := \Delta \mathbf{v}_t + \Delta{\mathbf{R}_t}
+\mathbf{a}_{t+1} \Delta t
+\\
+\Delta \mathbf{p}_{t+1} := \Delta \mathbf{p}_t + \Delta \mathbf{v}_t \Delta t
+\\
+\Delta \mathbf{s}_{t} := (\Delta \mathbf{R}_{t}, \Delta \mathbf{v}_{t}, \Delta
+\mathbf{p}_{t})
+\\
+\Delta \mathbf{s} := \Delta \mathbf{s}_{t_j}
+\end{align}
+$$
+
+---
+
+# Basalt - Detección de features
+
+Detección de características de la escena con `cv::FAST`.
+
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<div grid="~ cols-1 gap-2" m="-t-2">
+<img border="round" src="res/fastfeatures.jpg" style="margin: auto"/>
+</div>
+
+---
+
+# Basalt - Flujo óptico
+
+Optical flow con el Lukas-Kanade tracker y optimización para encontrar $T \in
+SE(2)$ con residuales:
+
+$$
+r_i =
+  \frac{I_{t + 1}(\mathbf{T} \mathbf{x}_i)}{\overline{I_{t + 1}}} -
+  \frac{I_{t}(\mathbf{x}_i)}{\overline{I_{t}}}
+  \ \ \ \ \forall \mathbf{x}_i \in \Omega
+$$
+
+<div grid="~ cols-1 gap-2" m="-t-2">
+<img border="round" src="res/basalt-patches.png" style="margin: auto"/>
+</div>
+---
+
+# Basalt - Flujo óptico
+
+Optical flow con el Lukas-Kanade tracker y optimización para encontrar $T \in
+SE(2)$ con residuales:
+
+$$
+r_i =
+  \frac{I_{t + 1}(\mathbf{T} \mathbf{x}_i)}{\overline{I_{t + 1}}} -
+  \frac{I_{t}(\mathbf{x}_i)}{\overline{I_{t}}}
+  \ \ \ \ \forall \mathbf{x}_i \in \Omega
+$$
+
+<div grid="~ cols-1 gap-2" m="-t-2">
+<img border="round" src="res/opticalflow.webp" style="margin: auto"/>
+</div>
+
+---
+
+# Basalt - Triangulación de landmarks
+
+<img border="round" src="res/stereo-triangulation.jpg" style="margin: auto; height:90%"/>
+
+---
+
+# Basalt - Bundle Adjustment
+
+Grafo de factores implícito en Basalt, explícito en otros sistemas con `g2o` o `GTSAM`.
+
+<img border="round" src="res/factorgraph.png" style="margin: auto; height:80%"/>
+
+<!-- Aquí ocurre la optimización por gauss newton -->
+---
+
 ### Keyboard Shortcuts
 
 |     |     |
