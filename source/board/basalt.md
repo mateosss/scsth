@@ -187,7 +187,7 @@
       Vec4[] p3d1 = cam1.unproject(proj1);
       for (p0, p1 in [p3d0, p3d1]) {
         if (p0 or p1 unsuccessful projection) lm_to_remove.append(kpid[i]);
-        if (epipolar_error(p0, p1) > 0.005) lm_to_remove.append(kpid[i]);
+        if (epipolar_error(p0, p1) > vioconfig(0.005)) lm_to_remove.append(kpid[i]);
       }
       for (id: lm_to_remove) transforms.observations[1].erase(id); // Only from cam1
     }
