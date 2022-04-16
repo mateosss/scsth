@@ -78,6 +78,9 @@ pdfull: tex
 		cd output/latex && bibtex thesis && cd ..
 		$(LATEXCMD)
 		$(LATEXCMD)
-all: md tex pdf
+
+pdf: pdfull
+
+all: pdf
 
 .PHONY: help install md tex pdfull pdfast
