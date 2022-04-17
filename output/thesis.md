@@ -73,17 +73,17 @@ incluyen _magnetómetros_. En teoría, si sus mediciones fueran perfectas, una I
 debería proveer suficiente información para determinar la pose en el espacio de
 un dispositivo que la contenga. Pero incluso las IMU de mayor calidad acumulan
 tanto ruido que la integración de sus mediciones durante cortos períodos de
-tiempo devuelve poses que tienen un error de cientos de metros, ver
-\Cref{tbl:imu-accumulated-error}. Para contrarrestar la naturaleza imperfecta de
+tiempo devuelve poses que tienen un error o _drift_ de cientos de metros.
+Valores aproximados para distintas categorías de IMU pueden verse en la
+\Cref{tbl:imu-accumulated-error} [@vectornavInertialNavigationPrimer, secc 3.3];
+las IMU utilizadas en dispositivos XR entran en la categoría para _consumidor_
+final listada en la tabla. Para contrarrestar la naturaleza imperfecta de
 sensores físicos como estos, los enfoques más exitosos de localización emplean
 una combinación de múltiples sensores junto a algoritmos de fusión ingeniosos
 capaces de integrar tipos de muestras tremendamente distintos en una estimación
 de la pose que es suficientemente buena.
 
-Table: \label{tbl:imu-accumulated-error} Error acumulado luego de cierto tiempo
-de integrar mediciones de IMU de distinta calidad [@vectornavInertialNavigationPrimer, secc 3.3]. Vale aclarar que en
-dispositivos XR las IMU utilizadas son del tipo _consumidor_ por su menor costo.
-
+Table: \label{tbl:imu-accumulated-error} Error acumulado por distintas IMU
 
 | **Categoría / Tiempo** | **1 s** | **10 s** | **60 s** | **10 min** | **1 hr**  |
 |------------------------|---------|----------|----------|------------|-----------|
@@ -243,7 +243,9 @@ tener para generar datos aceptables para SLAM.
 Para cerrar el trabajo, en la cuarta parte presentamos algunos resultados
 cualitativos del rendimiento y la precisión de los sistemas integrados.
 Finalmente cerramos con algunas conclusiones y líneas de trabajo a considerar
-para el futuro.
+para el futuro. En el [](#list-of-contributions) se encuentran listados varios
+enlaces a los repositorios, contribuciones y discusiones que surgieron como
+producto de este trabajo.
 
 
 ## Fundamentos
@@ -1336,7 +1338,9 @@ consideraron a la hora de elegir sistemas fueron:
 En este trabajo se integraron con Monado tres sistemas de código libre
 distintos, primero _Kimera-VIO_ [@rosinolKimeraOpenSourceLibrary2020], luego
 _ORB-SLAM3_ [@camposORBSLAM3AccurateOpenSource2021] y finalmente _Basalt_
-[@usenkoBasaltVisualInertialMapping2020].
+[@usenkoBasaltVisualInertialMapping2020]. Los clones de estos sistemas
+modificados para la integración pueden verse en las
+\Cref{app:kimera-fork,app:orbslam3-fork,app:basalt-fork}.
 
 Kimera-VIO[^kimera-repo] es una implementación desarrollada en el Instituto de
 Tecnología de Massachusetts (MIT) con una licencia permisiva BSD-2
@@ -1538,13 +1542,10 @@ proceso de bundle adjustment.
 Esto significa que, por defecto, no contamos con la capacidad de utilizar el VIM
 en tiempo real para XR, solo el VIO. Por ende solo este fue integrado con
 Monado. Se plantea como trabajo a futuro la paralelización del VIM en un hilo separado para poder correrlo
-en tiempo real[^basalt-issue69]. Exploraremos entonces, en esta parte del
+en tiempo real; ver \Cref{app:consistentmap-issue}. Exploraremos entonces, en esta parte del
 trabajo, los componentes fundamentales de la capa de VIO: _optical flow_,
 _bundle adjustment visual-inercial_ y finalmente el proceso de _optimización y
 de marginalización parcial_.
-
-[^basalt-issue69]: Discusión sobre como adaptar Basalt para poder correr el VIM
-en tiempo real: <https://gitlab.com/VladyslavUsenko/basalt/-/issues/69>
 
 #### Optical flow {#optical-flow}
 
@@ -1720,10 +1721,8 @@ de Basalt, es que el acelerómetro es utilizado como origen del agente localizad
 y, fundándose en esto, se fija su orientación. Es decir, no se aplica ningún
 tipo de corrección de orientación al calibrar las muestras del acelerómetro.
 Esto hace que la matriz de alineamiento para el acelerómetro tenga ceros en su
-triángulo superior (ver @schubertBasaltTUMVI2018 secc. IV.B y _discusión
-relacionada [^basalt-headers-issue8]_).
-
-[^basalt-headers-issue8]: <https://gitlab.com/VladyslavUsenko/basalt-headers/-/issues/8>
+triángulo superior (ver @schubertBasaltTUMVI2018 secc. IV.B y
+\Cref{app:imucalib-issue}).
 
 Luego de recibir esta primer muestra de la IMU se comienza la ejecución del
 bucle principal, el cual espera indefinidamente por resultados encolados por el
@@ -2258,11 +2257,13 @@ código de tracking está implementado en C++ al igual que todos los sistemas de
 SLAM contemplados. Adicionalmente tanto Monado como estos sistemas suelen hacer
 un uso extensivo de la biblioteca _OpenCV_, y en particular su clase contenedora
 de imágenes y matrices `cv::Mat`. Es por esto que se terminó optando por el uso de
-un archivo _header_ C++, en el cual se declara la clase `slam_tracker` que será
+un archivo _header_ C++, en el cual se declara la clase `slam_tracker`[^slam-tracker-file] que será
 utilizada por Monado como punto de comunicación con sistemas de SLAM arbitrarios
 y se utilizan `cv::Mat` como contenedor de imágenes. Luego de varias iteraciones de diseño,
 la clase `slam_tracker` tiene una interfaz que, quitando detalles de tipos de
 C++, se puede resumir en algo como lo que se muestra en el \Cref{lst:slam-tracker-def}.
+
+[^slam-tracker-file]: <https://gitlab.freedesktop.org/monado/monado/-/blob/2d9c1b2b11373f707b990e5b8a28b15bc1454b83/src/external/slam_tracker/slam_tracker.hpp#L95-167>
 
 <!-- TODO: linkear la clase slam_tracker en gitlab? -->
 
@@ -2302,6 +2303,7 @@ no se relaciona las colas dibujadas con nada, ni con Monado ni con la copia de s
 
 \fig{fig:slam-tracker-hpp}{source/figures/slam-tracker-hpp.pdf}{Interfaz de SLAM tracker}{%
 Interacción entre Monado y sistemas SLAM mediante la interfaz en C++.
+Enlaces a estos forks pueden verse en las \Cref{app:kimera-fork,app:orbslam3-fork,app:basalt-fork}.
 }
 
 La versión actual de esta clase es el
@@ -2326,7 +2328,7 @@ en uso. Algunas consideraciones de los puntos marcados en el código:
    esta interfaz es compartida por múltiples sistemas y repositorios, mantener
    todas las versiones sincronizadas se vuelve insostenible. Una
    forma de aliviar este problema fue la implementación de características
-   dinámicas. En ellas, Monado evalúa si el sistema implementa alguna
+   dinámicas en la \Cref{app:slamtracker-dynamic-features}. En ellas, Monado evalúa si el sistema implementa alguna
    característica específica en tiempo de ejecución antes de utilizarla.
    Uno de sus usos, fue la automatización del envío de datos de calibración sin pasar
    por el archivo `config_file`. La forma de añadir nuevas características de
@@ -2540,6 +2542,8 @@ con rotaciones.
 
 <!-- TODO: Acá cuando menciono un mando quizás estaría bueno tener una imagen de un mando de WMR o algo así? -->
 
+
+
 Para obtener estos espacios, la aplicación solicita las características que
 desea. Si se solicitara el espacio de un control o mando el runtime, Monado en
 este caso, intentará conseguir el más adecuado dentro de los disponibles en el
@@ -2547,15 +2551,14 @@ sistema. Entonces, la aplicación OpenXR es indiferente a qué dispositivos est�
 siendo utilizados, ni siquiera se asumen que estos espacios sean dispositivos,
 podrían ser cualquier otro objeto de interés que está siendo localizado por
 mecanismos externos (por visión por computadora por ejemplo) o incluso
-dispositivos emulados por software[^qwerty-driver]. Los espacios que
+dispositivos emulados por software\marginnote{%\
+Una de las primeras contribuciones realizadas para
+familiarizarse con el código fuente de Monado fue la implementación del
+controlador \mono{qwerty} que le permite a los usuarios emular de forma modular un
+casco y/o mandos mediante teclado y ratón. Ver \Cref{app:qwerty-mr}.
+}. Los espacios que
 aplican a nuestro caso son aquellos que representaran dispositivos que posean
 sensores IMU y cámaras que puedan utilizarse en nuestros sistemas de SLAM/VIO.
-
-[^qwerty-driver]: Una de las primeras contribuciones realizadas para
-familiarizarse con el código fuente de Monado fue la implementación del
-controlador `qwerty` que le permite a los usuarios emular de forma modular un
-casco y/o mandos mediante teclado y ratón.
-<https://gitlab.freedesktop.org/monado/monado/-/merge_requests/714>
 
 Otro importante aspecto a considerar es que el punto en el tiempo `time` para la
 cual la pose debe ser estimada es provisto por el usuario, y como tal, resulta
@@ -2872,7 +2875,8 @@ segundo, tenemos ~33ms entre pose y pose). Por otro lado, es usual tener una
 mayor cantidad de muestras de IMU entre estimaciones y no solo las 3 que se
 muestran en las figuras (p.ej. a 30 cuadros por segundo con la IMU a 250 hz,
 tenemos unas ~8 muestras de IMU entre cada par de cuadros consecutivos), lo cual
-mejora la precisión de la predicción aún más.
+mejora la precisión de la predicción aún más. Este algoritmo de predicción fue
+implementado en las \Cref{app:prediction-mr,app:filtering-mr}
 
 \FloatBarrier
 
@@ -2883,8 +2887,8 @@ mejora la precisión de la predicción aún más.
 
 Continuando con la descripción de la funcionalidad presente en la clase
 adaptadora `TrackerSlam` y luego de haber presentado el método de predicción que
-se emplea en Monado, veremos ahora la siguiente funcionalidad que `TrackerSlam`
-implementa: el **filtrado** de poses.
+se emplea en Monado, veremos ahora la siguiente funcionalidad de `TrackerSlam`
+implementada en la \Cref{app:filtering-mr}: el **filtrado** de poses.
 
 También llamado _smoothing_, alisado o suavizado, el filtro de señales, curvas
 o, en este caso poses, es una forma de minimizar o _filtrar_ el ruido presente
@@ -3138,13 +3142,12 @@ de mandos provistos por un fabricante.
 El concepto que se termina implementando en Monado es un poco más general, ya
 que además de sistemas físicos, soporta sistemas simulados que proveen distintas
 funcionalidades. Entre estas se incluyen la capacidad de conectar dispositivos de forma remota,
-emulación de dispositivos con teclado y ratón[^qwerty-mr] o mediante otros dispositivos como
+emulación de dispositivos con teclado y ratón (\Cref{app:qwerty-mr}) o mediante otros dispositivos como
 placas Arduino[^arduino]. En este trabajo se
 diferenció el concepto de _fuente de datos_ del de _dispositivo_ ya que es en
 definitiva esto en lo que estaremos interesados para SLAM, obtener fuentes de
 datos de IMU y cámaras.
 
-[^qwerty-mr]: <https://gitlab.freedesktop.org/monado/monado/-/merge_requests/714>
 [^arduino]: <https://www.arduino.cc/>
 
 \fig{fig:devices-ody-d455}{source/figures/devices-ody-d455.jpg}{Dispositivos XR utilizados}{%
@@ -3472,8 +3475,8 @@ RealSense.
 <!-- TODO@def: "host", lo uso acá y en otros lados -->
 <!-- TODO@def: DIY -->
 
-Para soportar la cámara D455, se extendió[^realsense-mr] significativamente en Monado el
-controlador de dispositivos RealSense. Hasta el momento, la única cámara de esta
+Para soportar la cámara D455, se extendió significativamente en Monado el
+controlador de dispositivos RealSense en la \Cref{app:realsense-mr}. Hasta el momento, la única cámara de esta
 línea soportada por Monado era la T265[^t265]. Esta cámara es curiosa, ya que
 presenta un algoritmo de SLAM privativo que corre dentro del dispositivo sin
 necesidad de interactuar con el host. Este controlador se encargaba únicamente
@@ -3484,7 +3487,6 @@ utilizaba, en iteraciones anteriores, como principal forma de tracking. En la
 web pueden encontrarse imágenes[^north-star-img1] que
 muestran estos cascos con la cámara T265 sujeta en su parte superior.
 
-[^realsense-mr]: <https://gitlab.freedesktop.org/monado/monado/-/merge_requests/907>
 [^t265]: <https://www.intelrealsense.com/tracking-camera-t265/>
 
 [^north-star]: El proyecto North Star de UltraLeap (prev. LeapMotion) es un
@@ -3537,7 +3539,7 @@ viceversa.
 
 ### Windows Mixed Reality
 
-La integración[^wmr-mr] con el casco Samsung Odyssey+ de la plataforma Windows Mixed
+La integración realizada en la \Cref{app:wmr-mr} con el casco Samsung Odyssey+ de la plataforma Windows Mixed
 Reality fue, en comparación a la cámara RealSense D455, desafiante. Este casco
 no soporta Linux por defecto y el controlador WMR es desarrollado y mantenido
 por miembros de la comunidad de Monado. El soporte de características básicas de
@@ -3555,12 +3557,12 @@ de las cámaras que no es muy usual que los sistemas de SLAM soporten, este es e
 modelo radial-tangencial [@brownDecenteringDistortionLenses1966] de 8
 parámetros. Inicialmente se recalibró el dispositivo a un modelo más usual
 (Kannala-Brandt [@kannalaGenericCameraModel2006] de 4 parámetros) pero
-eventualmente se decidió extender y contribuir a Basalt[^basalt-rt8-mr21] el
-modelo de 8 parámetros. Otras peculiaridades de estas cámaras es que no son
+eventualmente se decidió extender y añadir a Basalt el modelo de 8 parámetros en
+la \Cref{app:radtan8-mr}. Otras peculiaridades de estas cámaras es que no son
 paralelas como en el caso de la D455, sino que tienen un gran ángulo de
 separación haciendo que solo la mitad de ambas imágenes posean una zona de
-visión compartida. Se discuten estos problemas en más detalle en la referencia
-al pie de página[^fisheye-issue].
+visión compartida. Se describen estos problemas y posibles soluciones en más detalle
+en la \Cref{app:fisheyeoverlap-issue}.
 
 Otra particularidad es que las muestras de IMU no están precalibradas y por ende
 deben calibrarse en tiempo de ejecución. Por suerte esta característica es
@@ -3583,9 +3585,6 @@ comunicación con el hardware ocurre mediante comandos USB directos construidos
 con la ayuda de `libusb`[^libusb] y basados en la ingeniería inversa aplicada sobre el
 controlador oficial.
 
-[^wmr-mr]: <https://gitlab.freedesktop.org/monado/monado/-/merge_requests/1035>
-[^basalt-rt8-mr21]: <https://gitlab.com/VladyslavUsenko/basalt-headers/-/merge_requests/21>
-[^fisheye-issue]: <https://gitlab.com/VladyslavUsenko/basalt/-/issues/62>
 [^libusb]: <https://libusb.info>
 
 <!-- TODO: no se si es un TODO pero esta tabla me sirvió bastante y capaz sería bueno tenerla en el escrito?
@@ -3617,19 +3616,14 @@ ciertas consideraciones. A grandes rasgos, podemos dividir las métricas de
 interés usuales en medidas de _precisión_ y de _eficiencia_ que describen,
 respectivamente, la exactitud de la trayectoria estimada y el uso de recursos
 por parte de los sistemas. Para la evaluación de sistemas se desarrollaron
-funcionalidades [^euroc-player] [^euroc-recorder] [^slambatch1] [^slambatch2] y
-herramientas [^xrtslam-metrics] dedicadas a la evaluación de sistemas de SLAM en
-Monado. Para más información sobre evaluación que la que presentaremos en esta
+funcionalidades y herramientas dedicadas a la evaluación de sistemas de SLAM en Monado; ver
+\Cref{app:xrtslam-metrics,app:euroc-player-mr,app:euroc-recorder-mr,app:metrics-mr,app:slambatch-mr}.
+Para más información sobre evaluación que la que presentaremos en esta
 sección, referimos al lector al trabajo de @kummerleMeasuringAccuracySLAM2009
 que detalla en mayor profundidad el proceso de evaluación y a la suite de
 herramientas SLAMBench[^slambench] [@nardiIntroducingSLAMBenchPerformance2015]
 que intenta generalizarlo para una gran variedad de sistemas.
 
-[^euroc-player]: <https://gitlab.freedesktop.org/monado/monado/-/merge_requests/880>
-[^euroc-recorder]: <https://gitlab.freedesktop.org/monado/monado/-/merge_requests/1017>
-[^slambatch1]: <https://gitlab.freedesktop.org/monado/monado/-/merge_requests/1152>
-[^slambatch2]: <https://gitlab.freedesktop.org/monado/monado/-/merge_requests/1172>
-[^xrtslam-metrics]: <https://gitlab.freedesktop.org/mateosss/xrtslam-metrics>
 [^slambench]: <https://apt.cs.manchester.ac.uk/projects/PAMELA/tools/SLAMBench>
 
 Para la evaluación se utilizan _conjuntos de datos_ o _datasets_ pregrabados con
@@ -3679,15 +3673,13 @@ referirnos a los distintos conjuntos de datos con las siguientes característica
   - CO*: Odyssey+ en 640x480 a 30 fps e IMU a 250 Hz. Para Basalt
     en particular tenemos dos posibles modelos de cámara para utilizar con los lentes de
     este casco. Por defecto se utilizará el modelo radial-tangencial de 8
-    parámetros [^basalt-rt8-mr] dado de fábrica pero también se comparará con el
+    parámetros dado de fábrica e implementado en la \Cref{app:radtan8-mr}, pero también se comparará con el
     modelo Kannala-Brandt de 4 parámetros (KB4) recalibrado y nativo en Basalt.
 
 - E*: Los datasets EuRoC en dos habitaciones (V1 y V2) y una sala de máquinas
   (MH) en 752x480 a 20 fps e IMU a 200 Hz.
 
 - T*: TUM-VI en una habitación (R) en 512x512 a 20 fps e IMU a 200 Hz.
-
-[^basalt-rt8-mr]: <https://gitlab.com/VladyslavUsenko/basalt-headers/-/merge_requests/21>
 
 También utilizaremos acrónimos para los distintos sistemas evaluados, que son
 variantes de Basalt, Kimera y ORB-SLAM3 dados actualizaciones significativas que
@@ -3893,9 +3885,7 @@ de mapa global no se note tanto. Con esto queremos decir que es usual en Basalt
 notar luego de sesiones de uso más largas que el entorno simulado empieza a
 cambiar de lugar lentamente a causa de la deriva (_drift_) usuales en sistemas
 de VIO y no de SLAM. Se plantea también como trabajo a futuro mejorar este
-aspecto de Basalt (ver discusión relacionada[^basalt-slam-issue]).
-
-[^basalt-slam-issue]: <https://gitlab.com/VladyslavUsenko/basalt/-/issues/69>
+aspecto de Basalt (ver \Cref{app:consistentmap-issue}).
 
 
 \begin{table}[H]
@@ -4100,8 +4090,8 @@ como trabajo futuro:\newline
 
 - Sería bueno extender Basalt para soportar algún tipo de mapeo global en tiempo
   real que permita tener trayectorias consistentes que no tiendan a moverse
-  lentamente con el tiempo. Discusiones de esto referenciada en una nota al
-  pie[^basalt-issue-vim].
+  lentamente con el tiempo. Más información al respecto en la
+  \Cref{app:consistentmap-issue}.
 
 - Sería bueno mejorar las formas de testeo y evaluación de sistemas SLAM en
   Monado, poder automatizarlas e integrarlas en los procesos de integración
@@ -4124,5 +4114,109 @@ como trabajo futuro:\newline
   beneficiar a distintos controladores que quieran hacer uso de algoritmia de
   visión por computadora específica en otros contextos.
 
-[^basalt-issue-vim]: <https://gitlab.com/VladyslavUsenko/basalt/-/issues/69>
+
+\appendix
+\cleardoublepage
+# Apéndice
+
+## Listado de contribuciones {#list-of-contributions}
+
+Durante el desarrollo de este trabajo se produjeron distintas contribuciones,
+discusiones y repositorios complementarios. Por la metodología de trabajo usual
+del software libre, todo esto queda plasmado públicamente. En esta sección se
+compilan los enlaces más significativos de estos registros en la web y se los
+describe brevemente.
+
+\small
+
+#### Repositorios
+
+1. \contrib{app:monado-repo}
+  Monado, el proyecto en el que se realizaron la mayor parte de las
+  contribuciones en forma de _merge requests_:\
+  \url{gitlab.freedesktop.org/monado/monado}
+
+2. \contrib{app:kimera-fork}
+  Adaptación de Kimera-VIO para usar en Monado:\
+  \url{gitlab.freedesktop.org/mateosss/Kimera-VIO}
+
+3. \contrib{app:orbslam3-fork}
+  Adaptación de ORB-SLAM3 para usar en Monado:\
+  \url{gitlab.freedesktop.org/mateosss/ORB_SLAM3}
+
+4. \contrib{app:basalt-fork}
+  Adaptación de Basalt para usar en Monado:\
+  \url{gitlab.freedesktop.org/mateosss/basalt}
+
+5. \contrib{app:xrtslam-metrics}
+  Herramientas para análisis de métricas producidas por Monado:\
+  \url{gitlab.freedesktop.org/mateosss/xrtslam-metrics}
+
+#### Monado
+
+6. \contrib{app:qwerty-mr}
+  Controlador `qwerty` para emular dispositivos XR con teclado y ratón:\
+  \url{gitlab.freedesktop.org/monado/monado/-/merge_requests/714}
+
+7. \contrib{app:euroc-player-mr}
+  Controlador `euroc` para la reproducción de datasets visual-inerciales:\
+  \url{gitlab.freedesktop.org/monado/monado/-/merge_requests/880}
+
+8. \contrib{app:slamtracker-mr}
+  Integración inicial de sistemas externos de VIO/SLAM en Monado:\
+  \url{gitlab.freedesktop.org/monado/monado/-/merge_requests/889}
+
+9. \contrib{app:realsense-mr}
+  Extensión del controlador `realsense` para tracking por VIO/SLAM:\
+  \url{gitlab.freedesktop.org/monado/monado/-/merge_requests/907}
+
+10. \contrib{app:basalt-ref-mr}
+  Implementación de Basalt como posible sistema externo de SLAM:\
+  \url{gitlab.freedesktop.org/monado/monado/-/merge_requests/941}
+
+11. \contrib{app:slamtracker-dynamic-features}
+  Actualización de `slam_tracker` con características dinámicas:\
+  \url{gitlab.freedesktop.org/monado/monado/-/merge_requests/1016}
+
+12. \contrib{app:euroc-recorder-mr}
+  Grabador de datasets EuRoC:\
+  \url{gitlab.freedesktop.org/monado/monado/-/merge_requests/1017}
+
+13. \contrib{app:wmr-mr}
+  Extensión del controlador `wmr` para tracking por SLAM/VIO:\
+  \url{gitlab.freedesktop.org/monado/monado/-/merge_requests/1035}
+
+14. \contrib{app:prediction-mr}
+  Predicción sencilla para el SLAM tracker:\
+  \url{gitlab.freedesktop.org/monado/monado/-/merge_requests/1060}
+
+15. \contrib{app:filtering-mr}
+  Implementación de filtrado y extensión del algoritmo de predicción:\
+  \url{gitlab.freedesktop.org/monado/monado/-/merge_requests/1067}
+
+16. \contrib{app:metrics-mr}
+  Generación de datos para evaluación de rendimiento y precisión:\
+  \url{gitlab.freedesktop.org/monado/monado/-/merge_requests/1152}
+
+17. \contrib{app:slambatch-mr}
+  Herramienta para evaluar datasets en lote:\
+  \url{gitlab.freedesktop.org/monado/monado/-/merge_requests/1172}
+
+#### Basalt
+
+18. \discuss{app:consistentmap-issue}
+  Discusión e ideas para generar un mapa consistente en tiempo real:\
+  \url{gitlab.com/VladyslavUsenko/basalt/-/issues/69}
+
+19. \discuss{app:fisheyeoverlap-issue}
+  Discusión sobre uso de cámaras similares a las de dispositivos WMR:\
+  \url{gitlab.com/VladyslavUsenko/basalt/-/issues/62}
+
+20. \discuss{app:imucalib-issue}
+  Discusión sobre calibración de la IMU:\
+  \url{gitlab.com/VladyslavUsenko/basalt-headers/-/issues/8}
+
+21. \contrib{app:radtan8-mr}
+  Modelo de cámara radial-tangencial de 8 parámetros de WMR:\
+  \url{gitlab.com/VladyslavUsenko/basalt-headers/-/merge_requests/21}
 

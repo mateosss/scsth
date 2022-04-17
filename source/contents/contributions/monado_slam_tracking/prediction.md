@@ -25,6 +25,13 @@ con rotaciones.
 
 <!-- TODO: Acá cuando menciono un mando quizás estaría bueno tener una imagen de un mando de WMR o algo así? -->
 
+<!-- #define MN_QWERTY_DRIVER %\
+Una de las primeras contribuciones realizadas para
+familiarizarse con el código fuente de Monado fue la implementación del
+controlador \mono{qwerty} que le permite a los usuarios emular de forma modular un
+casco y/o mandos mediante teclado y ratón. Ver \Cref{app:qwerty-mr}.
+-->
+
 Para obtener estos espacios, la aplicación solicita las características que
 desea. Si se solicitara el espacio de un control o mando el runtime, Monado en
 este caso, intentará conseguir el más adecuado dentro de los disponibles en el
@@ -32,15 +39,9 @@ sistema. Entonces, la aplicación OpenXR es indiferente a qué dispositivos est�
 siendo utilizados, ni siquiera se asumen que estos espacios sean dispositivos,
 podrían ser cualquier otro objeto de interés que está siendo localizado por
 mecanismos externos (por visión por computadora por ejemplo) o incluso
-dispositivos emulados por software[^qwerty-driver]. Los espacios que
+dispositivos emulados por software\marginnote{MN_QWERTY_DRIVER}. Los espacios que
 aplican a nuestro caso son aquellos que representaran dispositivos que posean
 sensores IMU y cámaras que puedan utilizarse en nuestros sistemas de SLAM/VIO.
-
-[^qwerty-driver]: Una de las primeras contribuciones realizadas para
-familiarizarse con el código fuente de Monado fue la implementación del
-controlador `qwerty` que le permite a los usuarios emular de forma modular un
-casco y/o mandos mediante teclado y ratón.
-<https://gitlab.freedesktop.org/monado/monado/-/merge_requests/714>
 
 Otro importante aspecto a considerar es que el punto en el tiempo `time` para la
 cual la pose debe ser estimada es provisto por el usuario, y como tal, resulta
@@ -357,6 +358,7 @@ segundo, tenemos ~33ms entre pose y pose). Por otro lado, es usual tener una
 mayor cantidad de muestras de IMU entre estimaciones y no solo las 3 que se
 muestran en las figuras (p.ej. a 30 cuadros por segundo con la IMU a 250 hz,
 tenemos unas ~8 muestras de IMU entre cada par de cuadros consecutivos), lo cual
-mejora la precisión de la predicción aún más.
+mejora la precisión de la predicción aún más. Este algoritmo de predicción fue
+implementado en las \Cref{app:prediction-mr,app:filtering-mr}
 
 \FloatBarrier

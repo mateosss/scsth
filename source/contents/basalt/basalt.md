@@ -33,13 +33,10 @@ proceso de bundle adjustment.
 Esto significa que, por defecto, no contamos con la capacidad de utilizar el VIM
 en tiempo real para XR, solo el VIO. Por ende solo este fue integrado con
 Monado. Se plantea como trabajo a futuro la paralelización del VIM en un hilo separado para poder correrlo
-en tiempo real[^basalt-issue69]. Exploraremos entonces, en esta parte del
+en tiempo real; ver \Cref{app:consistentmap-issue}. Exploraremos entonces, en esta parte del
 trabajo, los componentes fundamentales de la capa de VIO: _optical flow_,
 _bundle adjustment visual-inercial_ y finalmente el proceso de _optimización y
 de marginalización parcial_.
-
-[^basalt-issue69]: Discusión sobre como adaptar Basalt para poder correr el VIM
-en tiempo real: <https://gitlab.com/VladyslavUsenko/basalt/-/issues/69>
 
 #### Optical flow {#optical-flow}
 

@@ -57,17 +57,17 @@ incluyen _magnetómetros_. En teoría, si sus mediciones fueran perfectas, una I
 debería proveer suficiente información para determinar la pose en el espacio de
 un dispositivo que la contenga. Pero incluso las IMU de mayor calidad acumulan
 tanto ruido que la integración de sus mediciones durante cortos períodos de
-tiempo devuelve poses que tienen un error de cientos de metros, ver
-\Cref{tbl:imu-accumulated-error}. Para contrarrestar la naturaleza imperfecta de
+tiempo devuelve poses que tienen un error o _drift_ de cientos de metros.
+Valores aproximados para distintas categorías de IMU pueden verse en la
+\Cref{tbl:imu-accumulated-error} [@vectornavInertialNavigationPrimer, secc 3.3];
+las IMU utilizadas en dispositivos XR entran en la categoría para _consumidor_
+final listada en la tabla. Para contrarrestar la naturaleza imperfecta de
 sensores físicos como estos, los enfoques más exitosos de localización emplean
 una combinación de múltiples sensores junto a algoritmos de fusión ingeniosos
 capaces de integrar tipos de muestras tremendamente distintos en una estimación
 de la pose que es suficientemente buena.
 
-Table: \label{tbl:imu-accumulated-error} Error acumulado luego de cierto tiempo
-de integrar mediciones de IMU de distinta calidad [@vectornavInertialNavigationPrimer, secc 3.3]. Vale aclarar que en
-dispositivos XR las IMU utilizadas son del tipo _consumidor_ por su menor costo.
-
+Table: \label{tbl:imu-accumulated-error} Error acumulado por distintas IMU
 
 | **Categoría / Tiempo** | **1 s** | **10 s** | **60 s** | **10 min** | **1 hr**  |
 |------------------------|---------|----------|----------|------------|-----------|
@@ -227,4 +227,6 @@ tener para generar datos aceptables para SLAM.
 Para cerrar el trabajo, en la cuarta parte presentamos algunos resultados
 cualitativos del rendimiento y la precisión de los sistemas integrados.
 Finalmente cerramos con algunas conclusiones y líneas de trabajo a considerar
-para el futuro.
+para el futuro. En el [](#list-of-contributions) se encuentran listados varios
+enlaces a los repositorios, contribuciones y discusiones que surgieron como
+producto de este trabajo.

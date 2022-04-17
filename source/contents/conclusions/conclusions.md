@@ -51,8 +51,8 @@ como trabajo futuro:\newline
 
 - Sería bueno extender Basalt para soportar algún tipo de mapeo global en tiempo
   real que permita tener trayectorias consistentes que no tiendan a moverse
-  lentamente con el tiempo. Discusiones de esto referenciada en una nota al
-  pie[^basalt-issue-vim].
+  lentamente con el tiempo. Más información al respecto en la
+  \Cref{app:consistentmap-issue}.
 
 - Sería bueno mejorar las formas de testeo y evaluación de sistemas SLAM en
   Monado, poder automatizarlas e integrarlas en los procesos de integración
@@ -74,5 +74,3 @@ como trabajo futuro:\newline
   útiles de manera individual. La integración de estos en Monado podría
   beneficiar a distintos controladores que quieran hacer uso de algoritmia de
   visión por computadora específica en otros contextos.
-
-[^basalt-issue-vim]: <https://gitlab.com/VladyslavUsenko/basalt/-/issues/69>

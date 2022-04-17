@@ -13,13 +13,12 @@ de mandos provistos por un fabricante.
 El concepto que se termina implementando en Monado es un poco más general, ya
 que además de sistemas físicos, soporta sistemas simulados que proveen distintas
 funcionalidades. Entre estas se incluyen la capacidad de conectar dispositivos de forma remota,
-emulación de dispositivos con teclado y ratón[^qwerty-mr] o mediante otros dispositivos como
+emulación de dispositivos con teclado y ratón (\Cref{app:qwerty-mr}) o mediante otros dispositivos como
 placas Arduino[^arduino]. En este trabajo se
 diferenció el concepto de _fuente de datos_ del de _dispositivo_ ya que es en
 definitiva esto en lo que estaremos interesados para SLAM, obtener fuentes de
 datos de IMU y cámaras.
 
-[^qwerty-mr]: <https://gitlab.freedesktop.org/monado/monado/-/merge_requests/714>
 [^arduino]: <https://www.arduino.cc/>
 
 \fig{fig:devices-ody-d455}{source/figures/devices-ody-d455.jpg}{Dispositivos XR utilizados}{%
@@ -347,8 +346,8 @@ RealSense.
 <!-- TODO@def: "host", lo uso acá y en otros lados -->
 <!-- TODO@def: DIY -->
 
-Para soportar la cámara D455, se extendió[^realsense-mr] significativamente en Monado el
-controlador de dispositivos RealSense. Hasta el momento, la única cámara de esta
+Para soportar la cámara D455, se extendió significativamente en Monado el
+controlador de dispositivos RealSense en la \Cref{app:realsense-mr}. Hasta el momento, la única cámara de esta
 línea soportada por Monado era la T265[^t265]. Esta cámara es curiosa, ya que
 presenta un algoritmo de SLAM privativo que corre dentro del dispositivo sin
 necesidad de interactuar con el host. Este controlador se encargaba únicamente
@@ -359,7 +358,6 @@ utilizaba, en iteraciones anteriores, como principal forma de tracking. En la
 web pueden encontrarse imágenes[^north-star-img1] que
 muestran estos cascos con la cámara T265 sujeta en su parte superior.
 
-[^realsense-mr]: <https://gitlab.freedesktop.org/monado/monado/-/merge_requests/907>
 [^t265]: <https://www.intelrealsense.com/tracking-camera-t265/>
 
 [^north-star]: El proyecto North Star de UltraLeap (prev. LeapMotion) es un
@@ -412,7 +410,7 @@ viceversa.
 
 ### Windows Mixed Reality
 
-La integración[^wmr-mr] con el casco Samsung Odyssey+ de la plataforma Windows Mixed
+La integración realizada en la \Cref{app:wmr-mr} con el casco Samsung Odyssey+ de la plataforma Windows Mixed
 Reality fue, en comparación a la cámara RealSense D455, desafiante. Este casco
 no soporta Linux por defecto y el controlador WMR es desarrollado y mantenido
 por miembros de la comunidad de Monado. El soporte de características básicas de
@@ -430,12 +428,12 @@ de las cámaras que no es muy usual que los sistemas de SLAM soporten, este es e
 modelo radial-tangencial [@brownDecenteringDistortionLenses1966] de 8
 parámetros. Inicialmente se recalibró el dispositivo a un modelo más usual
 (Kannala-Brandt [@kannalaGenericCameraModel2006] de 4 parámetros) pero
-eventualmente se decidió extender y contribuir a Basalt[^basalt-rt8-mr21] el
-modelo de 8 parámetros. Otras peculiaridades de estas cámaras es que no son
+eventualmente se decidió extender y añadir a Basalt el modelo de 8 parámetros en
+la \Cref{app:radtan8-mr}. Otras peculiaridades de estas cámaras es que no son
 paralelas como en el caso de la D455, sino que tienen un gran ángulo de
 separación haciendo que solo la mitad de ambas imágenes posean una zona de
-visión compartida. Se discuten estos problemas en más detalle en la referencia
-al pie de página[^fisheye-issue].
+visión compartida. Se describen estos problemas y posibles soluciones en más detalle
+en la \Cref{app:fisheyeoverlap-issue}.
 
 Otra particularidad es que las muestras de IMU no están precalibradas y por ende
 deben calibrarse en tiempo de ejecución. Por suerte esta característica es
@@ -458,9 +456,6 @@ comunicación con el hardware ocurre mediante comandos USB directos construidos
 con la ayuda de `libusb`[^libusb] y basados en la ingeniería inversa aplicada sobre el
 controlador oficial.
 
-[^wmr-mr]: <https://gitlab.freedesktop.org/monado/monado/-/merge_requests/1035>
-[^basalt-rt8-mr21]: <https://gitlab.com/VladyslavUsenko/basalt-headers/-/merge_requests/21>
-[^fisheye-issue]: <https://gitlab.com/VladyslavUsenko/basalt/-/issues/62>
 [^libusb]: <https://libusb.info>
 
 <!-- TODO: no se si es un TODO pero esta tabla me sirvió bastante y capaz sería bueno tenerla en el escrito?

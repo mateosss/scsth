@@ -31,11 +31,13 @@ código de tracking está implementado en C++ al igual que todos los sistemas de
 SLAM contemplados. Adicionalmente tanto Monado como estos sistemas suelen hacer
 un uso extensivo de la biblioteca _OpenCV_, y en particular su clase contenedora
 de imágenes y matrices `cv::Mat`. Es por esto que se terminó optando por el uso de
-un archivo _header_ C++, en el cual se declara la clase `slam_tracker` que será
+un archivo _header_ C++, en el cual se declara la clase `slam_tracker`[^slam-tracker-file] que será
 utilizada por Monado como punto de comunicación con sistemas de SLAM arbitrarios
 y se utilizan `cv::Mat` como contenedor de imágenes. Luego de varias iteraciones de diseño,
 la clase `slam_tracker` tiene una interfaz que, quitando detalles de tipos de
 C++, se puede resumir en algo como lo que se muestra en el \Cref{lst:slam-tracker-def}.
+
+[^slam-tracker-file]: <https://gitlab.freedesktop.org/monado/monado/-/blob/2d9c1b2b11373f707b990e5b8a28b15bc1454b83/src/external/slam_tracker/slam_tracker.hpp#L95-167>
 
 <!-- TODO: linkear la clase slam_tracker en gitlab? -->
 
@@ -75,6 +77,7 @@ no se relaciona las colas dibujadas con nada, ni con Monado ni con la copia de s
 
 \fig{fig:slam-tracker-hpp}{source/figures/slam-tracker-hpp.pdf}{Interfaz de SLAM tracker}{%
 Interacción entre Monado y sistemas SLAM mediante la interfaz en C++.
+Enlaces a estos forks pueden verse en las \Cref{app:kimera-fork,app:orbslam3-fork,app:basalt-fork}.
 }
 
 La versión actual de esta clase es el
@@ -99,7 +102,7 @@ en uso. Algunas consideraciones de los puntos marcados en el código:
    esta interfaz es compartida por múltiples sistemas y repositorios, mantener
    todas las versiones sincronizadas se vuelve insostenible. Una
    forma de aliviar este problema fue la implementación de características
-   dinámicas. En ellas, Monado evalúa si el sistema implementa alguna
+   dinámicas en la \Cref{app:slamtracker-dynamic-features}. En ellas, Monado evalúa si el sistema implementa alguna
    característica específica en tiempo de ejecución antes de utilizarla.
    Uno de sus usos, fue la automatización del envío de datos de calibración sin pasar
    por el archivo `config_file`. La forma de añadir nuevas características de

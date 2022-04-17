@@ -2,8 +2,8 @@
 
 Continuando con la descripción de la funcionalidad presente en la clase
 adaptadora `TrackerSlam` y luego de haber presentado el método de predicción que
-se emplea en Monado, veremos ahora la siguiente funcionalidad que `TrackerSlam`
-implementa: el **filtrado** de poses.
+se emplea en Monado, veremos ahora la siguiente funcionalidad de `TrackerSlam`
+implementada en la \Cref{app:filtering-mr}: el **filtrado** de poses.
 
 También llamado _smoothing_, alisado o suavizado, el filtro de señales, curvas
 o, en este caso poses, es una forma de minimizar o _filtrar_ el ruido presente

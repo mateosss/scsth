@@ -60,7 +60,9 @@ consideraron a la hora de elegir sistemas fueron:
 En este trabajo se integraron con Monado tres sistemas de código libre
 distintos, primero _Kimera-VIO_ [@rosinolKimeraOpenSourceLibrary2020], luego
 _ORB-SLAM3_ [@camposORBSLAM3AccurateOpenSource2021] y finalmente _Basalt_
-[@usenkoBasaltVisualInertialMapping2020].
+[@usenkoBasaltVisualInertialMapping2020]. Los clones de estos sistemas
+modificados para la integración pueden verse en las
+\Cref{app:kimera-fork,app:orbslam3-fork,app:basalt-fork}.
 
 Kimera-VIO[^kimera-repo] es una implementación desarrollada en el Instituto de
 Tecnología de Massachusetts (MIT) con una licencia permisiva BSD-2

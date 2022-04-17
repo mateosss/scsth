@@ -24,10 +24,8 @@ de Basalt, es que el acelerómetro es utilizado como origen del agente localizad
 y, fundándose en esto, se fija su orientación. Es decir, no se aplica ningún
 tipo de corrección de orientación al calibrar las muestras del acelerómetro.
 Esto hace que la matriz de alineamiento para el acelerómetro tenga ceros en su
-triángulo superior (ver @schubertBasaltTUMVI2018 secc. IV.B y _discusión
-relacionada [^basalt-headers-issue8]_).
-
-[^basalt-headers-issue8]: <https://gitlab.com/VladyslavUsenko/basalt-headers/-/issues/8>
+triángulo superior (ver @schubertBasaltTUMVI2018 secc. IV.B y
+\Cref{app:imucalib-issue}).
 
 Luego de recibir esta primer muestra de la IMU se comienza la ejecución del
 bucle principal, el cual espera indefinidamente por resultados encolados por el

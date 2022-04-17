@@ -5,19 +5,14 @@ ciertas consideraciones. A grandes rasgos, podemos dividir las métricas de
 interés usuales en medidas de _precisión_ y de _eficiencia_ que describen,
 respectivamente, la exactitud de la trayectoria estimada y el uso de recursos
 por parte de los sistemas. Para la evaluación de sistemas se desarrollaron
-funcionalidades [^euroc-player] [^euroc-recorder] [^slambatch1] [^slambatch2] y
-herramientas [^xrtslam-metrics] dedicadas a la evaluación de sistemas de SLAM en
-Monado. Para más información sobre evaluación que la que presentaremos en esta
+funcionalidades y herramientas dedicadas a la evaluación de sistemas de SLAM en Monado; ver
+\Cref{app:xrtslam-metrics,app:euroc-player-mr,app:euroc-recorder-mr,app:metrics-mr,app:slambatch-mr}.
+Para más información sobre evaluación que la que presentaremos en esta
 sección, referimos al lector al trabajo de @kummerleMeasuringAccuracySLAM2009
 que detalla en mayor profundidad el proceso de evaluación y a la suite de
 herramientas SLAMBench[^slambench] [@nardiIntroducingSLAMBenchPerformance2015]
 que intenta generalizarlo para una gran variedad de sistemas.
 
-[^euroc-player]: <https://gitlab.freedesktop.org/monado/monado/-/merge_requests/880>
-[^euroc-recorder]: <https://gitlab.freedesktop.org/monado/monado/-/merge_requests/1017>
-[^slambatch1]: <https://gitlab.freedesktop.org/monado/monado/-/merge_requests/1152>
-[^slambatch2]: <https://gitlab.freedesktop.org/monado/monado/-/merge_requests/1172>
-[^xrtslam-metrics]: <https://gitlab.freedesktop.org/mateosss/xrtslam-metrics>
 [^slambench]: <https://apt.cs.manchester.ac.uk/projects/PAMELA/tools/SLAMBench>
 
 Para la evaluación se utilizan _conjuntos de datos_ o _datasets_ pregrabados con
@@ -67,15 +62,13 @@ referirnos a los distintos conjuntos de datos con las siguientes característica
   - CO*: Odyssey+ en 640x480 a 30 fps e IMU a 250 Hz. Para Basalt
     en particular tenemos dos posibles modelos de cámara para utilizar con los lentes de
     este casco. Por defecto se utilizará el modelo radial-tangencial de 8
-    parámetros [^basalt-rt8-mr] dado de fábrica pero también se comparará con el
+    parámetros dado de fábrica e implementado en la \Cref{app:radtan8-mr}, pero también se comparará con el
     modelo Kannala-Brandt de 4 parámetros (KB4) recalibrado y nativo en Basalt.
 
 - E*: Los datasets EuRoC en dos habitaciones (V1 y V2) y una sala de máquinas
   (MH) en 752x480 a 20 fps e IMU a 200 Hz.
 
 - T*: TUM-VI en una habitación (R) en 512x512 a 20 fps e IMU a 200 Hz.
-
-[^basalt-rt8-mr]: <https://gitlab.com/VladyslavUsenko/basalt-headers/-/merge_requests/21>
 
 También utilizaremos acrónimos para los distintos sistemas evaluados, que son
 variantes de Basalt, Kimera y ORB-SLAM3 dados actualizaciones significativas que
@@ -339,9 +332,7 @@ de mapa global no se note tanto. Con esto queremos decir que es usual en Basalt
 notar luego de sesiones de uso más largas que el entorno simulado empieza a
 cambiar de lugar lentamente a causa de la deriva (_drift_) usuales en sistemas
 de VIO y no de SLAM. Se plantea también como trabajo a futuro mejorar este
-aspecto de Basalt (ver discusión relacionada[^basalt-slam-issue]).
-
-[^basalt-slam-issue]: <https://gitlab.com/VladyslavUsenko/basalt/-/issues/69>
+aspecto de Basalt (ver \Cref{app:consistentmap-issue}).
 
 <!-- #if 1 -->
 \begin{table}[H]
