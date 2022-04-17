@@ -36,6 +36,15 @@ A continuación, desarrollaremos algunas definiciones que nos ayudarán a descri
 idea de transformación más formalmente, y utilizaremos este mismo concepto para
 identificar las poses de nuestras entidades.
 
+Vale la pena aclarar que desarrollaremos una teoría suficientemente genérica
+como para aplicar en $n = 2$ y $n = 3$ dimensiones. En el caso bidimensional
+basta con tres variables independientes, también llamadas grados de libertad o
+_degrees of freedom (DoF)_, para describir completamente una transformación:
+dos para la traslación y uno para la rotación. Por otro lado, en el caso
+tridimensional se necesitarán seis grados de libertad: tres y tres. Veremos al
+final de la sección que terminaremos usando representaciones sobre-determinadas,
+con más de tres o seis variables, ya que nos facilitarán su manipulación.
+
 #### Preliminares del álgebra lineal {#sec:linearalg-prelim}
 
 Comenzaremos construyendo sobre algunas ideas básicas del álgebra lineal.
