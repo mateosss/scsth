@@ -89,6 +89,17 @@ Para las rotaciones, y orientaciones, existen múltiples representaciones
 válidas, cada una con sus ventajas y desventajas. Veremos algunas que han sido
 utilizadas en este trabajo.
 
+##### Ejes de rotación
+
+Cuando pensamos en la orientación de un cuerpo o en una rotación a aplicarle
+podemos pensar respecto a los ejes locales del mismo. Se suelen utilizar los
+términos _alabeo, cabeceo y guiñada_ o _roll, pitch y yaw_, comunes en áreas como la aeronáutica, para hablar
+sobre rotaciones que ocurren en estos ejes. Ver \figref{fig:roll-pitch-yaw}.
+
+\fig{fig:roll-pitch-yaw}{source/figures/roll-pitch-yaw.pdf}{Roll, pitch y yaw}{%
+Rotaciones y ejes homónimos de alabeo (roll), cabeceo (pitch) y guiñada (yaw).
+}
+
 ##### Ángulos Euler
 
 La representación por ángulos Euler utiliza un vector $[x, y, z]^T \in \R^3$ en donde

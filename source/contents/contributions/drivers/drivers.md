@@ -197,10 +197,10 @@ denomina el efecto de rolling shutter.
 -->
 
 <!-- #define MN_SHUTTER %\
-El término obturador proviene de los sensores ópticos tradicionales.
-Un obturador era una pieza mecánica en movimiento que controlaba el tiempo
-durante el cual la película fotográfica era expuesta a la luz de la escena.
-Actualmente el proceso de control de exposición se realiza con interrupciones
+El término obturador proviene de los dispositivos mecánicos que usan los sensores ópticos tradicionales.
+En el contexto analógico, un obturador es una pieza mecánica en movimiento que controla el tiempo
+durante el cual la película fotográfica es expuesta a la luz de la escena.
+Para las cámaras que usaremos, el proceso de control de exposición se realiza con interrupciones
 digitales.
 -->
 
