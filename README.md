@@ -41,6 +41,8 @@ Instructions tested on Ubuntu 20.04.
 
 - Run `./install_linux.sh`
 
+- Install pdftk `sudo apt install pdftk`
+
 ## Build
 
 Run `make pdf`

@@ -506,6 +506,15 @@ manera:
 slerp(p, q, t) = p(p^{-1}q)^t \label{eq:slerp-def}
 \end{align}
 
+Notar que _no_ definimos como elevar un cuaternión con un exponente $t \in \R$.
+Para esto necesitaríamos definir los llamados mapas _exponenciales_ y
+_logarítimcos_ que funcionan esencialmente como las operaciones usuales $exp$ y
+$log$ pero para cuaterniones. En este trabajo sólo haremos ese desarrollo sobre
+matrices de rotación en la sección siguiente. Mientras tanto invitamos al lector
+curioso en este desarrollo para cuaterniones a consultar el trabajo de
+@grassiaPracticalParameterizationRotations1998 y el de
+@shoemakeAnimatingRotationQuaternion1985.
+
 ##### Matrices de rotación {#sec:rotation-matrices}
 
 Las rotaciones pueden representarse también como una matriz $R \in \R^{3x3}$ con
@@ -2814,7 +2823,7 @@ la timestamp requerida. Acumularemos promedios de las mediciones recientes para
 reducir el impacto del ruido presente en las muestras de la IMU.
 
 Tenemos entonces que el algoritmo utilizado finalmente es similar al pseudo
-código que se presenta a continuación. Cabe aclarar que la función
+código que se presenta a continuación en el \Cref{lst:predict-pose}. Cabe aclarar que la función
 `predict_pose(t)` es llamada cuando el usuario quiere una predicción a tiempo
 `t`. Además las herramientas de Monado son representadas por `relation_history`
 (el historial de relaciones) y `predict_from_space` (la función de predicción en
@@ -3828,7 +3837,7 @@ ORB-SLAM3 se deja como trabajo a futuro.
 \begin{table}[H]
 \caption[Tiempos de ejecución]{Tiempos de ejecución medio por cuadro [ms]}
 \label{tab:timing}
-\begin{addmargin*}[-0.2\textwidth]{-0.2\textwidth}
+\begin{addmargin*}[-0.1\textwidth]{-0.3\textwidth}
 \resizebox{1.4\textwidth}{!}{
 \begin{tabular}{ |l||l|l|l|l|l|l|  }
 \hline
@@ -3927,7 +3936,7 @@ aspecto de Basalt (ver \Cref{app:consistentmap-issue}).
 \begin{table}[H]
 \caption[Error en las trayectorias]{Error absoluto de la trayectoria (ATE) [m]}
 \label{tab:ate}
-\begin{addmargin*}[-0.2\textwidth]{-0.2\textwidth}
+\begin{addmargin*}[-0.1\textwidth]{-0.3\textwidth}
 \resizebox{1.4\textwidth}{!}{
 \begin{tabular}{ |l||l|l|l|l|l|l|  }
 \hline
@@ -3988,7 +3997,7 @@ separadas por el equivalente tiempo a 6 cuadros de cada dataset, es decir unos
 \begin{table}[H]
 \caption[Error en los movimientos]{Error relativo de la trayectoria (RTE, intervalos de 6 cuadros) [m]}
 \label{tab:rte}
-\begin{addmargin*}[-0.2\textwidth]{-0.2\textwidth}
+\begin{addmargin*}[-0.1\textwidth]{-0.3\textwidth}
 \resizebox{1.4\textwidth}{!}{
 \begin{tabular}{ |l||l|l|l|l|l|l|  }
 \hline

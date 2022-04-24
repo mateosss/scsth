@@ -254,6 +254,15 @@ manera:
 slerp(p, q, t) = p(p^{-1}q)^t \label{eq:slerp-def}
 \end{align}
 
+Notar que _no_ definimos como elevar un cuaternión con un exponente $t \in \R$.
+Para esto necesitaríamos definir los llamados mapas _exponenciales_ y
+_logarítimcos_ que funcionan esencialmente como las operaciones usuales $exp$ y
+$log$ pero para cuaterniones. En este trabajo sólo haremos ese desarrollo sobre
+matrices de rotación en la sección siguiente. Mientras tanto invitamos al lector
+curioso en este desarrollo para cuaterniones a consultar el trabajo de
+@grassiaPracticalParameterizationRotations1998 y el de
+@shoemakeAnimatingRotationQuaternion1985.
+
 ##### Matrices de rotación {#sec:rotation-matrices}
 
 Las rotaciones pueden representarse también como una matriz $R \in \R^{3x3}$ con

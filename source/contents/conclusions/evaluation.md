@@ -209,7 +209,7 @@ ORB-SLAM3 se deja como trabajo a futuro.
 \begin{table}[H]
 \caption[Tiempos de ejecución]{Tiempos de ejecución medio por cuadro [ms]}
 \label{tab:timing}
-\begin{addmargin*}[-0.2\textwidth]{-0.2\textwidth}
+\begin{addmargin*}[-0.1\textwidth]{-0.3\textwidth}
 \resizebox{1.4\textwidth}{!}{
 \begin{tabular}{ |l||l|l|l|l|l|l|  }
 \hline
@@ -338,7 +338,7 @@ aspecto de Basalt (ver \Cref{app:consistentmap-issue}).
 \begin{table}[H]
 \caption[Error en las trayectorias]{Error absoluto de la trayectoria (ATE) [m]}
 \label{tab:ate}
-\begin{addmargin*}[-0.2\textwidth]{-0.2\textwidth}
+\begin{addmargin*}[-0.1\textwidth]{-0.3\textwidth}
 \resizebox{1.4\textwidth}{!}{
 \begin{tabular}{ |l||l|l|l|l|l|l|  }
 \hline
@@ -419,7 +419,7 @@ separadas por el equivalente tiempo a 6 cuadros de cada dataset, es decir unos
 \begin{table}[H]
 \caption[Error en los movimientos]{Error relativo de la trayectoria (RTE, intervalos de 6 cuadros) [m]}
 \label{tab:rte}
-\begin{addmargin*}[-0.2\textwidth]{-0.2\textwidth}
+\begin{addmargin*}[-0.1\textwidth]{-0.3\textwidth}
 \resizebox{1.4\textwidth}{!}{
 \begin{tabular}{ |l||l|l|l|l|l|l|  }
 \hline

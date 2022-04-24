@@ -34,7 +34,7 @@
     \WarningFilter{titlesec}{Non standard sectioning command detected}
 \documentclass[ twoside,openright,titlepage,numbers=noenddot,%1headlines,
                 headinclude,footinclude,cleardoublepage=empty,abstract=on,
-                BCOR=5mm,paper=a4,fontsize=11pt
+                BCOR=-5mm,paper=a4,fontsize=11pt
                 ]{scrreprt}
 
 %********************************************************************
@@ -185,6 +185,7 @@
 % \include{FrontBackmatter/DirtyTitlepage}
 \include{FrontBackmatter/Titlepage}
 \cleardoublepage\include{FrontBackmatter/Titleback}
+% \cleardoublepage\include{FrontBackmatter/Titleback}
 % \cleardoublepage\include{FrontBackmatter/Dedication}
 %\cleardoublepage\include{FrontBackmatter/Foreword}
 \include{FrontBackmatter/Abstract}
@@ -738,6 +739,16 @@ no unitarios, y por esto utilizaremos en su lugar la operación de
 siguiente manera: \begin{align}
 slerp(p, q, t) = p(p^{-1}q)^t \label{eq:slerp-def}
 \end{align}
+
+Notar que \emph{no} definimos como elevar un cuaternión con un exponente
+\(t \in \R\). Para esto necesitaríamos definir los llamados mapas
+\emph{exponenciales} y \emph{logarítimcos} que funcionan esencialmente
+como las operaciones usuales \(exp\) y \(log\) pero para cuaterniones.
+En este trabajo sólo haremos ese desarrollo sobre matrices de rotación
+en la sección siguiente. Mientras tanto invitamos al lector curioso en
+este desarrollo para cuaterniones a consultar el trabajo de
+\textcite{grassiaPracticalParameterizationRotations1998} y el de
+\textcite{shoemakeAnimatingRotationQuaternion1985}.
 
 \hypertarget{sec:rotation-matrices}{%
 \subsubsection{Matrices de rotación}\label{sec:rotation-matrices}}
@@ -3132,10 +3143,11 @@ promedios de las mediciones recientes para reducir el impacto del ruido
 presente en las muestras de la IMU.
 
 Tenemos entonces que el algoritmo utilizado finalmente es similar al
-pseudo código que se presenta a continuación. Cabe aclarar que la
-función \passthrough{\lstinline!predict\_pose(t)!} es llamada cuando el
-usuario quiere una predicción a tiempo \passthrough{\lstinline!t!}.
-Además las herramientas de Monado son representadas por
+pseudo código que se presenta a continuación en el
+\Cref{lst:predict-pose}. Cabe aclarar que la función
+\passthrough{\lstinline!predict\_pose(t)!} es llamada cuando el usuario
+quiere una predicción a tiempo \passthrough{\lstinline!t!}. Además las
+herramientas de Monado son representadas por
 \passthrough{\lstinline!relation\_history!} (el historial de relaciones)
 y \passthrough{\lstinline!predict\_from\_space!} (la función de
 predicción en base a un espacio).
@@ -4173,7 +4185,7 @@ como trabajo a futuro.
 \begin{table}[H]
 \caption[Tiempos de ejecución]{Tiempos de ejecución medio por cuadro [ms]}
 \label{tab:timing}
-\begin{addmargin*}[-0.2\textwidth]{-0.2\textwidth}
+\begin{addmargin*}[-0.1\textwidth]{-0.3\textwidth}
 \resizebox{1.4\textwidth}{!}{
 \begin{tabular}{ |l||l|l|l|l|l|l|  }
 \hline
@@ -4275,7 +4287,7 @@ aspecto de Basalt (ver \Cref{app:consistentmap-issue}).
 \begin{table}[H]
 \caption[Error en las trayectorias]{Error absoluto de la trayectoria (ATE) [m]}
 \label{tab:ate}
-\begin{addmargin*}[-0.2\textwidth]{-0.2\textwidth}
+\begin{addmargin*}[-0.1\textwidth]{-0.3\textwidth}
 \resizebox{1.4\textwidth}{!}{
 \begin{tabular}{ |l||l|l|l|l|l|l|  }
 \hline
@@ -4333,7 +4345,7 @@ fps.
 \begin{table}[H]
 \caption[Error en los movimientos]{Error relativo de la trayectoria (RTE, intervalos de 6 cuadros) [m]}
 \label{tab:rte}
-\begin{addmargin*}[-0.2\textwidth]{-0.2\textwidth}
+\begin{addmargin*}[-0.1\textwidth]{-0.3\textwidth}
 \resizebox{1.4\textwidth}{!}{
 \begin{tabular}{ |l||l|l|l|l|l|l|  }
 \hline

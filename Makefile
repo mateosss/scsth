@@ -78,6 +78,9 @@ pdfull: tex
 		cd output/latex && bibtex thesis && cd ..
 		$(LATEXCMD)
 		$(LATEXCMD)
+		cp output/thesis.pdf output/thesis.raw.pdf
+		pdftk output/thesis.raw.pdf cat 1 3-end output output/thesis.pdf
+		rm output/thesis.raw.pdf
 
 pdf: pdfull
 

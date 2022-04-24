@@ -261,7 +261,7 @@ la timestamp requerida. Acumularemos promedios de las mediciones recientes para
 reducir el impacto del ruido presente en las muestras de la IMU.
 
 Tenemos entonces que el algoritmo utilizado finalmente es similar al pseudo
-código que se presenta a continuación. Cabe aclarar que la función
+código que se presenta a continuación en el \Cref{lst:predict-pose}. Cabe aclarar que la función
 `predict_pose(t)` es llamada cuando el usuario quiere una predicción a tiempo
 `t`. Además las herramientas de Monado son representadas por `relation_history`
 (el historial de relaciones) y `predict_from_space` (la función de predicción en
