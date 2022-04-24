@@ -142,3 +142,6 @@ precalibradas
 merge
 requests
 qwerty
+roll
+pitch
+yaw

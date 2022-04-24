@@ -288,6 +288,15 @@ A continuación, desarrollaremos algunas definiciones que nos ayudarán a descri
 idea de transformación más formalmente, y utilizaremos este mismo concepto para
 identificar las poses de nuestras entidades.
 
+Vale la pena aclarar que desarrollaremos una teoría suficientemente genérica
+como para aplicar en $n = 2$ y $n = 3$ dimensiones. En el caso bidimensional
+basta con tres variables independientes, también llamadas grados de libertad o
+_degrees of freedom (DoF)_, para describir completamente una transformación:
+dos para la traslación y uno para la rotación. Por otro lado, en el caso
+tridimensional se necesitarán seis grados de libertad: tres y tres. Veremos al
+final de la sección que terminaremos usando representaciones sobre-determinadas,
+con más de tres o seis variables, ya que nos facilitarán su manipulación.
+
 #### Preliminares del álgebra lineal {#sec:linearalg-prelim}
 
 Comenzaremos construyendo sobre algunas ideas básicas del álgebra lineal.
@@ -332,14 +341,35 @@ Para las rotaciones, y orientaciones, existen múltiples representaciones
 válidas, cada una con sus ventajas y desventajas. Veremos algunas que han sido
 utilizadas en este trabajo.
 
+##### Ejes de rotación
+
+Cuando pensamos en la orientación de un cuerpo o en una rotación a aplicarle
+podemos pensar respecto a los ejes locales del mismo. Se suelen utilizar los
+términos _alabeo, cabeceo y guiñada_ o _roll, pitch y yaw_, comunes en áreas como la aeronáutica, para hablar
+sobre rotaciones que ocurren en estos ejes. Ver \figref{fig:roll-pitch-yaw}.
+
+\figw{fig:roll-pitch-yaw}{source/figures/roll-pitch-yaw.pdf}{Roll, pitch y yaw}{%
+Rotaciones y ejes homónimos de alabeo (roll), cabeceo (pitch) y guiñada (yaw).
+}{0.5\linewidth}
+
 ##### Ángulos Euler
 
 La representación por ángulos Euler utiliza un vector $[x, y, z]^T \in \R^3$ en donde
 cada componente representa el ángulo de rotación que aplicar alrededor de tres
 ejes seleccionados por convención. Es decir, el vector describe tres rotaciones
-que aplicar. Esta representación tiene la principal ventaja de resultar
+que aplicar como se ejemplifica en la \figref{fig:euler-angles}. Esta representación tiene la principal ventaja de resultar
 intuitiva cuando solo se necesita describir una rotación, pero se vuelve
 inconveniente en otros contextos que necesitaremos.
+
+\fig{fig:euler-angles}{source/figures/euler-angles.pdf}{Ángulos Euler}{%
+Ejemplo de una rotación objetivo representada en ángulos Euler. La construimos
+aplicando una secuencia de rotaciones sobre los ejes X, Y, y finalmente Z. Como
+utilizamos rotaciones alrededor de ejes fijos respecto a la orientación inicial
+de referencia, decimos que estamos usando la convención de ángulos Euler
+\emph{X-Y-Z extrínseca}. Además notar que también fue necesario elegir cuales
+rotaciones se consideraron positivas en cada eje. En este caso utilizamos la
+llamada \emph{regla de la mano derecha}.
+}
 
 
 
@@ -366,8 +396,14 @@ En general, evitaremos esta representación.
 Toda rotación puede representarse con un ángulo $\omega$ y un eje axial,
 representado por un vector unitario $a \in \R^3$, sobre el cual rotar $\omega$ radianes.
 La representación de ángulo axial de esta rotación queda definida por el vector
-$v = \omega a$. Tenemos entonces que $a = \frac{v}{\| v \|}$ y $\omega = \|
+$v = \omega a$; ver \figref{fig:axis-angles}. Tenemos entonces que $a = \frac{v}{\| v \|}$ y $\omega = \|
 v\|$.
+
+\fig{fig:axis-angles}{source/figures/axis-angles.pdf}{Ángulos axial}{%
+Representación de rotación por ángulo axial. Se puede pensar al eje $a$ como si
+atravesara o espetara el cuerpo y luego se rotara en $\omega$ radianes a su
+alrededor.
+}
 
 Esta representación surge naturalmente del uso de giroscopios. Estos módulos,
 internamente se componen de tres sensores capaces de reportar cada uno la
@@ -3326,10 +3362,10 @@ muestras para unifcarlas.
 
 Por el lado de los sensores de la cámara, será importante que el obturador o
 _shutter_\marginnote{%\
-El término obturador proviene de los sensores ópticos tradicionales.
-Un obturador era una pieza mecánica en movimiento que controlaba el tiempo
-durante el cual la película fotográfica era expuesta a la luz de la escena.
-Actualmente el proceso de control de exposición se realiza con interrupciones
+El término obturador proviene de los dispositivos mecánicos que usan los sensores ópticos tradicionales.
+En el contexto analógico, un obturador es una pieza mecánica en movimiento que controla el tiempo
+durante el cual la película fotográfica es expuesta a la luz de la escena.
+Para las cámaras que usaremos, el proceso de control de exposición se realiza con interrupciones
 digitales.
 } de las cámaras sea un _global shutter_, es
 decir que todos los píxeles sean capturados en el mismo instante. Por el

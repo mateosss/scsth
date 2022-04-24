@@ -96,18 +96,28 @@ podemos pensar respecto a los ejes locales del mismo. Se suelen utilizar los
 términos _alabeo, cabeceo y guiñada_ o _roll, pitch y yaw_, comunes en áreas como la aeronáutica, para hablar
 sobre rotaciones que ocurren en estos ejes. Ver \figref{fig:roll-pitch-yaw}.
 
-\fig{fig:roll-pitch-yaw}{source/figures/roll-pitch-yaw.pdf}{Roll, pitch y yaw}{%
+\figw{fig:roll-pitch-yaw}{source/figures/roll-pitch-yaw.pdf}{Roll, pitch y yaw}{%
 Rotaciones y ejes homónimos de alabeo (roll), cabeceo (pitch) y guiñada (yaw).
-}
+}{0.5\linewidth}
 
 ##### Ángulos Euler
 
 La representación por ángulos Euler utiliza un vector $[x, y, z]^T \in \R^3$ en donde
 cada componente representa el ángulo de rotación que aplicar alrededor de tres
 ejes seleccionados por convención. Es decir, el vector describe tres rotaciones
-que aplicar. Esta representación tiene la principal ventaja de resultar
+que aplicar como se ejemplifica en la \figref{fig:euler-angles}. Esta representación tiene la principal ventaja de resultar
 intuitiva cuando solo se necesita describir una rotación, pero se vuelve
 inconveniente en otros contextos que necesitaremos.
+
+\fig{fig:euler-angles}{source/figures/euler-angles.pdf}{Ángulos Euler}{%
+Ejemplo de una rotación objetivo representada en ángulos Euler. La construimos
+aplicando una secuencia de rotaciones sobre los ejes X, Y, y finalmente Z. Como
+utilizamos rotaciones alrededor de ejes fijos respecto a la orientación inicial
+de referencia, decimos que estamos usando la convención de ángulos Euler
+\emph{X-Y-Z extrínseca}. Además notar que también fue necesario elegir cuales
+rotaciones se consideraron positivas en cada eje. En este caso utilizamos la
+llamada \emph{regla de la mano derecha}.
+}
 
 <!-- #define MN_ROTATION_MADNESS %\
 En la práctica, la manipulación de rotaciones y sistemas de coordenadas son
@@ -134,8 +144,14 @@ En general, evitaremos esta representación.
 Toda rotación puede representarse con un ángulo $\omega$ y un eje axial,
 representado por un vector unitario $a \in \R^3$, sobre el cual rotar $\omega$ radianes.
 La representación de ángulo axial de esta rotación queda definida por el vector
-$v = \omega a$. Tenemos entonces que $a = \frac{v}{\| v \|}$ y $\omega = \|
+$v = \omega a$; ver \figref{fig:axis-angles}. Tenemos entonces que $a = \frac{v}{\| v \|}$ y $\omega = \|
 v\|$.
+
+\fig{fig:axis-angles}{source/figures/axis-angles.pdf}{Ángulos axial}{%
+Representación de rotación por ángulo axial. Se puede pensar al eje $a$ como si
+atravesara o espetara el cuerpo y luego se rotara en $\omega$ radianes a su
+alrededor.
+}
 
 Esta representación surge naturalmente del uso de giroscopios. Estos módulos,
 internamente se componen de tres sensores capaces de reportar cada uno la
