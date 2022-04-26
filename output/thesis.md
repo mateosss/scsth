@@ -4096,7 +4096,7 @@ computadora está plagado, y SLAM no es la excepción. También vimos las distin
 formas de representar transformaciones y rotaciones en dos y tres dimensiones:
 ángulos euler, cuaterniones, ángulo axial, matrices de rotación y una mirada
 práctica sobre los grupos de Lie $SO(n)$ y $SE(n)$ junto a sus álgebras de Lie
-$\so(n)$ y $\se(n)$.
+$\so{n}$ y $\se{n}$.
 
 Posteriormente nos adentramos en la implementación de la capa de odometría
 visual-inercial de Basalt. Esto permitió ver de primera mano los distintos tipos
