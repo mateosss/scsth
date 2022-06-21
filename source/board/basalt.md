@@ -525,6 +525,34 @@ class Keypoint {
   int kpt_id;
   Vec2 pos;
 };
+
+class LandmarkDatabase {
+  map<LandmarkId, Landmark> landmarks;
+  map<TimeCamId, map<TimeCamId, set<Keypoint>>> observations;
+}
+```
+
+```cpp
+// For a particular ts it gives you: all the (u,v) coordinates of landmark
+// observations at that timestamp for each camera, its inverse depth, and its id
+computeProjections(vector<Vector4>[2] data, ts) {
+  for (h, obs : lmdb.getObservations()) {
+    for (t, kps : obs) {
+      if (t.ts != ts) continue;
+      SE3 T_t_h = transformFromEstimatesBetween(t, h);
+      for (kpid : kps) {
+        Landmark lm = lmdb.getLandmark(kpid);
+        Camera t_cam = cameraFrom(t);
+        Vec2 res; // u,v of lm projected onto cam t
+        Vec4 proj; //
+        linearizePoint(kp=(0, 0), lm, T_t_h, t_cam, &res, &proj);
+        proj.w = kpid;
+        data[t.cam_id].push_back(proj);
+      }
+
+    }
+  }
+}
 ```
 
 ```cpp
@@ -656,16 +684,19 @@ void linearizeHelper(vector<RelLinData>& rld_vec, const obs, double& error) {
 
 }
 
-bool linearizePoint(Keypoint kp, Landmark lm, Mat44 T_t_h, Camera cam, Vec2 &res, Mat26 &d_res_d_xi, Mat23 &d_res_d_p) {
+// Returns in res: if we project the 3D landmark position to T (p2), how off are we from where we observed the landmark (kp_t)
+// Returns in proj: [p2.u, p2.v, SOMETHING, -] where I think that SOMETHING is some idea of inverse distance from T
+bool linearizePoint(Keypoint kp_t, Landmark lm, Mat44 T_t_h, Camera cam, Vec2 &res, Mat26 &d_res_d_xi, Mat23 &d_res_d_p, Vec4 &proj) {
   Vec4 p3_h = StereographicParam::unproject(lm.dir);
-  p3_h[3] = lm.inv_distance;
-  Vec4 p3_t = T_t_h * p3_h;
-  Vec2 p2 = cam.project(p3_t);
+  p3_h.w = lm.inv_distance;
+  Vec4 p3_t = T_t_h * p3_h; // What does it mean to multiply a matrix in SE3 with a p3_h that has a w != 1
+  Vec2 p2 = cam.project(p3_t); // What does even mean to project that result? Am I projecting a ray (an epiplar line?)? or what?
   if (any failed) return false;
 
-  *res = p2 - kp.pos;
+  *res = p2 - kp_t.pos;
   *d_res_d_xi = computeJacobian();
   *d_res_d_p = computeJacobian();
+  *proj = [p2.u, p2.v, p3_t.w / norm(p3_t.xyz), proj.w]; // At this point p3_t.w == p3_h.w == lm.inv_distance
   return true;
 }
 
